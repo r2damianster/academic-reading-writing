@@ -1,0 +1,46 @@
+/* css/modules.css */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f8f9fa; /* Un gris muy claro para el fondo del iframe */
+    margin: 0; padding: 20px;
+    display: flex; justify-content: center;
+}
+
+.lesson-container {
+    max-width: 700px; width: 100%;
+    background: white; padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.slide { display: none; animation: fadeIn 0.5s ease; }
+.slide.active { display: block; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h2 { color: #1a2a6c; border-left: 5px solid #3498db; padding-left: 15px; }
+
+.quiz-option {
+    display: block; width: 100%; padding: 15px; margin: 10px 0;
+    border: 2px solid #eee; border-radius: 8px; cursor: pointer;
+    text-align: left; background: white; transition: 0.3s;
+}
+
+.quiz-option:hover { border-color: #3498db; background: #f0f7ff; }
+
+.feedback {
+    margin-top: 15px; padding: 15px; border-radius: 8px;
+    display: none; font-weight: bold;
+}
+
+.btn-next {
+    background: #1a2a6c; color: white; border: none;
+    padding: 12px 25px; border-radius: 5px; cursor: pointer;
+    float: right; margin-top: 20px; display: none;
+}
+
+.progress-bar { height: 5px; background: #eee; margin-bottom: 30px; border-radius: 10px; }
+.progress-fill { height: 100%; background: #3498db; width: 0%; transition: 0.4s; }
