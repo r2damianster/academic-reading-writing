@@ -11,7 +11,7 @@ body, html {
     margin: 0; padding: 0; height: 100%;
     font-family: 'Segoe UI', Tahoma, sans-serif;
     background: var(--bg); 
-    overflow: hidden; /* Mantenlo así para que solo se mueva el contenido */
+    overflow: hidden;
 }
 
 .app-container { display: flex; height: 100vh; }
@@ -47,9 +47,8 @@ body, html {
     margin-bottom: 20px;
 }
 
-.menu-item { margin-bottom: 5px; }
+.menu-item { margin-bottom: 10px; } /* Manteniendo tu espacio */
 
-/* CORRECCIÓN: Encabezados clicables */
 .section-header {
     font-size: 0.75rem; 
     text-transform: uppercase; 
@@ -57,7 +56,7 @@ body, html {
     padding: 12px 10px; 
     background: rgba(255,255,255,0.03);
     border-radius: 4px; 
-    cursor: pointer; /* Cambiado a puntero */
+    cursor: pointer; 
     transition: all 0.2s ease;
     display: flex;
     justify-content: space-between;
@@ -77,9 +76,9 @@ body, html {
     transition: max-height 0.4s ease-out;
 }
 
-/* El menú se abre al pasar el mouse sobre el contenedor del item */
 .menu-item:hover .sub-menu {
-    max-height: 500px;
+    max-height: 800px;
+    margin-top: 5px;
     margin-bottom: 10px;
 }
 
@@ -96,7 +95,34 @@ body, html {
     transition: 0.2s; 
 }
 
-/* FOOTER Y BOTONES */
+/* --- LO NUEVO PARA TOOLBOX (Sin romper tus márgenes) --- */
+
+.nested-item { list-style: none; margin: 5px 0; }
+
+.nested-header {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    display: block;
+    padding: 5px 0;
+    cursor: default;
+}
+
+.nested-menu {
+    list-style: none;
+    padding-left: 12px;
+    border-left: 1px solid rgba(52, 152, 219, 0.3);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+/* Solo se abre el contenido interno al pasar por Grammar/Connectors */
+.nested-item:hover .nested-menu {
+    max-height: 200px;
+}
+
+/* --- FIN DE LO NUEVO --- */
+
 .sidebar-footer {
     padding-top: 15px;
     border-top: 1px solid rgba(255,255,255,0.1);
@@ -113,15 +139,9 @@ body, html {
     font-weight: bold; 
 }
 
-.content-area { 
-    flex-grow: 1; 
-    position: relative; 
-    overflow-y: auto; /* <--- CAMBIA ESTO: permite scroll si el iframe crece */
-    -webkit-overflow-scrolling: touch; /* Suavidad en móviles */
-}
+.content-area { flex-grow: 1; position: relative; overflow-y: auto; }
 #contentFrame { width: 100%; height: 100%; border: none; }
 
-/* MODAL Y RESPONSIVE (Se mantienen igual por estar correctos) */
 .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 3000; }
 .modal-content { background: white; padding: 40px; border-radius: 10px; text-align: center; max-width: 400px; color: #333; }
 .modal-content input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
@@ -135,6 +155,4 @@ body, html {
     .sidebar { position: fixed; left: -280px; top: 0; height: 100vh; width: 280px; }
     .sidebar.active { left: 0; }
     .sidebar-overlay.active { display: block; }
-    .sidebar-header { padding-top: 45px; }
-    .content-area { width: 100%; padding-top: 50px; }
 }
