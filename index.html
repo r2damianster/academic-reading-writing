@@ -1,92 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Reading & Writing Hub</title>
-    <link rel="stylesheet" href="css/main.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Academic Reading & Writing Hub</title>
+
+<link rel="stylesheet" href="css/main.css?v=1.2">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 </head>
+
 <body>
-    <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
-    <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-    <div id="welcomeModal" class="modal">
-        <div class="modal-content">
-            <h2>Welcome to the Course</h2>
-            <p>Please enter your details to personalize your activity reports.</p>
-            <input type="text" id="inputName" placeholder="Full Name">
-            <input type="email" id="inputEmail" placeholder="Institutional Email">
-            <button onclick="saveAndStart()">Start Learning</button>
-        </div>
-    </div>
+<button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-    <div class="app-container">
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <h1>Academic Reading & Writing</h1>
-                <p id="studentDisplay">Student: ...</p>
-            </div>
-            
-            <ul class="nav-menu">
-                <li class="menu-item">
-                    <div class="section-header" onclick="loadPage('welcome-content.html')">Main</div>
-                    <ul class="sub-menu">
-                        <li><a href="#" onclick="loadPage('welcome-content.html')">Dashboard</a></li>
-                    </ul>
-                </li>
+<div id="welcomeModal" class="modal">
+<div class="modal-content">
+<h2>Welcome to the Course</h2>
+<p>Please enter your details to personalize your activity reports.</p>
+<input type="text" id="inputName" placeholder="Full Name">
+<input type="email" id="inputEmail" placeholder="Institutional Email">
+<button onclick="saveAndStart()">Start Learning</button>
+</div>
+</div>
 
-                <li class="menu-item">
-                    <div class="section-header" onclick="loadPage('modules/00-fundamentals/fundamentals-hub.html')">00. Fundamentals ▾</div>
-                    <ul class="sub-menu">
-                        <li><a href="#" onclick="loadPage('modules/00-fundamentals/one-idea.html')">1. The One-Point Rule</a></li>
-                        <li><a href="#" onclick="loadPage('modules/00-fundamentals/topic-sentences.html')">2. Topic Sentences</a></li>
-                        <li><a href="#" onclick="loadPage('modules/00-fundamentals/peer-review.html')">3. PEER Review</a></li>
-                    </ul>
-                </li>
+<div class="app-container">
 
-                <li class="menu-item">
-                    <div class="section-header" onclick="loadPage('modules/01-core-syllabus/core-hub.html')">01. Core Syllabus ▾</div>
-                    <ul class="sub-menu">
-                        <li><a href="#" onclick="loadPage('modules/01-core-syllabus/unit1-essays.html')">Unit 1: Essays</a></li>
-                        <li><a href="#" onclick="loadPage('modules/01-core-syllabus/unit2-papers.html')">Unit 2: Research Papers</a></li>
-                        <li><a href="#" onclick="loadPage('modules/01-core-syllabus/apa-integrity.html')">APA & Integrity</a></li>
-                    </ul>
-                </li>
+<nav class="sidebar">
 
-                <li class="menu-item">
-                    <div class="section-header" onclick="loadPage('modules/02-toolbox/toolbox-hub.html')">02. Toolbox ▾</div>
-                    <ul class="sub-menu">
-                        <li><a href="#" onclick="loadPage('modules/02-toolbox/grammar/passive-voice.html')">Passive Voice</a></li>
-                        <li><a href="#" onclick="loadPage('modules/02-toolbox/grammar/although-despite.html')">Connectors</a></li>
-                    </ul>
-                </li>
+<div class="sidebar-header">
+<h1>Academic Reading & Writing</h1>
+<p id="studentDisplay">Student: ...</p>
+</div>
 
-                <li class="menu-item">
-                    <div class="section-header" onclick="loadPage('modules/03-peer-review/peer-review-hub.html')">03. Peer System ▾</div>
-                    <ul class="sub-menu">
-                        <li><a href="#" onclick="loadPage('modules/03-peer-review/checklist.html')">Review Checklist</a></li>
-                    </ul>
-                </li>
-            </ul>
+<ul class="nav-menu">
 
-            <div class="sidebar-footer">
-                <button class="btn-report" onclick="generateReport()">Download Progress</button>
-                <button onclick="resetApp()" style="background:none; border:none; color:#95a5a6; font-size:0.75rem; margin-top:15px; cursor:pointer; width:100%; text-decoration: underline;">
-                    Not you? Change Student 
-                </button>
-            </div>
-        </nav>
+<li class="menu-item">
+<div class="section-header" onclick="loadPage('welcome-content.html')">Main</div>
+<ul class="sub-menu">
+<li><a href="#" onclick="loadPage('welcome-content.html')">Dashboard</a></li>
+</ul>
+</li>
 
-        <main class="content-area">
-            <iframe name="contentFrame" id="contentFrame" src="about:blank" frameborder="0" style="width: 100%; height: 100%; min-height: 100vh;"></iframe>
-        </main>
-    </div>
+<li class="menu-item">
+<div class="section-header" onclick="loadPage('modules/00-fundamentals/fundamentals-hub.html')">00. Fundamentals ▾</div>
+<ul class="sub-menu">
+<li><a href="#" onclick="loadPage('modules/00-fundamentals/one-idea.html')">1. The One-Point Rule</a></li>
+<li><a href="#" onclick="loadPage('modules/00-fundamentals/topic-sentences.html')">2. Topic Sentences</a></li>
+<li><a href="#" onclick="loadPage('modules/00-fundamentals/peer-review.html')">3. PEER Review</a></li>
+</ul>
+</li>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<li class="menu-item">
+<div class="section-header" onclick="loadPage('modules/01-core-syllabus/core-hub.html')">01. Core Syllabus ▾</div>
+<ul class="sub-menu">
+<li><a href="#" onclick="loadPage('modules/01-core-syllabus/unit1-essays.html')">Unit 1: Essays</a></li>
+<li><a href="#" onclick="loadPage('modules/01-core-syllabus/unit2-papers.html')">Unit 2: Research Papers</a></li>
+<li><a href="#" onclick="loadPage('modules/01-core-syllabus/apa-integrity.html')">APA & Integrity</a></li>
+</ul>
+</li>
 
-    <script src="js/auth.js"></script>
-    <script src="js/navigation.js?v=2"></script>
-    <script src="js/report.js"></script>
-    <script src="js/ui-tools.js"></script>
+<li class="menu-item">
+<div class="section-header" onclick="loadPage('modules/02-toolbox/toolbox-hub.html')">02. Toolbox ▾</div>
+<ul class="sub-menu">
+<li><a href="#" onclick="loadPage('modules/02-toolbox/grammar/passive-voice.html')">Passive Voice</a></li>
+<li><a href="#" onclick="loadPage('modules/02-toolbox/grammar/although-despite.html')">Connectors</a></li>
+</ul>
+</li>
+
+<li class="menu-item">
+<div class="section-header" onclick="loadPage('modules/03-peer-review/peer-review-hub.html')">03. Peer System ▾</div>
+<ul class="sub-menu">
+<li><a href="#" onclick="loadPage('modules/03-peer-review/checklist.html')">Review Checklist</a></li>
+</ul>
+</li>
+
+</ul>
+
+<div class="sidebar-footer">
+<button class="btn-report" onclick="generateReport()">Download Progress</button>
+
+<button onclick="resetApp()" style="background:none;border:none;color:#95a5a6;font-size:0.75rem;margin-top:15px;cursor:pointer;width:100%;text-decoration:underline;">
+Not you? Change Student
+</button>
+</div>
+
+</nav>
+
+<main class="content-area">
+
+<iframe name="contentFrame"
+id="contentFrame"
+src="welcome-content.html"
+frameborder="0"
+style="width:100%;height:100%;min-height:100vh;">
+</iframe>
+
+</main>
+
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/navigation.js"></script>
+<script src="js/report.js"></script>
+<script src="js/ui-tools.js"></script>
+
 </body>
 </html>
