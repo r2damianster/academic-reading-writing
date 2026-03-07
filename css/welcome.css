@@ -5,11 +5,11 @@ body {
     color: var(--text); 
     line-height: 1.6; 
     background: #ffffff; 
-    display: flex;
-    flex-direction: column;
+    display: block; /* <--- CAMBIA DE flex A block: ayuda con el scroll natural */
     min-height: 100vh;
     margin: 0;
     box-sizing: border-box;
+    overflow-y: visible; /* <--- ASEGURA que el contenido se pueda ver */
 }
 
 .hero { 
