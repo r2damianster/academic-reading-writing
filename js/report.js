@@ -1,13 +1,62 @@
 /* js/report.js
- * Solo generación de PDF — el tracking está en ui-tools.js
+ * Generación de PDF y envío de datos a Google Sheets
  */
 
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxhY2AScZfSDIgTo7Zi1_FlW7BAVgo8AOqemr0xt6zv5N2V-l_PrLl2XGteDCC28e_m/exec";
+
+// --- ENVÍO A GOOGLE SHEETS ---
+// Se llama automáticamente al generar el reporte
+function sendToSheet(entries) {
+    const name        = localStorage.getItem('studentName')        || "";
+    const email       = localStorage.getItem('studentEmail')       || "";
+    const course      = localStorage.getItem('studentCourse')      || "";
+    const role        = localStorage.getItem('studentMajor')       || "";
+    const institution = localStorage.getItem('studentInstitution') || "";
+
+    entries.forEach(item => {
+        if (!item.result || item.result === "Visited") return;
+
+        const audit = item.audit || {};
+
+        const payload = {
+            timestamp:       item.timestamp        || new Date().toLocaleString(),
+            name:            name,
+            email:           email,
+            course:          course,
+            role:            role,
+            institution:     institution,
+            activity:        item.module            || "",
+            result:          item.result            || "",
+            words:           audit.words            || "",
+            pastes:          audit.pastes           || "",
+            tabSwitches:     audit.tabSwitches      || "",
+            keystrokes:      audit.actualKeystrokes || "",
+            deletions:       audit.deletions        || "",
+            timeToFirstKey:  audit.timeToFirstKeySec  != null ? audit.timeToFirstKeySec  : "",
+            writingDuration: audit.writingDurationSec != null ? audit.writingDurationSec : "",
+            charsTypedRatio: audit.charsTypedRatio  != null ? audit.charsTypedRatio  : "",
+            essay:           item.essay             || ""
+        };
+
+        fetch(SHEET_URL, {
+            method:  "POST",
+            mode:    "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body:    JSON.stringify(payload)
+        }).catch(err => console.warn("Sheet sync failed:", err));
+    });
+}
+
+// --- GENERACIÓN DE PDF ---
 async function generateReport() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    const studentName  = localStorage.getItem('studentName') || "Student";
-    const studentEmail = localStorage.getItem('studentEmail') || "N/A";
+    const studentName  = localStorage.getItem('studentName')        || "Student";
+    const studentEmail = localStorage.getItem('studentEmail')       || "N/A";
+    const course       = localStorage.getItem('studentCourse')      || "N/A";
+    const role         = localStorage.getItem('studentMajor')       || "N/A";
+    const institution  = localStorage.getItem('studentInstitution') || "N/A";
     const progress     = JSON.parse(localStorage.getItem('course_progress')) || [];
 
     if (progress.length === 0) {
@@ -15,22 +64,28 @@ async function generateReport() {
         return;
     }
 
+    // Enviar datos a Google Sheets antes de generar el PDF
+    sendToSheet(progress);
+
     // --- CABECERA ---
     doc.setFillColor(44, 62, 80);
-    doc.rect(0, 0, 210, 40, 'F');
+    doc.rect(0, 0, 210, 50, 'F');
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(16);
-    doc.text("ACADEMIC WRITING COURSE - PROGRESS REPORT", 15, 18);
-    doc.setFontSize(10);
-    doc.text(`Student: ${studentName}   |   Email: ${studentEmail}`, 15, 30);
+    doc.setFontSize(14);
+    doc.text("ACADEMIC WRITING COURSE — PROGRESS REPORT", 15, 16);
+    doc.setFontSize(9);
+    doc.text(`Student: ${studentName}   |   Email: ${studentEmail}`, 15, 26);
+    doc.text(`Course: ${course}   |   Role: ${role}   |   Institution: ${institution}`, 15, 34);
+    doc.setFontSize(8);
+    doc.setTextColor(180, 200, 220);
+    doc.text(`Generated: ${new Date().toLocaleString()}`, 15, 42);
 
-    let y     = 55;
+    let y     = 60;
     let count = 1;
 
     for (const item of progress) {
         if (!item.result) continue;
 
-        // Nueva página preventiva si queda poco espacio
         if (y > 250) { doc.addPage(); y = 20; }
 
         // --- Título de actividad ---
@@ -66,9 +121,7 @@ async function generateReport() {
             const timeFirst = audit.timeToFirstKeySec   != null ? `${audit.timeToFirstKeySec}s`  : "—";
             const timeDur   = audit.writingDurationSec  != null ? `${audit.writingDurationSec}s` : "—";
             const ratio     = audit.charsTypedRatio     != null ? `${audit.charsTypedRatio}%`    : "—";
-            const row2 = `Time to first key: ${timeFirst}  |  Writing duration: ${timeDur}  |  Chars typed ratio: ${ratio}`;
-            doc.text(row2, 23, y + 15);
-
+            doc.text(`Time to first key: ${timeFirst}  |  Writing duration: ${timeDur}  |  Chars typed ratio: ${ratio}`, 23, y + 15);
             y += 26;
         }
 
@@ -83,7 +136,6 @@ async function generateReport() {
 
         if (essayText && essayText.trim().length > 5) {
             if (y > 260) { doc.addPage(); y = 20; }
-
             doc.setTextColor(0);
             doc.setFontSize(10);
             doc.setFont("helvetica", "bold");
@@ -93,8 +145,6 @@ async function generateReport() {
             doc.setFont("helvetica", "italic");
             doc.setTextColor(40);
             const lines = doc.splitTextToSize(essayText.trim(), 165);
-
-            // Imprimir línea a línea con salto de página automático
             for (const line of lines) {
                 if (y > 282) { doc.addPage(); y = 20; }
                 doc.text(line, 20, y);
