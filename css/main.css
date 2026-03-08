@@ -47,7 +47,7 @@ body, html {
     margin-bottom: 20px;
 }
 
-.menu-item { margin-bottom: 10px; } /* Manteniendo tu espacio */
+.menu-item { margin-bottom: 10px; }
 
 .section-header {
     font-size: 0.75rem; 
@@ -95,8 +95,6 @@ body, html {
     transition: 0.2s; 
 }
 
-/* --- LO NUEVO PARA TOOLBOX (Sin romper tus márgenes) --- */
-
 .nested-item { list-style: none; margin: 5px 0; }
 
 .nested-header {
@@ -116,12 +114,9 @@ body, html {
     transition: max-height 0.3s ease;
 }
 
-/* Solo se abre el contenido interno al pasar por Grammar/Connectors */
 .nested-item:hover .nested-menu {
     max-height: 200px;
 }
-
-/* --- FIN DE LO NUEVO --- */
 
 .sidebar-footer {
     padding-top: 15px;
@@ -142,11 +137,133 @@ body, html {
 .content-area { flex-grow: 1; position: relative; overflow-y: auto; }
 #contentFrame { width: 100%; height: 100%; border: none; }
 
-.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 3000; }
-.modal-content { background: white; padding: 40px; border-radius: 10px; text-align: center; max-width: 400px; color: #333; }
-.modal-content input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-.modal-content button { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 5px; width: 100%; cursor: pointer; }
+/* --- MODAL DE REGISTRO --- */
+.modal {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 3000;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
 
+.modal-content {
+    background: white;
+    padding: 36px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 440px;
+    color: #333;
+    box-sizing: border-box;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.modal-content h2 {
+    margin: 0 0 6px 0;
+    color: var(--primary);
+    font-size: 1.4rem;
+    border: none;
+    padding: 0;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="email"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin: 6px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+    font-family: 'Segoe UI', sans-serif;
+    transition: border-color 0.2s;
+}
+
+.modal-content select {
+    width: 100%;
+    padding: 10px 12px;
+    margin: 6px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+    font-family: 'Segoe UI', sans-serif;
+    background: white;
+    color: #333;
+    cursor: pointer;
+    appearance: auto;
+    transition: border-color 0.2s;
+}
+
+.modal-content select:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(52,152,219,0.15);
+}
+
+.modal-content input[type="text"]:focus,
+.modal-content input[type="email"]:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(52,152,219,0.15);
+}
+
+.consent-box {
+    margin-top: 14px;
+    padding: 14px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.consent-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    color: #555;
+    line-height: 1.55;
+}
+
+.consent-label input[type="checkbox"] {
+    margin-top: 3px;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--primary);
+}
+
+.modal-content button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: bold;
+    margin-top: 16px;
+    transition: background 0.2s;
+}
+
+.modal-content button:hover {
+    background: var(--secondary);
+}
+
+#modalError {
+    color: #e74c3c;
+    font-size: 0.82rem;
+    margin-top: 10px;
+    text-align: center;
+    min-height: 18px;
+}
+
+/* MOBILE */
 .mobile-toggle { display: none; position: fixed; top: 10px; left: 10px; z-index: 2000; background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; }
 .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
 
