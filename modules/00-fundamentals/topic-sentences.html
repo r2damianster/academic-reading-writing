@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Power of the Topic Sentence</title>
     <link rel="stylesheet" href="../../css/modules.css">
+    <script src="../../js/activity-tracker.js"></script>
+    <script src="../../js/interactions-handler.js"></script>
+    <script src="../../js/essay-handler.js"></script>
     <script src="../../js/module-logic.js" defer></script>
 </head>
 <body>
@@ -19,14 +22,14 @@
         <h3>What is it?</h3>
         <p>Imagine your paragraph is a TV. The <strong>Topic Sentence</strong> is the remote control. It tells the reader exactly which "channel" (specific idea) they are going to watch.</p>
         <p class="note"><strong>Key Fact:</strong> It is usually the first sentence. It must be clear, specific, and avoid being overly broad.</p>
-        <button class="btn-next" style="display:block" onclick="nextSlide(2)">Let’s see an example →</button>
+        <button class="btn-next" style="display:block" onclick="nextSlide(2)">Let's see an example →</button>
     </div>
 
     <div class="slide" id="slide2">
         <h2>Identifying the Components</h2>
         <h3>Two Essential Components</h3>
         <p>Drag the fragments to their correct box to build a professional Topic Sentence:</p>
-        
+
         <div class="drag-container" id="source-container">
             <div class="draggable" draggable="true" id="frag1" data-type="topic">"Social media"</div>
             <div class="draggable" draggable="true" id="frag2" data-type="control">"has negatively impacted the attention span of teenagers."</div>
@@ -47,7 +50,7 @@
         <p>An academic Topic Sentence must be a statement that requires development and evidence, not just a simple fact.</p>
         <p><strong>Q1: Which of these is a more effective Topic Sentence?</strong></p>
         <button class="quiz-option" onclick="checkAnswer(this, false, 's3f')">A. The university was founded in 1950.</button>
-        <button class="quiz-option" onclick="checkAnswer(this, true, 's3f')">B. The university’s historic architecture creates an inspiring environment for new students.</button>
+        <button class="quiz-option" onclick="checkAnswer(this, true, 's3f')">B. The university's historic architecture creates an inspiring environment for new students.</button>
         <div id="s3f" class="feedback"></div>
         <button class="btn-next" onclick="nextSlide(4)">Learn about "Focus" →</button>
     </div>
@@ -94,9 +97,63 @@
         <button class="quiz-option" onclick="checkAnswer(this, false, 's7f')">A. In this paragraph, I will talk about why video games are good for your brain.</button>
         <button class="quiz-option" onclick="checkAnswer(this, true, 's7f')">B. Playing strategic video games can significantly improve problem-solving skills in young adults.</button>
         <div id="s7f" class="feedback"></div>
-        <button class="btn-next" id="finalBtn" style="display:none;" onclick="finishLesson('Topic Sentences', true)">Finish & Save Progress</button>
+        <button class="btn-next" onclick="finishLesson('topic sentences')">Go to Writing Challenge →</button>
     </div>
+
+    <div class="slide" id="slide8">
+        <h2>Writing Challenge: Topic Sentences</h2>
+        <p><strong>Prompt:</strong> Write a single paragraph (approx. 100-150 words) that begins with a strong academic Topic Sentence about the <strong>impact of technology on education</strong>.</p>
+
+        <textarea id="essayInput"
+            placeholder="Write your paragraph here..."
+            style="width:100%;height:200px;padding:15px;border-radius:8px;border:1px solid #ccc;font-family:'Georgia',serif;line-height:1.6;"></textarea>
+
+        <p style="font-size:0.85rem;color:#666;margin-top:5px;">
+            Word count: <span id="wordCountDisplay">0</span> words
+        </p>
+
+        <button class="btn-next" id="finalBtn" style="display:block;margin-top:20px;"
+            onclick="EssayHandler.submit()">
+            Submit & Save Progress
+        </button>
+        <button onclick="skipEssay()"
+            style="display:block;margin-top:10px;background:none;border:none;color:#999;font-size:0.85rem;cursor:pointer;text-decoration:underline;width:100%;">
+            Skip writing exercise →
+        </button>
+    </div>
+
 </div>
+
+<script>
+    function skipEssay() {
+        if (confirm("Skip the writing exercise? Your quiz score is already saved.")) {
+            window.location.href = 'fundamentals-hub.html';
+        }
+    }
+
+    // Drag & drop handled by drag-drop.js
+
+    // Inicializar ActivityTracker al cargar la página
+    ActivityTracker.init('topic sentences');
+
+    // Observer: inicializar drag & drop en slide 2, EssayHandler en slide 8
+    const _observer = new MutationObserver(() => {
+        const slide2 = document.getElementById('slide2');
+        if (slide2 && slide2.classList.contains('active')) {
+            Interactions.DragDrop.init();
+        }
+        const slide8 = document.getElementById('slide8');
+        if (slide8 && slide8.classList.contains('active')) {
+            EssayHandler.init('topic sentences');
+            _observer.disconnect();
+        }
+    });
+    _observer.observe(document.body, {
+        attributes: true,
+        subtree: true,
+        attributeFilter: ['class']
+    });
+</script>
 
 </body>
 </html>

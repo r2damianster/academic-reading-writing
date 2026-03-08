@@ -26,10 +26,11 @@ function loadPage(url) {
         frame.src = versionedUrl;
 
         // 3. REGISTRO AUTOMÁTICO: Si existe la función en report.js, guarda el progreso
+        // En js/navigation.js
         if (typeof window.logActivity === 'function') {
-            // Limpiamos el nombre de la URL para que el reporte se vea bonito
             const activityName = url.split('/').pop().replace('.html', '').replace(/-/g, ' ');
-            window.logActivity(activityName, "Visited");
+            // Enviamos false en el tercer parámetro para indicar que es solo una visita
+            window.logActivity(activityName, "Visited", false); 
         }
     }
 

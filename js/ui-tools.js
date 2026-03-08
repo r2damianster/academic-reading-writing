@@ -1,72 +1,44 @@
 /**
  * js/ui-tools.js
- * Herramientas de Tracking de actividad y generación de Reportes
+ * Solo tracking de actividad — la generación del reporte está en report.js
  */
 
-// Registra una actividad completada (se llama desde los iframes de las lecciones)
-function logActivity(activityName, result) {
+function logActivity(activityName, result, isQuiz = false, essayContent = "", auditData = null) {
     let progress = JSON.parse(localStorage.getItem('course_progress')) || [];
-    
-    const newEntry = {
-        timestamp: new Date().toLocaleString(),
-        module: activityName,
-        result: result
-    };
-    
-    progress.push(newEntry);
-    localStorage.setItem('course_progress', JSON.stringify(progress));
-    console.log("Activity saved: " + activityName);
-}
 
-// Genera el reporte .txt para descargar
-function generateReport() {
-    const name = localStorage.getItem('studentName') || "N/A";
-    const email = localStorage.getItem('studentEmail') || "N/A";
-    const progress = JSON.parse(localStorage.getItem('course_progress')) || [];
-    
-    // Fecha y hora del momento exacto de la descarga
-    const now = new Date();
-    const dateTime = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+    const existingIndex = progress.findIndex(
+        p => p.module === activityName && p.result && p.result.includes("Score")
+    );
 
-    if (progress.length === 0) {
-        alert("You haven't completed any activities yet. Start learning to generate a report!");
+    // Caso 1: llega un "Visited" pero ya hay Score → ignorar
+    if (result === "Visited" && existingIndex !== -1) return;
+
+    // Caso 2: llega un Score y ya existe una entrada con Score → actualizar en lugar de agregar
+    if (result.includes("Score") && existingIndex !== -1) {
+        const existing = progress[existingIndex];
+        progress[existingIndex] = {
+            ...existing,
+            timestamp: new Date().toLocaleString(),
+            essay: (essayContent && essayContent.trim().length > 5)
+                ? essayContent.trim()
+                : existing.essay || "",
+            audit: auditData || existing.audit || null
+        };
+        localStorage.setItem('course_progress', JSON.stringify(progress));
+        console.log("Activity updated: " + activityName);
         return;
     }
 
-    // Construcción del documento de texto
-    let reportContent = `--------------------------------------------------\n`;
-    reportContent += `   ACADEMIC WRITING COURSE - PROGRESS REPORT\n`;
-    reportContent += `--------------------------------------------------\n\n`;
-    reportContent += `STUDENT: ${name}\n`;
-    reportContent += `EMAIL:   ${email}\n`;
-    reportContent += `REPORT GENERATED: ${dateTime}\n`; 
-    reportContent += `\n==================================================\n`;
-    reportContent += `             COMPLETED ACTIVITIES\n`;
-    reportContent += `==================================================\n\n`;
+    // Caso 3: entrada nueva (primera vez o Visited sin Score previo)
+    const newEntry = {
+        timestamp: new Date().toLocaleString(),
+        module:    activityName,
+        result:    result,
+        essay:     (essayContent && essayContent.trim().length > 5) ? essayContent.trim() : "",
+        audit:     auditData || null
+    };
 
-    progress.forEach((item, index) => {
-        reportContent += `${index + 1}. [${item.timestamp}]\n`;
-        reportContent += `   Activity: ${item.module}\n`;
-        reportContent += `   Result:   ${item.result}\n`;
-        reportContent += `--------------------------------------------------\n`;
-    });
-
-    reportContent += `\nEnd of Report. Please send this file to your instructor.`;
-
-    try {
-        const blob = new Blob([reportContent], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const downloadLink = document.createElement('a');
-        const fileName = `Report_${name.replace(/\s+/g, '_')}.txt`;
-        
-        downloadLink.href = url;
-        downloadLink.download = fileName;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        URL.revokeObjectURL(url);
-    } catch (error) {
-        console.error("Error generating report:", error);
-        alert("Could not generate report.");
-    }
+    progress.push(newEntry);
+    localStorage.setItem('course_progress', JSON.stringify(progress));
+    console.log("Activity saved: " + activityName);
 }
