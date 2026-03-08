@@ -1,19 +1,25 @@
 /* css/welcome.css */
+:root {
+    --primary: #1a2a6c;
+    --secondary: #3498db;
+    --text: #333;
+}
+
 body { 
-    font-family: 'Segoe UI', sans-serif; 
     padding: 30px; 
     color: var(--text); 
     line-height: 1.6; 
     background: #ffffff; 
-    display: block; /* <--- CAMBIA DE flex A block: ayuda con el scroll natural */
+    display: block; 
     min-height: 100vh;
     margin: 0;
     box-sizing: border-box;
-    overflow-y: visible; /* <--- ASEGURA que el contenido se pueda ver */
+    overflow-y: auto; /* Permite scroll si el contenido crece */
 }
 
+/* --- ESTILOS EXCLUSIVOS DE LA BIENVENIDA --- */
 .hero { 
-    background: linear-gradient(135deg, #1a2a6c, #3498db); 
+    background: linear-gradient(135deg, var(--primary), var(--secondary)); 
     color: white; 
     padding: 40px; 
     border-radius: 15px; 
@@ -30,6 +36,13 @@ body {
     margin-top: 20px; 
 }
 
+/* Tarjetas Clickables */
+.step-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
 .step-card { 
     padding: 25px; 
     border: 1px solid #eee; 
@@ -38,36 +51,24 @@ body {
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
 }
 
-.step-card:hover { 
+.step-card-link:hover .step-card { 
     transform: translateY(-5px); 
-    border-color: #3498db; 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    border-color: var(--secondary); 
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    background: #ffffff;
 }
 
 .step-card h3 { 
-    color: #1a2a6c; 
+    color: var(--primary); 
     margin-top: 0; 
     font-size: 1.2rem; 
-    border-bottom: 2px solid #3498db;
+    border-bottom: 2px solid var(--secondary);
     display: inline-block;
-    width: fit-content;
     padding-bottom: 5px;
-}
-
-footer {
-    margin-top: auto;
-    padding: 30px 0;
-    text-align: center;
-    font-size: 0.85rem;
-    color: #7f8c8d;
-    border-top: 1px solid #eee;
-}
-
-.credits-name {
-    font-weight: bold;
-    color: #1a2a6c;
 }
 
 /* Sección del Instructor */
@@ -83,49 +84,35 @@ footer {
 }
 
 .instructor-photo {
-    width: 120px;
-    height: 120px;
+    width: 120px; height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid var(--white);
+    border: 3px solid white;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.instructor-text h2 {
-    margin: 0 0 10px 0;
-    color: var(--primary);
-    font-size: 1.5rem;
-}
-
-.instructor-text p {
-    margin: 0;
-    font-style: italic;
-    color: #555;
-}
+.instructor-text h2 { margin: 0 0 10px 0; color: var(--primary); }
+.instructor-text p { margin: 0; font-style: italic; color: #555; }
 
 .orcid-link {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     margin-top: 10px;
-    color: #A6CE39; /* Color oficial de ORCID */
+    color: #A6CE39; 
     text-decoration: none;
     font-weight: bold;
-    font-size: 0.9rem;
 }
 
-.orcid-link:hover {
-    text-decoration: underline;
+footer {
+    margin-top: 50px;
+    padding: 30px 0;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    border-top: 1px solid #eee;
 }
 
-/* Responsivo para móvil */
 @media (max-width: 600px) {
-    .instructor-profile {
-        flex-direction: column;
-        text-align: center;
-    }
-}
-.orcid-link img {
-    vertical-align: middle;
-    margin-bottom: 2px;
+    .instructor-profile { flex-direction: column; text-align: center; }
 }

@@ -32,7 +32,7 @@ function saveAndStart() {
     const name        = document.getElementById('inputName').value.trim();
     const email       = document.getElementById('inputEmail').value.trim();
     const course      = document.getElementById('inputCourse').value.trim();
-    const major       = document.getElementById('inputMajor').value.trim();
+    const major       = document.getElementById('inputMajor').value.trim(); //Creo que este no se necesita porque no se está registradndo
     const institution = document.getElementById('inputInstitution').value.trim();
     const consent     = document.getElementById('inputConsent').checked;
 
