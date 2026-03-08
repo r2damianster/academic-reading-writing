@@ -2,7 +2,7 @@
  * Generación de PDF y envío de datos a Google Sheets
  */
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbxhY2AScZfSDIgTo7Zi1_FlW7BAVgo8AOqemr0xt6zv5N2V-l_PrLl2XGteDCC28e_m/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbx3J6-BeGC7J83xnIwtedRNRycAsV52NFdlHulCdsV1HxNrzlH-FZq9QjHRuM5PhpJc/exec";
 
 // --- ENVÍO A GOOGLE SHEETS ---
 // Se llama automáticamente al generar el reporte
@@ -38,11 +38,14 @@ function sendToSheet(entries) {
             essay:           item.essay             || ""
         };
 
+        // Usar URLSearchParams para compatibilidad con Apps Script en modo no-cors
+        const params = new URLSearchParams();
+        Object.entries(payload).forEach(([k, v]) => params.append(k, v));
+
         fetch(SHEET_URL, {
-            method:  "POST",
-            mode:    "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body:    JSON.stringify(payload)
+            method: "POST",
+            mode:   "no-cors",
+            body:   params
         }).catch(err => console.warn("Sheet sync failed:", err));
     });
 }
