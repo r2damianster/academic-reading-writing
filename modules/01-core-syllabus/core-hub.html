@@ -3,50 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hub - Under Construction</title>
-    <link rel="stylesheet" href="../../css/modules.css">
+    <title>Core Syllabus - Overview</title>
+    <link rel="stylesheet" href="../css/modules.css">
+    <script src="../js/nav.js"></script>
     <style>
-        .construction-container {
-            text-align: center;
-            padding: 50px 20px;
-            background: #fdfcf0;
-            border: 2px dashed #f1c40f;
-            border-radius: 15px;
-            margin-top: 20px;
+        .unit-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
         }
-        .icon { font-size: 3rem; margin-bottom: 20px; }
-        .hub-nav {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 30px;
-            opacity: 0.6; /* Indica que aún no están listos */
+        .unit-card:hover { transform: translateX(5px); border-color: #3498db; }
+        .unit-info h3 { margin: 0 0 5px 0; color: #1a2a6c; }
+        .unit-info p  { margin: 0; font-size: 0.9rem; color: #666; }
+        .btn-start {
+            background: #3498db; color: white; text-decoration: none;
+            padding: 10px 20px; border-radius: 5px; font-weight: bold;
+            font-size: 0.85rem; white-space: nowrap;
         }
-        .card-locked {
-            background: #eee;
-            padding: 15px;
-            border-radius: 8px;
-            color: #7f8c8d;
-            border: 1px solid #ccc;
+        .intro-box {
+            background: #eef2f7; padding: 20px; border-radius: 10px;
+            margin-bottom: 30px; line-height: 1.6;
         }
     </style>
 </head>
 <body>
-
 <div class="lesson-container">
-    <div class="construction-container">
-        <div class="icon">🚧</div>
-        <h2>Module Under Development</h2>
-        <p>We are currently polishing the advanced lessons for this section. <br> 
-           Please complete the <strong>Fundamentals</strong> module first.</p>
+    <h2>Module 01: Core Syllabus</h2>
+    <div class="intro-box">
+        <p>This module covers the official course syllabus, from essay writing to research papers and academic integrity. Work through each unit in order for the best learning experience.</p>
     </div>
-
-    <div class="hub-nav">
-        <div class="card-locked">🔒 Content Loading...</div>
-        <div class="card-locked">🔒 Exercises Pending</div>
-        <div class="card-locked">🔒 Final Quiz</div>
-    </div>
+    <h3>Units</h3>
+    <div id="cardContainer"></div>
 </div>
-
+<script>
+    const section = MENU.find(item => item.label === '01. Core Syllabus');
+    const container = document.getElementById('cardContainer');
+    section.children.forEach(unit => {
+        const path = unit.path.replace('modules/01-core-syllabus/', '');
+        const card = document.createElement('div');
+        card.className = 'unit-card';
+        card.innerHTML = `
+            <div class="unit-info"><h3>${unit.label}</h3></div>
+            <a href="${path}" class="btn-start">Enter →</a>
+        `;
+        container.appendChild(card);
+    });
+</script>
 </body>
 </html>

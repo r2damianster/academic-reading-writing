@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fundamentals - Overview</title>
-    <link rel="stylesheet" href="../../css/modules.css">
+    <link rel="stylesheet" href="/css/modules.css">
+    <script src="/js/nav.js"></script>
     <style>
         .module-card {
             background: #fff;
@@ -17,12 +18,9 @@
             align-items: center;
             transition: transform 0.2s;
         }
-        .module-card:hover {
-            transform: translateX(5px);
-            border-color: #3498db;
-        }
+        .module-card:hover { transform: translateX(5px); border-color: #3498db; }
         .module-info h3 { margin: 0 0 5px 0; color: #1a2a6c; }
-        .module-info p { margin: 0; font-size: 0.9rem; color: #666; }
+        .module-info p  { margin: 0; font-size: 0.9rem; color: #666; }
         .btn-start {
             background: #3498db;
             color: white;
@@ -31,6 +29,7 @@
             border-radius: 5px;
             font-weight: bold;
             font-size: 0.85rem;
+            white-space: nowrap;
         }
         .intro-box {
             background: #eef2f7;
@@ -42,41 +41,37 @@
     </style>
 </head>
 <body>
-
 <div class="lesson-container">
+
     <h2>Module 00: Writing Fundamentals</h2>
-    
+
     <div class="intro-box">
         <p>Welcome to the core of academic writing. Before diving into complex essays, you must master the building blocks of a perfect paragraph. This module will teach you how to maintain focus, structure your claims, and refine your work through the eyes of others.</p>
     </div>
 
     <h3>Learning Path</h3>
-
-    <div class="module-card">
-        <div class="module-info">
-            <h3>1. The One-Point Rule</h3>
-            <p>Practice focused on paragraph's rules and structures".</p>
-        </div>
-        <a href="one-idea.html" class="btn-start">Start →</a>
-    </div>
-
-    <div class="module-card">
-        <div class="module-info">
-            <h3>2. Topic Sentences</h3>
-            <p>Learn to structure paragraphs using Point, Evidence, and Explanation.</p>
-        </div>
-        <a href="topic-sentences.html" class="btn-start">Start →</a>
-    </div>
-
-    <div class="module-card">
-        <div class="module-info">
-            <h3>3. Peer Structure</h3>
-            <p>The art of giving and receiving constructive academic feedback.</p>
-        </div>
-        <a href="peer.html" class="btn-start">Start →</a>
-    </div>
+    <div id="cardContainer"></div>
 
 </div>
+
+<script>
+    // Busca la sección correcta en MENU y renderiza una tarjeta por cada lección
+    const section = MENU.find(item => item.label === '00. Fundamentals');
+
+    const container = document.getElementById('cardContainer');
+
+    section.children.forEach(lesson => {
+        const card = document.createElement('div');
+        card.className = 'module-card';
+        card.innerHTML = `
+            <div class="module-info">
+                <h3>${lesson.label}</h3>
+            </div>
+            <a href="${lesson.path.replace('modules/00-fundamentals/', '')}" class="btn-start">Start →</a>
+        `;
+        container.appendChild(card);
+    });
+</script>
 
 </body>
 </html>

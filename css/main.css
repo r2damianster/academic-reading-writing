@@ -73,7 +73,7 @@ body, html {
     padding-left: 15px;
     max-height: 0; 
     overflow: hidden;
-    transition: max-height 0.4s ease-out 0s;
+    transition: max-height 0.4s ease-out 250ms;
 }
 
 .menu-item:hover .sub-menu {

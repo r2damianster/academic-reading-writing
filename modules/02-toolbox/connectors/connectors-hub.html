@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toolbox</title>
+    <title>Connectors</title>
     <link rel="stylesheet" href="/css/modules.css">
     <script src="/js/nav.js"></script>
     <style>
@@ -14,7 +14,6 @@
         }
         .module-card:hover { transform: translateX(5px); border-color: #3498db; }
         .module-info h3 { margin: 0 0 5px 0; color: #1a2a6c; }
-        .module-info p  { margin: 0; font-size: 0.9rem; color: #666; }
         .btn-start {
             background: #3498db; color: white; text-decoration: none;
             padding: 10px 20px; border-radius: 5px; font-weight: bold;
@@ -28,32 +27,24 @@
 </head>
 <body>
 <div class="lesson-container">
-    <h2>Module 02: Toolbox</h2>
+    <h2>Toolbox: Connectors</h2>
     <div class="intro-box">
-        <p>The Toolbox contains targeted practice on grammar, connectors, and vocabulary. Use these lessons to strengthen specific language skills that support your academic writing.</p>
+        <p>Connectors and transition signals are essential for coherent academic writing. These lessons cover the main categories of linking words and how to use them effectively.</p>
     </div>
-    <h3>Categories</h3>
+    <h3>Lessons</h3>
     <div id="cardContainer"></div>
 </div>
 <script>
-    const section = MENU.find(i => i.label === '02. Toolbox');
+    const section  = MENU.find(i => i.label === '02. Toolbox');
+    const category = section.children.find(i => i.label === 'Connectors');
     const container = document.getElementById('cardContainer');
-
-    const hubPaths = {
-        'Grammar':    'grammar/grammar-hub.html',
-        'Connectors': 'connectors/connectors-hub.html',
-        'Vocabulary': 'vocabulary/vocabulary-hub.html'
-    };
-
-    section.children.forEach(category => {
+    category.children.forEach(lesson => {
+        const path = lesson.path.replace('modules/02-toolbox/connectors/', '');
         const card = document.createElement('div');
         card.className = 'module-card';
         card.innerHTML = `
-            <div class="module-info">
-                <h3>${category.label}</h3>
-                <p>${category.children.length} lesson${category.children.length > 1 ? 's' : ''}</p>
-            </div>
-            <a href="${hubPaths[category.label]}" class="btn-start">Enter →</a>
+            <div class="module-info"><h3>${lesson.label}</h3></div>
+            <a href="${path}" class="btn-start">Start →</a>
         `;
         container.appendChild(card);
     });

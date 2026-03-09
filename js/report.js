@@ -2,7 +2,7 @@
  * Generación de PDF y envío de datos a Google Sheets
  */
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbwIDntpzM5m4pASrMKGYH6XtDkMej1A6S6dx6nqEUA4UyCoSgqXMDpeJU3THVmLVAgN/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxyTGsa79RwK7F09CSIfOnUDhur5e8391gDo8aguA_pxvhY_GyCv-8Gh0Hsb45XPzwC/exec";
 
 // --- ENVÍO A GOOGLE SHEETS ---
 // Se llama automáticamente al generar el reporte
@@ -13,7 +13,7 @@ function sendToSheet(entries) {
     const role            = localStorage.getItem('studentMajor')           || "";
     const institution     = localStorage.getItem('studentInstitution')     || "";
     const practiceType    = localStorage.getItem('studentPracticeType')    || "";
-    const dataConsent     = localStorage.getItem('studentDataConsent')     || "Yes";
+    const dataConsent     = localStorage.getItem('studentAcademicConsent') || "Yes";
     const researchConsent = localStorage.getItem('studentResearchConsent') || "Yes";
 
     entries.forEach(item => {
@@ -41,7 +41,8 @@ function sendToSheet(entries) {
             timeToFirstKey:  audit.timeToFirstKeySec  != null ? audit.timeToFirstKeySec  : "",
             writingDuration: audit.writingDurationSec != null ? audit.writingDurationSec : "",
             charsTypedRatio: audit.charsTypedRatio  != null ? audit.charsTypedRatio  : "",
-            essay:           item.essay             || ""
+            essay:              item.essay             || "",
+            reportGeneratedAt:  new Date().toLocaleString()
         };
 
         const params = new URLSearchParams();
@@ -72,7 +73,6 @@ async function generateReport() {
         return;
     }
 
-    sendToSheet(progress);
 
     // --- CABECERA ---
     doc.setFillColor(44, 62, 80);
