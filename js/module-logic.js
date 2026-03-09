@@ -3,6 +3,16 @@
 let currentSlide = 1;
 let mistakes     = 0;
 
+// Proxy global: permite que lecciones custom hagan window.mistakes++
+Object.defineProperty(window, 'mistakes', {
+    get: ()    => mistakes,
+    set: (val) => { mistakes = val; },
+    configurable: true
+});
+
+// Resetear errores al cargar — por si ActivityTracker.init() ya corrió antes
+mistakes = 0;
+
 // --- Navegación entre Slides ---
 window.nextSlide = function(n) {
     const totalSlides = document.querySelectorAll('.slide').length;
@@ -22,9 +32,9 @@ window.nextSlide = function(n) {
 
 // --- Validación de Quizzes ---
 window.checkAnswer = function(btn, isCorrect, feedbackId) {
-    const feedback   = document.getElementById(feedbackId);
+    const feedback    = document.getElementById(feedbackId);
     const parentSlide = btn.closest('.slide');
-    const nextBtn    = parentSlide.querySelector('.btn-next');
+    const nextBtn     = parentSlide.querySelector('.btn-next');
 
     if (feedback) feedback.style.display = "block";
 
@@ -48,39 +58,41 @@ window.checkAnswer = function(btn, isCorrect, feedbackId) {
 };
 
 // --- GUARDAR SCORE (sin essay, sin redirect) ---
-// Llamar desde el último quiz. Guarda el Score inmediatamente.
-window.finishLesson = function(lessonName, isQuiz = true, essay = "", audit = null) {
+window.finishLesson = function(lessonName) {
     let score = 100 - (mistakes * 5);
     if (score < 0) score = 0;
     const finalStatus = `Score: ${score}% (Errors: ${mistakes})`;
+    console.log("finishLesson →", finalStatus);
 
     const logger = window.parent.logActivity || window.logActivity;
-    if (logger) {
-        logger(lessonName, finalStatus, isQuiz, essay, audit);
-    }
+    if (logger) logger(lessonName, finalStatus, true, "", null);
 
-    // Score guardado — ahora avanzar al slide del essay
     const totalSlides = document.querySelectorAll('.slide').length;
-    nextSlide(totalSlides); // El essay siempre es el último slide
+    nextSlide(totalSlides);
 };
 
 // --- GUARDAR ESSAY Y CERRAR ---
-// Llamado por EssayTracker.submit() después de que el estudiante escribe.
-// Actualiza la entrada existente agregando el essay al Score ya guardado.
-window.finishLessonWithEssay = function(lessonName, essay, audit) {
+window.finishLessonWithEssay = function(lessonName, essay, audit, redirectUrl) {
     const logger = window.parent.logActivity || window.logActivity;
 
-    // Recuperar el Score ya guardado para no sobreescribirlo
     const progress = JSON.parse(localStorage.getItem('course_progress')) || [];
     const existing = [...progress].reverse().find(
         p => p.module === lessonName && p.result && p.result.includes("Score")
     );
-    const status = existing ? existing.result : `Score: ${100 - (mistakes * 5)}%`;
+    const status = existing ? existing.result : `Score: ${100 - (mistakes * 5)}% (Errors: ${mistakes})`;
 
-    if (logger) {
-        logger(lessonName, status, true, essay, audit);
-    }
+    if (logger) logger(lessonName, status, true, essay, audit);
 
     alert("Progress saved!");
-    window.location.href = 'fundamentals-hub.html';
+    // Detectar automáticamente el hub más cercano según la ruta actual
+    const path = window.location.pathname;
+    let dest = 'index.html';
+    if (path.includes('/00-fundamentals/'))  dest = 'fundamentals-hub.html';
+    if (path.includes('/unit1-essays/'))     dest = 'unit1-essays.html';
+    if (path.includes('/unit2-papers/'))     dest = 'unit2-papers.html';
+    if (path.includes('/apa-integrity/'))    dest = 'apa-integrity.html';
+    if (path.includes('/toolbox/'))          dest = '../toolbox-hub.html';
+    if (path.includes('/03-peer-review/'))   dest = 'peer-review-hub.html';
+    if (redirectUrl) dest = redirectUrl;
+    window.location.href = dest;
 };

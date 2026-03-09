@@ -88,6 +88,7 @@ async function generateReport() {
 
     for (const item of progress) {
         if (!item.result) continue;
+        if (item.result === "Visited") continue; // omitir en PDF, no aportan valor
 
         if (y > 250) { doc.addPage(); y = 20; }
 

@@ -62,81 +62,29 @@
                 <p id="studentDisplay">Student: ...</p>
             </div>
 
-            <ul class="nav-menu">
-                <li class="menu-item">
-                    <div class="section-header" onclick="loadPage('welcome-content.html')">Main</div>
-                </li>
-
-                <li class="menu-item">
-                    <div class="section-header" onclick="loadPage('modules/00-fundamentals/fundamentals-hub.html')">00. Fundamentals ▾</div>
-                    <ul class="sub-menu">
-                        <li><a href="#" onclick="loadPage('modules/00-fundamentals/one-idea.html')">1. The One-Point Rule</a></li>
-                        <li><a href="#" onclick="loadPage('modules/00-fundamentals/topic-sentences.html')">2. Topic Sentences</a></li>
-                        <li><a href="#" onclick="loadPage('modules/00-fundamentals/peer.html')">3. PEER</a></li>
-                    </ul>
-                </li>
-
-                <li class="menu-item">
-                    <div class="section-header" onclick="loadPage('modules/01-core-syllabus/core-hub.html')">01. Core Syllabus ▾</div>
-                    <ul class="sub-menu">
-                        <li><a href="#" onclick="loadPage('modules/01-core-syllabus/unit1-essays.html')">Unit 1: Essays</a></li>
-                        <li><a href="#" onclick="loadPage('modules/01-core-syllabus/unit2-papers.html')">Unit 2: Research Papers</a></li>
-                        <li><a href="#" onclick="loadPage('modules/01-core-syllabus/apa-integrity.html')">APA & Integrity</a></li>
-                    </ul>
-                </li>
-
-                <li class="menu-item">
-                    <div class="section-header" onclick="loadPage('modules/02-toolbox/toolbox-hub.html')">02. Toolbox ▾</div>
-                    <ul class="sub-menu">
-                        <li class="nested-item">
-                            <span class="nested-header">Grammar</span>
-                            <ul class="nested-menu">
-                                <li><a href="#" onclick="loadPage('modules/02-toolbox/grammar/passive-voice.html')">Passive Voice</a></li>
-                                <li><a href="#" onclick="loadPage('modules/02-toolbox/grammar/although-despite.html')">Although / Despite</a></li>
-                            </ul>
-                        </li>
-                        <li class="nested-item">
-                            <span class="nested-header">Connectors</span>
-                            <ul class="nested-menu">
-                                <li><a href="#" onclick="loadPage('modules/02-toolbox/connectors/transitions.html')">Transitions</a></li>
-                            </ul>
-                        </li>
-                        <li class="nested-item">
-                            <span class="nested-header">Vocabulary</span>
-                            <ul class="nested-menu">
-                                <li><a href="#" onclick="loadPage('modules/02-toolbox/vocabulary/vocabulary1.html')">Academic Vocab 1</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="menu-item">
-                    <div class="section-header" onclick="loadPage('modules/03-peer-review/peer-review-hub.html')">03. Peer System ▾</div>
-                    <ul class="sub-menu">
-                        <li><a href="#" onclick="loadPage('modules/03-peer-review/checklist.html')">Review Checklist</a></li>
-                    </ul>
-                </li>
-            </ul>
+            <!-- nav.js construye este menú automáticamente -->
+            <ul class="nav-menu" id="navMenu"></ul>
 
             <div class="sidebar-footer">
-                <a href="#" onclick="loadPage('modules/ethics-and-data.html')" 
-                style="color: #bdc3c7; font-size: 0.8rem; display: block; margin-bottom: 10px; text-align: center; text-decoration: none;">
-                🔒 Ethics & Privacy Policy
+                <a href="#" onclick="loadPage('modules/ethics-and-data.html')"
+                    style="color:#bdc3c7;font-size:0.8rem;display:block;margin-bottom:10px;text-align:center;text-decoration:none;">
+                    🔒 Ethics & Privacy Policy
                 </a>
-
                 <button class="btn-report" onclick="generateReport()">Download & Send Progress</button>
-                
-                <button onclick="resetApp()" style="background:none;border:none;color:#95a5a6;font-size:0.75rem;margin-top:15px;cursor:pointer;width:100%;text-decoration:underline;">
+                <button onclick="resetApp()"
+                    style="background:none;border:none;color:#95a5a6;font-size:0.75rem;margin-top:15px;cursor:pointer;width:100%;text-decoration:underline;">
                     Not you? Change Student
                 </button>
             </div>
         </nav>
 
         <main class="content-area">
-            <iframe name="contentFrame" id="contentFrame" src="welcome-content.html" frameborder="0" style="width:100%;height:100%;min-height:100vh;"></iframe>
+            <iframe name="contentFrame" id="contentFrame" src="welcome-content.html" frameborder="0"
+                style="width:100%;height:100%;min-height:100vh;"></iframe>
         </main>
     </div>
 
+    <script src="js/nav.js?v=1.0"></script>
     <script src="js/auth.js?v=1.3"></script>
     <script src="js/essay-handler.js?v=1.2"></script>
     <script src="js/activity-tracker.js?v=1.0"></script>

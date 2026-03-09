@@ -18,7 +18,7 @@ window.ActivityTracker = (function () {
         _lessonName    = lessonName;
         _pageStart     = Date.now();
         _tabSwitches   = 0;
-        _slidesVisited = 1; // empieza en slide 1
+        _slidesVisited = 1;
 
         if (_boundBlur) window.removeEventListener('blur', _boundBlur);
         _boundBlur = _onBlur;
@@ -27,7 +27,6 @@ window.ActivityTracker = (function () {
         console.log("📊 ActivityTracker initialized for:", _lessonName);
     }
 
-    // Llamar desde nextSlide() si se quiere contar slides visitados
     function trackSlide() {
         _slidesVisited++;
     }
@@ -38,10 +37,10 @@ window.ActivityTracker = (function () {
             : null;
 
         return {
-            lessonName:      _lessonName,
-            tabSwitches:     _tabSwitches,
-            slidesVisited:   _slidesVisited,
-            durationSec:     durationSec
+            lessonName:    _lessonName,
+            tabSwitches:   _tabSwitches,
+            slidesVisited: _slidesVisited,
+            durationSec:   durationSec
         };
     }
 

@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Types of Academic Essays</title>
+    <link rel="stylesheet" href="../../../css/modules.css">
+    <script src="../../../js/activity-tracker.js"></script>
+    <script src="../../../js/essay-handler.js"></script>
+    <script src="../../../js/module-logic.js"></script>
+    <style>
+        /* --- TRUE/FALSE/NOT GIVEN --- */
+        .tfng-item {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+        }
+        .tfng-item p {
+            margin: 0 0 10px 0;
+            font-size: 0.95rem;
+            color: #333;
+        }
+        .tfng-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .tfng-btn {
+            padding: 7px 16px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .tfng-btn:hover { border-color: #3498db; background: #f0f7ff; }
+        .tfng-btn.correct { border-color: #27ae60; background: #eafaf1; color: #27ae60; }
+        .tfng-btn.incorrect { border-color: #e74c3c; background: #fdf2f2; color: #e74c3c; }
+        .tfng-btn.disabled { pointer-events: none; opacity: 0.5; }
+        .tfng-feedback {
+            font-size: 0.82rem;
+            margin-top: 6px;
+            min-height: 16px;
+            font-style: italic;
+        }
+
+        /* --- MATCHING --- */
+        .matching-container {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .matching-col {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .match-item {
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .match-term {
+            background: #1a2a6c;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        .match-term.selected { border-color: #f39c12; background: #2c3e7a; }
+        .match-term.matched  { border-color: #27ae60; background: #1e8449; cursor: default; }
+        .match-term.wrong    { border-color: #e74c3c; animation: shake 0.3s; }
+        .match-def {
+            background: #f0f7ff;
+            border: 2px solid #d0e8ff;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .match-def:hover  { border-color: #3498db; }
+        .match-def.matched { border-color: #27ae60; background: #eafaf1; cursor: default; }
+        .match-def.wrong   { border-color: #e74c3c; animation: shake 0.3s; }
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            25%      { transform: translateX(-6px); }
+            75%      { transform: translateX(6px); }
+        }
+        #matchFeedback {
+            font-size: 0.9rem;
+            margin-top: 10px;
+            min-height: 20px;
+            font-weight: bold;
+        }
+
+        /* --- DRAG & DROP (slide 4) --- */
+        .excerpts-source {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .excerpt-card {
+            padding: 12px 16px;
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            cursor: grab;
+            font-size: 0.88rem;
+            font-style: italic;
+            line-height: 1.5;
+            transition: transform 0.2s, box-shadow 0.2s;
+            user-select: none;
+        }
+        .excerpt-card:active { cursor: grabbing; transform: scale(0.98); }
+        .excerpt-card.dragging { opacity: 0.4; }
+        .excerpt-card.placed { border-color: #27ae60; background: #eafaf1; cursor: default; color: #1e8449; }
+
+        .purpose-zones {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .purpose-zone {
+            flex: 1;
+            min-width: 150px;
+            min-height: 90px;
+            border: 2px dashed #bdc3c7;
+            border-radius: 10px;
+            padding: 10px;
+            background: #fdfdfd;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .purpose-zone .zone-label {
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #7f8c8d;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        .purpose-zone.over { border-color: #3498db; background: #ebf5fb; }
+        .purpose-zone.correct-zone { border-color: #27ae60; background: #eafaf1; }
+        #s4Feedback { margin-top: 12px; font-weight: bold; font-size: 0.9rem; min-height: 20px; }
+
+        /* --- FILL IN THE BLANKS --- */
+        .fitb-text {
+            font-size: 0.95rem;
+            line-height: 2;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #1a2a6c;
+            margin: 16px 0;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #3498db;
+            background: transparent;
+            font-size: 0.95rem;
+            font-family: 'Georgia', serif;
+            width: 110px;
+            text-align: center;
+            padding: 2px 4px;
+            outline: none;
+            color: #1a2a6c;
+            font-weight: bold;
+            transition: border-color 0.2s;
+        }
+        .blank-input:focus { border-color: #1a2a6c; }
+        .blank-input.correct { border-color: #27ae60; color: #27ae60; background: #eafaf1; border-bottom-width: 2px; }
+        .blank-input.incorrect { border-color: #e74c3c; color: #e74c3c; }
+        #fitbCheckBtn {
+            background: #1a2a6c; color: white; border: none;
+            padding: 10px 24px; border-radius: 6px; cursor: pointer;
+            font-size: 0.9rem; margin-top: 12px;
+        }
+        #fitbCheckBtn:hover { background: #3498db; }
+        #fitbFeedback { margin-top: 10px; font-size: 0.9rem; font-weight: bold; min-height: 20px; }
+
+        /* --- PURPOSE SELECTOR (slide final) --- */
+        .purpose-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 16px 0;
+        }
+        .purpose-pick {
+            flex: 1;
+            min-width: 130px;
+            padding: 14px 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.88rem;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.2s;
+        }
+        .purpose-pick:hover { border-color: #3498db; color: #1a2a6c; }
+        .purpose-pick.active-argue  { border-color: #2980b9; background: #ebf5fb; color: #2980b9; }
+        .purpose-pick.active-compare{ border-color: #27ae60; background: #eafaf1; color: #27ae60; }
+        .purpose-pick.active-analyze{ border-color: #e67e22; background: #fef9e7; color: #e67e22; }
+
+        .source-ref {
+            font-size: 0.78rem;
+            color: #95a5a6;
+            font-style: italic;
+            margin-top: 14px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ SLIDE 1 ══ -->
+    <div class="slide active" id="slide1">
+        <h2>Beyond the Template</h2>
+        <p>In academic writing, most students learn a simple formula:</p>
+        <div class="example-box">
+            <strong>1. Introduction</strong> — Present the topic and thesis.<br>
+            <strong>2. Development</strong> — Body arguments and evidence.<br>
+            <strong>3. Conclusion</strong> — Synthesis and closing.
+        </div>
+        <p>While this framework is a useful starting point, university-level writing demands something more sophisticated. Researchers have found that academic essays are not rigid templates — they are <strong>flexible tools shaped by communicative purpose</strong>: the specific goal a writer wants to achieve in a given text.</p>
+        <p class="source-ref">Based on: Goulart, L., Biber, D., &amp; Reppen, R. (2022). <em>In this essay, I will…: Examining variation of communicative purpose in student written genres.</em> Journal of English for Academic Purposes, 59.</p>
+
+        <p><strong>Quick check:</strong> According to this introduction, what does university-level writing require beyond the basic three-part structure?</p>
+        <button class="quiz-option" onclick="checkAnswer(this, false, 's1f')">A. Longer paragraphs and more references.</button>
+        <button class="quiz-option" onclick="checkAnswer(this, true,  's1f')">B. An understanding of the writer's communicative purpose.</button>
+        <button class="quiz-option" onclick="checkAnswer(this, false, 's1f')">C. Avoiding personal opinions at all times.</button>
+        <div id="s1f" class="feedback"></div>
+        <button class="btn-next" onclick="nextSlide(2)">Continue Reading →</button>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ SLIDE 2 ══ -->
+    <div class="slide" id="slide2">
+        <h2>The Logic of Communicative Purpose</h2>
+        <p><em>Read the following excerpt carefully before answering the questions below.</em></p>
+        <div class="example-box" style="font-size:0.92rem;line-height:1.7;">
+            Writing scholars and instructors all generally agree that students are required to write many different types of texts, or different <strong>genres</strong>, as part of a normal university education. These texts must accomplish a range of different <strong>communicative purposes</strong> — defined as "the primary goal and intention of anyone involved in an act of communication on a given occasion."
+            <br><br>
+            Over the last decade, two in-depth studies exploring the communicative purposes of university written genres have been carried out: the <strong>Michigan Corpus of Upper-Level Student Papers (MICUSP)</strong> and the <strong>British Academic Written English (BAWE) Corpus</strong>. However, a comparison of these studies shows that there is virtually <em>no consensus</em> on the inventory of particular genres or even on the number of different student writing genres. For example, 'case study' is a genre identified by many researchers, but its defining characteristics range widely.
+        </div>
+        <p class="source-ref">Goulart, Biber &amp; Reppen (2022), p. 1–2.</p>
+
+        <p><strong>True / False / Not Given</strong> — Select the correct answer for each statement:</p>
+
+        <div class="tfng-item" id="tfng1">
+            <p>1. Researchers universally agree on the number of student writing genres that exist in university education.</p>
+            <div class="tfng-options">
+                <button class="tfng-btn" onclick="checkTFNG(this, 'tfng1', false, 'False — the text states there is virtually <em>no consensus</em> on the number of genres.')">True</button>
+                <button class="tfng-btn" onclick="checkTFNG(this, 'tfng1', true,  'Correct. The text explicitly states there is no consensus among researchers.')">False</button>
+                <button class="tfng-btn" onclick="checkTFNG(this, 'tfng1', false, 'Not Given is used when the text neither confirms nor denies — here it clearly denies.')">Not Given</button>
+            </div>
+            <div class="tfng-feedback" id="tfng1-fb"></div>
+        </div>
+
+        <div class="tfng-item" id="tfng2">
+            <p>2. The MICUSP and BAWE corpora were created to support large-scale studies of student writing.</p>
+            <div class="tfng-options">
+                <button class="tfng-btn" onclick="checkTFNG(this, 'tfng2', true,  'Correct. Both corpora were built to provide a foundation for large-scale studies.')">True</button>
+                <button class="tfng-btn" onclick="checkTFNG(this, 'tfng2', false, 'False — the text confirms they were created for this purpose.')">False</button>
+                <button class="tfng-btn" onclick="checkTFNG(this, 'tfng2', false, 'Not Given is incorrect — the text directly confirms this.')">Not Given</button>
+            </div>
+            <div class="tfng-feedback" id="tfng2-fb"></div>
+        </div>
+
+        <div class="tfng-item" id="tfng3">
+            <p>3. The genre of 'case study' has a single, universally accepted definition across all institutions.</p>
+            <div class="tfng-options">
+                <button class="tfng-btn" onclick="checkTFNG(this, 'tfng3', false, 'False — the text says its defining characteristics <em>range widely</em>.')">True</button>
+                <button class="tfng-btn" onclick="checkTFNG(this, 'tfng3', true,  'Correct. The text states that the defining characteristics of case study range widely.')">False</button>
+                <button class="tfng-btn" onclick="checkTFNG(this, 'tfng3', false, 'Not Given is incorrect — the text directly addresses this.')">Not Given</button>
+            </div>
+            <div class="tfng-feedback" id="tfng3-fb"></div>
+        </div>
+
+        <button class="btn-next" id="next2" style="display:none;" onclick="nextSlide(3)">Next →</button>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ SLIDE 3 ══ -->
+    <div class="slide" id="slide3">
+        <h2>Fluidity and Hybridity in Structure</h2>
+        <div class="example-box" style="font-size:0.92rem;line-height:1.7;">
+            Rather than forcing texts into rigid categories, researchers now embrace the fact that <strong>register distinctions are fluid</strong>, with fuzzy boundaries and extensive internal variation. This means that texts within the same genre do not necessarily share exactly the same communicative characteristics.
+            <br><br>
+            More importantly, research has shown that <strong>a single text might be characterized by multiple communicative purposes</strong>. Individual essays can combine purposes like persuading, comparing, or analyzing — often within the same paper. The clearest example of this is the diversity among student essays: some papers argue for a point of view, others compare different areas, and others analyze an object of study.
+        </div>
+        <p class="source-ref">Goulart, Biber &amp; Reppen (2022), p. 3–4.</p>
+
+        <p><strong>Matching</strong> — Click a purpose on the left, then click its correct description on the right:</p>
+
+        <div class="matching-container">
+            <div class="matching-col" id="terms-col">
+                <div class="match-item match-term" id="term-argue"   onclick="selectTerm(this)" data-id="argue">ARGUE</div>
+                <div class="match-item match-term" id="term-compare" onclick="selectTerm(this)" data-id="compare">COMPARE</div>
+                <div class="match-item match-term" id="term-analyze" onclick="selectTerm(this)" data-id="analyze">ANALYZE</div>
+            </div>
+            <div class="matching-col" id="defs-col">
+                <div class="match-item match-def" onclick="selectDef(this)" data-match="analyze">Breaks down a topic to examine its components and what they mean critically.</div>
+                <div class="match-item match-def" onclick="selectDef(this)" data-match="argue">Defends a specific point of view using evidence and structured reasoning.</div>
+                <div class="match-item match-def" onclick="selectDef(this)" data-match="compare">Examines similarities and differences between two or more subjects or ideas.</div>
+            </div>
+        </div>
+        <div id="matchFeedback"></div>
+        <button class="btn-next" id="next3" style="display:none;" onclick="nextSlide(4)">Next →</button>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ SLIDE 4 ══ -->
+    <div class="slide" id="slide4">
+        <h2>Evidence in Student Introductions</h2>
+        <p>The following three excerpts are taken from real university essays in the BAWE corpus. Each one signals a different communicative purpose in its opening sentence.</p>
+        <p><strong>Drag each excerpt to its correct communicative purpose:</strong></p>
+
+        <div class="excerpts-source" id="excerptSource">
+            <div class="excerpt-card" id="exc-argue" draggable="true" data-purpose="argue">
+                <strong>Excerpt A:</strong> "Therefore, in this essay I will focus on three debates around delinquency among girls and investigate the considerations framing these. <em>I will argue</em> for the recognition of 'genuine' female behaviour."
+            </div>
+            <div class="excerpt-card" id="exc-compare" draggable="true" data-purpose="compare">
+                <strong>Excerpt B:</strong> "This essay <em>compares</em> the social policies of Hitler's Nazi government with the New Deal policies of Roosevelt's Democratic government from 1932 to 1937."
+            </div>
+            <div class="excerpt-card" id="exc-analyze" draggable="true" data-purpose="analyze">
+                <strong>Excerpt C:</strong> "In this essay I shall attempt to give a brief outline of the SGP and its problems before <em>analysing</em> how serious these problems are in today's context."
+            </div>
+        </div>
+
+        <div class="purpose-zones">
+            <div class="purpose-zone" id="zone-argue"   data-accept="argue">
+                <span class="zone-label">🔵 Argue</span>
+            </div>
+            <div class="purpose-zone" id="zone-compare" data-accept="compare">
+                <span class="zone-label">🟢 Compare</span>
+            </div>
+            <div class="purpose-zone" id="zone-analyze" data-accept="analyze">
+                <span class="zone-label">🟠 Analyze</span>
+            </div>
+        </div>
+
+        <div id="s4Feedback"></div>
+        <button class="btn-next" id="next4" style="display:none;" onclick="nextSlide(5)">Next →</button>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ SLIDE 5 ══ -->
+    <div class="slide" id="slide5">
+        <h2>Conclusions on Essay Architecture</h2>
+        <div class="example-box" style="font-size:0.92rem;line-height:1.7;">
+            The analysis has clearly shown that essays, critiques, and case studies show <strong>extensive variation</strong> in the major purpose of texts, to the extent that any generalization about the typical communicative purposes of those genres would be suspect. In addition, those three genres show considerable overlap in major purpose.
+            <br><br>
+            The results reveal that most texts contain <strong>more than one communicative purpose</strong>. For example, 55.7% of essays combine two communicative purposes, while 56.1% of critiques combine three communicative purposes. This study highlights that academic writing is not just about following a template, but about the <strong>strategic combination of rhetorical goals</strong>. Understanding this complexity is essential for students to move beyond the 'In this essay, I will...' cliché and develop a sophisticated awareness of how their writing choices shape their academic work.
+        </div>
+        <p class="source-ref">Goulart, Biber &amp; Reppen (2022), p. 8–9.</p>
+
+        <p><strong>Fill in the blanks</strong> — Complete the summary using the words from the text:</p>
+        <div class="fitb-text">
+            According to Goulart et al. (2022), academic writing is not simply about following a
+            <input class="blank-input" id="blank1" data-answer="template" placeholder="________"> of Introduction, Development, and Conclusion.
+            The study found that <input class="blank-input" id="blank2" data-answer="55.7" placeholder="____">% of essays combine
+            two communicative purposes within a single text. Furthermore, genres such as essays and critiques show considerable
+            <input class="blank-input" id="blank3" data-answer="overlap" placeholder="________"> in their major purpose,
+            meaning that no single generalization can describe them accurately. This complexity challenges students to move
+            beyond the 'In this essay, I will...' <input class="blank-input" id="blank4" data-answer="cliché" placeholder="________"> and develop a
+            more strategic awareness of their writing goals.
+        </div>
+
+        <button id="fitbCheckBtn" onclick="checkFITB()">Check Answers</button>
+        <div id="fitbFeedback"></div>
+        <button class="btn-next" id="next5" style="display:none;" onclick="finishLesson('types of essays')">Go to Writing Challenge →</button>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ SLIDE 6 ══ -->
+    <div class="slide" id="slide6">
+        <h2>Writing Challenge: Your Essay Opening</h2>
+        <p>You have just analyzed how expert writers signal their communicative purpose in the very first lines of an essay.</p>
+        <p><strong>Step 1 — Choose your communicative purpose:</strong></p>
+
+        <div class="purpose-selector">
+            <div class="purpose-pick" id="pick-argue"   onclick="selectPurpose('argue')">🔵 <strong>Argue</strong><br><small>I will argue that...</small></div>
+            <div class="purpose-pick" id="pick-compare" onclick="selectPurpose('compare')">🟢 <strong>Compare</strong><br><small>This paragraph compares...</small></div>
+            <div class="purpose-pick" id="pick-analyze" onclick="selectPurpose('analyze')">🟠 <strong>Analyze</strong><br><small>This paragraph analyzes...</small></div>
+        </div>
+        <div id="purposeWarning" style="color:#e74c3c;font-size:0.85rem;min-height:18px;"></div>
+
+        <p style="margin-top:16px;"><strong>Step 2 — Write your opening paragraph</strong> (approx. 100–130 words). Your first sentence must clearly signal the purpose you chose above.</p>
+
+        <textarea id="essayInput"
+            placeholder="Write your opening paragraph here..."
+            style="width:100%;height:200px;padding:15px;border-radius:8px;border:1px solid #ccc;font-family:'Georgia',serif;line-height:1.6;box-sizing:border-box;"></textarea>
+
+        <p style="font-size:0.85rem;color:#666;margin-top:5px;">
+            Word count: <span id="wordCountDisplay">0</span> words
+        </p>
+
+        <button class="btn-next" id="finalBtn" style="display:block;margin-top:20px;"
+            onclick="submitWithPurpose()">
+            Submit &amp; Save Progress
+        </button>
+        <button id="continueBtn" 
+            style="display:none;margin-top:12px;background:#27ae60;color:white;border:none;padding:12px 25px;border-radius:5px;cursor:pointer;width:100%;font-weight:bold;font-size:0.95rem;"
+            onclick="window.location.href='unit1-essays.html'">
+            ✓ Continue to Unit 1 Hub →
+        </button>
+        <button onclick="skipEssay()"
+            style="display:block;margin-top:10px;background:none;border:none;color:#999;font-size:0.85rem;cursor:pointer;text-decoration:underline;width:100%;">
+            Skip writing exercise →
+        </button>
+    </div>
+
+</div><!-- /lesson-container -->
+
+<script>
+/* ─────────────────────────────────────────────────────────────
+   TRUE / FALSE / NOT GIVEN
+───────────────────────────────────────────────────────────── */
+let tfngDone   = { tfng1: false, tfng2: false, tfng3: false };
+
+function checkTFNG(btn, itemId, isCorrect, explanation) {
+    if (tfngDone[itemId]) return;
+    tfngDone[itemId] = true;
+
+    const allBtns = document.querySelectorAll(`#${itemId} .tfng-btn`);
+    allBtns.forEach(b => b.classList.add('disabled'));
+
+    const fb = document.getElementById(`${itemId}-fb`);
+    if (isCorrect) {
+        btn.classList.add('correct');
+        fb.style.color = '#27ae60';
+    } else {
+        btn.classList.add('incorrect');
+        fb.style.color = '#e74c3c';
+        window.mistakes++; // cuenta para el Score final
+    }
+    fb.innerHTML = explanation;
+
+    // Show next button when all answered
+    if (Object.values(tfngDone).every(v => v)) {
+        document.getElementById('next2').style.display = 'block';
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MATCHING
+───────────────────────────────────────────────────────────── */
+let selectedTerm = null;
+let matchedCount = 0;
+
+function selectTerm(el) {
+    if (el.classList.contains('matched')) return;
+    document.querySelectorAll('.match-term').forEach(t => t.classList.remove('selected'));
+    selectedTerm = el;
+    el.classList.add('selected');
+}
+
+function selectDef(el) {
+    if (!selectedTerm || el.classList.contains('matched')) return;
+
+    const termId  = selectedTerm.dataset.id;
+    const defMatch = el.dataset.match;
+
+    if (termId === defMatch) {
+        selectedTerm.classList.remove('selected');
+        selectedTerm.classList.add('matched');
+        el.classList.add('matched');
+        matchedCount++;
+        document.getElementById('matchFeedback').innerHTML =
+            `<span style="color:#27ae60">✓ Correct!</span>`;
+        selectedTerm = null;
+
+        if (matchedCount === 3) {
+            document.getElementById('matchFeedback').innerHTML =
+                `<span style="color:#27ae60">✓ All matched correctly! Well done.</span>`;
+            document.getElementById('next3').style.display = 'block';
+        }
+    } else {
+        selectedTerm.classList.add('wrong');
+        el.classList.add('wrong');
+        document.getElementById('matchFeedback').innerHTML =
+            `<span style="color:#e74c3c">✗ Not quite — try again.</span>`;
+        window.mistakes++; // cuenta para el Score final
+        setTimeout(() => {
+            selectedTerm.classList.remove('wrong', 'selected');
+            el.classList.remove('wrong');
+            selectedTerm = null;
+        }, 700);
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   DRAG & DROP (slide 4)
+───────────────────────────────────────────────────────────── */
+let placedCount   = 0;
+let _dragInitDone = false;
+
+function initExcerptDrag() {
+    if (_dragInitDone) return;
+    _dragInitDone = true;
+
+    setTimeout(() => {
+
+        // ── Draggables ──────────────────────────────────────────
+        document.querySelectorAll('.excerpt-card').forEach(card => {
+            card.addEventListener('dragstart', e => {
+                // Guardar ID en dataTransfer — más fiable que variable global
+                e.dataTransfer.setData('text/plain', card.id);
+                e.dataTransfer.effectAllowed = 'move';
+                card.style.opacity = '0.4';
+            });
+            card.addEventListener('dragend', () => {
+                card.style.opacity = '1';
+            });
+        });
+
+        // ── Drop zones ──────────────────────────────────────────
+        document.querySelectorAll('.purpose-zone').forEach(zone => {
+
+            zone.addEventListener('dragover', e => {
+                e.preventDefault(); // CRÍTICO: sin esto no se dispara drop
+                zone.classList.add('over');
+            });
+
+            zone.addEventListener('dragleave', e => {
+                if (!zone.contains(e.relatedTarget)) {
+                    zone.classList.remove('over');
+                }
+            });
+
+            zone.addEventListener('drop', e => {
+                e.preventDefault();
+                zone.classList.remove('over');
+
+                // Recuperar la tarjeta por ID desde dataTransfer
+                const cardId = e.dataTransfer.getData('text/plain');
+                const card   = document.getElementById(cardId);
+                if (!card || card.classList.contains('placed')) return;
+
+                const accepted = zone.dataset.accept;
+                const purpose  = card.dataset.purpose;
+                const fb       = document.getElementById('s4Feedback');
+
+                if (purpose === accepted) {
+                    card.setAttribute('draggable', 'false');
+                    card.classList.add('placed');
+                    card.style.opacity = '1';
+                    zone.appendChild(card);
+                    zone.classList.add('correct-zone');
+                    placedCount++;
+
+                    if (placedCount === 3) {
+                        fb.innerHTML = `<span style="color:#27ae60">✓ All excerpts correctly classified! Notice how a single signal word reveals the entire communicative purpose.</span>`;
+                        document.getElementById('next4').style.display = 'block';
+                    } else {
+                        fb.innerHTML = `<span style="color:#27ae60">✓ Correct! Keep going.</span>`;
+                    }
+                } else {
+                    fb.innerHTML = `<span style="color:#e74c3c">✗ Not quite — look carefully at the key verb in that excerpt.</span>`;
+                    card.style.opacity = '1';
+                    card.classList.add('wrong');
+                    window.mistakes++; // cuenta para el Score final
+                    setTimeout(() => card.classList.remove('wrong'), 600);
+                }
+            });
+        });
+
+    }, 150);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   FILL IN THE BLANKS (slide 5)
+───────────────────────────────────────────────────────────── */
+function checkFITB() {
+    const blanks = document.querySelectorAll('.blank-input');
+    let correct = 0;
+
+    blanks.forEach(input => {
+        const answer     = input.dataset.answer.toLowerCase().trim();
+        const userVal    = input.value.toLowerCase().trim()
+                               .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const answerNorm = answer.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+        if (userVal === answerNorm || userVal === answer) {
+            input.classList.add('correct');
+            input.classList.remove('incorrect');
+            correct++;
+        } else {
+            input.classList.add('incorrect');
+            input.classList.remove('correct');
+            window.mistakes++; // cuenta para el Score final
+        }
+    });
+
+    const fb = document.getElementById('fitbFeedback');
+    if (correct === blanks.length) {
+        fb.innerHTML = `<span style="color:#27ae60">✓ Perfect! All ${correct} blanks correct.</span>`;
+        document.getElementById('next5').style.display = 'block';
+        document.getElementById('fitbCheckBtn').style.display = 'none';
+    } else {
+        fb.innerHTML = `<span style="color:#e74c3c">${correct}/${blanks.length} correct — review the highlighted fields and try again.</span>`;
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PURPOSE SELECTOR (slide 6)
+───────────────────────────────────────────────────────────── */
+let selectedPurpose = null;
+
+function selectPurpose(p) {
+    selectedPurpose = p;
+    ['argue','compare','analyze'].forEach(id => {
+        const el = document.getElementById(`pick-${id}`);
+        el.className = 'purpose-pick';
+        if (id === p) el.classList.add(`active-${p}`);
+    });
+    document.getElementById('purposeWarning').textContent = '';
+}
+
+function submitWithPurpose() {
+    if (!selectedPurpose) {
+        document.getElementById('purposeWarning').textContent =
+            'Please select a communicative purpose before submitting.';
+        return;
+    }
+    const textarea = document.getElementById('essayInput');
+    const prefix   = `[Purpose: ${selectedPurpose.toUpperCase()}] `;
+    if (!textarea.value.startsWith('[Purpose:')) {
+        textarea.value = prefix + textarea.value;
+    }
+    EssayHandler.submit();
+    // Mostrar botón Continue y ocultar Submit
+    document.getElementById('finalBtn').style.display = 'none';
+    document.getElementById('continueBtn').style.display = 'block';
+}
+
+function skipEssay() {
+    if (confirm("Skip the writing exercise? Your quiz score is already saved.")) {
+        window.location.href = 'unit1-essays.html';
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   INIT
+───────────────────────────────────────────────────────────── */
+ActivityTracker.init('types of essays');
+
+const _observer = new MutationObserver(() => {
+    const slide4 = document.getElementById('slide4');
+    if (slide4 && slide4.classList.contains('active')) {
+        initExcerptDrag();
+    }
+    const slide6 = document.getElementById('slide6');
+    if (slide6 && slide6.classList.contains('active')) {
+        EssayHandler.init('types of essays');
+        _observer.disconnect();
+    }
+});
+_observer.observe(document.body, {
+    attributes: true,
+    subtree: true,
+    attributeFilter: ['class']
+});
+</script>
+
+</body>
+</html>
