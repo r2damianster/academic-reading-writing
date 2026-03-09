@@ -29,6 +29,7 @@ function sendOneToSheet(entry) {
         writingDuration:  audit.writingDurationSec != null ? audit.writingDurationSec : "",
         charsTypedRatio:  audit.charsTypedRatio    != null ? audit.charsTypedRatio    : "",
         essay:            entry.essay                  || "",
+        isNewAttempt:     entry.isNewAttempt ? "Yes" : "",
         reportGeneratedAt: ""   // vacío — no es descarga de reporte
     };
 
@@ -55,12 +56,16 @@ function logActivity(activityName, result, isQuiz = false, essayContent = "", au
     // Caso 2: llega un Score y ya existe una entrada con Score → actualizar
     if (result.includes("Score") && existingIndex !== -1) {
         const existing = progress[existingIndex];
+        // Si el audit es diferente es un intento nuevo → limpiar ensayo anterior
+        const isNewAttempt = auditData && existing.audit &&
+            JSON.stringify(auditData) !== JSON.stringify(existing.audit);
         progress[existingIndex] = {
             ...existing,
-            timestamp: new Date().toLocaleString(),
+            timestamp:    new Date().toISOString(),
+            isNewAttempt: isNewAttempt || false,
             essay: (essayContent && essayContent.trim().length > 5)
                 ? essayContent.trim()
-                : existing.essay || "",
+                : isNewAttempt ? "" : existing.essay || "",
             audit: auditData || existing.audit || null
         };
         localStorage.setItem('course_progress', JSON.stringify(progress));
@@ -71,7 +76,7 @@ function logActivity(activityName, result, isQuiz = false, essayContent = "", au
 
     // Caso 3: entrada nueva con Score → guardar y enviar
     const newEntry = {
-        timestamp: new Date().toLocaleString(),
+        timestamp: new Date().toISOString(),
         module:    activityName,
         result:    result,
         essay:     (essayContent && essayContent.trim().length > 5) ? essayContent.trim() : "",
