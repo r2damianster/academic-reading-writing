@@ -23,30 +23,54 @@
             <input type="email" id="inputEmail" placeholder="Institutional Email">
 
             <select id="inputCourse">
-                <option value="" disabled selected>Select your Course</option>
-                <option value="Academic Reading &amp; Writing II">Academic Reading &amp; Writing II</option>
+                <option value="Academic Reading &amp; Writing II" selected>Academic Reading &amp; Writing II</option>
                 <option value="Academic Reading &amp; Writing I">Academic Reading &amp; Writing I</option>
             </select>
 
             <select id="inputMajor">
-                <option value="" disabled selected>Select your Role</option>
-                <option value="Student">Student</option>
+                <option value="Student" selected>Student</option>
                 <option value="Teacher">Teacher</option>
             </select>
 
             <select id="inputInstitution">
-                <option value="" disabled selected>Are you from ULEAM?</option>
-                <option value="ULEAM">Yes — ULEAM</option>
+                <option value="ULEAM" selected>Yes — ULEAM</option>
                 <option value="Other">No — Other institution</option>
+            </select>
+
+            <select id="inputPracticeType">
+                <option value="In-class practice" selected>In-class practice</option>
+                <option value="Personal practice">Personal practice</option>
+                <option value="Exam preparation">Exam preparation</option>
+                <option value="Other">Other</option>
             </select>
 
             <div class="consent-box">
                 <label class="consent-label">
-                    <input type="checkbox" id="inputConsent">
+                    <input type="checkbox" id="inputConsent" checked>
                     <span>
                         I understand that my activity on this platform is monitored for academic integrity purposes,
                         including quiz scores, time spent, writing submissions, and behavioral data (keystrokes, tab switches, paste events).
                         This data is accessible to my instructor for educational assessment only.
+                    </span>
+                </label>
+            </div>
+
+            <div class="consent-box">
+                <label class="consent-label">
+                    <input type="checkbox" id="inputDataConsent" checked>
+                    <span>
+                        I authorize the use of my anonymized data for course improvement and academic research purposes.
+                        My personal information will not be shared publicly.
+                    </span>
+                </label>
+            </div>
+
+            <div class="consent-box">
+                <label class="consent-label">
+                    <input type="checkbox" id="inputResearchConsent" checked>
+                    <span>
+                        I authorize the use of my writing samples and activity data for academic research and publication,
+                        in accordance with ethical research guidelines.
                     </span>
                 </label>
             </div>

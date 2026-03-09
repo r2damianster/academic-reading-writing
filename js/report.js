@@ -2,16 +2,19 @@
  * Generación de PDF y envío de datos a Google Sheets
  */
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbx3J6-BeGC7J83xnIwtedRNRycAsV52NFdlHulCdsV1HxNrzlH-FZq9QjHRuM5PhpJc/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbwIDntpzM5m4pASrMKGYH6XtDkMej1A6S6dx6nqEUA4UyCoSgqXMDpeJU3THVmLVAgN/exec";
 
 // --- ENVÍO A GOOGLE SHEETS ---
 // Se llama automáticamente al generar el reporte
 function sendToSheet(entries) {
-    const name        = localStorage.getItem('studentName')        || "";
-    const email       = localStorage.getItem('studentEmail')       || "";
-    const course      = localStorage.getItem('studentCourse')      || "";
-    const role        = localStorage.getItem('studentMajor')       || "";
-    const institution = localStorage.getItem('studentInstitution') || "";
+    const name            = localStorage.getItem('studentName')            || "";
+    const email           = localStorage.getItem('studentEmail')           || "";
+    const course          = localStorage.getItem('studentCourse')          || "";
+    const role            = localStorage.getItem('studentMajor')           || "";
+    const institution     = localStorage.getItem('studentInstitution')     || "";
+    const practiceType    = localStorage.getItem('studentPracticeType')    || "";
+    const dataConsent     = localStorage.getItem('studentDataConsent')     || "Yes";
+    const researchConsent = localStorage.getItem('studentResearchConsent') || "Yes";
 
     entries.forEach(item => {
         if (!item.result || item.result === "Visited") return;
@@ -25,6 +28,9 @@ function sendToSheet(entries) {
             course:          course,
             role:            role,
             institution:     institution,
+            practiceType:    practiceType,
+            dataConsent:     dataConsent,
+            researchConsent: researchConsent,
             activity:        item.module            || "",
             result:          item.result            || "",
             words:           audit.words            || "",
@@ -38,7 +44,6 @@ function sendToSheet(entries) {
             essay:           item.essay             || ""
         };
 
-        // Usar URLSearchParams para compatibilidad con Apps Script en modo no-cors
         const params = new URLSearchParams();
         Object.entries(payload).forEach(([k, v]) => params.append(k, v));
 
@@ -67,12 +72,11 @@ async function generateReport() {
         return;
     }
 
-    // Enviar datos a Google Sheets antes de generar el PDF
     sendToSheet(progress);
 
     // --- CABECERA ---
     doc.setFillColor(44, 62, 80);
-    doc.rect(0, 0, 210, 50, 'F');
+    doc.rect(0, 0, 210, 58, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(14);
     doc.text("ACADEMIC WRITING COURSE — PROGRESS REPORT", 15, 16);
@@ -82,17 +86,19 @@ async function generateReport() {
     doc.setFontSize(8);
     doc.setTextColor(180, 200, 220);
     doc.text(`Generated: ${new Date().toLocaleString()}`, 15, 42);
+    doc.setFontSize(7);
+    doc.setTextColor(140, 170, 200);
+    doc.text("Consultas, créditos y derechos reservados © arturo.rodriguez@uleam.edu.ec", 15, 52);
 
-    let y     = 60;
+    let y     = 68;
     let count = 1;
 
     for (const item of progress) {
         if (!item.result) continue;
-        if (item.result === "Visited") continue; // omitir en PDF, no aportan valor
+        if (item.result === "Visited") continue;
 
         if (y > 250) { doc.addPage(); y = 20; }
 
-        // --- Título de actividad ---
         doc.setTextColor(0);
         doc.setFontSize(12);
         doc.setFont("helvetica", "bold");
@@ -107,7 +113,6 @@ async function generateReport() {
         doc.text(`Date: ${item.timestamp}`, 20, y + 13);
         y += 20;
 
-        // --- Bloque de Auditoría ---
         const audit = item.audit || null;
         if (audit && audit.words > 0) {
             if (y > 260) { doc.addPage(); y = 20; }
@@ -129,7 +134,6 @@ async function generateReport() {
             y += 26;
         }
 
-        // --- Essay (solo en entradas con Score) ---
         let essayText = "";
         if (item.result && item.result.includes("Score")) {
             essayText = item.essay || "";
@@ -157,7 +161,6 @@ async function generateReport() {
             y += 8;
         }
 
-        // --- Separador ---
         if (y > 282) { doc.addPage(); y = 20; }
         doc.setDrawColor(200);
         doc.line(15, y, 195, y);

@@ -23,8 +23,8 @@ const MENU = [
     children: [
       {
         label: 'Unit 1: Essays',
+        path: 'modules/01-core-syllabus/unit1-essays/unit1-essays-hub.html',
         children: [
-          { label: 'Unit 1 Hub',                 path: 'modules/01-core-syllabus/unit1-essays/unit1-essays.html' },
           { label: 'Types of Essays',            path: 'modules/01-core-syllabus/unit1-essays/types-essay.html' },
           { label: 'Essay Structure',            path: 'modules/01-core-syllabus/unit1-essays/essay-structure.html' },
           { label: 'Argumentative Essay',        path: 'modules/01-core-syllabus/unit1-essays/argumentative-essay.html' },
@@ -33,14 +33,13 @@ const MENU = [
       },
       {
         label: 'Unit 2: Research Papers',
-        children: [
-          { label: 'Unit 2 Hub', path: 'modules/01-core-syllabus/unit2-papers/unit2-papers.html' }
-        ]
+        path: 'modules/01-core-syllabus/unit2-papers/unit2-papers-hub.html',
+        children: []
       },
       {
         label: 'APA & Integrity',
+        path: 'modules/01-core-syllabus/apa-integrity/apa-integrity-hub.html',
         children: [
-          { label: 'APA & Integrity Hub',    path: 'modules/01-core-syllabus/apa-integrity/apa-integrity.html' },
           { label: 'APA Style 7th Ed.',      path: 'modules/01-core-syllabus/apa-integrity/apa-style-7.html' },
           { label: 'Citation & Referencing', path: 'modules/01-core-syllabus/apa-integrity/citation-referencing.html' }
         ]
@@ -107,10 +106,13 @@ function buildMenu() {
         if (!child.children) {
           // Enlace directo
           childLi.innerHTML = `<a href="#" onclick="loadPage('${child.path}')">${child.label}</a>`;
+        } else if (child.children.length === 0) {
+          // Label clicable sin subitems
+          childLi.innerHTML = `<a href="#" onclick="loadPage('${child.path}')">${child.label}</a>`;
         } else {
-          // Nested (Grammar, Connectors, etc.)
+          // Nested con subitems (Unit 1, APA, Grammar, etc.)
           childLi.className = 'nested-item';
-          childLi.innerHTML = `<span class="nested-header">${child.label}</span>`;
+          childLi.innerHTML = `<span class="nested-header" onclick="loadPage('${child.path}')" style="cursor:pointer;">${child.label}</span>`;
 
           const nestedUl = document.createElement('ul');
           nestedUl.className = 'nested-menu';
