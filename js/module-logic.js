@@ -1,6 +1,6 @@
 /* js/module-logic.js */
 
-let currentSlide = 1;
+let currentSlide = 0;
 let mistakes     = 0;
 
 // Proxy global: permite que lecciones custom hagan window.mistakes++
@@ -10,22 +10,40 @@ Object.defineProperty(window, 'mistakes', {
     configurable: true
 });
 
-// Resetear errores al cargar — por si ActivityTracker.init() ya corrió antes
 mistakes = 0;
 
-// --- Navegación entre Slides ---
-window.nextSlide = function(n) {
-    const totalSlides = document.querySelectorAll('.slide').length;
-    const currentEl   = document.getElementById(`slide${currentSlide}`);
+// --- Navegación Universal entre Slides ---
+window.nextSlide = function(target) {
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    // 1. Quitar 'active' de la diapositiva que esté visible ahora
+    const currentEl = document.querySelector('.slide.active');
     if (currentEl) currentEl.classList.remove('active');
 
-    currentSlide = n;
-    const nextEl = document.getElementById(`slide${currentSlide}`);
-    if (nextEl) nextEl.classList.add('active');
+    // 2. Determinar el elemento destino (por número o por ID de texto)
+    let nextEl;
+    if (typeof target === 'number') {
+        currentSlide = target;
+        nextEl = document.getElementById(`slide${target}`);
+    } else {
+        // Si target es un string como 'essaySlide'
+        nextEl = document.getElementById(target);
+        // Intentamos encontrar el índice para la barra de progreso
+        const index = Array.from(slides).indexOf(nextEl);
+        if (index !== -1) currentSlide = index;
+    }
 
+    // 3. Activar la siguiente y subir el scroll
+    if (nextEl) {
+        nextEl.classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    // 4. Barra de progreso dinámica
     const progressBar = document.getElementById('progressBar');
-    if (progressBar) {
-        const progress = ((currentSlide - 1) / (totalSlides - 1)) * 100;
+    if (progressBar && totalSlides > 1) {
+        const progress = (currentSlide / (totalSlides - 1)) * 100;
         progressBar.style.width = `${progress}%`;
     }
 };
@@ -57,14 +75,13 @@ window.checkAnswer = function(btn, isCorrect, feedbackId) {
     }
 };
 
-// --- GUARDAR SCORE (sin essay, sin redirect) ---
+// --- GUARDAR SCORE Y SALTAR AL ENSAYO ---
 window.finishLesson = function(lessonName) {
     let score = 100 - (mistakes * 5);
     if (score < 0) score = 0;
     const finalStatus = `Score: ${score}% (Errors: ${mistakes})`;
-    console.log("finishLesson →", finalStatus);
-
-    // Obtener auditData del ActivityTracker si está disponible
+    
+    // Obtener auditData del ActivityTracker
     const auditData = (typeof ActivityTracker !== 'undefined' && ActivityTracker.getActivityAudit)
         ? ActivityTracker.getActivityAudit()
         : { timestamp: Date.now(), mistakes: mistakes };
@@ -72,11 +89,11 @@ window.finishLesson = function(lessonName) {
     const logger = window.parent.logActivity || window.logActivity;
     if (logger) logger(lessonName, finalStatus, true, "", auditData);
 
-    const totalSlides = document.querySelectorAll('.slide').length;
-    nextSlide(totalSlides);
+    // En lugar de ir a un número fijo, vamos al ID genérico del ensayo
+    nextSlide('essaySlide');
 };
 
-// --- GUARDAR ESSAY Y CERRAR ---
+// --- GUARDAR ENSAYO Y REDIRIGIR AL HUB ---
 window.finishLessonWithEssay = function(lessonName, essay, audit, redirectUrl) {
     const logger = window.parent.logActivity || window.logActivity;
 
@@ -88,16 +105,16 @@ window.finishLessonWithEssay = function(lessonName, essay, audit, redirectUrl) {
 
     if (logger) logger(lessonName, status, true, essay, audit);
 
-    alert("Progress saved!");
-    // Detectar automáticamente el hub más cercano según la ruta actual
+    alert("Academic progress saved successfully!");
+
+    // Lógica de redirección inteligente
     const path = window.location.pathname;
     let dest = 'index.html';
     if (path.includes('/00-fundamentals/'))  dest = 'fundamentals-hub.html';
     if (path.includes('/unit1-essays/'))     dest = 'unit1-essays.html';
     if (path.includes('/unit2-papers/'))     dest = 'unit2-papers.html';
     if (path.includes('/apa-integrity/'))    dest = 'apa-integrity.html';
-    if (path.includes('/toolbox/'))          dest = '../toolbox-hub.html';
-    if (path.includes('/03-peer-review/'))   dest = 'peer-review-hub.html';
+    
     if (redirectUrl) dest = redirectUrl;
     window.location.href = dest;
 };

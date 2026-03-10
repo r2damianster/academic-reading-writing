@@ -16,7 +16,18 @@
         <div class="progress-fill" id="progressBar"></div>
     </div>
 
-    <div class="slide active" id="slide1">
+    <div class="slide active" id="slide0">
+        <h2>Introduction</h2>
+        <iframe
+            src="https://docs.google.com/presentation/d/1f7FplyepkRn_gEDcjzGSfRNeYsR9pE4NnYnLWplLF-U/embed?start=false&loop=false&delayms=3000"
+            frameborder="0" width="100%" height="380" allowfullscreen>
+        </iframe>
+        <button class="btn-next" style="display:block; margin-top:20px;" onclick="nextSlide(1)">
+            Continue to lesson →
+        </button>
+    </div>
+
+    <div class="slide" id="slide1">
         <h2>What is it?</h2>
         <p>In academic writing, a paragraph is like a contract. When you start with a sentence, you promise the reader you will talk <strong>only</strong> about that specific topic.</p>
         <p>The One-Point Rule means: <strong>One paragraph = One single idea.</strong> If you start a new idea, you start a new paragraph.</p>
@@ -80,18 +91,15 @@
         <button class="btn-next" onclick="finishLesson('one idea')">Go to Final Writing Exercise →</button>
     </div>
 
-    <div class="slide" id="slide9">
+    <div class="slide" id="essaySlide">
         <h2>Writing Challenge: The One-Point Rule</h2>
         <p><strong>Prompt:</strong> Write a simple paragraph about how making mistakes <strong>can help students learn.</strong></p>
-
         <textarea id="essayInput"
             placeholder="Write your paragraph here..."
             style="width:100%;height:200px;padding:15px;border-radius:8px;border:1px solid #ccc;font-family:'Georgia',serif;line-height:1.6;"></textarea>
-
         <p style="font-size:0.85rem;color:#666;margin-top:5px;">
             Word count: <span id="wordCountDisplay">0</span> words
         </p>
-
         <button class="btn-next" id="finalBtn" style="display:block;margin-top:20px;"
             onclick="EssayHandler.submit()">
             Submit & Save Progress
@@ -104,24 +112,37 @@
 </div>
 
 <script>
-    // Skip essay — redirigir sin guardar essay
     function skipEssay() {
         if (confirm("Skip the writing exercise? Your quiz score is already saved.")) {
             window.location.href = 'fundamentals-hub.html';
         }
     }
 
-    // Inicializar ActivityTracker al cargar la página
+    // Inicializamos el tracker general
     ActivityTracker.init('one idea');
 
-    // Inicializar EssayHandler cuando el slide 9 se vuelve visible
+    // Usamos un intervalo de seguridad además del observer para asegurar la carga
+    const checkSlide9 = setInterval(() => {
+        const slide9 = document.getElementById('slide9');
+        if (slide9 && slide9.classList.contains('active')) {
+            if (typeof EssayHandler !== 'undefined') {
+                console.log("🚀 EssayHandler activado manualmente");
+                EssayHandler.init('one idea');
+                clearInterval(checkSlide9); // Detener cuando se active
+            }
+        }
+    }, 500);
+
     const _observer = new MutationObserver(() => {
         const slide9 = document.getElementById('slide9');
         if (slide9 && slide9.classList.contains('active')) {
-            EssayHandler.init('one idea');
-            _observer.disconnect();
+            if (typeof EssayHandler !== 'undefined') {
+                EssayHandler.init('one idea');
+                _observer.disconnect();
+            }
         }
     });
+
     _observer.observe(document.body, {
         attributes: true,
         subtree: true,
