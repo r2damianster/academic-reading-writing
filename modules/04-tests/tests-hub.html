@@ -34,16 +34,17 @@
     <h3>Available Tests</h3>
     <div id="cardContainer"></div>
 </div>
+
 <script>
     const section = MENU.find(i => i.label === '04. Tests');
     const container = document.getElementById('cardContainer');
+    
     section.children.forEach(lesson => {
-        const path = lesson.path.replace('modules/04-tests/', '');
         const card = document.createElement('div');
         card.className = 'module-card';
         card.innerHTML = `
             <div class="module-info"><h3>${lesson.label}</h3></div>
-            <a href="${path}" class="btn-start">Take Test →</a>
+            <a href="#" onclick="parent.loadPage('${lesson.path}'); return false;" class="btn-start">Take Test →</a>
         `;
         container.appendChild(card);
     });

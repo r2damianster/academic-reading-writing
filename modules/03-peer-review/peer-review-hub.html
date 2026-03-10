@@ -34,16 +34,18 @@
     <h3>Lessons</h3>
     <div id="cardContainer"></div>
 </div>
+
 <script>
     const section = MENU.find(i => i.label === '03. Peer System');
     const container = document.getElementById('cardContainer');
+    
     section.children.forEach(lesson => {
-        const path = lesson.path.replace('modules/03-peer-review/', '');
         const card = document.createElement('div');
         card.className = 'module-card';
+        // Forzamos la carga a través del index usando la ruta completa de nav.js
         card.innerHTML = `
             <div class="module-info"><h3>${lesson.label}</h3></div>
-            <a href="${path}" class="btn-start">Start →</a>
+            <a href="#" onclick="parent.loadPage('${lesson.path}'); return false;" class="btn-start">Start →</a>
         `;
         container.appendChild(card);
     });

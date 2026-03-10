@@ -35,25 +35,28 @@
     <h3>Categories</h3>
     <div id="cardContainer"></div>
 </div>
+
 <script>
+    // Usamos '/' para asegurar que busque desde la raíz del proyecto
     const section = MENU.find(i => i.label === '02. Toolbox');
     const container = document.getElementById('cardContainer');
 
     const hubPaths = {
-        'Grammar':    'grammar/grammar-hub.html',
-        'Connectors': 'connectors/connectors-hub.html',
-        'Vocabulary': 'vocabulary/vocabulary-hub.html'
+        'Grammar':    '/modules/02-toolbox/grammar/grammar-hub.html',
+        'Connectors': '/modules/02-toolbox/connectors/connectors-hub.html',
+        'Vocabulary': '/modules/02-toolbox/vocabulary/vocabulary-hub.html'
     };
 
     section.children.forEach(category => {
         const card = document.createElement('div');
         card.className = 'module-card';
+        // Usamos onclick con parent.loadPage para que el cambio ocurra en el marco principal
         card.innerHTML = `
             <div class="module-info">
                 <h3>${category.label}</h3>
                 <p>${category.children.length} lesson${category.children.length > 1 ? 's' : ''}</p>
             </div>
-            <a href="${hubPaths[category.label]}" class="btn-start">Enter →</a>
+            <a href="#" onclick="parent.loadPage('${hubPaths[category.label]}'); return false;" class="btn-start">Enter →</a>
         `;
         container.appendChild(card);
     });
