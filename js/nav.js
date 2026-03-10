@@ -1,6 +1,5 @@
 /* js/nav.js
  * Árbol de navegación del curso.
- * Para agregar una lección nueva: añade una línea { label, path } en el array children correspondiente.
  */
 
 const MENU = [
@@ -14,7 +13,7 @@ const MENU = [
     children: [
       { label: '1. The One-Point Rule',        path: 'modules/00-fundamentals/one-idea.html' },
       { label: '2. Topic Sentences',           path: 'modules/00-fundamentals/topic-sentences.html' },
-      { label: '3. PEER',                      path: 'modules/00-fundamentals/peer.html' },
+      { label: '3. PEER',                       path: 'modules/00-fundamentals/peer.html' },
       { label: '4. Supporting Sentences',      path: 'modules/00-fundamentals/supporting-sentences.html' },
       { label: '5. Paragraph Review',          path: 'modules/00-fundamentals/paragraph-review.html' },
       { label: '6. Organizational Patterns',   path: 'modules/00-fundamentals/organizational-patterns.html' },
@@ -123,55 +122,69 @@ const MENU = [
   }
 ];
 
-/* ── Generador del menú ─────────────────────────────────────── */
+/**
+ * Generador del menú corregido para manejar rutas relativas 
+ * y asegurar compatibilidad con iframe en GitHub Pages.
+ */
 function buildMenu() {
   const ul = document.getElementById('navMenu');
   if (!ul) return;
+  ul.innerHTML = ""; // Limpiar antes de generar
 
   MENU.forEach(item => {
     const li = document.createElement('li');
     li.className = 'menu-item';
 
-    if (!item.children) {
-      li.innerHTML = `<div class="section-header" onclick="loadPage('${item.path}')">${item.label}</div>`;
-    } else {
-      const headerClick = item.path ? `loadPage('${item.path}')` : '';
-      li.innerHTML = `<div class="section-header" onclick="${headerClick}">${item.label} ▾</div>`;
+    // Formato para items principales (Main o secciones con hijos)
+    const hasChildren = item.children && item.children.length > 0;
+    const arrow = hasChildren ? ' ▾' : '';
+    
+    // Header de la sección
+    const header = document.createElement('div');
+    header.className = 'section-header';
+    header.style.cursor = 'pointer';
+    header.innerHTML = `${item.label}${arrow}`;
+    
+    // Al hacer clic, carga la página principal de la sección
+    header.onclick = () => { if(item.path) loadPage(item.path); };
+    li.appendChild(header);
 
+    if (hasChildren) {
       const subUl = document.createElement('ul');
       subUl.className = 'sub-menu';
 
       item.children.forEach(child => {
         const childLi = document.createElement('li');
-
-        if (!child.children) {
-          childLi.innerHTML = `<a href="#" onclick="loadPage('${child.path}')">${child.label}</a>`;
-        } else if (child.children.length === 0) {
-          childLi.innerHTML = `<a href="#" onclick="loadPage('${child.path}')">${child.label}</a>`;
-        } else {
+        
+        // Si el hijo tiene nietos (como en Core Syllabus)
+        if (child.children && child.children.length > 0) {
           childLi.className = 'nested-item';
-          childLi.innerHTML = `<span class="nested-header" onclick="loadPage('${child.path}')" style="cursor:pointer;">${child.label}</span>`;
-
+          childLi.innerHTML = `<span class="nested-header" onclick="loadPage('${child.path}')">${child.label}</span>`;
+          
           const nestedUl = document.createElement('ul');
           nestedUl.className = 'nested-menu';
-
+          
           child.children.forEach(leaf => {
             const leafLi = document.createElement('li');
-            leafLi.innerHTML = `<a href="#" onclick="loadPage('${leaf.path}')">${leaf.label}</a>`;
+            leafLi.innerHTML = `<a href="#" onclick="loadPage('${leaf.path}'); return false;">${leaf.label}</a>`;
             nestedUl.appendChild(leafLi);
           });
-
           childLi.appendChild(nestedUl);
+        } else {
+          // Si es una lección directa
+          childLi.innerHTML = `<a href="#" onclick="loadPage('${child.path}'); return false;">${child.label}</a>`;
         }
-
         subUl.appendChild(childLi);
       });
-
       li.appendChild(subUl);
     }
-
     ul.appendChild(li);
   });
 }
 
-document.addEventListener('DOMContentLoaded', () => { if (document.getElementById('navMenu')) buildMenu(); });
+// Inicialización
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('navMenu')) {
+    buildMenu();
+  }
+});

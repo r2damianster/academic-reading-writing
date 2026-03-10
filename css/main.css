@@ -1,3 +1,6 @@
+/* ==========================================================================
+   CONFIGURACIÓN CORE
+   ========================================================================== */
 :root {
     --primary: #1a2a6c;
     --secondary: #3498db;
@@ -7,7 +10,6 @@
     --sidebar-width: 280px;
 }
 
-/* 1. CORRECCIÓN BASE: Control de scroll */
 body, html {
     margin: 0; 
     padding: 0; 
@@ -25,7 +27,9 @@ body, html {
     overflow: hidden;
 }
 
-/* SIDEBAR CORE */
+/* ==========================================================================
+   SIDEBAR & NAV-MENU
+   ========================================================================== */
 .sidebar {
     width: var(--sidebar-width);
     min-width: var(--sidebar-width);
@@ -48,7 +52,6 @@ body, html {
 }
 .sidebar-header p { font-size: 0.8rem; color: #3498db; margin-bottom: 20px; }
 
-/* MENÚ ACORDEÓN */
 .nav-menu { 
     list-style: none; 
     padding: 0; 
@@ -58,7 +61,7 @@ body, html {
     scrollbar-width: thin;
 }
 
-.menu-item { margin-bottom: 10px; }
+.menu-item { margin-bottom: 10px; position: relative; }
 
 .section-header {
     font-size: 0.75rem; 
@@ -79,22 +82,30 @@ body, html {
     color: #3498db;
 }
 
-/* --- SUB-MENÚS (Retraso de 250ms en ambos sentidos) --- */
+/* ==========================================================================
+   SISTEMA DE SUB-MENÚS (Con 1s de retraso)
+   ========================================================================== */
+
+/* NIVEL 1: Sub-menús principales */
 .sub-menu {
     list-style: none; 
     padding-left: 15px;
     max-height: 0; 
     overflow: hidden;
-    /* Retraso al cerrar */
-    transition: max-height 0.4s ease-out 0.25s !important; 
+    opacity: 0;
+    visibility: hidden;
+    /* Al salir: Cierre suave pero visibilidad inmediata para no bloquear otros hovers */
+    transition: max-height 0.4s ease, opacity 0.4s ease, visibility 0s linear 0.4s !important; 
 }
 
-.menu-item:hover .sub-menu {
-    max-height: 800px;
+.menu-item:hover > .sub-menu {
+    max-height: 1000px; /* Ajustado para que quepan menús largos */
+    opacity: 1;
+    visibility: visible;
     margin-top: 5px;
     margin-bottom: 10px;
-    /* Retraso al abrir */
-    transition: max-height 0.4s ease-out 0.25s !important; 
+    /* Al entrar: Espera de 1 segundo real antes de mostrar nada */
+    transition: max-height 0.4s ease 1s, opacity 0.4s ease 1s, visibility 0s linear 1s !important;
 }
 
 .sub-menu li a {
@@ -111,8 +122,8 @@ body, html {
     transition: 0.2s; 
 }
 
-/* --- MENÚS ANIDADOS (Para sub-unidades) --- */
-.nested-item { list-style: none; margin: 5px 0; }
+/* NIVEL 2: Menús Anidados */
+.nested-item { list-style: none; margin: 5px 0; position: relative; }
 
 .nested-header {
     font-size: 0.8rem;
@@ -128,17 +139,22 @@ body, html {
     border-left: 1px solid rgba(52, 152, 219, 0.3);
     max-height: 0;
     overflow: hidden;
-    /* Retraso al cerrar */
-    transition: max-height 0.3s ease 0.25s !important;
+    opacity: 0;
+    visibility: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease, visibility 0s linear 0.3s !important;
 }
 
-.nested-item:hover .nested-menu {
-    max-height: 400px;
-    /* Retraso al abrir */
-    transition: max-height 0.3s ease 0.25s !important;
+.nested-item:hover > .nested-menu {
+    max-height: 500px;
+    opacity: 1;
+    visibility: visible;
+    /* También 1s de espera para coherencia */
+    transition: max-height 0.3s ease 1s, opacity 0.3s ease 1s, visibility 0s linear 1s !important;
 }
 
-/* 2. ÁREA DE CONTENIDO */
+/* ==========================================================================
+   CONTENIDO & MODALES
+   ========================================================================== */
 .content-area { 
     flex-grow: 1; 
     position: relative; 
@@ -154,7 +170,6 @@ body, html {
     display: block;
 }
 
-/* --- MODAL DE REGISTRO --- */
 .modal {
     position: fixed; top: 0; left: 0;
     width: 100%; height: 100%;
@@ -176,7 +191,9 @@ body, html {
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
 }
 
-/* --- MOBILE OPTIMIZATION --- */
+/* ==========================================================================
+   MOBILE & RESPONSIVE
+   ========================================================================== */
 .mobile-toggle { 
     display: none; 
     position: fixed; 
@@ -217,29 +234,19 @@ body, html {
         width: 280px; 
     }
     
-    .sidebar.active { 
-        transform: translateX(0); 
-    }
-    
-    .sidebar-overlay.active { 
-        display: block; 
-    }
+    .sidebar.active { transform: translateX(0); }
+    .sidebar-overlay.active { display: block; }
 
-    /* En móvil eliminamos esperas para respuesta táctil inmediata */
-    .sub-menu, .nested-menu, .menu-item:hover .sub-menu, .nested-item:hover .nested-menu {
+    /* En móvil: Respuesta inmediata sin esperas de 1s */
+    .sub-menu, .nested-menu, 
+    .menu-item:hover > .sub-menu, 
+    .nested-item:hover > .nested-menu {
         transition-delay: 0s !important;
     }
 
-    .content-area {
-        width: 100vw;
-    }
-
-    #contentFrame {
-        width: 100%;
-        min-width: 100%;
-    }
+    .content-area { width: 100vw; }
 }
 
-/* Botones y formularios */
+/* UI Elements */
 .btn-report { background: var(--secondary); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px;}
 .modal-content input, .modal-content select { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
