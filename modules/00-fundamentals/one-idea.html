@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>The One-Point Rule</title>
     <link rel="stylesheet" href="../../css/modules.css">
     <script src="../../js/activity-tracker.js"></script>
@@ -18,10 +18,12 @@
 
     <div class="slide active" id="slide0">
         <h2>Introduction</h2>
-        <iframe
-            src="https://docs.google.com/presentation/d/1f7FplyepkRn_gEDcjzGSfRNeYsR9pE4NnYnLWplLF-U/embed?start=false&loop=false&delayms=3000"
-            frameborder="0" width="100%" height="380" allowfullscreen>
-        </iframe>
+        <div class="video-container" style="position: relative; overflow: hidden; width: 100%; background: #000; border-radius: 8px;">
+            <iframe
+                src="https://docs.google.com/presentation/d/1f7FplyepkRn_gEDcjzGSfRNeYsR9pE4NnYnLWplLF-U/embed?start=false&loop=false&delayms=3000"
+                frameborder="0" width="100%" height="320" allowfullscreen>
+            </iframe>
+        </div>
         <button class="btn-next" style="display:block; margin-top:20px;" onclick="nextSlide(1)">
             Continue to lesson →
         </button>
@@ -96,7 +98,7 @@
         <p><strong>Prompt:</strong> Write a simple paragraph about how making mistakes <strong>can help students learn.</strong></p>
         <textarea id="essayInput"
             placeholder="Write your paragraph here..."
-            style="width:100%;height:200px;padding:15px;border-radius:8px;border:1px solid #ccc;font-family:'Georgia',serif;line-height:1.6;"></textarea>
+            style="width:100%;height:200px;padding:15px;border-radius:8px;border:1px solid #ccc;font-family:'Georgia',serif;line-height:1.6;font-size:16px;"></textarea>
         <p style="font-size:0.85rem;color:#666;margin-top:5px;">
             Word count: <span id="wordCountDisplay">0</span> words
         </p>
@@ -118,29 +120,30 @@
         }
     }
 
-    // Inicializamos el tracker general
+    // Inicializamos tracker
     ActivityTracker.init('one idea');
 
-    // Usamos un intervalo de seguridad además del observer para asegurar la carga
-    const checkSlide9 = setInterval(() => {
-        const slide9 = document.getElementById('slide9');
-        if (slide9 && slide9.classList.contains('active')) {
+    // Lógica de detección de ensayo universal para móviles y PC
+    const initEssayIfActive = () => {
+        const essaySlide = document.getElementById('essaySlide');
+        if (essaySlide && essaySlide.classList.contains('active')) {
             if (typeof EssayHandler !== 'undefined') {
-                console.log("🚀 EssayHandler activado manualmente");
+                console.log("✍️ EssayHandler activado");
                 EssayHandler.init('one idea');
-                clearInterval(checkSlide9); // Detener cuando se active
+                return true;
             }
         }
+        return false;
+    };
+
+    // Intervalo de seguridad para dispositivos lentos
+    const checkEssayInterval = setInterval(() => {
+        if (initEssayIfActive()) clearInterval(checkEssayInterval);
     }, 500);
 
+    // Observer para cambios de navegación
     const _observer = new MutationObserver(() => {
-        const slide9 = document.getElementById('slide9');
-        if (slide9 && slide9.classList.contains('active')) {
-            if (typeof EssayHandler !== 'undefined') {
-                EssayHandler.init('one idea');
-                _observer.disconnect();
-            }
-        }
+        if (initEssayIfActive()) _observer.disconnect();
     });
 
     _observer.observe(document.body, {
