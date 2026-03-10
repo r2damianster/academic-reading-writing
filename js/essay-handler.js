@@ -96,51 +96,71 @@ window.EssayHandler = (function () {
         console.log("✍️ EssayHandler initialized for:", _lessonName);
     }
 
+    /* Reemplaza TODA la función submit() en js/essay-handler.js */
+
     function submit() {
-        const textarea   = document.getElementById(_textareaId);
-        const essayText  = textarea ? textarea.value : "";
-        const totalChars = essayText.trim().length;
-        const words      = essayText.trim() ? essayText.trim().split(/\s+/).length : 0;
+        try {
+            const textarea   = document.getElementById(_textareaId);
+            const essayText  = textarea ? textarea.value : "";
+            const totalChars = essayText.trim().length;
+            const words      = essayText.trim() ? essayText.trim().split(/\s+/).length : 0;
 
-        const timeToFirstKey  = (_firstKeyTime && _slideStart)
-            ? Math.round((_firstKeyTime - _slideStart) / 1000)
-            : null;
+            // 1. OBTENER PRIMERO LOS DATOS DEL TRACKER (Para evitar el error de variable)
+            const activityAudit = (typeof ActivityTracker !== 'undefined')
+                ? ActivityTracker.getActivityAudit()
+                : { tabSwitches: 0 };
 
-        const writingDuration = (_firstKeyTime && _lastKeyTime)
-            ? Math.round((_lastKeyTime - _firstKeyTime) / 1000)
-            : null;
+            const timeToFirstKey  = (_firstKeyTime && _slideStart)
+                ? Math.round((_firstKeyTime - _slideStart) / 1000)
+                : "";
 
-        const charsTypedRatio = totalChars > 0
-            ? Math.round((_totalKeys / totalChars) * 100)
-            : null;
+            const writingDuration = (_firstKeyTime && _lastKeyTime)
+                ? Math.round((_lastKeyTime - _firstKeyTime) / 1000)
+                : "";
 
-        // Métricas del essay
-        const essayAudit = {
-            words:              words,
-            pastes:             _pastesMade,
-            actualKeystrokes:   _totalKeys,
-            deletions:          _deletions,
-            timeToFirstKeySec:  timeToFirstKey,
-            writingDurationSec: writingDuration,
-            charsTypedRatio:    charsTypedRatio
-        };
+            const charsTypedRatio = totalChars > 0
+                ? Math.round((_totalKeys / totalChars) * 100)
+                : "";
 
-        // Combinar con métricas generales de ActivityTracker si está disponible
-        const activityAudit = (typeof ActivityTracker !== 'undefined')
-            ? ActivityTracker.getActivityAudit()
-            : {};
+            // 2. CONSTRUIR EL AUDIT CON LOS NOMBRES QUE PIDE GOOGLE SCRIPT
+            // Dentro de la función submit() de essay-handler.js
+            const fullAudit = {
+                words:           words,
+                pastes:          _pastesMade,
+                tabSwitches:     activityAudit.tabSwitches || 0,
+                keystrokes:      _totalKeys,
+                deletions:       _deletions,
+                timeToFirstKey:  timeToFirstKey,
+                writingDuration: writingDuration,
+                charsTypedRatio: charsTypedRatio
+            };
 
-        const fullAudit = { ...essayAudit, ...activityAudit };
+            // IMPORTANTE: Al llamar a finishLessonWithEssay, asegúrate de pasar 'fullAudit'
+            if (typeof window.finishLessonWithEssay === 'function') {
+                window.finishLessonWithEssay(_lessonName, essayText, fullAudit);
+            }
+            
 
-        // Guardar en bóveda
-        const saver = window.parent.saveEssay || window.saveEssay;
-        if (typeof saver === 'function') {
-            saver(_lessonName, essayText, fullAudit);
-        }
+            console.log("🚀 Enviando auditoría completa:", fullAudit);
 
-        // Actualizar entrada existente con essay
-        if (typeof finishLessonWithEssay === 'function') {
-            finishLessonWithEssay(_lessonName, essayText, fullAudit);
+            // 3. GUARDAR EN BÓVEDA
+            const saver = window.parent.saveEssay || window.saveEssay;
+            if (typeof saver === 'function') {
+                saver(_lessonName, essayText, fullAudit);
+            }
+
+            // 4. FINALIZAR (Asegúrate que esta función exista en module-logic.js)
+            if (typeof window.finishLessonWithEssay === 'function') {
+                window.finishLessonWithEssay(_lessonName, essayText, fullAudit);
+            } else if (typeof finishLessonWithEssay === 'function') {
+                finishLessonWithEssay(_lessonName, essayText, fullAudit);
+            } else {
+                console.error("❌ No se encontró la función finishLessonWithEssay");
+                alert("Progress saved locally, but server sync function is missing.");
+            }
+        } catch (error) {
+            console.error("❌ ERROR CRÍTICO EN SUBMIT:", error);
+            alert("Error al procesar el envío. Revisa la consola (F12).");
         }
     }
 

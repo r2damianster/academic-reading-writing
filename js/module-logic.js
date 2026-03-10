@@ -3,7 +3,7 @@
 let currentSlide = 0;
 let mistakes     = 0;
 
-// Proxy global: permite que lecciones custom hagan window.mistakes++
+// Proxy global
 Object.defineProperty(window, 'mistakes', {
     get: ()    => mistakes,
     set: (val) => { mistakes = val; },
@@ -12,35 +12,28 @@ Object.defineProperty(window, 'mistakes', {
 
 mistakes = 0;
 
-// --- Navegación Universal entre Slides ---
+// --- Navegación Universal ---
 window.nextSlide = function(target) {
     const slides = document.querySelectorAll('.slide');
     const totalSlides = slides.length;
-
-    // 1. Quitar 'active' de la diapositiva que esté visible ahora
     const currentEl = document.querySelector('.slide.active');
     if (currentEl) currentEl.classList.remove('active');
 
-    // 2. Determinar el elemento destino (por número o por ID de texto)
     let nextEl;
     if (typeof target === 'number') {
         currentSlide = target;
         nextEl = document.getElementById(`slide${target}`);
     } else {
-        // Si target es un string como 'essaySlide'
         nextEl = document.getElementById(target);
-        // Intentamos encontrar el índice para la barra de progreso
         const index = Array.from(slides).indexOf(nextEl);
         if (index !== -1) currentSlide = index;
     }
 
-    // 3. Activar la siguiente y subir el scroll
     if (nextEl) {
         nextEl.classList.add('active');
         window.scrollTo(0, 0);
     }
 
-    // 4. Barra de progreso dinámica
     const progressBar = document.getElementById('progressBar');
     if (progressBar && totalSlides > 1) {
         const progress = (currentSlide / (totalSlides - 1)) * 100;
@@ -81,33 +74,63 @@ window.finishLesson = function(lessonName) {
     if (score < 0) score = 0;
     const finalStatus = `Score: ${score}% (Errors: ${mistakes})`;
     
-    // Obtener auditData del ActivityTracker
-    const auditData = (typeof ActivityTracker !== 'undefined' && ActivityTracker.getActivityAudit)
-        ? ActivityTracker.getActivityAudit()
-        : { timestamp: Date.now(), mistakes: mistakes };
+    // Guardar temporalmente el score en el progreso para que el ensayo lo herede
+    let progress = JSON.parse(localStorage.getItem('course_progress')) || [];
+    let existingIndex = progress.findIndex(p => p.module === lessonName);
+    
+    const entry = {
+        module: lessonName,
+        result: finalStatus,
+        timestamp: new Date().toLocaleString()
+    };
 
-    const logger = window.parent.logActivity || window.logActivity;
-    if (logger) logger(lessonName, finalStatus, true, "", auditData);
+    if (existingIndex !== -1) progress[existingIndex] = entry;
+    else progress.push(entry);
+    
+    localStorage.setItem('course_progress', JSON.stringify(progress));
 
-    // En lugar de ir a un número fijo, vamos al ID genérico del ensayo
     nextSlide('essaySlide');
 };
 
-// --- GUARDAR ENSAYO Y REDIRIGIR AL HUB ---
+// --- GUARDAR ENSAYO Y REDIRIGIR AL HUB (CORRECCIÓN CRÍTICA) ---
 window.finishLessonWithEssay = function(lessonName, essay, audit, redirectUrl) {
-    const logger = window.parent.logActivity || window.logActivity;
+    // 1. Obtener el progreso actual
+    let progress = JSON.parse(localStorage.getItem('course_progress')) || [];
+    
+    // 2. Buscar la entrada de esta lección para inyectar el ensayo y la auditoría
+    let found = false;
+    for (let item of progress) {
+        if (item.module === lessonName) {
+            item.essay = essay || "";
+            item.audit = audit || {}; // <--- AQUÍ SE GUARDAN LAS MÉTRICAS (Words, Keys, etc.)
+            item.timestamp = new Date().toLocaleString();
+            found = true;
+            break;
+        }
+    }
 
-    const progress = JSON.parse(localStorage.getItem('course_progress')) || [];
-    const existing = [...progress].reverse().find(
-        p => p.module === lessonName && p.result && p.result.includes("Score")
-    );
-    const status = existing ? existing.result : `Score: ${100 - (mistakes * 5)}% (Errors: ${mistakes})`;
+    // Si no existía (ej. lección sin quiz previo), la creamos
+    if (!found) {
+        progress.push({
+            module: lessonName,
+            result: `Completed (No Quiz)`,
+            essay: essay || "",
+            audit: audit || {},
+            timestamp: new Date().toLocaleString()
+        });
+    }
 
-    if (logger) logger(lessonName, status, true, essay, audit);
+    // 3. Persistencia en LocalStorage
+    localStorage.setItem('course_progress', JSON.stringify(progress));
 
-    alert("Academic progress saved successfully!");
+    // 4. ENVÍO INMEDIATO A GOOGLE SHEETS (Sincronización forzada)
+    if (typeof sendToSheet === 'function') {
+        sendToSheet(progress);
+    }
 
-    // Lógica de redirección inteligente
+    alert("Academic progress and Integrity Audit saved!");
+
+    // 5. Lógica de redirección
     const path = window.location.pathname;
     let dest = 'index.html';
     if (path.includes('/00-fundamentals/'))  dest = 'fundamentals-hub.html';
@@ -116,5 +139,9 @@ window.finishLessonWithEssay = function(lessonName, essay, audit, redirectUrl) {
     if (path.includes('/apa-integrity/'))    dest = 'apa-integrity.html';
     
     if (redirectUrl) dest = redirectUrl;
-    window.location.href = dest;
+    
+    // Pequeño delay para asegurar que el fetch de sendToSheet se inicie
+    setTimeout(() => {
+        window.location.href = dest;
+    }, 500);
 };
