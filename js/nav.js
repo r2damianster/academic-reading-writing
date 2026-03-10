@@ -1,5 +1,5 @@
 /* js/nav.js
- * Árbol de navegación del curso.
+ * Árbol de navegación del curso con descripciones para el Welcome.
  */
 
 const MENU = [
@@ -10,8 +10,9 @@ const MENU = [
   {
     label: '00. Fundamentals',
     path: 'modules/00-fundamentals/fundamentals-hub.html',
+    description: 'Master paragraph rules, structures, and the <strong>PEER</strong> model.',
     children: [
-      { label: '1. The One-Point Rule',        path: 'modules/00-fundamentals/one-idea.html' },
+      { label: '1. The One-Point Rule',         path: 'modules/00-fundamentals/one-idea.html' },
       { label: '2. Topic Sentences',           path: 'modules/00-fundamentals/topic-sentences.html' },
       { label: '3. PEER',                       path: 'modules/00-fundamentals/peer.html' },
       { label: '4. Supporting Sentences',      path: 'modules/00-fundamentals/supporting-sentences.html' },
@@ -25,13 +26,14 @@ const MENU = [
   {
     label: '01. Core Syllabus',
     path: 'modules/01-core-syllabus/core-hub.html',
+    description: 'Detailed units on <strong>Essays, Research Papers</strong>, and APA Style.',
     children: [
       {
         label: 'Unit 1: Essays',
         path: 'modules/01-core-syllabus/unit1-essays/unit1-essays-hub.html',
         children: [
           { label: 'Essay Structure',            path: 'modules/01-core-syllabus/unit1-essays/essay-structure.html' },
-          { label: 'Block Pattern',              path: 'modules/01-core-syllabus/unit1-essays/block-pattern.html' },
+          { label: 'Block Pattern',               path: 'modules/01-core-syllabus/unit1-essays/block-pattern.html' },
           { label: 'Point-by-Point Pattern',     path: 'modules/01-core-syllabus/unit1-essays/point-by-point.html' },
           { label: 'Types of Essays',            path: 'modules/01-core-syllabus/unit1-essays/types-essay.html' },
           { label: 'Argumentative Essay',        path: 'modules/01-core-syllabus/unit1-essays/argumentative-essay.html' },
@@ -63,6 +65,7 @@ const MENU = [
   {
     label: '02. Toolbox',
     path: 'modules/02-toolbox/toolbox-hub.html',
+    description: 'Interactive <strong>grammar drills</strong> and vocabulary boosters.',
     children: [
       {
         label: 'Grammar',
@@ -103,6 +106,7 @@ const MENU = [
   {
     label: '03. Peer System',
     path: 'modules/03-peer-review/peer-review-hub.html',
+    description: 'Learn about <strong>Data Privacy</strong>, ethics, and feedback systems.',
     children: [
       { label: 'Review Checklist',        path: 'modules/03-peer-review/checklist.html' },
       { label: 'How to Give Feedback',    path: 'modules/03-peer-review/how-to-give-feedback.html' },
@@ -113,6 +117,7 @@ const MENU = [
   {
     label: '04. Tests',
     path: 'modules/04-tests/tests-hub.html',
+    description: 'Assess your progress with our <strong>module-based tests</strong>.',
     children: [
       { label: 'Test 1 — Fundamentals',    path: 'modules/04-tests/test1-fundamentals.html' },
       { label: 'Test 2 — Essays',          path: 'modules/04-tests/test2-essays.html' },
@@ -122,48 +127,32 @@ const MENU = [
   }
 ];
 
-/**
- * Generador del menú corregido para manejar rutas relativas 
- * y asegurar compatibilidad con iframe en GitHub Pages.
- */
+// ... (Aquí sigue tu función buildMenu() original sin cambios)
 function buildMenu() {
   const ul = document.getElementById('navMenu');
   if (!ul) return;
-  ul.innerHTML = ""; // Limpiar antes de generar
-
+  ul.innerHTML = ""; 
   MENU.forEach(item => {
     const li = document.createElement('li');
     li.className = 'menu-item';
-
-    // Formato para items principales (Main o secciones con hijos)
     const hasChildren = item.children && item.children.length > 0;
     const arrow = hasChildren ? ' ▾' : '';
-    
-    // Header de la sección
     const header = document.createElement('div');
     header.className = 'section-header';
     header.style.cursor = 'pointer';
     header.innerHTML = `${item.label}${arrow}`;
-    
-    // Al hacer clic, carga la página principal de la sección
     header.onclick = () => { if(item.path) loadPage(item.path); };
     li.appendChild(header);
-
     if (hasChildren) {
       const subUl = document.createElement('ul');
       subUl.className = 'sub-menu';
-
       item.children.forEach(child => {
         const childLi = document.createElement('li');
-        
-        // Si el hijo tiene nietos (como en Core Syllabus)
         if (child.children && child.children.length > 0) {
           childLi.className = 'nested-item';
           childLi.innerHTML = `<span class="nested-header" onclick="loadPage('${child.path}')">${child.label}</span>`;
-          
           const nestedUl = document.createElement('ul');
           nestedUl.className = 'nested-menu';
-          
           child.children.forEach(leaf => {
             const leafLi = document.createElement('li');
             leafLi.innerHTML = `<a href="#" onclick="loadPage('${leaf.path}'); return false;">${leaf.label}</a>`;
@@ -171,7 +160,6 @@ function buildMenu() {
           });
           childLi.appendChild(nestedUl);
         } else {
-          // Si es una lección directa
           childLi.innerHTML = `<a href="#" onclick="loadPage('${child.path}'); return false;">${child.label}</a>`;
         }
         subUl.appendChild(childLi);
@@ -182,9 +170,6 @@ function buildMenu() {
   });
 }
 
-// Inicialización
 document.addEventListener('DOMContentLoaded', () => {
-  if (document.getElementById('navMenu')) {
-    buildMenu();
-  }
+  if (document.getElementById('navMenu')) buildMenu();
 });

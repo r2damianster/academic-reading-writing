@@ -3,23 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Academic Workspace</title>
     <link rel="stylesheet" href="css/welcome.css">
-    <style>
-        /* Ajuste rápido para que el contenido no pegue a los bordes en el celular */
-        body {
-            padding: 20px;
-            box-sizing: border-box;
-            background: #fff; /* Fondo limpio para el área de lectura */
-        }
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        /* Evita que las imágenes se desborden en pantallas pequeñas */
-        img { max-width: 100%; height: auto; }
-    </style>
 </head>
 <body>
 
@@ -33,7 +18,6 @@
         <div class="instructor-text">
             <h2>Hi! I'm Dr. Arturo Rodríguez</h2>
             <p>"He creado esta plataforma con mucho cariño para apoyarte en tu camino hacia la excelencia académica..."</p>
-            
             <a href="https://orcid.org/0000-0002-7017-9443" target="_blank" class="orcid-link">
                 <img src="https://orcid.org/assets/vectors/orcid.logo.icon.svg" width="20" alt="ORCID logo">
                 0000-0002-7017-9443
@@ -43,34 +27,8 @@
 
     <h2>How to use this platform:</h2>
     
-    <div class="steps">
-        <a href="modules/00-fundamentals/fundamentals-hub.html" onclick="parent.loadPage('modules/00-fundamentals/fundamentals-hub.html'); return false;" class="step-card-link">
-            <div class="step-card">
-                <h3>1. Learn</h3>
-                <p>Explore <strong>Fundamentals</strong> to master paragraph's rules and structures.</p>
-            </div>
-        </a>
-
-        <a href="modules/01-core-syllabus/core-hub.html" onclick="parent.loadPage('modules/01-core-syllabus/core-hub.html'); return false;" class="step-card-link">
-            <div class="step-card">
-                <h3>2. Syllabus</h3>
-                <p>Review the <strong>Core Syllabus</strong> for detailed units on Essays, Research Papers, and APA.</p>
-            </div>
-        </a>
-
-        <a href="modules/02-toolbox/toolbox-hub.html" onclick="parent.loadPage('modules/02-toolbox/toolbox-hub.html'); return false;" class="step-card-link">
-            <div class="step-card">
-                <h3>3. Practice</h3>
-                <p>Go to the <strong>Toolbox</strong> for interactive grammar drills and vocabulary boosters.</p>
-            </div>
-        </a>
-
-        <a href="modules/ethics-and-data.html" onclick="parent.loadPage('modules/ethics-and-data.html'); return false;" class="step-card-link">
-            <div class="step-card">
-                <h3>4. Report & Ethics</h3>
-                <p>Click here to learn about <strong>Data Privacy</strong> and ethics.</p>
-            </div>
-        </a>
+    <div class="steps-container" id="mouseWheelArea">
+        <div class="steps" id="cardsWrapper"></div>
     </div>
 
     <footer style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px; text-align: center; color: #777;">
@@ -78,6 +36,77 @@
         <p><strong>Arturo Rodriguez, PhD.</strong></p>
         <p>Pedagogía de los Idiomas Nacionales y Extranjeros </p>
     </footer>
+
+    <script src="js/nav.js"></script>
+
+    <script>
+        /**
+         * Genera las tarjetas basadas en el objeto MENU de nav.js
+         */
+        function generateCards() {
+            const wrapper = document.getElementById('cardsWrapper');
+            if (!wrapper || typeof MENU === 'undefined') return;
+
+            // Filtrar 'Main' y generar el resto
+            const modules = MENU.filter(item => item.label !== 'Main');
+
+            modules.forEach(item => {
+                const cardLink = document.createElement('a');
+                cardLink.href = "#";
+                cardLink.className = 'step-card-link';
+                
+                // Conexión con la función loadPage del index
+                cardLink.onclick = (e) => {
+                    e.preventDefault();
+                    if (parent && parent.loadPage) {
+                        parent.loadPage(item.path);
+                    } else {
+                        window.location.href = item.path;
+                    }
+                };
+
+                // Estructura de la tarjeta usando la descripción de nav.js
+                cardLink.innerHTML = `
+                    <div class="step-card">
+                        <h3>${item.label}</h3>
+                        <p>${item.description || 'Explore the lessons and tools in this module.'}</p>
+                    </div>
+                `;
+                wrapper.appendChild(cardLink);
+            });
+        }
+
+        // Efecto de movimiento por mouse
+        function initMouseEffect() {
+            const container = document.getElementById('mouseWheelArea');
+            const wrapper = document.getElementById('cardsWrapper');
+
+            container.addEventListener('mousemove', (e) => {
+                const totalWidth = wrapper.scrollWidth;
+                const visibleWidth = container.offsetWidth;
+                const maxMove = totalWidth - visibleWidth;
+
+                if (maxMove <= 0) return;
+
+                const rect = container.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const percentage = x / visibleWidth;
+                const moveX = percentage * maxMove;
+
+                wrapper.style.transform = `translateX(-${moveX}px)`;
+            });
+
+            container.addEventListener('touchstart', () => {
+                wrapper.style.transition = 'none';
+            });
+        }
+
+        // Ejecutar todo al cargar
+        document.addEventListener('DOMContentLoaded', () => {
+            generateCards();
+            initMouseEffect();
+        });
+    </script>
 
 </body>
 </html>
