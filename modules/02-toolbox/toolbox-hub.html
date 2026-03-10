@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toolbox</title>
-    <link rel="stylesheet" href="/css/modules.css">
-    <script src="/js/nav.js"></script>
+    <link rel="stylesheet" href="../../css/modules.css">
+    <script src="../../js/nav.js"></script>
     <style>
         .module-card {
             background: #fff; border: 1px solid #e0e0e0; border-radius: 10px;
@@ -37,28 +37,36 @@
 </div>
 
 <script>
-    // Usamos '/' para asegurar que busque desde la raíz del proyecto
-    const section = MENU.find(i => i.label === '02. Toolbox');
-    const container = document.getElementById('cardContainer');
+    // Esperamos a que todo cargue para asegurar que MENU exista
+    window.addEventListener('load', () => {
+        if (typeof MENU !== 'undefined') {
+            const section = MENU.find(i => i.label === '02. Toolbox');
+            const container = document.getElementById('cardContainer');
 
-    const hubPaths = {
-        'Grammar':    '/modules/02-toolbox/grammar/grammar-hub.html',
-        'Connectors': '/modules/02-toolbox/connectors/connectors-hub.html',
-        'Vocabulary': '/modules/02-toolbox/vocabulary/vocabulary-hub.html'
-    };
+            // Definimos las rutas relativas para las sub-hubs
+            const hubPaths = {
+                'Grammar':    'grammar/grammar-hub.html',
+                'Connectors': 'connectors/connectors-hub.html',
+                'Vocabulary': 'vocabulary/vocabulary-hub.html'
+            };
 
-    section.children.forEach(category => {
-        const card = document.createElement('div');
-        card.className = 'module-card';
-        // Usamos onclick con parent.loadPage para que el cambio ocurra en el marco principal
-        card.innerHTML = `
-            <div class="module-info">
-                <h3>${category.label}</h3>
-                <p>${category.children.length} lesson${category.children.length > 1 ? 's' : ''}</p>
-            </div>
-            <a href="#" onclick="parent.loadPage('${hubPaths[category.label]}'); return false;" class="btn-start">Enter →</a>
-        `;
-        container.appendChild(card);
+            if (section && section.children) {
+                section.children.forEach(category => {
+                    const card = document.createElement('div');
+                    card.className = 'module-card';
+                    card.innerHTML = `
+                        <div class="module-info">
+                            <h3>${category.label}</h3>
+                            <p>${category.children.length} lesson${category.children.length > 1 ? 's' : ''}</p>
+                        </div>
+                        <a href="${hubPaths[category.label]}" class="btn-start">Enter →</a>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+        } else {
+            console.error("nav.js no se cargó correctamente.");
+        }
     });
 </script>
 </body>
