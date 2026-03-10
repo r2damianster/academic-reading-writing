@@ -4,74 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fundamentals - Overview</title>
-    <link rel="stylesheet" href="/css/modules.css">
-    <script src="/js/nav.js"></script>
+    <link rel="stylesheet" href="../../css/modules.css">
+    <script src="../../js/nav.js"></script>
     <style>
         .module-card {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: transform 0.2s;
+            background: #fff; border: 1px solid #e0e0e0; border-radius: 10px;
+            padding: 20px; margin-bottom: 15px; display: flex;
+            justify-content: space-between; align-items: center; transition: transform 0.2s;
         }
         .module-card:hover { transform: translateX(5px); border-color: #3498db; }
         .module-info h3 { margin: 0 0 5px 0; color: #1a2a6c; }
-        .module-info p  { margin: 0; font-size: 0.9rem; color: #666; }
         .btn-start {
-            background: #3498db;
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 0.85rem;
-            white-space: nowrap;
+            background: #3498db; color: white; text-decoration: none;
+            padding: 10px 20px; border-radius: 5px; font-weight: bold;
+            font-size: 0.85rem; white-space: nowrap;
         }
         .intro-box {
-            background: #eef2f7;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            line-height: 1.6;
+            background: #eef2f7; padding: 20px; border-radius: 10px;
+            margin-bottom: 30px; line-height: 1.6;
         }
     </style>
 </head>
 <body>
 <div class="lesson-container">
-
     <h2>Module 00: Writing Fundamentals</h2>
-
     <div class="intro-box">
         <p>Welcome to the core of academic writing. Before diving into complex essays, you must master the building blocks of a perfect paragraph. This module will teach you how to maintain focus, structure your claims, and refine your work through the eyes of others.</p>
     </div>
-
     <h3>Learning Path</h3>
     <div id="cardContainer"></div>
-
 </div>
 
 <script>
-    // Busca la sección correcta en MENU y renderiza una tarjeta por cada lección
-    const section = MENU.find(item => item.label === '00. Fundamentals');
+    window.addEventListener('load', () => {
+        if (typeof MENU !== 'undefined') {
+            // CORRECCIÓN: El label debe coincidir con nav.js (00. Fundamentals)
+            const section = MENU.find(item => item.label === '00. Fundamentals');
+            const container = document.getElementById('cardContainer');
 
-    const container = document.getElementById('cardContainer');
-
-    section.children.forEach(lesson => {
-        const card = document.createElement('div');
-        card.className = 'module-card';
-        card.innerHTML = `
-            <div class="module-info">
-                <h3>${lesson.label}</h3>
-            </div>
-            <a href="${lesson.path.replace('modules/00-fundamentals/', '')}" class="btn-start">Start →</a>
-        `;
-        container.appendChild(card);
+            if (section && section.children) {
+                section.children.forEach(lesson => {
+                    // Limpiamos el path para que sea relativo a esta carpeta
+                    const path = lesson.path.replace('modules/00-fundamentals/', '');
+                    const card = document.createElement('div');
+                    card.className = 'module-card';
+                    card.innerHTML = `
+                        <div class="module-info"><h3>${lesson.label}</h3></div>
+                        <a href="${path}" class="btn-start">Start →</a>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+        }
     });
 </script>
-
 </body>
 </html>
