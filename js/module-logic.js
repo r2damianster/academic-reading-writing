@@ -64,8 +64,13 @@ window.finishLesson = function(lessonName) {
     const finalStatus = `Score: ${score}% (Errors: ${mistakes})`;
     console.log("finishLesson →", finalStatus);
 
+    // Obtener auditData del ActivityTracker si está disponible
+    const auditData = (typeof ActivityTracker !== 'undefined' && ActivityTracker.getActivityAudit)
+        ? ActivityTracker.getActivityAudit()
+        : { timestamp: Date.now(), mistakes: mistakes };
+
     const logger = window.parent.logActivity || window.logActivity;
-    if (logger) logger(lessonName, finalStatus, true, "", null);
+    if (logger) logger(lessonName, finalStatus, true, "", auditData);
 
     const totalSlides = document.querySelectorAll('.slide').length;
     nextSlide(totalSlides);
@@ -88,7 +93,7 @@ window.finishLessonWithEssay = function(lessonName, essay, audit, redirectUrl) {
     const path = window.location.pathname;
     let dest = 'index.html';
     if (path.includes('/00-fundamentals/'))  dest = 'fundamentals-hub.html';
-    if (path.includes('/unit1-essays/'))     dest = 'unit1-essays-hub.html';
+    if (path.includes('/unit1-essays/'))     dest = 'unit1-essays.html';
     if (path.includes('/unit2-papers/'))     dest = 'unit2-papers.html';
     if (path.includes('/apa-integrity/'))    dest = 'apa-integrity.html';
     if (path.includes('/toolbox/'))          dest = '../toolbox-hub.html';

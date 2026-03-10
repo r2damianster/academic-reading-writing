@@ -3,9 +3,9 @@
  * Solo tracking de actividad — la generación del reporte está en report.js
  */
 
-const SHEET_URL_UITOOLS = "https://script.google.com/macros/s/AKfycbxyTGsa79RwK7F09CSIfOnUDhur5e8391gDo8aguA_pxvhY_GyCv-8Gh0Hsb45XPzwC/exec";
+const SHEET_URL_UITOOLS = "https://script.google.com/macros/s/AKfycbwkGu5Guzmy7tEVR4YJ8hSrFgUe69tUsyzGthPzWivMxEpe6tFezWb60D_oWt0cAH14/exec";
 
-function sendOneToSheet(entry) {
+function sendOneToSheet(entry, isEssayUpdate = false) {
     const audit = entry.audit || {};
 
     const payload = {
@@ -30,7 +30,10 @@ function sendOneToSheet(entry) {
         charsTypedRatio:  audit.charsTypedRatio    != null ? audit.charsTypedRatio    : "",
         essay:            entry.essay                  || "",
         isNewAttempt:     entry.isNewAttempt ? "Yes" : "",
-        reportGeneratedAt: ""   // vacío — no es descarga de reporte
+        reportGeneratedAt: "",
+        lessonCompleted:  entry.lessonCompleted ? "Yes" : "",
+        essayCompleted:   entry.essayCompleted  ? "Yes" : "",
+        isEssayUpdate:    isEssayUpdate ? "Yes" : ""
     };
 
     const params = new URLSearchParams();
@@ -50,37 +53,58 @@ function logActivity(activityName, result, isQuiz = false, essayContent = "", au
         p => p.module === activityName && p.result && p.result.includes("Score")
     );
 
+    const hasEssay = essayContent && essayContent.trim().length > 5;
+
     // Caso 1: llega un "Visited" pero ya hay Score → ignorar
     if (result === "Visited" && existingIndex !== -1) return;
 
     // Caso 2: llega un Score y ya existe una entrada con Score → actualizar
     if (result.includes("Score") && existingIndex !== -1) {
         const existing = progress[existingIndex];
-        // Si el audit es diferente es un intento nuevo → limpiar ensayo anterior
-        const isNewAttempt = auditData && existing.audit &&
-            JSON.stringify(auditData) !== JSON.stringify(existing.audit);
-        progress[existingIndex] = {
+
+        const isEssayUpdate = hasEssay && existing.lessonCompleted;
+
+        const isNewAttempt = existing.isNewAttempt || (
+            !isEssayUpdate &&
+            auditData && existing.audit &&
+            JSON.stringify(auditData) !== JSON.stringify(existing.audit)
+        );
+
+        const updated = {
             ...existing,
-            timestamp:    new Date().toISOString(),
-            isNewAttempt: isNewAttempt || false,
-            essay: (essayContent && essayContent.trim().length > 5)
-                ? essayContent.trim()
-                : isNewAttempt ? "" : existing.essay || "",
-            audit: auditData || existing.audit || null
+            // ✅ FIX: si es nuevo intento sin essay, limpiar essay anterior
+            essay:          hasEssay ? essayContent.trim()
+                          : isNewAttempt ? ""
+                          : existing.essay || "",
+            essayCompleted: hasEssay ? true
+                          : isNewAttempt ? false
+                          : existing.essayCompleted || false,
         };
+
+        if (!isEssayUpdate) {
+            updated.timestamp       = new Date().toISOString();
+            updated.isNewAttempt    = isNewAttempt || false;
+            updated.audit           = auditData || existing.audit || null;
+            updated.lessonCompleted = true;
+        }
+
+        progress[existingIndex] = updated;
         localStorage.setItem('course_progress', JSON.stringify(progress));
-        console.log("Activity updated: " + activityName);
-        sendOneToSheet(progress[existingIndex]);  // ✅ enviar al Sheet al actualizar
+        console.log(`Activity ${isEssayUpdate ? "essay updated" : "updated"}: ` + activityName);
+        sendOneToSheet(progress[existingIndex], isEssayUpdate);
         return;
     }
 
     // Caso 3: entrada nueva con Score → guardar y enviar
     const newEntry = {
-        timestamp: new Date().toISOString(),
-        module:    activityName,
-        result:    result,
-        essay:     (essayContent && essayContent.trim().length > 5) ? essayContent.trim() : "",
-        audit:     auditData || null
+        timestamp:       new Date().toISOString(),
+        module:          activityName,
+        result:          result,
+        essay:           hasEssay ? essayContent.trim() : "",
+        audit:           auditData || null,
+        lessonCompleted: true,
+        essayCompleted:  hasEssay,
+        isNewAttempt:    false
     };
 
     progress.push(newEntry);
@@ -88,6 +112,6 @@ function logActivity(activityName, result, isQuiz = false, essayContent = "", au
     console.log("Activity saved: " + activityName);
 
     if (result.includes("Score")) {
-        sendOneToSheet(newEntry);  // ✅ enviar al Sheet solo si tiene Score
+        sendOneToSheet(newEntry, false);
     }
 }

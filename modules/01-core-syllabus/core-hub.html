@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Core Syllabus - Overview</title>
-    <link rel="stylesheet" href="../css/modules.css">
-    <script src="../js/nav.js"></script>
+    <link rel="stylesheet" href="../../css/modules.css">
+    <script src="../../js/nav.js"></script>
     <style>
         .unit-card {
             background: #fff;
@@ -41,18 +41,28 @@
     <h3>Units</h3>
     <div id="cardContainer"></div>
 </div>
+
 <script>
-    const section = MENU.find(item => item.label === '01. Core Syllabus');
-    const container = document.getElementById('cardContainer');
-    section.children.forEach(unit => {
-        const path = unit.path.replace('modules/01-core-syllabus/', '');
-        const card = document.createElement('div');
-        card.className = 'unit-card';
-        card.innerHTML = `
-            <div class="unit-info"><h3>${unit.label}</h3></div>
-            <a href="${path}" class="btn-start">Enter →</a>
-        `;
-        container.appendChild(card);
+    // Se ejecuta solo cuando el DOM y nav.js estén listos
+    window.addEventListener('load', () => {
+        if (typeof MENU !== 'undefined') {
+            const section = MENU.find(item => item.label === '01. Core Syllabus');
+            const container = document.getElementById('cardContainer');
+            
+            if (section && section.children) {
+                section.children.forEach(unit => {
+                    // Ajustamos el path quitando la ruta absoluta para que funcione desde aquí
+                    const path = unit.path.replace('modules/01-core-syllabus/', '');
+                    const card = document.createElement('div');
+                    card.className = 'unit-card';
+                    card.innerHTML = `
+                        <div class="unit-info"><h3>${unit.label}</h3></div>
+                        <a href="${path}" class="btn-start">Enter →</a>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+        }
     });
 </script>
 </body>

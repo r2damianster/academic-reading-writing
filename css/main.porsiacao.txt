@@ -1,0 +1,283 @@
+:root {
+    --primary: #1a2a6c;
+    --secondary: #3498db;
+    --bg: #f0f2f5;
+    --text: #333;
+    --white: #ffffff;
+    --sidebar-width: 280px;
+}
+
+body, html {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: var(--bg); 
+    overflow: hidden;
+}
+
+.app-container { display: flex; height: 100vh; }
+
+/* SIDEBAR CORE */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--primary);
+    color: white;
+    display: flex; 
+    flex-direction: column; 
+    padding: 20px;
+    height: 100vh;
+    box-sizing: border-box;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    z-index: 1001;
+}
+
+.sidebar-header h1 { 
+    font-size: 1.1rem; 
+    margin: 0; 
+    line-height: 1.2;
+}
+.sidebar-header p { font-size: 0.8rem; color: #3498db; margin-bottom: 20px; }
+
+/* MENÚ ACORDEÓN */
+.nav-menu { 
+    list-style: none; 
+    padding: 0; 
+    flex-grow: 1; 
+    overflow-y: auto; 
+    margin-bottom: 20px;
+}
+
+.menu-item { margin-bottom: 10px; }
+
+.section-header {
+    font-size: 0.75rem; 
+    text-transform: uppercase; 
+    color: #95a5a6;
+    padding: 12px 10px; 
+    background: rgba(255,255,255,0.03);
+    border-radius: 4px; 
+    cursor: pointer; 
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-header:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #3498db;
+}
+
+.sub-menu {
+    list-style: none; 
+    padding-left: 15px;
+    max-height: 0; 
+    overflow: hidden;
+    transition: max-height 0.4s ease-out 0.25s;
+}
+
+.menu-item:hover .sub-menu {
+    max-height: 800px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    transition: max-height 0.4s ease-out 0.25s;  /* ✅ 250ms antes de abrir */
+}
+
+.sub-menu li a {
+    color: #bdc3c7; 
+    text-decoration: none; 
+    display: block;
+    padding: 8px 0; 
+    font-size: 0.9rem;
+}
+.sub-menu li a:hover { 
+    color: white; 
+    transform: translateX(5px); 
+    transition: 0.2s; 
+}
+
+.nested-item { list-style: none; margin: 5px 0; }
+
+.nested-header {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    display: block;
+    padding: 5px 0;
+    cursor: pointer;
+}
+
+.nested-menu {
+    list-style: none;
+    padding-left: 12px;
+    border-left: 1px solid rgba(52, 152, 219, 0.3);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease 0.25s;
+}
+
+.nested-item:hover .nested-menu {
+    max-height: 200px;
+    transition: max-height 0.3s ease 0.25s;  /* ✅ 250ms antes de abrir */
+}
+
+.sidebar-footer {
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.btn-report { 
+    background: var(--secondary); 
+    color: white; 
+    border: none; 
+    padding: 12px; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    width: 100%; 
+    font-weight: bold; 
+}
+
+.content-area { flex-grow: 1; position: relative; overflow-y: auto; }
+#contentFrame { width: 100%; height: 100%; border: none; }
+
+/* --- MODAL DE REGISTRO --- */
+.modal {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    display: flex; align-items: flex-start; justify-content: center;
+    z-index: 3000;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.modal-content {
+    background: white;
+    padding: 36px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 440px;
+    color: #333;
+    box-sizing: border-box;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    margin: auto;
+}
+
+@media (max-width: 768px) {
+    .modal { align-items: flex-start; padding: 16px; }
+    .modal-content { padding: 24px; margin: 0; border-radius: 8px; }
+}
+
+.modal-content h2 {
+    margin: 0 0 6px 0;
+    color: var(--primary);
+    font-size: 1.4rem;
+    border: none;
+    padding: 0;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="email"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin: 6px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+    font-family: 'Segoe UI', sans-serif;
+    transition: border-color 0.2s;
+}
+
+.modal-content select {
+    width: 100%;
+    padding: 10px 12px;
+    margin: 6px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+    font-family: 'Segoe UI', sans-serif;
+    background: white;
+    color: #333;
+    cursor: pointer;
+    appearance: auto;
+    transition: border-color 0.2s;
+}
+
+.modal-content select:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(52,152,219,0.15);
+}
+
+.modal-content input[type="text"]:focus,
+.modal-content input[type="email"]:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(52,152,219,0.15);
+}
+
+.consent-box {
+    margin-top: 14px;
+    padding: 14px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.consent-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    color: #555;
+    line-height: 1.55;
+}
+
+.consent-label input[type="checkbox"] {
+    margin-top: 3px;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--primary);
+}
+
+.modal-content button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: bold;
+    margin-top: 16px;
+    transition: background 0.2s;
+}
+
+.modal-content button:hover {
+    background: var(--secondary);
+}
+
+#modalError {
+    color: #e74c3c;
+    font-size: 0.82rem;
+    margin-top: 10px;
+    text-align: center;
+    min-height: 18px;
+}
+
+/* MOBILE */
+.mobile-toggle { display: none; position: fixed; top: 10px; left: 10px; z-index: 2000; background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; }
+.sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+
+@media (max-width: 768px) {
+    .mobile-toggle { display: block; }
+    .sidebar { position: fixed; left: -280px; top: 0; height: 100vh; width: 280px; }
+    .sidebar.active { left: 0; }
+    .sidebar-overlay.active { display: block; }
+}

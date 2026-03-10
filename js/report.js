@@ -2,10 +2,8 @@
  * Generación de PDF y envío de datos a Google Sheets
  */
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbxyTGsa79RwK7F09CSIfOnUDhur5e8391gDo8aguA_pxvhY_GyCv-8Gh0Hsb45XPzwC/exec";
+const SHEET_URL_REPORT = "https://script.google.com/macros/s/AKfycbwkGu5Guzmy7tEVR4YJ8hSrFgUe69tUsyzGthPzWivMxEpe6tFezWb60D_oWt0cAH14/exec";
 
-// --- ENVÍO A GOOGLE SHEETS ---
-// Se llama automáticamente al generar el reporte
 function sendToSheet(entries) {
     const name            = localStorage.getItem('studentName')            || "";
     const email           = localStorage.getItem('studentEmail')           || "";
@@ -40,15 +38,17 @@ function sendToSheet(entries) {
             deletions:       audit.deletions        || "",
             timeToFirstKey:  audit.timeToFirstKeySec  != null ? audit.timeToFirstKeySec  : "",
             writingDuration: audit.writingDurationSec != null ? audit.writingDurationSec : "",
-            charsTypedRatio: audit.charsTypedRatio  != null ? audit.charsTypedRatio  : "",
+            charsTypedRatio: audit.charsTypedRatio  != null ? audit.charsTypedRatio      : "",
             essay:              item.essay             || "",
-            reportGeneratedAt:  new Date().toLocaleString()
+            reportGeneratedAt:  new Date().toLocaleString(),
+            lessonCompleted:    item.lessonCompleted ? "Yes" : "",
+            essayCompleted:     item.essayCompleted  ? "Yes" : ""
         };
 
         const params = new URLSearchParams();
         Object.entries(payload).forEach(([k, v]) => params.append(k, v));
 
-        fetch(SHEET_URL, {
+        fetch(SHEET_URL_REPORT, {
             method: "POST",
             mode:   "no-cors",
             body:   params
@@ -56,7 +56,6 @@ function sendToSheet(entries) {
     });
 }
 
-// --- GENERACIÓN DE PDF ---
 async function generateReport() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -73,8 +72,6 @@ async function generateReport() {
         return;
     }
 
-
-    // --- CABECERA ---
     doc.setFillColor(44, 62, 80);
     doc.rect(0, 0, 210, 58, 'F');
     doc.setTextColor(255, 255, 255);
@@ -170,4 +167,5 @@ async function generateReport() {
     }
 
     doc.save(`Report_${studentName.replace(/\s+/g, '_')}.pdf`);
+    sendToSheet(progress);
 }
