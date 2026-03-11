@@ -62,6 +62,11 @@ function logActivity(activityName, result, isQuiz = false, essayContent = "", au
     };
 
     progress.push(newEntry);
+    /* al final de logActivity en ui-tools.js */
     localStorage.setItem('course_progress', JSON.stringify(progress));
     console.log("logActivity saved:", activityName);
-}
+
+    // NUEVO: Si es un resultado final de Quiz, gatillar el envío al Sheet
+    if (result.includes("Score") && typeof window._sendToSheetBeacon === 'function') {
+        window._sendToSheetBeacon(progress);
+    }

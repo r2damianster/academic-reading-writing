@@ -10,6 +10,13 @@
     <script src="../../js/ui-tools.js"></script>
     <script src="../../js/report.js"></script>
     <script src="../../js/module-logic.js" defer></script>
+    <style>
+        /* Estilos para los cuadros de contraste visual */
+        .example-box { padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 5px solid; }
+        .correct { background-color: #d4edda; color: #155724; border-color: #28a745; }
+        .incorrect { background-color: #f8d7da; color: #721c24; border-color: #dc3545; }
+        .label { font-weight: bold; text-transform: uppercase; font-size: 0.8rem; display: block; margin-bottom: 5px; }
+    </style>
 </head>
 <body>
 
@@ -26,16 +33,14 @@
                 frameborder="0" width="100%" height="320" allowfullscreen>
             </iframe>
         </div>
-        <button class="btn-next" style="display:block; margin-top:20px;" onclick="nextSlide(1)">
-            Continue to lesson →
-        </button>
+        <button class="btn-next" style="display:block; margin-top:20px;" onclick="nextSlide(1)">Continue to lesson →</button>
     </div>
 
     <div class="slide" id="slide1">
         <h2>What is it?</h2>
         <p>In academic writing, a paragraph is like a contract. When you start with a sentence, you promise the reader you will talk <strong>only</strong> about that specific topic.</p>
-        <p>The One-Point Rule means: <strong>One paragraph = One single idea.</strong> If you start a new idea, you start a new paragraph.</p>
-        <button class="btn-next" style="display:block" onclick="nextSlide(2)">Got it, next →</button>
+        <p>The One-Point Rule means: <strong>One paragraph = One single idea.</strong></p>
+        <button class="btn-next" style="display:block" onclick="nextSlide(2)">Next →</button>
     </div>
 
     <div class="slide" id="slide2">
@@ -43,9 +48,9 @@
         <p><strong>Q1:</strong> Does this opening sentence follow the One-Point Rule?</p>
         <p><em>"Regular exercise improves heart health and also helps the local economy by creating jobs in gyms."</em></p>
         <button class="quiz-option" onclick="checkAnswer(this, false, 's2f')">A. Yes, it's a great start.</button>
-        <button class="quiz-option" onclick="checkAnswer(this, true, 's2f')">B. No, it mixes 'Health' and 'Economy' in the same point.</button>
+        <button class="quiz-option" onclick="checkAnswer(this, true, 's2f')">B. No, it mixes 'Health' and 'Economy'.</button>
         <div id="s2f" class="feedback"></div>
-        <button class="btn-next" onclick="nextSlide(3)">Next Question →</button>
+        <button class="btn-next" onclick="nextSlide(3)">Next →</button>
     </div>
 
     <div class="slide" id="slide3">
@@ -54,44 +59,77 @@
         <button class="quiz-option" onclick="checkAnswer(this, false, 's3f')">A. Smartphones are addictive and expensive for parents.</button>
         <button class="quiz-option" onclick="checkAnswer(this, true, 's3f')">B. High smartphone usage is directly linked to decreased sleep quality in teens.</button>
         <div id="s3f" class="feedback"></div>
-        <button class="btn-next" onclick="nextSlide(4)">Next Step →</button>
+        <button class="btn-next" onclick="nextSlide(4)">Next →</button>
     </div>
 
     <div class="slide" id="slide4">
         <h2>Proving it</h2>
-        <p>Once you make a promise (your main point), you need proof. This is the data, the quote, or the fact that supports your claim.</p>
-        <p>But watch out: your proof must support <strong>only</strong> that specific point. Don't bring extra information that doesn't belong here.</p>
-        <button class="btn-next" style="display:block" onclick="nextSlide(5)">Understood →</button>
+        <p><strong>Point:</strong> <em>"Regular exercise improves mental health."</em></p>
+        
+        <div class="example-box correct">
+            <span class="label">Correct Evidence</span>
+            <p>"A 2023 study found that 30 minutes of daily walking reduced anxiety symptoms by 20%."</p>
+        </div>
+
+        <div class="example-box incorrect">
+            <span class="label">Incorrect Evidence</span>
+            <p>"Furthermore, the global market for athletic footwear is expected to reach billions by 2030."</p>
+        </div>
+        
+        <button class="btn-next" style="display:block" onclick="nextSlide(5)">Next →</button>
     </div>
 
     <div class="slide" id="slide5">
         <h2>Quick Check</h2>
-        <p><strong>Q3:</strong> Your point is: <em>"Remote work increases employee productivity."</em> Which evidence fits?</p>
-        <button class="quiz-option" onclick="checkAnswer(this, true, 's5f')">A. A 2023 study showing workers finished tasks 13% faster at home.</button>
-        <button class="quiz-option" onclick="checkAnswer(this, false, 's5f')">B. A survey where 50% of people said they missed their office coffee.</button>
+        <p><strong>Q3:</strong> Your point is: <em>"Remote work increases employee productivity."</em> Which fits?</p>
+        <button class="quiz-option" onclick="checkAnswer(this, true, 's5f')">A. Data showing tasks finished 13% faster at home.</button>
+        <button class="quiz-option" onclick="checkAnswer(this, false, 's5f')">B. A survey where people missed their office coffee.</button>
         <div id="s5f" class="feedback"></div>
         <button class="btn-next" onclick="nextSlide(6)">Next →</button>
     </div>
 
     <div class="slide" id="slide6">
         <h2>Why does it matter?</h2>
-        <p>Facts don't speak for themselves; you have to explain them. You tell the reader: <em>"This evidence proves my point because..."</em>.</p>
-        <p>Keep your analysis strictly focused on the same idea you started with.</p>
-        <button class="btn-next" style="display:block" onclick="nextSlide(7)">Show me an example →</button>
+        <p>Facts don't speak for themselves; you have to explain them. Keep your analysis strictly focused on the same idea.</p>
+        <button class="btn-next" style="display:block" onclick="nextSlide(7)">Next →</button>
     </div>
 
     <div class="slide" id="slide7">
         <h2>Wrapping up</h2>
-        <p>This is your exit strategy. It's the final sentence that reminds the reader why this whole paragraph was important for your main argument. It closes the door tightly.</p>
-        <button class="btn-next" style="display:block" onclick="nextSlide(8)">Final Test →</button>
+        <p>The final sentence "closes the door" on your point.</p>
+
+        <div class="example-box correct">
+            <span class="label">Correct Wrapping Up</span>
+            <p>"Therefore, staying active is a powerful tool for maintaining emotional balance."</p>
+        </div>
+
+        <div class="example-box incorrect">
+            <span class="label">Incorrect Wrapping Up</span>
+            <p>"In addition, it is very important to stay hydrated while you exercise."</p>
+        </div>
+
+        <button class="btn-next" style="display:block" onclick="nextSlide(8)">Show me an example →</button>
     </div>
 
     <div class="slide" id="slide8">
-        <h2>Mastered?</h2>
-        <p>Select the best closing sentence for a paragraph about <strong>"Solar Energy benefits"</strong>:</p>
-        <button class="quiz-option" onclick="checkAnswer(this, true, 's8f')">A. Thus, solar power is a key tool in reducing our carbon footprint.</button>
-        <button class="quiz-option" onclick="checkAnswer(this, false, 's8f')">B. By the way, wind energy is also pretty good.</button>
-        <div id="s8f" class="feedback"></div>
+        <h2>Practical Example</h2>
+        <p>Let's see the full "contract" in action:</p>
+        <div style="background:#f9f9f9; padding:15px; border-radius:8px; border:1px solid #ccc; font-family: 'Georgia', serif;">
+            <p><strong>Point:</strong> Online learning offers flexibility for working students.</p>
+            <p><span style="color:#28a745; font-weight:bold;">✔ Correct Evidence:</span> Students can access lectures at any time, allowing them to keep full-time jobs.</p>
+            <p><span style="color:#28a745; font-weight:bold;">✔ Correct Cierre:</span> This adaptability makes higher education more accessible to the modern workforce.</p>
+            <hr>
+            <p><span style="color:#dc3545; font-weight:bold;">✘ Incorrect:</span> "By the way, many students also prefer using laptops over tablets." (This breaks the one-point rule).</p>
+        </div>
+        <button class="btn-next" style="display:block; margin-top:20px;" onclick="nextSlide(9)">Final Question →</button>
+    </div>
+
+    <div class="slide" id="slide9">
+        <h2>Final Question</h2>
+        <p>Select the best closing sentence for <strong>"Solar Energy benefits"</strong>:</p>
+        <button class="quiz-option" onclick="checkAnswer(this, true, 's9f')">A. Thus, solar power is a key tool in reducing our carbon footprint.</button>
+        <button class="quiz-option" onclick="checkAnswer(this, false, 's9f')">B. By the way, wind energy is also pretty good.</button>
+        <div id="s9f" class="feedback"></div>
         <button class="btn-next" onclick="finishLesson('one idea')">Go to Final Writing Exercise →</button>
     </div>
 
@@ -122,15 +160,12 @@
         }
     }
 
-    // Inicializamos tracker
     ActivityTracker.init('one idea');
 
-    // Lógica de detección de ensayo universal para móviles y PC
     const initEssayIfActive = () => {
         const essaySlide = document.getElementById('essaySlide');
         if (essaySlide && essaySlide.classList.contains('active')) {
             if (typeof EssayHandler !== 'undefined') {
-                console.log("✍️ EssayHandler activado");
                 EssayHandler.init('one idea');
                 return true;
             }
@@ -138,21 +173,15 @@
         return false;
     };
 
-    // Intervalo de seguridad para dispositivos lentos
     const checkEssayInterval = setInterval(() => {
         if (initEssayIfActive()) clearInterval(checkEssayInterval);
     }, 500);
 
-    // Observer para cambios de navegación
     const _observer = new MutationObserver(() => {
         if (initEssayIfActive()) _observer.disconnect();
     });
 
-    _observer.observe(document.body, {
-        attributes: true,
-        subtree: true,
-        attributeFilter: ['class']
-    });
+    _observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class'] });
 </script>
 
 </body>
