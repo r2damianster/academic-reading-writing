@@ -82,7 +82,7 @@ window.checkAnswer = function(btn, isCorrect, feedbackId) {
     }
 };
 
-// --- GUARDAR SCORE Y SALTAR AL ENSAYO ---
+// --- GUARDAR SCORE Y SALTAR AL PRE-ESSAY ---
 window.finishLesson = function(lessonName) {
     let score = 100 - (mistakes * 5);
     if (score < 0) score = 0;
@@ -102,11 +102,15 @@ window.finishLesson = function(lessonName) {
 
     localStorage.setItem('course_progress', JSON.stringify(progress));
 
-    nextSlide('essaySlide');
+    // ✅ ENVÍO DE LECCIÓN (isEssayUpdate: "No") — registra score en el sheet
+    window._sendLessonToSheet(lessonName, entry, null);
+
+    nextSlide('preEssaySlide');
 };
 
-// --- ENVÍO GARANTIZADO CON sendBeacon (no se cancela al redirigir) ---
-window._sendToSheetBeacon = function(progress) {
+// --- ENVÍO DE LECCIÓN — crea o actualiza la fila de lección ---
+// essay es opcional: solo se usa cuando no hubo quiz previo y se envía todo junto
+window._sendLessonToSheet = function(lessonName, lessonEntry, audit, essay) {
     const SHEET_URL = "https://script.google.com/macros/s/AKfycbwkGu5Guzmy7tEVR4YJ8hSrFgUe69tUsyzGthPzWivMxEpe6tFezWb60D_oWt0cAH14/exec";
 
     const name            = localStorage.getItem('studentName')            || "";
@@ -118,48 +122,87 @@ window._sendToSheetBeacon = function(progress) {
     const dataConsent     = localStorage.getItem('studentAcademicConsent') || "Yes";
     const researchConsent = localStorage.getItem('studentResearchConsent') || "Yes";
 
-    progress.forEach(item => {
-        if (!item.result || item.result === "Visited") return;
+    const a           = audit || {};
+    const essayText   = essay || "";
 
-        const a = item.audit || {};
+    const payload = {
+        timestamp:        new Date().toLocaleString(),
+        name:             name,
+        email:            email,
+        course:           course,
+        role:             role,
+        institution:      institution,
+        practiceType:     practiceType,
+        dataConsent:      dataConsent,
+        researchConsent:  researchConsent,
+        activity:         String(lessonEntry.module || lessonName),
+        result:           String(lessonEntry.result || ""),
+        words:            String(a.words           || "0"),
+        pastes:           String(a.pastes          || "0"),
+        tabSwitches:      String(a.tabSwitches     || "0"),
+        keystrokes:       String(a.keystrokes      || "0"),
+        deletions:        String(a.deletions       || "0"),
+        timeToFirstKey:   String(a.timeToFirstKey  || "0"),
+        writingDuration:  String(a.writingDuration || "0"),
+        charsTypedRatio:  String(a.charsTypedRatio || "0"),
+        essay:            essayText,
+        isEssayUpdate:    "No"   // ← LECCIÓN: siempre "No"
+    };
 
-        const payload = {
-            timestamp:        new Date().toLocaleString(),
-            name:             name,
-            email:            email,
-            course:           course,
-            role:             role,
-            institution:      institution,
-            practiceType:     practiceType,
-            dataConsent:      dataConsent,
-            researchConsent:  researchConsent,
-            activity:         String(item.module  || ""),
-            result:           String(item.result  || ""),
-            words:            String(a.words           || "0"),
-            pastes:           String(a.pastes          || "0"),
-            tabSwitches:      String(a.tabSwitches     || "0"),
-            keystrokes:       String(a.keystrokes      || "0"),
-            deletions:        String(a.deletions       || "0"),
-            timeToFirstKey:   String(a.timeToFirstKey  || "0"),
-            writingDuration:  String(a.writingDuration || "0"),
-            charsTypedRatio:  String(a.charsTypedRatio || "0"),
-            essay:            String(item.essay || ""),
-            isEssayUpdate:    "Yes"
-        };
+    const params = new URLSearchParams();
+    for (const key in payload) params.append(key, payload[key]);
 
-        const params = new URLSearchParams();
-        for (const key in payload) params.append(key, payload[key]);
+    const sent = navigator.sendBeacon(SHEET_URL, params);
+    console.log(`📡 sendBeacon LESSON "${lessonName}":`, sent ? "encolado ✅" : "falló ❌");
 
-        // ✅ sendBeacon: el browser garantiza el envío incluso si la página cambia
-        const sent = navigator.sendBeacon(SHEET_URL, params);
-        console.log(`📡 sendBeacon para "${item.module}":`, sent ? "encolado ✅" : "falló ❌");
+    if (!sent) {
+        fetch(SHEET_URL, { method: "POST", mode: "no-cors", body: params })
+            .catch(err => console.error("Fetch fallback falló:", err));
+    }
+};
 
-        // Fallback con fetch si sendBeacon no está disponible
-        if (!sent) {
-            fetch(SHEET_URL, { method: "POST", mode: "no-cors", body: params })
-                .catch(err => console.error("Fetch fallback falló:", err));
-        }
-    });
+// --- ENVÍO DE ESSAY — actualiza SOLO las columnas de essay en la fila existente ---
+window._sendEssayToSheet = function(lessonName, essay, audit) {
+    const SHEET_URL = "https://script.google.com/macros/s/AKfycbwkGu5Guzmy7tEVR4YJ8hSrFgUe69tUsyzGthPzWivMxEpe6tFezWb60D_oWt0cAH14/exec";
+
+    const email    = localStorage.getItem('studentEmail') || "";
+    const a        = audit || {};
+
+    const payload = {
+        timestamp:        new Date().toLocaleString(),
+        email:            email,
+        activity:         String(lessonName),
+        words:            String(a.words           || "0"),
+        pastes:           String(a.pastes          || "0"),
+        tabSwitches:      String(a.tabSwitches     || "0"),
+        keystrokes:       String(a.keystrokes      || "0"),
+        deletions:        String(a.deletions       || "0"),
+        timeToFirstKey:   String(a.timeToFirstKey  || "0"),
+        writingDuration:  String(a.writingDuration || "0"),
+        charsTypedRatio:  String(a.charsTypedRatio || "0"),
+        essay:            String(essay || ""),
+        isEssayUpdate:    "Yes"  // ← ESSAY: siempre "Yes"
+    };
+
+    const params = new URLSearchParams();
+    for (const key in payload) params.append(key, payload[key]);
+
+    const sent = navigator.sendBeacon(SHEET_URL, params);
+    console.log(`📡 sendBeacon ESSAY "${lessonName}":`, sent ? "encolado ✅" : "falló ❌");
+
+    if (!sent) {
+        fetch(SHEET_URL, { method: "POST", mode: "no-cors", body: params })
+            .catch(err => console.error("Fetch fallback falló:", err));
+    }
+};
+
+// --- MANTENER _sendToSheetBeacon por compatibilidad con ui-tools.js ---
+// Solo se usa desde logActivity() en ui-tools.js para quices sin essay
+window._sendToSheetBeacon = function(progress) {
+    // Enviar solo la última entrada, no todo el array
+    const lastEntry = [...progress].reverse().find(item => item.result && item.result !== "Visited");
+    if (!lastEntry) return;
+    window._sendLessonToSheet(lastEntry.module, lastEntry, lastEntry.audit || null);
 };
 
 // --- GUARDAR ENSAYO Y REDIRIGIR AL HUB ---
@@ -167,20 +210,17 @@ window.finishLessonWithEssay = function(lessonName, essay, audit, redirectUrl) {
     // 1. Obtener el progreso actual
     let progress = JSON.parse(localStorage.getItem('course_progress')) || [];
 
-    // 2. Inyectar ensayo y auditoría en la entrada existente
-    let found = false;
-    for (let item of progress) {
-        if (item.module === lessonName) {
-            item.essay     = essay || "";
-            item.audit     = audit || {};
-            item.timestamp = new Date().toLocaleString();
-            found = true;
-            break;
-        }
-    }
+    // 2. Determinar si ya existe fila de lección en localStorage
+    //    (proxy de si ya existe fila en el sheet)
+    let foundIndex = progress.findIndex(item => item.module === lessonName);
+    const lessonAlreadyRegistered = foundIndex !== -1;
 
-    // Si no existía, crear entrada nueva
-    if (!found) {
+    // 3. Inyectar ensayo y auditoría en la entrada existente, o crear una nueva
+    if (lessonAlreadyRegistered) {
+        progress[foundIndex].essay     = essay || "";
+        progress[foundIndex].audit     = audit || {};
+        progress[foundIndex].timestamp = new Date().toLocaleString();
+    } else {
         progress.push({
             module:    lessonName,
             result:    `Completed (No Quiz)`,
@@ -190,20 +230,22 @@ window.finishLessonWithEssay = function(lessonName, essay, audit, redirectUrl) {
         });
     }
 
-    // 3. Persistencia en LocalStorage
+    // 4. Persistencia en LocalStorage
     localStorage.setItem('course_progress', JSON.stringify(progress));
 
-    // 4. ✅ ENVÍO CON sendBeacon — garantizado antes del redirect
-    window._sendToSheetBeacon(progress);
-
-    // También llamar sendToSheet (report.js) si existe, como respaldo
-    if (typeof sendToSheet === 'function') {
-        sendToSheet(progress);
+    // 5. ✅ UN SOLO ENVÍO — la lógica decide la rama correcta:
+    //    - Si ya había fila registrada → isEssayUpdate:"Yes" (solo actualiza columnas de essay)
+    //    - Si NO había fila → isEssayUpdate:"No" (crea la fila completa con essay incluido)
+    if (lessonAlreadyRegistered) {
+        window._sendEssayToSheet(lessonName, essay, audit);
+    } else {
+        const entry = progress[progress.length - 1];
+        window._sendLessonToSheet(lessonName, entry, audit, essay);
     }
 
     alert("Academic progress and Integrity Audit saved!");
 
-    // 5. Lógica de redirección — delay aumentado a 1500ms como seguridad extra
+    // 5. Lógica de redirección
     const path = window.location.pathname;
     let dest = 'index.html';
     if (path.includes('/00-fundamentals/'))  dest = 'fundamentals-hub.html';
@@ -215,5 +257,5 @@ window.finishLessonWithEssay = function(lessonName, essay, audit, redirectUrl) {
 
     setTimeout(() => {
         window.location.href = dest;
-    }, 1500); // ← aumentado de 500ms a 1500ms como capa extra de seguridad
+    }, 1500);
 };
