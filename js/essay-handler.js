@@ -1,12 +1,8 @@
 /* js/essay-handler.js
- * Dos responsabilidades:
- * 1. BÓVEDA: guardar y recuperar ensayos en localStorage
- * 2. EssayHandler: trackear el textarea (keystrokes, pastes, 
- *    deletions, tiempos, ratio) y enviar al log al hacer submit
- *
- * Uso en cualquier HTML con textarea:
- *   EssayHandler.init('lesson name')   ← cuando el slide del essay se vuelve visible
- *   EssayHandler.submit()              ← en el botón Submit
+ * Responsabilidades:
+ * 1. BÓVEDA: Guardar y recuperar ensayos en localStorage.
+ * 2. EssayHandler: Trackear métricas de escritura (teclas, borrados, tiempos) 
+ * y enviar los datos al finalizar.
  */
 
 // --- BÓVEDA ---
@@ -91,25 +87,36 @@ window.EssayHandler = (function () {
             textarea.addEventListener('paste',   _onPaste);
             textarea.addEventListener('keydown', _onKeydown);
             textarea.addEventListener('input',   _updateWordCount);
+            // Cargar si ya existe algo en la bóveda
+            const saved = getEssay(lessonName);
+            if (saved) {
+                textarea.value = saved;
+                _updateWordCount();
+            }
         }
 
         console.log("✍️ EssayHandler initialized for:", _lessonName);
     }
 
-    /* Reemplaza TODA la función submit() en js/essay-handler.js */
-
     function submit() {
         try {
             const textarea   = document.getElementById(_textareaId);
             const essayText  = textarea ? textarea.value : "";
+            
+            if (essayText.trim().length < 10) {
+                alert("Please write a more substantial response before submitting.");
+                return;
+            }
+
             const totalChars = essayText.trim().length;
             const words      = essayText.trim() ? essayText.trim().split(/\s+/).length : 0;
 
-            // 1. OBTENER PRIMERO LOS DATOS DEL TRACKER (Para evitar el error de variable)
+            // 1. Obtener datos del ActivityTracker (si existe)
             const activityAudit = (typeof ActivityTracker !== 'undefined')
                 ? ActivityTracker.getActivityAudit()
                 : { tabSwitches: 0 };
 
+            // 2. Cálculos de tiempos y ratios
             const timeToFirstKey  = (_firstKeyTime && _slideStart)
                 ? Math.round((_firstKeyTime - _slideStart) / 1000)
                 : "";
@@ -122,8 +129,7 @@ window.EssayHandler = (function () {
                 ? Math.round((_totalKeys / totalChars) * 100)
                 : "";
 
-            // 2. CONSTRUIR EL AUDIT CON LOS NOMBRES QUE PIDE GOOGLE SCRIPT
-            // Dentro de la función submit() de essay-handler.js
+            // 3. Construir objeto de auditoría único
             const fullAudit = {
                 words:           words,
                 pastes:          _pastesMade,
@@ -135,29 +141,26 @@ window.EssayHandler = (function () {
                 charsTypedRatio: charsTypedRatio
             };
 
-            // IMPORTANTE: Al llamar a finishLessonWithEssay, asegúrate de pasar 'fullAudit'
-            if (typeof window.finishLessonWithEssay === 'function') {
-                window.finishLessonWithEssay(_lessonName, essayText, fullAudit);
-            }
-            
+            console.log("🚀 Enviando auditoría única:", fullAudit);
 
-            console.log("🚀 Enviando auditoría completa:", fullAudit);
-
-            // 3. GUARDAR EN BÓVEDA
-            const saver = window.parent.saveEssay || window.saveEssay;
+            // 4. Guardar en Bóveda local primero (Seguridad)
+            const saver = window.saveEssay || (window.parent && window.parent.saveEssay);
             if (typeof saver === 'function') {
                 saver(_lessonName, essayText, fullAudit);
             }
 
-            // 4. FINALIZAR (Asegúrate que esta función exista en module-logic.js)
-            if (typeof window.finishLessonWithEssay === 'function') {
-                window.finishLessonWithEssay(_lessonName, essayText, fullAudit);
-            } else if (typeof finishLessonWithEssay === 'function') {
-                finishLessonWithEssay(_lessonName, essayText, fullAudit);
+            // 5. LLAMADA ÚNICA al servidor (Google Sheets)
+            // Buscamos la función en el entorno global o el padre (si es un iframe)
+            const finisher = window.finishLessonWithEssay || 
+                           (window.parent && window.parent.finishLessonWithEssay);
+
+            if (typeof finisher === 'function') {
+                finisher(_lessonName, essayText, fullAudit);
             } else {
-                console.error("❌ No se encontró la función finishLessonWithEssay");
-                alert("Progress saved locally, but server sync function is missing.");
+                console.error("❌ No se encontró la función finishLessonWithEssay en ningún contexto.");
+                alert("Progress saved locally, but server sync is not available.");
             }
+
         } catch (error) {
             console.error("❌ ERROR CRÍTICO EN SUBMIT:", error);
             alert("Error al procesar el envío. Revisa la consola (F12).");
