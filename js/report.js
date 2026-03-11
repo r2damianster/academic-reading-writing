@@ -1,71 +1,8 @@
 /* js/report.js
- * Generación de PDF y envío de datos a Google Sheets
+ * ÚNICA responsabilidad: generar el PDF.
+ * Lee de localStorage. NO envía al sheet (eso es trabajo de module-logic.js).
  */
 
-const SHEET_URL_REPORT = "https://script.google.com/macros/s/AKfycbwkGu5Guzmy7tEVR4YJ8hSrFgUe69tUsyzGthPzWivMxEpe6tFezWb60D_oWt0cAH14/exec";
-
-/**
- * Envía los datos de progreso a Google Sheets con conversión forzada a String
- */
-function sendToSheet(entries) {
-    const name            = localStorage.getItem('studentName')            || "";
-    const email           = localStorage.getItem('studentEmail')           || "";
-    const course          = localStorage.getItem('studentCourse')          || "";
-    const role            = localStorage.getItem('studentMajor')           || "";
-    const institution     = localStorage.getItem('studentInstitution')     || "";
-    const practiceType    = localStorage.getItem('studentPracticeType')    || "";
-    const dataConsent     = localStorage.getItem('studentAcademicConsent') || "Yes";
-    const researchConsent = localStorage.getItem('studentResearchConsent') || "Yes";
-
-    entries.forEach(item => {
-        if (!item.result || item.result === "Visited") return;
-
-        // Buscamos la auditoría dentro de item.audit
-        const a = item.audit || {};
-
-        // CONSTRUCCIÓN MANUAL: Convertimos todo a String explícitamente
-        const payload = {
-            "Name":            String(name),
-            "Email":           String(email),
-            "Course":          String(course),
-            "Role":            String(role),
-            "Institution":     String(institution),
-            "PracticeType":    String(practiceType),
-            "DataConsent":     String(dataConsent),
-            "ResearchConsent": String(researchConsent),
-            "Activity":        String(item.module || ""),
-            "Result":          String(item.result || ""),
-            
-            // MÉTRICAS FORZADAS A STRING PARA EVITAR VALORES NULOS
-            "Words":           String(a.words || "0"),
-            "Pastes":          String(a.pastes || "0"),
-            "TabSwitches":     String(a.tabSwitches || "0"),
-            "Keystrokes":      String(a.keystrokes || "0"),
-            "Deletions":       String(a.deletions || "0"),
-            "TimeToFirstKey":  String(a.timeToFirstKey || "0"),
-            "WritingDuration": String(a.writingDuration || "0"),
-            "CharsTypedRatio": String(a.charsTypedRatio || "0"),
-            
-            "Essay":           String(item.essay || ""),
-            "isEssayUpdate":   "Yes" 
-        };
-
-        const params = new URLSearchParams();
-        for (const key in payload) {
-            params.append(key, payload[key]);
-        }
-
-        fetch(SHEET_URL_REPORT, {
-            method: "POST",
-            mode:   "no-cors", 
-            body:   params
-        }).catch(err => console.error("Falla de red en Sheet:", err));
-    });
-}
-
-/**
- * Genera el reporte PDF y dispara el envío a Sheets
- */
 async function generateReport() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -82,7 +19,7 @@ async function generateReport() {
         return;
     }
 
-    // --- Diseño del Encabezado ---
+    // --- Encabezado ---
     doc.setFillColor(44, 62, 80);
     doc.rect(0, 0, 210, 58, 'F');
     doc.setTextColor(255, 255, 255);
@@ -132,7 +69,7 @@ async function generateReport() {
             const row1 = `Words: ${audit.words || 0}  |  Pastes: ${audit.pastes || 0}  |  Tabs: ${audit.tabSwitches || 0}  |  Keys: ${audit.keystrokes || 0}  |  Dels: ${audit.deletions || 0}`;
             doc.text(row1, 23, y + 8);
 
-            const t1 = audit.timeToFirstKey ? `${audit.timeToFirstKey}s` : "—";
+            const t1 = audit.timeToFirstKey  ? `${audit.timeToFirstKey}s`  : "—";
             const tD = audit.writingDuration ? `${audit.writingDuration}s` : "—";
             const rA = audit.charsTypedRatio ? `${audit.charsTypedRatio}%` : "—";
             doc.text(`Time to first: ${t1}  |  Duration: ${tD}  |  Typed ratio: ${rA}`, 23, y + 14);
@@ -140,7 +77,7 @@ async function generateReport() {
         }
 
         // Texto del ensayo
-        let essayText = item.essay || "";
+        const essayText = item.essay || "";
         if (essayText.trim().length > 5) {
             if (y > 260) { doc.addPage(); y = 20; }
             doc.setTextColor(0);
@@ -167,5 +104,4 @@ async function generateReport() {
     }
 
     doc.save(`Report_${studentName.replace(/\s+/g, '_')}.pdf`);
-    sendToSheet(progress);
 }
