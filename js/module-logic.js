@@ -12,32 +12,46 @@ Object.defineProperty(window, 'mistakes', {
 
 mistakes = 0;
 
-// --- Navegación Universal ---
-window.nextSlide = function(target) {
+// --- Navegación Universal Corregida ---
+window.nextSlide = function(target = null) {
     const slides = document.querySelectorAll('.slide');
     const totalSlides = slides.length;
     const currentEl = document.querySelector('.slide.active');
-    if (currentEl) currentEl.classList.remove('active');
-
+    
+    // 1. Determinar cuál es la siguiente diapositiva
     let nextEl;
-    if (typeof target === 'number') {
+
+    if (target === null || target === undefined) {
+        // MODO AUTOMÁTICO: Ir a la siguiente en el orden del HTML
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            nextEl = slides[currentSlide];
+        }
+    } else if (typeof target === 'number') {
+        // MODO POR ÍNDICE: (Comportamiento antiguo)
         currentSlide = target;
         nextEl = document.getElementById(`slide${target}`);
     } else {
+        // MODO POR ID: (Para ir a 'essaySlide' o 'preEssaySlide')
         nextEl = document.getElementById(target);
         const index = Array.from(slides).indexOf(nextEl);
         if (index !== -1) currentSlide = index;
     }
 
+    // 2. Ejecutar el cambio visual
     if (nextEl) {
+        if (currentEl) currentEl.classList.remove('active');
         nextEl.classList.add('active');
         window.scrollTo(0, 0);
-    }
 
-    const progressBar = document.getElementById('progressBar');
-    if (progressBar && totalSlides > 1) {
-        const progress = (currentSlide / (totalSlides - 1)) * 100;
-        progressBar.style.width = `${progress}%`;
+        // 3. Actualizar barra de progreso
+        const progressBar = document.getElementById('progressBar');
+        if (progressBar && totalSlides > 1) {
+            const progress = (currentSlide / (totalSlides - 1)) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+    } else {
+        console.error("No se encontró la siguiente slide:", target);
     }
 };
 

@@ -3,20 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The One-Point Rule</title>
+    <title>The One-Point Rule | Academic Workspace</title>
+    
     <link rel="stylesheet" href="../../css/modules.css">
+    
     <script src="../../js/activity-tracker.js"></script>
     <script src="../../js/essay-handler.js"></script>
     <script src="../../js/ui-tools.js"></script>
     <script src="../../js/report.js"></script>
     <script src="../../js/module-logic.js" defer></script>
-    <style>
-        /* Estilos para los cuadros de contraste visual */
-        .example-box { padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 5px solid; }
-        .correct { background-color: #d4edda; color: #155724; border-color: #28a745; }
-        .incorrect { background-color: #f8d7da; color: #721c24; border-color: #dc3545; }
-        .label { font-weight: bold; text-transform: uppercase; font-size: 0.8rem; display: block; margin-bottom: 5px; }
-    </style>
+
+    <script src="../../js/ui-components.js" defer></script>
 </head>
 <body>
 
@@ -28,160 +25,149 @@
     <div class="slide active" id="slide0">
         <h2>Introduction</h2>
         <div class="video-container" style="position: relative; overflow: hidden; width: 100%; background: #000; border-radius: 8px;">
-            <iframe
-                src="https://docs.google.com/presentation/d/1f7FplyepkRn_gEDcjzGSfRNeYsR9pE4NnYnLWplLF-U/embed?start=false&loop=false&delayms=3000"
-                frameborder="0" width="100%" height="320" allowfullscreen>
-            </iframe>
+            <iframe src="https://docs.google.com/presentation/d/1f7FplyepkRn_gEDcjzGSfRNeYsR9pE4NnYnLWplLF-U/embed?start=false&loop=false&delayms=3000"
+                frameborder="0" width="100%" height="320" allowfullscreen></iframe>
         </div>
-        <button class="btn-next" style="display:block; margin-top:20px;" onclick="nextSlide(1)">Continue to lesson →</button>
+        <div id="btn0"></div>
     </div>
 
     <div class="slide" id="slide1">
         <h2>What is it?</h2>
         <p>In academic writing, a paragraph is like a contract. When you start with a sentence, you promise the reader you will talk <strong>only</strong> about that specific topic.</p>
         <p>The One-Point Rule means: <strong>One paragraph = One single idea.</strong></p>
-        <button class="btn-next" style="display:block" onclick="nextSlide(2)">Next →</button>
+        <div id="btn1"></div>
     </div>
 
     <div class="slide" id="slide2">
         <h2>Got it?</h2>
-        <p><strong>Q1:</strong> Does this opening sentence follow the One-Point Rule?</p>
-        <p><em>"Regular exercise improves heart health and also helps the local economy by creating jobs in gyms."</em></p>
-        <button class="quiz-option" onclick="checkAnswer(this, false, 's2f')">A. Yes, it's a great start.</button>
-        <button class="quiz-option" onclick="checkAnswer(this, true, 's2f')">B. No, it mixes 'Health' and 'Economy'.</button>
-        <div id="s2f" class="feedback"></div>
-        <button class="btn-next" onclick="nextSlide(3)">Next →</button>
+        <div id="quiz2"></div>
+        <div id="btn2"></div>
     </div>
 
     <div class="slide" id="slide3">
         <h2>Got it?</h2>
-        <p><strong>Q2:</strong> Which of these is a "One-Point" sentence?</p>
-        <button class="quiz-option" onclick="checkAnswer(this, false, 's3f')">A. Smartphones are addictive and expensive for parents.</button>
-        <button class="quiz-option" onclick="checkAnswer(this, true, 's3f')">B. High smartphone usage is directly linked to decreased sleep quality in teens.</button>
-        <div id="s3f" class="feedback"></div>
-        <button class="btn-next" onclick="nextSlide(4)">Next →</button>
+        <div id="quiz3"></div>
+        <div id="btn3"></div>
     </div>
 
     <div class="slide" id="slide4">
         <h2>Proving it</h2>
         <p><strong>Point:</strong> <em>"Regular exercise improves mental health."</em></p>
-        
-        <div class="example-box correct">
-            <span class="label">Correct Evidence</span>
-            <p>"A 2023 study found that 30 minutes of daily walking reduced anxiety symptoms by 20%."</p>
-        </div>
-
-        <div class="example-box incorrect">
-            <span class="label">Incorrect Evidence</span>
-            <p>"Furthermore, the global market for athletic footwear is expected to reach billions by 2030."</p>
-        </div>
-        
-        <button class="btn-next" style="display:block" onclick="nextSlide(5)">Next →</button>
+        <div id="contrast4"></div>
+        <div id="btn4"></div>
     </div>
 
     <div class="slide" id="slide5">
         <h2>Quick Check</h2>
-        <p><strong>Q3:</strong> Your point is: <em>"Remote work increases employee productivity."</em> Which fits?</p>
-        <button class="quiz-option" onclick="checkAnswer(this, true, 's5f')">A. Data showing tasks finished 13% faster at home.</button>
-        <button class="quiz-option" onclick="checkAnswer(this, false, 's5f')">B. A survey where people missed their office coffee.</button>
-        <div id="s5f" class="feedback"></div>
-        <button class="btn-next" onclick="nextSlide(6)">Next →</button>
+        <div id="quiz5"></div>
+        <div id="btn5"></div>
     </div>
 
     <div class="slide" id="slide6">
         <h2>Why does it matter?</h2>
         <p>Facts don't speak for themselves; you have to explain them. Keep your analysis strictly focused on the same idea.</p>
-        <button class="btn-next" style="display:block" onclick="nextSlide(7)">Next →</button>
+        <div id="btn6"></div>
     </div>
 
     <div class="slide" id="slide7">
         <h2>Wrapping up</h2>
         <p>The final sentence "closes the door" on your point.</p>
-
-        <div class="example-box correct">
-            <span class="label">Correct Wrapping Up</span>
-            <p>"Therefore, staying active is a powerful tool for maintaining emotional balance."</p>
-        </div>
-
-        <div class="example-box incorrect">
-            <span class="label">Incorrect Wrapping Up</span>
-            <p>"In addition, it is very important to stay hydrated while you exercise."</p>
-        </div>
-
-        <button class="btn-next" style="display:block" onclick="nextSlide(8)">Show me an example →</button>
+        <div id="contrast7"></div>
+        <div id="btn7"></div>
     </div>
 
     <div class="slide" id="slide8">
         <h2>Practical Example</h2>
-        <p>Let's see the full "contract" in action:</p>
-        <div style="background:#f9f9f9; padding:15px; border-radius:8px; border:1px solid #ccc; font-family: 'Georgia', serif;">
-            <p><strong>Point:</strong> Online learning offers flexibility for working students.</p>
-            <p><span style="color:#28a745; font-weight:bold;">✔ Correct Evidence:</span> Students can access lectures at any time, allowing them to keep full-time jobs.</p>
-            <p><span style="color:#28a745; font-weight:bold;">✔ Correct Cierre:</span> This adaptability makes higher education more accessible to the modern workforce.</p>
-            <hr>
-            <p><span style="color:#dc3545; font-weight:bold;">✘ Incorrect:</span> "By the way, many students also prefer using laptops over tablets." (This breaks the one-point rule).</p>
-        </div>
-        <button class="btn-next" style="display:block; margin-top:20px;" onclick="nextSlide(9)">Final Question →</button>
+        <div id="example8"></div>
+        <div id="btn8"></div>
     </div>
 
     <div class="slide" id="slide9">
         <h2>Final Question</h2>
-        <p>Select the best closing sentence for <strong>"Solar Energy benefits"</strong>:</p>
-        <button class="quiz-option" onclick="checkAnswer(this, true, 's9f')">A. Thus, solar power is a key tool in reducing our carbon footprint.</button>
-        <button class="quiz-option" onclick="checkAnswer(this, false, 's9f')">B. By the way, wind energy is also pretty good.</button>
-        <div id="s9f" class="feedback"></div>
-        <button class="btn-next" onclick="finishLesson('one idea')">Go to Final Writing Exercise →</button>
+        <div id="quiz9"></div>
+        <div id="btn9"></div>
+    </div>
+
+    <div class="slide" id="preEssaySlide">
+        <div id="warningArea"></div>
     </div>
 
     <div class="slide" id="essaySlide">
-        <h2>Writing Challenge: The One-Point Rule</h2>
-        <p><strong>Prompt:</strong> Write a simple paragraph about how making mistakes <strong>can help students learn.</strong></p>
-        <textarea id="essayInput"
-            placeholder="Write your paragraph here..."
-            style="width:100%;height:200px;padding:15px;border-radius:8px;border:1px solid #ccc;font-family:'Georgia',serif;line-height:1.6;font-size:16px;"></textarea>
-        <p style="font-size:0.85rem;color:#666;margin-top:5px;">
-            Word count: <span id="wordCountDisplay">0</span> words
-        </p>
-        <button class="btn-next" id="finalBtn" style="display:block;margin-top:20px;"
-            onclick="EssayHandler.submit()">
-            Submit & Save Progress
-        </button>
-        <button onclick="skipEssay()"
-            style="display:block;margin-top:10px;background:none;border:none;color:#999;font-size:0.85rem;cursor:pointer;text-decoration:underline;width:100%;">
-            Skip writing exercise →
-        </button>
+        <div id="essayArea"></div>
     </div>
 </div>
 
 <script>
-    function skipEssay() {
-        if (confirm("Skip the writing exercise? Your quiz score is already saved.")) {
-            window.location.href = 'fundamentals-hub.html';
-        }
-    }
+    window.onload = () => {
+        const UI = AcademicUI;
+        const LESSON_ID = 'one idea';
 
-    ActivityTracker.init('one idea');
+        // 1. Botones de navegación (DINÁMICOS - Sin números hardcodeados)
+        // Al usar null en el segundo parámetro, el componente usa 'nextSlide()' por defecto
+        document.getElementById('btn0').innerHTML = UI.createButton('Continue to lesson →');
+        document.getElementById('btn1').innerHTML = UI.createButton('Next →');
+        
+        // Botones que inician ocultos (esperando a que el quiz se resuelva)
+        document.getElementById('btn2').innerHTML = UI.createButton('Next →', null, 'next2', true);
+        document.getElementById('btn3').innerHTML = UI.createButton('Next →', null, 'next3', true);
+        
+        document.getElementById('btn4').innerHTML = UI.createButton('Next →');
+        document.getElementById('btn5').innerHTML = UI.createButton('Next →', null, 'next5', true);
+        document.getElementById('btn6').innerHTML = UI.createButton('Next →');
+        document.getElementById('btn7').innerHTML = UI.createButton('Show me an example →');
+        document.getElementById('btn8').innerHTML = UI.createButton('Final Question →');
+        
+        // Este botón llevará al preEssaySlide (la advertencia)
+        document.getElementById('btn9').innerHTML = UI.createButton('Go to Final Writing Exercise →', null, 'next9', true);
 
-    const initEssayIfActive = () => {
-        const essaySlide = document.getElementById('essaySlide');
-        if (essaySlide && essaySlide.classList.contains('active')) {
-            if (typeof EssayHandler !== 'undefined') {
-                EssayHandler.init('one idea');
-                return true;
-            }
-        }
-        return false;
+        // 2. Quices
+        document.getElementById('quiz2').innerHTML = UI.createQuizBlock('s2', 
+            "Does this opening sentence follow the One-Point Rule? <br><em>'Regular exercise improves heart health and also helps the local economy...'</em>", 
+            [{ text: "A. Yes", isCorrect: false }, { text: "B. No, it mixes Health and Economy", isCorrect: true }]);
+
+        document.getElementById('quiz3').innerHTML = UI.createQuizBlock('s3', 
+            "Which of these is a 'One-Point' sentence?", 
+            [{ text: "A. Smartphones are addictive and expensive.", isCorrect: false }, 
+             { text: "B. High usage is linked to decreased sleep quality.", isCorrect: true }]);
+
+        document.getElementById('quiz5').innerHTML = UI.createQuizBlock('s5', 
+            "Your point is: 'Remote work increases productivity.' Which fits?", 
+            [{ text: "A. Data: tasks finished 13% faster.", isCorrect: true }, 
+             { text: "B. Survey: people missed office coffee.", isCorrect: false }]);
+
+        document.getElementById('quiz9').innerHTML = UI.createQuizBlock('s9', 
+            "Select the best closing sentence for 'Solar Energy benefits':", 
+            [{ text: "A. Thus, solar power is a key tool in reducing our carbon footprint.", isCorrect: true }, 
+             { text: "B. By the way, wind energy is also pretty good.", isCorrect: false }]);
+
+        // 3. Contrastes y Ejemplos
+        document.getElementById('contrast4').innerHTML = 
+            UI.createContrastBox('correct', 'Correct Evidence', 'A 2023 study found reduction in anxiety.') +
+            UI.createContrastBox('incorrect', 'Incorrect Evidence', 'Market for footwear is increasing.');
+
+        document.getElementById('contrast7').innerHTML = 
+            UI.createContrastBox('correct', 'Correct Wrapping Up', 'Therefore, activity maintains balance.') +
+            UI.createContrastBox('incorrect', 'Incorrect Wrapping Up', 'It is important to stay hydrated.');
+
+        document.getElementById('example8').innerHTML = 
+            UI.createContrastBox('correct', 'Full Paragraph Example', 
+            '<strong>Point:</strong> Online learning offers flexibility... <br><strong>✔ Evidence:</strong> Students access lectures anytime... <br><strong>✔ Closing:</strong> Adaptability makes education accessible.');
+
+        // 4. Inyección de Secciones Finales
+        // La función dentro del botón de Warning ya ejecuta nextSlide() para mostrar el Essay
+        document.getElementById('warningArea').innerHTML = UI.createEssayWarning(
+            LESSON_ID,
+            "Usted va a realizar un ensayo que le tomará entre 5 minutos o más. Este ejercicio es fundamental para evaluar su comprensión de la unidad y su capacidad de síntesis académica."
+        );
+
+        document.getElementById('essayArea').innerHTML = UI.renderEssaySection(
+            LESSON_ID,
+            "Write a simple paragraph about how making mistakes can help students learn. Ensure you follow the One-Point Rule."
+        );
     };
 
-    const checkEssayInterval = setInterval(() => {
-        if (initEssayIfActive()) clearInterval(checkEssayInterval);
-    }, 500);
-
-    const _observer = new MutationObserver(() => {
-        if (initEssayIfActive()) _observer.disconnect();
-    });
-
-    _observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class'] });
+    // Inicializar rastreo general
+    ActivityTracker.init('one idea');
 </script>
 
 </body>
