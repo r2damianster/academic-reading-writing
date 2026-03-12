@@ -211,9 +211,9 @@ const SlideEngine = (function () {
         if (!redirectUrl) {
             const path = window.location.pathname;
             if (path.includes('/00-fundamentals/')) dest = 'fundamentals-hub.html';
-            if (path.includes('/unit1-essays/'))    dest = 'unit1-essays.html';
-            if (path.includes('/unit2-papers/'))    dest = 'unit2-papers.html';
-            if (path.includes('/apa-integrity/'))   dest = 'apa-integrity.html';
+            if (path.includes('/unit1-essays/'))    dest = 'unit1-essays-hub.html';
+            if (path.includes('/unit2-papers/'))    dest = 'unit2-papers-hub.html';
+            if (path.includes('/apa-integrity/'))   dest = 'apa-integrity-hub.html';
         }
 
         setTimeout(() => { window.location.href = dest; }, 1500);
