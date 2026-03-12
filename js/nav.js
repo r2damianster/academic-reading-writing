@@ -13,14 +13,16 @@ const MENU = [
     description: 'Master paragraph rules, structures, and the <strong>PEER</strong> model.',
     children: [
       { label: '1. The One-Point Rule',         path: 'modules/00-fundamentals/one-idea.html' },
-      { label: '2. Topic Sentences',           path: 'modules/00-fundamentals/topic-sentences.html' },
-      { label: '3. PEER',                       path: 'modules/00-fundamentals/peer.html' },
-      { label: '4. Supporting Sentences',      path: 'modules/00-fundamentals/supporting-sentences.html' },
-      { label: '5. Paragraph Review',          path: 'modules/00-fundamentals/paragraph-review.html' },
-      { label: '6. Organizational Patterns',   path: 'modules/00-fundamentals/organizational-patterns.html' },
-      { label: '7. Body Paragraphs',           path: 'modules/00-fundamentals/body-paragraphs.html' },
-      { label: '8. Conclusion Paragraphs',     path: 'modules/00-fundamentals/conclusion-paragraphs.html' },
-      { label: '9. From Paragraphs to Essay',  path: 'modules/00-fundamentals/paragraphs-to-essay.html' }
+      { label: '2. Topic Sentences',            path: 'modules/00-fundamentals/topic-sentences.html' },
+      { label: '3. PEER',                        path: 'modules/00-fundamentals/peer.html' },
+      { label: '4. Supporting Sentences',       path: 'modules/00-fundamentals/supporting-sentences.html' },
+      { label: '5. Paragraph Review',           path: 'modules/00-fundamentals/paragraph-review.html' },
+      { label: '6. Organizational Patterns',    path: 'modules/00-fundamentals/organizational-patterns.html' },
+      { label: '7. Body Paragraphs',            path: 'modules/00-fundamentals/body-paragraphs.html' },
+      { label: '8. Conclusion Paragraphs',      path: 'modules/00-fundamentals/conclusion-paragraphs.html' },
+      { label: '9. From Paragraphs to Essay',   path: 'modules/00-fundamentals/paragraphs-to-essay.html' },
+      { label: '10. Introduction Strategies',   path: 'modules/00-fundamentals/introduction-strategies.html' },
+      { label: '11. Integrating Visuals',       path: 'modules/00-fundamentals/integrating-visuals.html' }
     ]
   },
   {
@@ -32,12 +34,13 @@ const MENU = [
         label: 'Unit 1: Essays',
         path: 'modules/01-core-syllabus/unit1-essays/unit1-essays-hub.html',
         children: [
-          { label: 'Essay Structure',            path: 'modules/01-core-syllabus/unit1-essays/essay-structure.html' },
+          { label: 'Essay Structure',             path: 'modules/01-core-syllabus/unit1-essays/essay-structure.html' },
           { label: 'Block Pattern',               path: 'modules/01-core-syllabus/unit1-essays/block-pattern.html' },
-          { label: 'Point-by-Point Pattern',     path: 'modules/01-core-syllabus/unit1-essays/point-by-point.html' },
-          { label: 'Types of Essays',            path: 'modules/01-core-syllabus/unit1-essays/types-essay.html' },
-          { label: 'Argumentative Essay',        path: 'modules/01-core-syllabus/unit1-essays/argumentative-essay.html' },
-          { label: 'Summarizing & Paraphrasing', path: 'modules/01-core-syllabus/unit1-essays/summarizing-paraphrasing.html' }
+          { label: 'Point-by-Point Pattern',      path: 'modules/01-core-syllabus/unit1-essays/point-by-point.html' },
+          { label: 'Types of Essays',             path: 'modules/01-core-syllabus/unit1-essays/types-essay.html' },
+          { label: 'Argumentative Essay',         path: 'modules/01-core-syllabus/unit1-essays/argumentative-essay.html' },
+          { label: 'Chain Essay',                 path: 'modules/01-core-syllabus/unit1-essays/chain-essay.html' },
+          { label: 'Summarizing & Paraphrasing',  path: 'modules/01-core-syllabus/unit1-essays/summarizing-paraphrasing.html' }
         ]
       },
       {
@@ -47,6 +50,8 @@ const MENU = [
           { label: 'From Essays to Research Papers', path: 'modules/01-core-syllabus/unit2-papers/essays-to-papers.html' },
           { label: 'The Logic of Research',          path: 'modules/01-core-syllabus/unit2-papers/logic-of-research.html' },
           { label: 'Sections of a Research Paper',   path: 'modules/01-core-syllabus/unit2-papers/sections-research-paper.html' },
+          { label: 'Scientific Articles',            path: 'modules/01-core-syllabus/unit2-papers/scientific-articles.html' },
+          { label: 'Writing an Abstract',            path: 'modules/01-core-syllabus/unit2-papers/writing-abstract.html' },
           { label: 'Reading Chart for Research',     path: 'modules/01-core-syllabus/unit2-papers/reading-chart.html' },
           { label: 'Academic Presentation',          path: 'modules/01-core-syllabus/unit2-papers/academic-presentation.html' }
         ]
@@ -71,12 +76,14 @@ const MENU = [
         label: 'Grammar',
         path: 'modules/02-toolbox/grammar/grammar-hub.html',
         children: [
-          { label: 'Passive Voice',           path: 'modules/02-toolbox/grammar/passive-voice.html' },
-          { label: 'Although / Despite',      path: 'modules/02-toolbox/grammar/although-despite.html' },
-          { label: 'Relative Clauses',        path: 'modules/02-toolbox/grammar/relative-clauses.html' },
-          { label: 'Conditionals',            path: 'modules/02-toolbox/grammar/conditionals.html' },
-          { label: 'Nominalization',          path: 'modules/02-toolbox/grammar/nominalization.html' },
-          { label: 'Hedging Language',        path: 'modules/02-toolbox/grammar/hedging-language.html' }
+          { label: 'Passive Voice',                  path: 'modules/02-toolbox/grammar/passive-voice.html' },
+          { label: 'Although / Despite',             path: 'modules/02-toolbox/grammar/although-despite.html' },
+          { label: 'Relative Clauses',               path: 'modules/02-toolbox/grammar/relative-clauses.html' },
+          { label: 'Conditionals',                   path: 'modules/02-toolbox/grammar/conditionals.html' },
+          { label: 'Inverted Conditionals',          path: 'modules/02-toolbox/grammar/inverted-conditionals.html' },
+          { label: 'Compound & Complex Sentences',   path: 'modules/02-toolbox/grammar/compound-complex-sentences.html' },
+          { label: 'Nominalization',                 path: 'modules/02-toolbox/grammar/nominalization.html' },
+          { label: 'Hedging Language',               path: 'modules/02-toolbox/grammar/hedging-language.html' }
         ]
       },
       {
@@ -87,7 +94,8 @@ const MENU = [
           { label: 'Logical Division',        path: 'modules/02-toolbox/connectors/logical-division-signals.html' },
           { label: 'Cause & Effect',          path: 'modules/02-toolbox/connectors/cause-effect-connectors.html' },
           { label: 'Contrast & Concession',   path: 'modules/02-toolbox/connectors/contrast-concession.html' },
-          { label: 'Adding Information',      path: 'modules/02-toolbox/connectors/adding-information.html' }
+          { label: 'Adding Information',      path: 'modules/02-toolbox/connectors/adding-information.html' },
+          { label: 'Discourse Markers',       path: 'modules/02-toolbox/connectors/discourse-markers.html' }
         ]
       },
       {
@@ -98,7 +106,9 @@ const MENU = [
           { label: 'Academic Vocab 2',        path: 'modules/02-toolbox/vocabulary/vocabulary2.html' },
           { label: 'Reporting Verbs',         path: 'modules/02-toolbox/vocabulary/reporting-verbs.html' },
           { label: 'Hedging Vocabulary',      path: 'modules/02-toolbox/vocabulary/hedging-vocabulary.html' },
-          { label: 'Discipline-Specific',     path: 'modules/02-toolbox/vocabulary/discipline-specific.html' }
+          { label: 'Discipline-Specific',     path: 'modules/02-toolbox/vocabulary/discipline-specific.html' },
+          { label: 'Phrasal Verbs',           path: 'modules/02-toolbox/vocabulary/phrasal-verbs-academic.html' },
+          { label: 'Formal Language',         path: 'modules/02-toolbox/vocabulary/formal-language.html' }
         ]
       }
     ]
@@ -108,10 +118,11 @@ const MENU = [
     path: 'modules/03-peer-review/peer-review-hub.html',
     description: 'Learn about <strong>Data Privacy</strong>, ethics, and feedback systems.',
     children: [
-      { label: 'Review Checklist',        path: 'modules/03-peer-review/checklist.html' },
-      { label: 'How to Give Feedback',    path: 'modules/03-peer-review/how-to-give-feedback.html' },
-      { label: 'How to Receive Feedback', path: 'modules/03-peer-review/how-to-receive-feedback.html' },
-      { label: 'Peer Review Form',        path: 'modules/03-peer-review/peer-review-form.html' }
+      { label: 'Review Checklist',         path: 'modules/03-peer-review/checklist.html' },
+      { label: 'How to Give Feedback',     path: 'modules/03-peer-review/how-to-give-feedback.html' },
+      { label: 'How to Receive Feedback',  path: 'modules/03-peer-review/how-to-receive-feedback.html' },
+      { label: 'Peer Review Form',         path: 'modules/03-peer-review/peer-review-form.html' },
+      { label: 'Self-Assessment Rubric',   path: 'modules/03-peer-review/self-assessment-rubric.html' }
     ]
   },
   {
@@ -127,11 +138,10 @@ const MENU = [
   }
 ];
 
-// ... (Aquí sigue tu función buildMenu() original sin cambios)
 function buildMenu() {
   const ul = document.getElementById('navMenu');
   if (!ul) return;
-  ul.innerHTML = ""; 
+  ul.innerHTML = "";
   MENU.forEach(item => {
     const li = document.createElement('li');
     li.className = 'menu-item';
