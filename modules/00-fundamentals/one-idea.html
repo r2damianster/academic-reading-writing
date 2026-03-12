@@ -7,13 +7,13 @@
     
     <link rel="stylesheet" href="../../css/modules.css">
     
+    <!-- Archivos que NO cambian (tracking externo) -->
     <script src="../../js/activity-tracker.js"></script>
     <script src="../../js/essay-handler.js"></script>
-    <script src="../../js/ui-tools.js"></script>
     <script src="../../js/report.js"></script>
-    <script src="../../js/module-logic.js" defer></script>
 
-    <script src="../../js/ui-components.js" defer></script>
+    <!-- ✅ ÚNICO archivo nuevo — reemplaza module-logic, ui-components, interactions-handler -->
+    <script src="../../js/slide-engine.js" defer></script>
 </head>
 <body>
 
@@ -22,152 +22,169 @@
         <div class="progress-fill" id="progressBar"></div>
     </div>
 
-    <div class="slide active" id="slide0">
+    <!-- =====================================================================
+         SLIDE 0 — VIDEO
+         Solo necesitas poner el src del iframe en data-se-src.
+         El engine aplica estilos, dimensiones y el botón automáticamente.
+    ====================================================================== -->
+    <div class="slide active" data-type="VIDEO">
         <h2>Introduction</h2>
-        <div class="video-container" style="position: relative; overflow: hidden; width: 100%; background: #000; border-radius: 8px;">
-            <iframe src="https://docs.google.com/presentation/d/1f7FplyepkRn_gEDcjzGSfRNeYsR9pE4NnYnLWplLF-U/embed?start=false&loop=false&delayms=3000"
-                frameborder="0" width="100%" height="320" allowfullscreen></iframe>
-        </div>
-        <div id="btn0"></div>
+        <iframe data-se-src="https://docs.google.com/presentation/d/1f7FplyepkRn_gEDcjzGSfRNeYsR9pE4NnYnLWplLF-U/embed?start=false&loop=false&delayms=3000"
+                data-se-height="320"></iframe>
     </div>
 
-    <div class="slide" id="slide1">
+    <!-- =====================================================================
+         SLIDE 1 — CONTENT
+         Texto puro. El botón "Next" se añade automáticamente.
+    ====================================================================== -->
+    <div class="slide" data-type="CONTENT">
         <h2>What is it?</h2>
-        <p>In academic writing, a paragraph is like a contract. When you start with a sentence, you promise the reader you will talk <strong>only</strong> about that specific topic.</p>
+        <p>In academic writing, a paragraph is like a contract. When you start with a sentence,
+           you promise the reader you will talk <strong>only</strong> about that specific topic.</p>
         <p>The One-Point Rule means: <strong>One paragraph = One single idea.</strong></p>
-        <div id="btn1"></div>
     </div>
 
-    <div class="slide" id="slide2">
+    <!-- =====================================================================
+         SLIDE 2 — QUIZ
+         Marca la respuesta correcta con data-se-correct.
+         El botón "Next" aparece solo cuando el alumno acierta.
+    ====================================================================== -->
+    <div class="slide" data-type="QUIZ">
         <h2>Got it?</h2>
-        <div id="quiz2"></div>
-        <div id="btn2"></div>
+        <p data-se-question>
+            Does this opening sentence follow the One-Point Rule?
+            <br><em>'Regular exercise improves heart health and also helps the local economy...'</em>
+        </p>
+        <div data-se-option>A. Yes</div>
+        <div data-se-option data-se-correct>B. No, it mixes Health and Economy</div>
     </div>
 
-    <div class="slide" id="slide3">
+    <!-- =====================================================================
+         SLIDE 3 — QUIZ
+    ====================================================================== -->
+    <div class="slide" data-type="QUIZ">
         <h2>Got it?</h2>
-        <div id="quiz3"></div>
-        <div id="btn3"></div>
+        <p data-se-question>Which of these is a 'One-Point' sentence?</p>
+        <div data-se-option>A. Smartphones are addictive and expensive.</div>
+        <div data-se-option data-se-correct>B. High usage is linked to decreased sleep quality.</div>
     </div>
 
-    <div class="slide" id="slide4">
+    <!-- =====================================================================
+         SLIDE 4 — CONTRAST
+         Cada bloque correct/incorrect tiene su label y contenido.
+         Puedes añadir tantos pares como necesites.
+    ====================================================================== -->
+    <div class="slide" data-type="CONTRAST">
         <h2>Proving it</h2>
-        <p><strong>Point:</strong> <em>"Regular exercise improves mental health."</em></p>
-        <div id="contrast4"></div>
-        <div id="btn4"></div>
+        <p data-se-intro><strong>Point:</strong> <em>"Regular exercise improves mental health."</em></p>
+
+        <div data-se-correct data-se-label="Correct Evidence">
+            A 2023 study found reduction in anxiety symptoms among regular runners.
+        </div>
+        <div data-se-incorrect data-se-label="Incorrect Evidence">
+            Market for footwear is increasing year over year.
+        </div>
     </div>
 
-    <div class="slide" id="slide5">
+    <!-- =====================================================================
+         SLIDE 5 — QUIZ
+    ====================================================================== -->
+    <div class="slide" data-type="QUIZ">
         <h2>Quick Check</h2>
-        <div id="quiz5"></div>
-        <div id="btn5"></div>
+        <p data-se-question>
+            Your point is: <em>'Remote work increases productivity.'</em> Which evidence fits?
+        </p>
+        <div data-se-option data-se-correct>A. Data: tasks finished 13% faster.</div>
+        <div data-se-option>B. Survey: people missed office coffee.</div>
     </div>
 
-    <div class="slide" id="slide6">
+    <!-- =====================================================================
+         SLIDE 6 — CONTENT
+    ====================================================================== -->
+    <div class="slide" data-type="CONTENT">
         <h2>Why does it matter?</h2>
-        <p>Facts don't speak for themselves; you have to explain them. Keep your analysis strictly focused on the same idea.</p>
-        <div id="btn6"></div>
+        <p>Facts don't speak for themselves; you have to explain them.
+           Keep your analysis strictly focused on the same idea.</p>
     </div>
 
-    <div class="slide" id="slide7">
+    <!-- =====================================================================
+         SLIDE 7 — CONTRAST
+    ====================================================================== -->
+    <div class="slide" data-type="CONTRAST">
         <h2>Wrapping up</h2>
         <p>The final sentence "closes the door" on your point.</p>
-        <div id="contrast7"></div>
-        <div id="btn7"></div>
+
+        <div data-se-correct data-se-label="Correct Wrapping Up">
+            Therefore, regular activity helps maintain psychological balance.
+        </div>
+        <div data-se-incorrect data-se-label="Incorrect Wrapping Up">
+            By the way, it is also important to stay hydrated.
+        </div>
     </div>
 
-    <div class="slide" id="slide8">
+    <!-- =====================================================================
+         SLIDE 8 — CONTRAST (ejemplo de párrafo completo)
+    ====================================================================== -->
+    <div class="slide" data-type="CONTRAST">
         <h2>Practical Example</h2>
-        <div id="example8"></div>
-        <div id="btn8"></div>
+
+        <div data-se-correct data-se-label="Full Paragraph Example">
+            <strong>Point:</strong> Online learning offers flexibility for working students.<br>
+            <strong>✔ Evidence:</strong> Students can access recorded lectures at any time of day.<br>
+            <strong>✔ Closing:</strong> This adaptability makes higher education more accessible.
+        </div>
     </div>
 
-    <div class="slide" id="slide9">
+    <!-- =====================================================================
+         SLIDE 9 — QUIZ (último quiz — después va al essay)
+    ====================================================================== -->
+    <div class="slide" data-type="QUIZ">
         <h2>Final Question</h2>
-        <div id="quiz9"></div>
-        <div id="btn9"></div>
+        <p data-se-question>Select the best closing sentence for 'Solar Energy benefits':</p>
+        <div data-se-option data-se-correct>
+            A. Thus, solar power is a key tool in reducing our carbon footprint.
+        </div>
+        <div data-se-option>
+            B. By the way, wind energy is also pretty good.
+        </div>
     </div>
 
-    <div class="slide" id="preEssaySlide">
-        <div id="warningArea"></div>
+    <!-- =====================================================================
+         ESSAY — Slide de advertencia previa
+         data-se-role="warning" genera el panel de instrucciones y los botones.
+    ====================================================================== -->
+    <div class="slide" id="preEssaySlide"
+         data-type="ESSAY" data-se-role="warning"
+         data-se-lesson="one point">
+        <h2>Writing Task Instructions</h2>
+        <p data-se-warning>
+            You will be writing an essay that will take 5 minutes or more.
+            This exercise is essential for assessing your understanding of the unit
+            and your ability to synthesize information academically.
+        </p>
     </div>
 
-    <div class="slide" id="essaySlide">
-        <div id="essayArea"></div>
+    <!-- =====================================================================
+         ESSAY — Área de escritura
+         data-se-role="workspace" genera el textarea, word counter y submit.
+    ====================================================================== -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="one point">
+        <p data-se-prompt>
+            Write a simple paragraph about how making mistakes can help students learn.
+            Ensure you follow the One-Point Rule.
+        </p>
     </div>
+
 </div>
 
 <script>
+    // Una sola línea para iniciar toda la lección
     window.onload = () => {
-        const UI = AcademicUI;
-        const LESSON_ID = 'one point';
-
-        // 1. Botones de navegación (DINÁMICOS - Sin números hardcodeados)
-        // Al usar null en el segundo parámetro, el componente usa 'nextSlide()' por defecto
-        document.getElementById('btn0').innerHTML = UI.createButton('Continue to lesson →');
-        document.getElementById('btn1').innerHTML = UI.createButton('Next →');
-        
-        // Botones que inician ocultos (esperando a que el quiz se resuelva)
-        document.getElementById('btn2').innerHTML = UI.createButton('Next →', null, 'next2', true);
-        document.getElementById('btn3').innerHTML = UI.createButton('Next →', null, 'next3', true);
-        
-        document.getElementById('btn4').innerHTML = UI.createButton('Next →');
-        document.getElementById('btn5').innerHTML = UI.createButton('Next →', null, 'next5', true);
-        document.getElementById('btn6').innerHTML = UI.createButton('Next →');
-        document.getElementById('btn7').innerHTML = UI.createButton('Show me an example →');
-        document.getElementById('btn8').innerHTML = UI.createButton('Final Question →');
-        
-        // Este botón llevará al preEssaySlide (la advertencia)
-        document.getElementById('btn9').innerHTML = UI.createButton('Go to Final Writing Exercise →', null, 'next9', true);
-
-        // 2. Quices
-        document.getElementById('quiz2').innerHTML = UI.createQuizBlock('s2', 
-            "Does this opening sentence follow the One-Point Rule? <br><em>'Regular exercise improves heart health and also helps the local economy...'</em>", 
-            [{ text: "A. Yes", isCorrect: false }, { text: "B. No, it mixes Health and Economy", isCorrect: true }]);
-
-        document.getElementById('quiz3').innerHTML = UI.createQuizBlock('s3', 
-            "Which of these is a 'One-Point' sentence?", 
-            [{ text: "A. Smartphones are addictive and expensive.", isCorrect: false }, 
-             { text: "B. High usage is linked to decreased sleep quality.", isCorrect: true }]);
-
-        document.getElementById('quiz5').innerHTML = UI.createQuizBlock('s5', 
-            "Your point is: 'Remote work increases productivity.' Which fits?", 
-            [{ text: "A. Data: tasks finished 13% faster.", isCorrect: true }, 
-             { text: "B. Survey: people missed office coffee.", isCorrect: false }]);
-
-        document.getElementById('quiz9').innerHTML = UI.createQuizBlock('s9', 
-            "Select the best closing sentence for 'Solar Energy benefits':", 
-            [{ text: "A. Thus, solar power is a key tool in reducing our carbon footprint.", isCorrect: true }, 
-             { text: "B. By the way, wind energy is also pretty good.", isCorrect: false }]);
-
-        // 3. Contrastes y Ejemplos
-        document.getElementById('contrast4').innerHTML = 
-            UI.createContrastBox('correct', 'Correct Evidence', 'A 2023 study found reduction in anxiety.') +
-            UI.createContrastBox('incorrect', 'Incorrect Evidence', 'Market for footwear is increasing.');
-
-        document.getElementById('contrast7').innerHTML = 
-            UI.createContrastBox('correct', 'Correct Wrapping Up', 'Therefore, activity maintains balance.') +
-            UI.createContrastBox('incorrect', 'Incorrect Wrapping Up', 'It is important to stay hydrated.');
-
-        document.getElementById('example8').innerHTML = 
-            UI.createContrastBox('correct', 'Full Paragraph Example', 
-            '<strong>Point:</strong> Online learning offers flexibility... <br><strong>✔ Evidence:</strong> Students access lectures anytime... <br><strong>✔ Closing:</strong> Adaptability makes education accessible.');
-
-        // 4. Inyección de Secciones Finales
-        // La función dentro del botón de Warning ya ejecuta nextSlide() para mostrar el Essay
-        document.getElementById('warningArea').innerHTML = UI.createEssayWarning(
-            LESSON_ID,
-            "You will be writing an essay that will take 5 minutes or more. This exercise is essential for assessing your understanding of the unit and your ability to synthesize information academically."
-        );
-
-        document.getElementById('essayArea').innerHTML = UI.renderEssaySection(
-            LESSON_ID,
-            "Write a simple paragraph about how making mistakes can help students learn. Ensure you follow the One-Point Rule."
-        );
+        SlideEngine.init('one point');
+        ActivityTracker.init('one point');
     };
-
-    // Inicializar rastreo general
-    ActivityTracker.init('one point');
 </script>
 
 </body>
