@@ -1,0 +1,8 @@
+{
+  "name": "academic-reading-writing",
+  "version": "1.0.0",
+  "description": "ULEAM Academic Reading and Writing course",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
