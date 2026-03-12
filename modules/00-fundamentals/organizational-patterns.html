@@ -1,6 +1,158 @@
-<!-- CREAR PROXIMAMENTE -->
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>Coming Soon</title></head>
-<body><p>🚧 This lesson is coming soon.</p></body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Organizational Patterns | Academic Workspace</title>
+
+    <link rel="stylesheet" href="../../css/modules.css">
+
+    <script src="../../js/activity-tracker.js"></script>
+    <script src="../../js/essay-handler.js"></script>
+    <script src="../../js/report.js"></script>
+    <script src="../../js/slide-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — VIDEO -->
+    <div class="slide active" data-type="VIDEO">
+        <h2>Organizational Patterns</h2>
+        <iframe data-se-src="https://docs.google.com/presentation/d/1g49UgfrD9V8cUjr6wlQ3rIdg6xI7G2MbUGgLCizqCoM/embed?start=false&loop=false&delayms=3000"
+                data-se-height="320"></iframe>
+    </div>
+
+    <!-- SLIDE 1 — CONTENT: The 5 patterns -->
+    <div class="slide" data-type="CONTENT">
+        <h2>Five Ways to Organize a Paragraph</h2>
+        <p>The content of a paragraph is not enough — the <strong>order</strong> in which you present it shapes how convincing your argument is. There are five core organizational patterns:</p>
+        <ul>
+            <li><strong>General → Specific</strong> — Start with a broad claim, then narrow it down with evidence. The most common pattern in academic writing.</li>
+            <li><strong>Specific → General</strong> — Start with a concrete detail or case, then draw a wider conclusion. More narrative in tone.</li>
+            <li><strong>Chronological</strong> — Arrange information in time order. Best for historical events or processes with clear stages.</li>
+            <li><strong>Problem → Solution</strong> — Identify a problem first, then propose or evaluate a solution. Common in argumentative writing.</li>
+            <li><strong>Claim → Concession → Refutation</strong> — State your claim, acknowledge the opposing view, then argue why your position is stronger. The most sophisticated pattern.</li>
+        </ul>
+    </div>
+
+    <!-- SLIDE 2 — MATCH: Pattern → Typical purpose -->
+    <div class="slide" data-type="MATCH">
+        <h2>Pattern and Purpose</h2>
+        <p>Match each organizational pattern to the context where it works best.</p>
+
+        <div data-se-left data-se-pair="chrono">Chronological</div>
+        <div data-se-left data-se-pair="prob">Problem → Solution</div>
+        <div data-se-left data-se-pair="gen">General → Specific</div>
+        <div data-se-left data-se-pair="ccr">Claim → Concession → Refutation</div>
+
+        <div data-se-right data-se-pair="gen">Making an academic argument supported by evidence</div>
+        <div data-se-right data-se-pair="chrono">Describing the stages of a historical event or process</div>
+        <div data-se-right data-se-pair="prob">Proposing a policy or practical intervention</div>
+        <div data-se-right data-se-pair="ccr">Defending a position against a known counterargument</div>
+    </div>
+
+    <!-- SLIDE 3 — QUIZ: Identify the pattern -->
+    <div class="slide" data-type="QUIZ">
+        <h2>Name That Pattern</h2>
+        <p data-se-question>
+            Read this paragraph and identify its organizational pattern:<br><br>
+            <em>"Urban noise pollution is a growing public health concern. Studies link chronic noise exposure to elevated cortisol levels and sleep disruption. Specifically, residents near major airports show a 34% higher incidence of hypertension. This data suggests that prolonged exposure to urban noise causes measurable physiological damage."</em>
+        </p>
+        <div data-se-option data-se-correct>A. General → Specific</div>
+        <div data-se-option>B. Problem → Solution</div>
+        <div data-se-option>C. Chronological</div>
+        <div data-se-option>D. Claim → Concession → Refutation</div>
+    </div>
+
+    <!-- SLIDE 4 — SORT_PARAGRAPH: General → Specific -->
+    <div class="slide" data-type="SORT_PARAGRAPH">
+        <h2>Build the Pattern</h2>
+        <p>These sentences follow a <strong>General → Specific</strong> pattern. Drag them into the correct order.</p>
+
+        <div data-se-sort data-se-order="4">This indicates that the economic pressure of tuition fees is the primary barrier to higher education access.</div>
+        <div data-se-sort data-se-order="2">In many countries, the cost of university education has risen faster than average household income over the past two decades.</div>
+        <div data-se-sort data-se-order="1">Financial barriers remain one of the most significant obstacles to higher education access worldwide.</div>
+        <div data-se-sort data-se-order="3">For instance, in the United States, average student debt reached $37,000 in 2023 — a 60% increase from 2005.</div>
+    </div>
+
+    <!-- SLIDE 5 — CONTRAST: Same content, two different patterns -->
+    <div class="slide" data-type="CONTRAST">
+        <h2>Same Content, Different Pattern</h2>
+        <p data-se-intro>Both paragraphs use the same facts about plastic pollution. Notice how the pattern changes the argumentative effect.</p>
+
+        <div data-se-correct data-se-label="General → Specific (Academic Standard) ✅">
+            <strong>Claim:</strong> Single-use plastics represent the most urgent category of environmental pollution today.<br>
+            <strong>Evidence:</strong> A 2023 UN report found that 380 million tonnes of plastic are produced annually, of which 91% is never recycled.<br>
+            <strong>Analysis:</strong> This accumulation, concentrated in marine ecosystems, constitutes a systemic rather than isolated threat.
+        </div>
+        <div data-se-incorrect data-se-label="Specific → General (Narrative Tone) ⚠️">
+            <strong>Case:</strong> A sea turtle found off the coast of Costa Rica had 104 pieces of plastic in its stomach.<br>
+            <strong>Broader data:</strong> Similar findings have been documented in 700 marine species globally.<br>
+            <strong>Conclusion:</strong> Single-use plastics therefore represent a major environmental crisis.
+        </div>
+    </div>
+
+    <!-- SLIDE 6 — QUIZ: Problem → Solution vs. list -->
+    <div class="slide" data-type="QUIZ">
+        <h2>Pattern or Just a List?</h2>
+        <p data-se-question>
+            Does this paragraph follow a <strong>Problem → Solution</strong> pattern, or is it simply a list of related facts?<br><br>
+            <em>"Many students struggle with academic writing. Universities offer writing centers. Some professors provide feedback on drafts. Online tools such as Grammarly are widely available. Writing workshops are held each semester."</em>
+        </p>
+        <div data-se-option>A. Problem → Solution — it identifies a problem and proposes responses.</div>
+        <div data-se-option data-se-correct>B. It is a list — the solutions are mentioned but never connected to the problem or evaluated.</div>
+    </div>
+
+    <!-- SLIDE 7 — SORT_PARAGRAPH: Claim → Concession → Refutation -->
+    <div class="slide" data-type="SORT_PARAGRAPH">
+        <h2>The Sophisticated Pattern</h2>
+        <p>These sentences follow a <strong>Claim → Concession → Refutation</strong> structure. Drag them into the correct order.</p>
+
+        <div data-se-sort data-se-order="3">However, research consistently shows that students in bilingual programmes outperform monolingual peers in standardized literacy assessments by the age of ten.</div>
+        <div data-se-sort data-se-order="1">Bilingual education produces stronger long-term academic outcomes than monolingual instruction.</div>
+        <div data-se-sort data-se-order="4">This evidence suggests that the initial challenges are temporary, while the cognitive benefits are lasting.</div>
+        <div data-se-sort data-se-order="2">Admittedly, bilingual students may experience a slower initial acquisition of reading skills in their first language.</div>
+    </div>
+
+    <!-- SLIDE 8 — PRE-ESSAY WARNING -->
+    <div class="slide" id="preEssaySlide"
+         data-type="ESSAY" data-se-role="warning"
+         data-se-lesson="organizational patterns">
+        <h2>Writing Task Instructions</h2>
+        <p data-se-warning>
+            You will write a paragraph using a specific organizational pattern.
+            The pattern is assigned — your task is not just to write about the topic,
+            but to demonstrate a clear and deliberate structure.
+            Allow approximately 10 minutes. Your writing will be tracked for academic integrity purposes.
+        </p>
+    </div>
+
+    <!-- SLIDE 9 — ESSAY WORKSPACE -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="organizational patterns">
+        <p data-se-prompt>
+            Write a paragraph (110–150 words) using the <strong>Problem → Solution</strong> pattern.<br><br>
+            Topic: <em>the lack of mental health support in universities.</em><br><br>
+            Your paragraph must follow this structure:<br>
+            1. Clearly state the problem and its consequences.<br>
+            2. Provide at least one piece of evidence that demonstrates the problem's scale.<br>
+            3. Propose a concrete solution and explain why it would be effective.
+        </p>
+    </div>
+
+</div>
+
+<script>
+    window.onload = () => {
+        SlideEngine.init('organizational patterns');
+        ActivityTracker.init('organizational patterns');
+    };
+</script>
+
+</body>
 </html>

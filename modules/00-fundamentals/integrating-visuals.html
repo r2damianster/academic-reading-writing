@@ -1,6 +1,192 @@
-<!-- CREAR PROXIMAMENTE -->
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>Coming Soon</title></head>
-<body><p>🚧 This lesson is coming soon.</p></body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Integrating Visuals | Academic Workspace</title>
+
+    <link rel="stylesheet" href="../../css/modules.css">
+
+    <script src="../../js/activity-tracker.js"></script>
+    <script src="../../js/essay-handler.js"></script>
+    <script src="../../js/report.js"></script>
+    <script src="../../js/slide-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — VIDEO -->
+    <div class="slide active" data-type="VIDEO">
+        <h2>Integrating Visuals</h2>
+        <iframe data-se-src="https://docs.google.com/presentation/d/16BivPbtxRLvG0krn9m1K_4kmmNRqDnk8nKc1SSzTnQk/embed?start=false&loop=false&delayms=3000"
+                data-se-height="320"></iframe>
+    </div>
+
+    <!-- SLIDE 1 — CONTENT: The core rule -->
+    <div class="slide" data-type="CONTENT">
+        <h2>A Visual Cannot Speak for Itself</h2>
+        <p>One of the most common errors in academic writing is inserting a graph or table and assuming it proves the argument on its own. It does not. <strong>Every visual requires three moves from the writer:</strong></p>
+        <div style="background:#f0f4f8; border-radius:10px; padding:18px; margin:14px 0; line-height:2.4; font-size:0.95rem;">
+            <strong>1. Introduction</strong> — tell the reader what they are about to see and why it matters<br>
+            <strong>2. The visual itself</strong> — the figure, table, or diagram, labelled correctly<br>
+            <strong>3. Analysis</strong> — explain what the visual means in relation to your argument
+        </div>
+        <p>The introduction and analysis are not optional. A visual without them is decorative, not argumentative. The analysis is the most important step — it is where <em>your voice</em> enters the data.</p>
+    </div>
+
+    <!-- SLIDE 2 — MATCH: Visual type → best use -->
+    <div class="slide" data-type="MATCH">
+        <h2>The Right Visual for the Right Data</h2>
+        <p>Match each type of visual to the kind of data it best represents.</p>
+
+        <div data-se-left data-se-pair="table">Table</div>
+        <div data-se-left data-se-pair="line">Line Graph</div>
+        <div data-se-left data-se-pair="bar">Bar Chart</div>
+        <div data-se-left data-se-pair="diagram">Diagram</div>
+
+        <div data-se-right data-se-pair="line">Showing how a variable changes over time (e.g. temperature rise across decades)</div>
+        <div data-se-right data-se-pair="bar">Comparing discrete quantities across categories (e.g. literacy rates by country)</div>
+        <div data-se-right data-se-pair="table">Organising multiple variables for direct side-by-side comparison</div>
+        <div data-se-right data-se-pair="diagram">Illustrating a process, structure, or system with labelled parts</div>
+    </div>
+
+    <!-- SLIDE 3 — QUIZ: Which visual for time-based change? -->
+    <div class="slide" data-type="QUIZ">
+        <h2>Choose the Right Visual</h2>
+        <p data-se-question>
+            A researcher wants to show how global average temperatures have changed between 1950 and 2023. Which type of visual is most appropriate?
+        </p>
+        <div data-se-option>A. A table listing the temperature for each year.</div>
+        <div data-se-option data-se-correct>B. A line graph showing the trend over time.</div>
+        <div data-se-option>C. A bar chart comparing temperatures by continent.</div>
+        <div data-se-option>D. A diagram of the Earth's atmosphere.</div>
+    </div>
+
+    <!-- SLIDE 4 — CONTENT: How to write the introduction sentence -->
+    <div class="slide" data-type="CONTENT">
+        <h2>Introducing a Visual in Academic Writing</h2>
+        <p>The sentence that introduces a visual does two things: it <strong>signals what the visual shows</strong> and <strong>connects it to the argument</strong>. There are two standard patterns:</p>
+        <div style="background:#d4edda; border-left:5px solid #28a745; padding:14px; border-radius:6px; margin:12px 0;">
+            <strong>Pattern 1 — Lead with the visual:</strong><br>
+            <em>"As shown in Figure 1, global plastic production increased by 400% between 1980 and 2020."</em>
+        </div>
+        <div style="background:#d4edda; border-left:5px solid #28a745; padding:14px; border-radius:6px; margin:12px 0;">
+            <strong>Pattern 2 — Lead with the claim:</strong><br>
+            <em>"Plastic production has grown exponentially over the past four decades (see Figure 1)."</em>
+        </div>
+        <div style="background:#f8d7da; border-left:5px solid #dc3545; padding:14px; border-radius:6px; margin:12px 0;">
+            <strong>What to avoid:</strong><br>
+            <em>"The graph below shows information about plastic."</em> — This describes the visual without connecting it to any argument.
+        </div>
+        <p>In APA format, figures are numbered sequentially (Figure 1, Figure 2…) and tables separately (Table 1, Table 2…).</p>
+    </div>
+
+    <!-- SLIDE 5 — CONTRAST: Correct integration vs. visual dump -->
+    <div class="slide" data-type="CONTRAST">
+        <h2>Integrated vs. Dumped</h2>
+        <p data-se-intro>Both paragraphs include the same bar chart about university dropout rates. One integrates it; the other dumps it.</p>
+
+        <div data-se-incorrect data-se-label="Visual Dump ❌">
+            Financial stress is a significant issue for university students. [Bar chart inserted here.] Many students leave university before completing their degrees.
+            <br><br><em>Problems: no introduction of the figure, no analysis, no connection to the argument. The chart could be removed without changing the paragraph.</em>
+        </div>
+        <div data-se-correct data-se-label="Correct Integration ✅">
+            Financial stress is a leading driver of university dropout rates. As illustrated in Figure 1, institutions with the highest tuition fees consistently report dropout rates above 30% — more than double the rate at fully subsidised universities. This disparity strongly suggests that economic barriers, rather than academic ability, are the primary cause of non-completion.
+            <br><br><em>The figure is introduced, cited, and then analysed — the writer's argument depends on it.</em>
+        </div>
+    </div>
+
+    <!-- SLIDE 6 — QUIZ: Which sentence correctly introduces a visual? -->
+    <div class="slide" data-type="QUIZ">
+        <h2>Which Introduction Works?</h2>
+        <p data-se-question>
+            Which of these sentences correctly introduces a graph in an academic paragraph?
+        </p>
+        <div data-se-option>A. "Below is a graph about renewable energy."</div>
+        <div data-se-option>B. "There is a lot of data available on renewable energy sources."</div>
+        <div data-se-option data-se-correct>C. "As demonstrated in Figure 2, solar energy capacity grew by 270% globally between 2015 and 2022, outpacing all other renewable sources."</div>
+        <div data-se-option>D. "Figure 3 shows some interesting information about wind energy."</div>
+    </div>
+
+    <!-- SLIDE 7 — FILL_BLANK: Complete the APA caption -->
+    <div class="slide" data-type="FILL_BLANK">
+        <h2>Write the Caption</h2>
+        <p>In APA format, every figure needs a caption. Complete these two captions correctly.</p>
+
+        <p data-se-sentence>
+            <span data-se-blank data-se-answer="Figure 1">___</span>.
+            <em>Average global temperature anomalies (°C) relative to the 1951–1980 baseline, 1880–2023.</em>
+            Note. Adapted from NASA Goddard Institute for Space Studies (2023).
+        </p>
+
+        <p data-se-sentence>
+            <span data-se-blank data-se-answer="Table 2">___</span>.
+            <em>Comparison of literacy rates across six Latin American countries, 2010–2020.</em>
+            Note. Data sourced from UNESCO Institute for Statistics (2021).
+        </p>
+
+        <button data-se-check>Check my answers</button>
+    </div>
+
+    <!-- SLIDE 8 — HIGHLIGHT: Find the evidence dump sentence -->
+    <div class="slide" data-type="HIGHLIGHT">
+        <h2>Description vs. Analysis</h2>
+        <p data-se-instruction>
+            This paragraph integrates a line graph about screen time. One sentence merely <strong>describes</strong> what the graph shows without analysing it — that is the visual evidence dump. Click on it.
+        </p>
+
+        <div data-se-paragraph>
+            <span data-se-sentence>The correlation between increased screen time and declining sleep quality among teenagers is clearly illustrated in Figure 3.</span>
+            <span data-se-sentence data-se-highlight-correct>The line graph shows data from 2015 to 2023, with screen time on the x-axis measured in hours and sleep duration on the y-axis measured in hours per night.</span>
+            <span data-se-sentence>Notably, every one-hour increase in daily screen time corresponds to an average reduction of 22 minutes of sleep — a relationship that remains consistent across all age groups studied.</span>
+            <span data-se-sentence>This inverse correlation suggests that digital device use is not merely associated with poor sleep but may actively displace it, with direct consequences for adolescent cognitive performance.</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 9 — PRE-ESSAY WARNING -->
+    <div class="slide" id="preEssaySlide"
+         data-type="ESSAY" data-se-role="warning"
+         data-se-lesson="integrating visuals">
+        <h2>Writing Task Instructions</h2>
+        <p data-se-warning>
+            You will write a complete academic paragraph that introduces and analyses a
+            described visual. You will not see an actual graph — instead, the data is
+            described for you. Your task is to write the paragraph as if the graph were
+            present: introduce it, reference it, and — most importantly — analyse what
+            it means for the argument. Allow approximately 10–12 minutes.
+            Your writing will be tracked for academic integrity purposes.
+        </p>
+    </div>
+
+    <!-- SLIDE 10 — ESSAY WORKSPACE -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="integrating visuals">
+        <p data-se-prompt>
+            <strong>The visual (described):</strong> A bar chart (Figure 1) comparing the percentage of students who report high levels of academic stress in three university systems: fully online (67%), hybrid (48%), and fully in-person (39%). Data from a 2023 international survey of 12,000 university students.<br><br>
+            <strong>Your argument:</strong> Online learning, despite its flexibility, generates higher levels of academic stress than traditional formats.<br><br>
+            Write a paragraph (110–150 words) that:<br>
+            1. States the argument in a Topic Sentence.<br>
+            2. Introduces Figure 1 with a proper referencing phrase.<br>
+            3. Describes the key finding (briefly — one sentence).<br>
+            4. Analyses what the data means for the argument (this is the most important part).<br>
+            5. Closes with a sentence that connects back to the main claim.<br><br>
+            Do not simply list what the chart shows. Your analysis must explain <em>why</em> the pattern exists or what it implies.
+        </p>
+    </div>
+
+</div>
+
+<script>
+    window.onload = () => {
+        SlideEngine.init('integrating visuals');
+        ActivityTracker.init('integrating visuals');
+    };
+</script>
+
+</body>
 </html>

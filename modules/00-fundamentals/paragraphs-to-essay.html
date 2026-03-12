@@ -1,6 +1,193 @@
-<!-- CREAR PROXIMAMENTE -->
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>Coming Soon</title></head>
-<body><p>🚧 This lesson is coming soon.</p></body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>From Paragraphs to Essay | Academic Workspace</title>
+
+    <link rel="stylesheet" href="../../css/modules.css">
+
+    <script src="../../js/activity-tracker.js"></script>
+    <script src="../../js/essay-handler.js"></script>
+    <script src="../../js/report.js"></script>
+    <script src="../../js/slide-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — VIDEO -->
+    <div class="slide active" data-type="VIDEO">
+        <h2>From Paragraphs to Essay</h2>
+        <iframe data-se-src="https://docs.google.com/presentation/d/1r5P0mpra5u9C17xiV9ejE-IBQgg1Y8UZ8kpn9nm3Gao/embed?start=false&loop=false&delayms=3000"
+                data-se-height="320"></iframe>
+    </div>
+
+    <!-- SLIDE 1 — CONTENT: The essay as a unified argument -->
+    <div class="slide" data-type="CONTENT">
+        <h2>An Essay Is Not a Collection</h2>
+        <p>A common mistake is treating an essay as a <strong>series of independent paragraphs</strong> — each one complete in itself, loosely grouped under a title. That produces a document, not an argument.</p>
+        <p>A well-written essay is a <strong>single, unified argument</strong> in which every part serves the whole:</p>
+        <div style="background:#f0f4f8; border-radius:10px; padding:18px; margin:14px 0; line-height:2.2; font-size:0.95rem;">
+            📌 <strong>Introduction (≈10%)</strong> — opens the argument and announces the thesis<br>
+            &nbsp;&nbsp;&nbsp;↳ <strong>Body Paragraph 1 (≈27%)</strong> — develops argument 1<br>
+            &nbsp;&nbsp;&nbsp;↳ <strong>Body Paragraph 2 (≈27%)</strong> — develops argument 2<br>
+            &nbsp;&nbsp;&nbsp;↳ <strong>Body Paragraph 3 (≈26%)</strong> — develops argument 3<br>
+            📌 <strong>Conclusion (≈10%)</strong> — restates, summarises, and closes
+        </div>
+        <p>The proportions are a guide, not a rule — but if your introduction is longer than your body, something is structurally wrong.</p>
+    </div>
+
+    <!-- SLIDE 2 — CONTENT: Thesis as the essay's map -->
+    <div class="slide" data-type="CONTENT">
+        <h2>The Thesis Is the Map</h2>
+        <p>The thesis statement does not just state an opinion — it <strong>maps the entire essay</strong>. Every body paragraph must be traceable back to one point announced in the thesis.</p>
+        <p>This creates a test you can apply to any essay:</p>
+        <ol>
+            <li>Read the thesis. Note its 3 points.</li>
+            <li>Read the first sentence of each body paragraph.</li>
+            <li>Each topic sentence must match exactly one thesis point.</li>
+            <li>If a topic sentence introduces a point the thesis never mentioned → <strong>coherence failure</strong>.</li>
+            <li>If a thesis point has no corresponding body paragraph → <strong>structural gap</strong>.</li>
+        </ol>
+        <p>Cohesion means the thesis and the topic sentences tell the <em>same story</em>.</p>
+    </div>
+
+    <!-- SLIDE 3 — DRAG_DROP: Match topic sentences to thesis points -->
+    <div class="slide" data-type="DRAG_DROP">
+        <h2>Build the Essay Skeleton</h2>
+        <p>Thesis: <em>"The widespread adoption of electric vehicles will reduce air pollution, lower long-term transport costs, and decrease dependence on fossil fuels."</em></p>
+        <p>Drag each Topic Sentence to the thesis point it develops. One sentence is an <strong>intruder</strong> — it does not belong.</p>
+
+        <div data-se-drag data-se-drag-type="pollution">"Electric vehicles produce zero direct emissions, significantly improving air quality in urban areas."</div>
+        <div data-se-drag data-se-drag-type="costs">"Although EVs have higher upfront prices, fuel and maintenance savings generate net savings within five years."</div>
+        <div data-se-drag data-se-drag-type="fossil">"Electrifying transport reduces the volume of oil a country must import, strengthening its energy independence."</div>
+
+        <div data-se-drop data-se-drop-accepts="pollution" data-se-label="POINT 1: Air pollution"></div>
+        <div data-se-drop data-se-drop-accepts="costs"     data-se-label="POINT 2: Transport costs"></div>
+        <div data-se-drop data-se-drop-accepts="fossil"    data-se-label="POINT 3: Fossil fuel dependence"></div>
+    </div>
+
+    <!-- SLIDE 4 — QUIZ: Intruder topic sentence -->
+    <div class="slide" data-type="QUIZ">
+        <h2>Find the Intruder</h2>
+        <p data-se-question>
+            Thesis: <em>"Universal basic income could reduce poverty, simplify the welfare system, and encourage entrepreneurship."</em><br><br>
+            Which of these Topic Sentences does <strong>NOT</strong> belong in this essay?
+        </p>
+        <div data-se-option>A. "By providing a guaranteed income floor, UBI would lift millions of households above the poverty line."</div>
+        <div data-se-option>B. "A single unconditional payment would replace dozens of overlapping benefit programmes, reducing administrative costs."</div>
+        <div data-se-option data-se-correct>C. "Critics of UBI argue that it would reduce the incentive to work and increase inflation."</div>
+        <div data-se-option>D. "With a financial safety net guaranteed, individuals would be more willing to leave stable jobs to start businesses."</div>
+    </div>
+
+    <!-- SLIDE 5 — CONTENT: Inter-paragraph transitions -->
+    <div class="slide" data-type="CONTENT">
+        <h2>Transitions Between Paragraphs</h2>
+        <p>Connectors like <em>however, furthermore, therefore</em> work within a sentence. But moving from one <strong>paragraph</strong> to the next requires something larger — a <strong>transition sentence</strong> that signals a shift in argument.</p>
+        <p>There are two places where inter-paragraph transitions appear:</p>
+        <ul>
+            <li><strong>At the end of a body paragraph</strong> — the closing sentence hints at what comes next (covered in Lesson 7)</li>
+            <li><strong>At the start of the next body paragraph</strong> — the topic sentence can briefly acknowledge the previous point before introducing the new one</li>
+        </ul>
+        <div style="background:#eaf6ff; border-left:5px solid #3498db; padding:14px; border-radius:6px; margin:12px 0;">
+            <strong>Example bridge opening:</strong><br>
+            <em>"While the economic benefits of remote work are clear, its impact on employee well-being is equally significant."</em>
+        </div>
+        <p>This sentence closes the economic argument and opens the well-being argument in one move.</p>
+    </div>
+
+    <!-- SLIDE 6 — QUIZ: Explicit transition or abrupt jump? -->
+    <div class="slide" data-type="QUIZ">
+        <h2>Connected or Disconnected?</h2>
+        <p data-se-question>
+            Paragraph 1 ends with: <em>"Therefore, regular physical activity significantly reduces the risk of cardiovascular disease."</em><br><br>
+            Paragraph 2 begins with: <em>"Sleep deprivation has become a widespread public health concern in modern societies."</em><br><br>
+            Is the transition between these two paragraphs coherent?
+        </p>
+        <div data-se-option data-se-correct>A. No — there is an abrupt jump. The reader cannot see how the two arguments relate.</div>
+        <div data-se-option>B. Yes — both topics relate to health, so the connection is obvious.</div>
+    </div>
+
+    <!-- SLIDE 7 — HIGHLIGHT: Find the paragraph without a transition -->
+    <div class="slide" data-type="HIGHLIGHT">
+        <h2>Where Does the Essay Break?</h2>
+        <p data-se-instruction>
+            This is the opening sentence of each paragraph in an essay about the benefits of bilingual education. Click on the Topic Sentence that creates an <strong>abrupt jump</strong> — it has no connection to the previous argument.
+        </p>
+        <div data-se-paragraph>
+            <span data-se-sentence><strong>Introduction ends:</strong> "...making bilingual education one of the most effective investments a society can make in its children."</span>
+            <span data-se-sentence><strong>BP1:</strong> "The most well-documented benefit of bilingual education is its positive effect on cognitive flexibility and problem-solving ability."</span>
+            <span data-se-sentence><strong>BP2:</strong> "Beyond cognitive gains, bilingual students consistently demonstrate stronger academic performance across all subjects, not only in language classes."</span>
+            <span data-se-sentence data-se-highlight-correct><strong>BP3:</strong> "The history of language policy in Latin America has been shaped by colonial and post-colonial political decisions."</span>
+            <span data-se-sentence><strong>Conclusion:</strong> "In summary, the evidence confirms that bilingual education produces lasting cognitive, academic, and social advantages."</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 8 — CONTRAST: Cohesive essay vs. disconnected paragraphs -->
+    <div class="slide" data-type="CONTRAST">
+        <h2>One Essay or Three Fragments?</h2>
+        <p data-se-intro>Both versions discuss the same topic. One reads as a unified argument; the other feels like three separate assignments stapled together.</p>
+
+        <div data-se-incorrect data-se-label="Disconnected Paragraphs ❌">
+            <strong>BP1 ends:</strong> "Therefore, social media negatively affects teenagers' mental health."<br>
+            <strong>BP2 opens:</strong> "Academic performance is an important factor in a student's future."<br>
+            <em>→ No bridge. The reader must guess the connection.</em><br><br>
+            <strong>BP2 ends:</strong> "Thus, grades have declined among heavy social media users."<br>
+            <strong>BP3 opens:</strong> "Friendship is a fundamental human need."<br>
+            <em>→ Another abrupt jump. Three isolated ideas, not one argument.</em>
+        </div>
+        <div data-se-correct data-se-label="Unified Essay ✅">
+            <strong>BP1 ends:</strong> "...confirming that social media overuse poses a direct risk to adolescent psychological health."<br>
+            <strong>BP2 opens:</strong> "This psychological toll does not remain confined to emotional well-being — it spills directly into academic performance."<br>
+            <em>→ BP2 picks up where BP1 left off.</em><br><br>
+            <strong>BP2 ends:</strong> "...suggesting that the academic damage is both measurable and preventable."<br>
+            <strong>BP3 opens:</strong> "The consequences extend further still: the quality of teenagers' real-world social relationships is also being reshaped."<br>
+            <em>→ The essay builds progressively.</em>
+        </div>
+    </div>
+
+    <!-- SLIDE 9 — PRE-ESSAY WARNING -->
+    <div class="slide" id="preEssaySlide"
+         data-type="ESSAY" data-se-role="warning"
+         data-se-lesson="paragraphs to essay">
+        <h2>Writing Task Instructions</h2>
+        <p data-se-warning>
+            You will write the structural skeleton of a complete essay — not the full essay,
+            but its load-bearing elements: the thesis, the three topic sentences, and the
+            restatement. This task tests whether you can design a coherent argument before
+            writing it in full. Allow approximately 8–10 minutes.
+            Your writing will be tracked for academic integrity purposes.
+        </p>
+    </div>
+
+    <!-- SLIDE 10 — ESSAY WORKSPACE -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="paragraphs to essay">
+        <p data-se-prompt>
+            Topic: <em>"The impact of artificial intelligence on the future of work."</em><br><br>
+            Write the <strong>essay skeleton</strong> — not the full essay. Your response must include exactly these four elements, clearly labelled:<br><br>
+            <strong>Thesis:</strong> One sentence announcing your position and three supporting arguments.<br>
+            <strong>Topic Sentence 1:</strong> Opens Body Paragraph 1, responds to argument 1.<br>
+            <strong>Topic Sentence 2:</strong> Opens Body Paragraph 2, includes a bridge from TS1.<br>
+            <strong>Topic Sentence 3:</strong> Opens Body Paragraph 3, includes a bridge from TS2.<br>
+            <strong>Restatement:</strong> Paraphrase of the thesis in different words.<br><br>
+            Each sentence should be complete and academic. Total: approximately 5 sentences.
+        </p>
+    </div>
+
+</div>
+
+<script>
+    window.onload = () => {
+        SlideEngine.init('paragraphs to essay');
+        ActivityTracker.init('paragraphs to essay');
+    };
+</script>
+
+</body>
 </html>

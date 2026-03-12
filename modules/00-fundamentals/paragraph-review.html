@@ -1,6 +1,172 @@
-<!-- CREAR PROXIMAMENTE -->
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>Coming Soon</title></head>
-<body><p>🚧 This lesson is coming soon.</p></body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Paragraph Review | Academic Workspace</title>
+
+    <link rel="stylesheet" href="../../css/modules.css">
+
+    <script src="../../js/activity-tracker.js"></script>
+    <script src="../../js/essay-handler.js"></script>
+    <script src="../../js/report.js"></script>
+    <script src="../../js/slide-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — VIDEO -->
+    <div class="slide active" data-type="VIDEO">
+        <h2>Paragraph Review</h2>
+        <iframe data-se-src="https://docs.google.com/presentation/d/1xBzTfuQtNkd6B-KvSYBVh9uS6VnYYmGH6VmpYOG71Z0/embed?start=false&loop=false&delayms=3000"
+                data-se-height="320"></iframe>
+    </div>
+
+    <!-- SLIDE 1 — CONTENT: The 4 common problems -->
+    <div class="slide" data-type="CONTENT">
+        <h2>The Four Warning Signs</h2>
+        <p>When reviewing a paragraph — your own or someone else's — look for these four problems:</p>
+        <ul>
+            <li><strong>No Topic Sentence</strong> — the paragraph has no clear claim; the reader doesn't know what it is about</li>
+            <li><strong>Irrelevant Evidence</strong> — the supporting sentences don't actually prove the claim</li>
+            <li><strong>Evidence Dump</strong> — the paragraph lists quotes and data but contains no analysis or explanation</li>
+            <li><strong>Drift</strong> — the paragraph starts on one idea but gradually moves to a different one</li>
+        </ul>
+        <p>A paragraph can have more than one problem at once. Your job as a reviewer is to name the problem <em>before</em> trying to fix it.</p>
+    </div>
+
+    <!-- SLIDE 2 — HIGHLIGHT: Drift — find where the paragraph loses focus -->
+    <div class="slide" data-type="HIGHLIGHT">
+        <h2>Spot the Drift</h2>
+        <p data-se-instruction>This paragraph starts clearly but loses focus. Click on the sentence where it drifts away from the original point.</p>
+
+        <div data-se-paragraph>
+            <span data-se-sentence>Excessive screen time before bed significantly disrupts sleep quality in adolescents.</span>
+            <span data-se-sentence>A study published in Sleep Medicine found that teenagers who used devices within one hour of bedtime took 35% longer to fall asleep.</span>
+            <span data-se-sentence>This delay in sleep onset reduces the total hours of restorative rest they receive each night.</span>
+            <span data-se-sentence data-se-highlight-correct>Many teenagers also struggle with time management when it comes to completing homework assignments.</span>
+            <span data-se-sentence>Therefore, limiting device use before bed is essential for protecting adolescent cognitive development.</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 3 — QUIZ: Identify the main problem -->
+    <div class="slide" data-type="QUIZ">
+        <h2>Name the Problem</h2>
+        <p data-se-question>
+            Read this paragraph carefully:<br><br>
+            <em>"Bilingual education has many advantages. According to Baker (2011), bilingualism improves cognitive flexibility. A UNESCO report states that mother-tongue instruction increases school completion rates. Cummins (2000) argues that first-language literacy supports second-language acquisition. Research by Thomas and Collier shows improved long-term outcomes."</em><br><br>
+            What is the main problem with this paragraph?
+        </p>
+        <div data-se-option>A. It has no Topic Sentence.</div>
+        <div data-se-option data-se-correct>B. It is an Evidence Dump — it lists sources but never analyzes them.</div>
+        <div data-se-option>C. The evidence is irrelevant to the claim.</div>
+        <div data-se-option>D. The paragraph drifts to a different topic.</div>
+    </div>
+
+    <!-- SLIDE 4 — CONTENT: Content review vs. grammar review -->
+    <div class="slide" data-type="CONTENT">
+        <h2>Review the Right Thing First</h2>
+        <p>Most students review grammar first. That is the wrong order.</p>
+        <p>If a sentence makes a weak argument, fixing its grammar does not make it stronger — it just makes it a <em>grammatically correct weak argument</em>.</p>
+        <p>The correct order is:</p>
+        <ol>
+            <li><strong>Content first</strong> — Does each sentence have a clear purpose? Is the evidence relevant? Is there analysis?</li>
+            <li><strong>Structure second</strong> — Does the paragraph follow a logical sequence?</li>
+            <li><strong>Language last</strong> — Grammar, vocabulary, punctuation.</li>
+        </ol>
+        <p>This lesson focuses on level 1: <strong>content review</strong>.</p>
+    </div>
+
+    <!-- SLIDE 5 — HIGHLIGHT: Evidence Dump — find the sentence that should be analysis -->
+    <div class="slide" data-type="HIGHLIGHT">
+        <h2>What's Missing?</h2>
+        <p data-se-instruction>This paragraph has an Evidence Dump problem. Click on the sentence that is another piece of evidence when it should instead be <strong>analysis</strong> of the previous quote.</p>
+
+        <div data-se-paragraph>
+            <span data-se-sentence>Access to green spaces in urban areas has a direct impact on residents' mental health.</span>
+            <span data-se-sentence>A 2021 study by the University of Exeter found that people living within 300 metres of a park reported 25% lower rates of anxiety.</span>
+            <span data-se-sentence data-se-highlight-correct>According to the World Health Organization, urban populations are growing at an unprecedented rate worldwide.</span>
+            <span data-se-sentence>Therefore, city planners must prioritize the integration of parks and green corridors into urban development projects.</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 6 — QUIZ: Missing Topic Sentence -->
+    <div class="slide" data-type="QUIZ">
+        <h2>Supply the Missing Piece</h2>
+        <p data-se-question>
+            This paragraph has no Topic Sentence:<br><br>
+            <em>"For example, students who cook their own meals tend to make healthier choices. A 2020 study found that home-cooked meals contain 30% less sodium than restaurant food. This habit also develops budgeting and planning skills that are valuable beyond the kitchen."</em><br><br>
+            Which of these would be the most effective Topic Sentence for this paragraph?
+        </p>
+        <div data-se-option>A. Cooking is something many people enjoy doing at home.</div>
+        <div data-se-option data-se-correct>B. Learning to cook independently builds both physical health and life skills in young adults.</div>
+        <div data-se-option>C. There are many different types of food students can prepare.</div>
+    </div>
+
+    <!-- SLIDE 7 — CONTRAST: Unreviewed vs. corrected paragraph -->
+    <div class="slide" data-type="CONTRAST">
+        <h2>Before and After</h2>
+        <p data-se-intro>Same content — one unreviewed, one corrected. Notice the three specific improvements.</p>
+
+        <div data-se-incorrect data-se-label="Unreviewed ❌">
+            There are many issues with social media. Studies show people spend a lot of time on it. According to Twenge (2017), screen time is increasing. Another study found mental health issues are rising. Social media platforms were founded in the early 2000s. This is a serious problem for society.
+        </div>
+        <div data-se-correct data-se-label="After Content Review ✅">
+            <strong>Fix 1 — Specific claim:</strong> Excessive social media use is directly linked to rising rates of anxiety in adolescents.<br>
+            <strong>Fix 2 — Relevant, analyzed evidence:</strong> Twenge (2017) found that teens spending 5+ hours daily on devices were 66% more likely to report depression — suggesting that passive consumption, not social connection, drives the harm.<br>
+            <strong>Fix 3 — Drift removed:</strong> The sentence about platform founding dates was deleted as it did not support the claim.
+        </div>
+    </div>
+
+    <!-- SLIDE 8 — QUIZ: Final check -->
+    <div class="slide" data-type="QUIZ">
+        <h2>Review Sequence</h2>
+        <p data-se-question>A student finishes a paragraph and wants to review it. What should they check <strong>first</strong>?</p>
+        <div data-se-option>A. Spelling and punctuation errors.</div>
+        <div data-se-option>B. Whether the vocabulary is formal enough.</div>
+        <div data-se-option data-se-correct>C. Whether each sentence has a clear purpose and connects to the main claim.</div>
+    </div>
+
+    <!-- SLIDE 9 — PRE-ESSAY WARNING -->
+    <div class="slide" id="preEssaySlide"
+         data-type="ESSAY" data-se-role="warning"
+         data-se-lesson="paragraph review">
+        <h2>Writing Task Instructions</h2>
+        <p data-se-warning>
+            You will be given a weak paragraph to rewrite. This task requires you to
+            identify what is wrong and produce a corrected version — not just fix grammar,
+            but improve content, relevance, and structure. Allow approximately 10 minutes.
+            Your writing will be tracked for academic integrity purposes.
+        </p>
+    </div>
+
+    <!-- SLIDE 10 — ESSAY WORKSPACE -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="paragraph review">
+        <p data-se-prompt>
+            The following paragraph has multiple problems. Rewrite it as a corrected,
+            well-structured paragraph (100–140 words). Before writing, identify what
+            is wrong.<br><br>
+            <em>"Exercise is important. Many people go to the gym. A study found exercise
+            is good for you. According to researchers, physical activity helps. Gyms
+            became popular in the 1980s. Exercise equipment is also widely available
+            online. Therefore, people should exercise more."</em>
+        </p>
+    </div>
+
+</div>
+
+<script>
+    window.onload = () => {
+        SlideEngine.init('paragraph review');
+        ActivityTracker.init('paragraph review');
+    };
+</script>
+
+</body>
 </html>

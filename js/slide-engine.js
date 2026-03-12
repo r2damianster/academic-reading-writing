@@ -72,8 +72,11 @@ const SlideEngine = (function () {
                 case 'QUIZ':       SlideTypes.QUIZ.mount(slide, index);       break;
                 case 'CONTRAST':   SlideTypes.CONTRAST.mount(slide, index);   break;
                 case 'DRAG_DROP':  SlideTypes.DRAG_DROP.mount(slide, index);  break;
-                case 'FILL_BLANK': SlideTypes.FILL_BLANK.mount(slide, index); break;
-                case 'ESSAY':      SlideTypes.ESSAY.mount(slide, index, lessonName); break;
+                case 'FILL_BLANK':      SlideTypes.FILL_BLANK.mount(slide, index);      break;
+                case 'ESSAY':          SlideTypes.ESSAY.mount(slide, index, lessonName); break;
+                case 'SORT_PARAGRAPH': SlideTypes.SORT_PARAGRAPH.mount(slide, index);   break;
+                case 'HIGHLIGHT':      SlideTypes.HIGHLIGHT.mount(slide, index);        break;
+                case 'MATCH':          SlideTypes.MATCH.mount(slide, index);            break;
                 // Sin data-type → slide estática, sin procesamiento adicional
             }
         });
@@ -874,3 +877,469 @@ function _appendNextButton(slide, options = {}) {
     slide.appendChild(btn);
     return btn;
 }
+
+
+/* =============================================================================
+   SECCIÓN 5 — NUEVOS TIPOS DE SLIDE
+   Añadidos sin modificar nada de las Secciones 1–4.
+   Cada tipo se auto-registra en SlideTypes y se activa en el switch de init().
+   
+   NUEVOS TIPOS:
+   ─────────────────────────────────────────────────────────────────────────────
+     data-type="SORT_PARAGRAPH"  → Ordenar oraciones arrastrando verticalmente
+     data-type="HIGHLIGHT"       → Hacer clic en la oración incorrecta/correcta
+     data-type="MATCH"           → Emparejar dos columnas con clic
+   ─────────────────────────────────────────────────────────────────────────────
+   IMPORTANTE: Para activar estos tipos, añadir los tres cases al switch en init():
+   
+     case 'SORT_PARAGRAPH': SlideTypes.SORT_PARAGRAPH.mount(slide, index); break;
+     case 'HIGHLIGHT':      SlideTypes.HIGHLIGHT.mount(slide, index);      break;
+     case 'MATCH':          SlideTypes.MATCH.mount(slide, index);          break;
+   ============================================================================= */
+
+
+/* -----------------------------------------------------------------------------
+   TIPO: SORT_PARAGRAPH
+   El alumno arrastra oraciones verticalmente para ordenarlas correctamente.
+   El botón "Next" aparece cuando el orden es correcto.
+
+   USO EN HTML:
+   ─────────────────────────────────────────────────────────────────────────────
+   <div class="slide" data-type="SORT_PARAGRAPH">
+     <h2>Put the sentences in order</h2>
+     <p>Drag the sentences to build a coherent paragraph.</p>
+
+     <!-- data-se-order indica la posición correcta (1 = primero) -->
+     <div data-se-sort data-se-order="3">Exercise also improves sleep quality.</div>
+     <div data-se-sort data-se-order="1">Regular physical activity benefits mental health.</div>
+     <div data-se-sort data-se-order="4">Therefore, an active lifestyle leads to overall wellbeing.</div>
+     <div data-se-sort data-se-order="2">A 2023 study found a 30% reduction in anxiety symptoms.</div>
+   </div>
+   ─────────────────────────────────────────────────────────────────────────────
+   NOTAS:
+   - data-se-order es la posición correcta final (empieza en 1)
+   - El engine desordena las oraciones automáticamente al montar
+   - El alumno arrastra; al soltar se revalida el orden completo
+   - El botón "Check Order" valida manualmente; "Next" aparece si es correcto
+----------------------------------------------------------------------------- */
+SlideTypes.SORT_PARAGRAPH = {
+    mount(slide, index) {
+        const items = Array.from(slide.querySelectorAll('[data-se-sort]'));
+        if (items.length === 0) return;
+
+        const feedbackId  = `se-sort-feedback-${index}`;
+        const containerId = `se-sort-container-${index}`;
+
+        // Recoger textos y orden correcto antes de modificar el DOM
+        const correctOrder = items
+            .map(el => ({ text: el.innerHTML.trim(), order: parseInt(el.dataset.seOrder, 10) }))
+            .sort((a, b) => a.order - b.order)
+            .map(item => item.text);
+
+        // Desordenar (Fisher-Yates) para que nunca salga en orden correcto
+        const shuffled = [...correctOrder];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        // Si por azar salió igual al correcto, rotar uno
+        if (shuffled.every((t, i) => t === correctOrder[i])) {
+            shuffled.push(shuffled.shift());
+        }
+
+        // Eliminar los elementos originales del DOM
+        items.forEach(el => el.remove());
+
+        // Crear contenedor de lista ordenable
+        const container = document.createElement('div');
+        container.id = containerId;
+        container.style.cssText = 'display:flex; flex-direction:column; gap:8px; margin:16px 0;';
+
+        shuffled.forEach((text, i) => {
+            const item = document.createElement('div');
+            item.className        = 'se-sort-item';
+            item.draggable        = true;
+            item.dataset.seText   = text;
+            item.style.cssText    = `padding:12px 16px; background:#fff; border:2px solid #dee2e6;
+                                      border-radius:8px; cursor:grab; user-select:none;
+                                      display:flex; align-items:center; gap:10px;
+                                      transition: box-shadow 0.15s, border-color 0.15s;`;
+            item.innerHTML        = `<span style="color:#adb5bd; font-size:0.8rem; min-width:20px;">⠿</span>
+                                      <span>${text}</span>`;
+
+            // Drag events
+            item.addEventListener('dragstart', e => {
+                e.dataTransfer.setData('text/plain', i.toString());
+                item.style.opacity = '0.5';
+                item._dragIndex    = Array.from(container.children).indexOf(item);
+            });
+            item.addEventListener('dragend', () => { item.style.opacity = '1'; });
+
+            item.addEventListener('dragover', e => {
+                e.preventDefault();
+                item.style.borderColor = '#3498db';
+            });
+            item.addEventListener('dragleave', () => {
+                item.style.borderColor = '#dee2e6';
+            });
+            item.addEventListener('drop', e => {
+                e.preventDefault();
+                item.style.borderColor = '#dee2e6';
+                const fromIndex = parseInt(e.dataTransfer.getData('text/plain'), 10);
+                const allItems  = Array.from(container.children);
+                const draggedEl = allItems[fromIndex] ||
+                    [...container.querySelectorAll('.se-sort-item')]
+                        .find(el => el.style.opacity === '0.5');
+                const toIndex   = Array.from(container.children).indexOf(item);
+
+                if (draggedEl && draggedEl !== item) {
+                    const rect = item.getBoundingClientRect();
+                    const mid  = rect.top + rect.height / 2;
+                    if (e.clientY < mid) {
+                        container.insertBefore(draggedEl, item);
+                    } else {
+                        container.insertBefore(draggedEl, item.nextSibling);
+                    }
+                }
+            });
+
+            container.appendChild(item);
+        });
+
+        // Insertar contenedor en la slide (antes del último hijo para no romper estructura)
+        slide.appendChild(container);
+
+        // Botón de verificación
+        const checkBtn = document.createElement('button');
+        checkBtn.textContent  = 'Check Order';
+        checkBtn.style.cssText = `margin-top:8px; padding:10px 24px; background:#3498db;
+                                   color:white; border:none; border-radius:8px;
+                                   cursor:pointer; font-size:1rem;`;
+        checkBtn.addEventListener('click', () => {
+            SlideTypes.SORT_PARAGRAPH._validate(slide, containerId, feedbackId, correctOrder);
+        });
+        slide.appendChild(checkBtn);
+
+        // Feedback
+        const feedback = document.createElement('div');
+        feedback.id    = feedbackId;
+        feedback.style.cssText = 'display:none; margin-top:10px; padding:10px;' +
+                                  'border-radius:5px; font-weight:bold;';
+        slide.appendChild(feedback);
+
+        _appendNextButton(slide, { hidden: true });
+    },
+
+    _validate(slide, containerId, feedbackId, correctOrder) {
+        const container   = document.getElementById(containerId);
+        const feedback    = document.getElementById(feedbackId);
+        const currentOrder = Array.from(container.querySelectorAll('.se-sort-item'))
+            .map(el => el.dataset.seText);
+
+        const isCorrect = currentOrder.every((text, i) => text === correctOrder[i]);
+
+        // Colorear bordes según posición correcta o no
+        container.querySelectorAll('.se-sort-item').forEach((el, i) => {
+            el.style.borderColor = (el.dataset.seText === correctOrder[i])
+                ? '#2ecc71'
+                : '#e74c3c';
+        });
+
+        if (feedback) {
+            feedback.style.display = 'block';
+            if (isCorrect) {
+                feedback.innerHTML  = '✅ Perfect order! The paragraph is coherent.';
+                feedback.style.color = '#27ae60';
+                const nextBtn = slide.querySelector('.btn-next');
+                if (nextBtn) nextBtn.style.display = 'block';
+            } else {
+                feedback.innerHTML  = '❌ Not quite. Some sentences are out of order — try again!';
+                feedback.style.color = '#c0392b';
+                window.mistakes++;
+            }
+        }
+    }
+};
+
+
+/* -----------------------------------------------------------------------------
+   TIPO: HIGHLIGHT
+   El alumno hace clic en la oración que contiene el error (o el acierto).
+   Feedback inmediato al hacer clic. El botón "Next" aparece al acertar.
+
+   USO EN HTML:
+   ─────────────────────────────────────────────────────────────────────────────
+   <div class="slide" data-type="HIGHLIGHT">
+     <h2>Find the problem</h2>
+     <p data-se-instruction>Click on the sentence that breaks the One-Point Rule.</p>
+
+     <div data-se-paragraph>
+       <span data-se-sentence>Regular exercise improves cardiovascular health.</span>
+       <span data-se-sentence data-se-highlight-correct>
+         Many people also enjoy cooking as a hobby.
+       </span>
+       <span data-se-sentence>Studies show a 25% reduction in heart disease risk.</span>
+       <span data-se-sentence>Therefore, physical activity is key to a healthy heart.</span>
+     </div>
+   </div>
+   ─────────────────────────────────────────────────────────────────────────────
+   NOTAS:
+   - data-se-highlight-correct marca la oración que el alumno debe seleccionar
+   - Solo una oración debe tener data-se-highlight-correct
+   - data-se-instruction es el texto de consigna (opcional)
+   - Las oraciones se separan visualmente con un leve espaciado entre ellas
+----------------------------------------------------------------------------- */
+SlideTypes.HIGHLIGHT = {
+    mount(slide, index) {
+        const sentences = Array.from(slide.querySelectorAll('[data-se-sentence]'));
+        if (sentences.length === 0) return;
+
+        const feedbackId = `se-hl-feedback-${index}`;
+
+        // Estilar cada oración como bloque cliqueable
+        sentences.forEach(el => {
+            el.style.cssText = `display:block; padding:10px 14px; margin:6px 0;
+                                 border-radius:6px; border:2px solid #dee2e6;
+                                 background:#fff; cursor:pointer;
+                                 transition: background 0.15s, border-color 0.15s;
+                                 line-height:1.6;`;
+
+            el.addEventListener('mouseenter', () => {
+                if (!el.dataset.seAnswered) {
+                    el.style.background   = '#eaf6ff';
+                    el.style.borderColor  = '#3498db';
+                }
+            });
+            el.addEventListener('mouseleave', () => {
+                if (!el.dataset.seAnswered) {
+                    el.style.background  = '#fff';
+                    el.style.borderColor = '#dee2e6';
+                }
+            });
+
+            el.addEventListener('click', () => {
+                // Bloquear si ya se respondió correctamente
+                if (slide.dataset.seHighlightDone) return;
+
+                const isCorrect = el.hasAttribute('data-se-highlight-correct');
+                const feedback  = document.getElementById(feedbackId);
+
+                el.dataset.seAnswered = 'true';
+
+                if (isCorrect) {
+                    // Marcar la correcta en verde y bloquear todas
+                    el.style.background   = '#d4edda';
+                    el.style.borderColor  = '#28a745';
+                    el.style.color        = '#155724';
+                    slide.dataset.seHighlightDone = 'true';
+
+                    sentences.forEach(s => { s.style.cursor = 'default'; });
+
+                    if (feedback) {
+                        feedback.innerHTML  = '✅ Correct! That sentence breaks the focus of the paragraph.';
+                        feedback.style.color = '#27ae60';
+                        feedback.style.display = 'block';
+                    }
+                    const nextBtn = slide.querySelector('.btn-next');
+                    if (nextBtn) nextBtn.style.display = 'block';
+                } else {
+                    // Marcar el intento fallido en rojo, luego limpiar
+                    el.style.background  = '#f8d7da';
+                    el.style.borderColor = '#dc3545';
+                    el.style.color       = '#721c24';
+
+                    if (feedback) {
+                        feedback.innerHTML  = '❌ That\'s not the one — look more carefully!';
+                        feedback.style.color = '#c0392b';
+                        feedback.style.display = 'block';
+                    }
+                    window.mistakes++;
+
+                    setTimeout(() => {
+                        el.style.background  = '#fff';
+                        el.style.borderColor = '#dee2e6';
+                        el.style.color       = '';
+                        delete el.dataset.seAnswered;
+                    }, 900);
+                }
+            });
+        });
+
+        // Feedback
+        const feedback = document.createElement('div');
+        feedback.id    = feedbackId;
+        feedback.style.cssText = 'display:none; margin-top:10px; padding:10px;' +
+                                  'border-radius:5px; font-weight:bold;';
+        slide.appendChild(feedback);
+
+        _appendNextButton(slide, { hidden: true });
+    }
+};
+
+
+/* -----------------------------------------------------------------------------
+   TIPO: MATCH
+   Dos columnas: el alumno hace clic en un item de cada columna para emparejarlos.
+   Los pares correctos se marcan en verde; los incorrectos parpadean en rojo.
+   El botón "Next" aparece cuando todos los pares están completos.
+
+   USO EN HTML:
+   ─────────────────────────────────────────────────────────────────────────────
+   <div class="slide" data-type="MATCH">
+     <h2>Match the concept</h2>
+     <p>Click one item from each column to create a pair.</p>
+
+     <!-- data-se-pair debe ser idéntico en el item izquierdo y su pareja derecha -->
+     <div data-se-left  data-se-pair="point">Point (P)</div>
+     <div data-se-left  data-se-pair="evidence">Evidence (E)</div>
+     <div data-se-left  data-se-pair="explain">Explanation (E)</div>
+     <div data-se-left  data-se-pair="relevance">Relevance (R)</div>
+
+     <div data-se-right data-se-pair="explain">Connects evidence to the claim</div>
+     <div data-se-right data-se-pair="relevance">Links paragraph back to thesis</div>
+     <div data-se-right data-se-pair="point">The Topic Sentence you will defend</div>
+     <div data-se-right data-se-pair="evidence">Data, quotes, or statistics</div>
+   </div>
+   ─────────────────────────────────────────────────────────────────────────────
+   NOTAS:
+   - data-se-pair debe ser idéntico en el left y su right correspondiente
+   - El engine mezcla automáticamente la columna derecha
+   - Se pueden tener de 2 a 6 pares (más de 6 se vuelve incómodo en móvil)
+   - El alumno hace clic en uno de la izquierda, luego uno de la derecha
+----------------------------------------------------------------------------- */
+SlideTypes.MATCH = {
+    mount(slide, index) {
+        const lefts  = Array.from(slide.querySelectorAll('[data-se-left]'));
+        const rights = Array.from(slide.querySelectorAll('[data-se-right]'));
+        if (lefts.length === 0 || rights.length === 0) return;
+
+        const feedbackId = `se-match-feedback-${index}`;
+        let   selected   = null;   // el item de la izquierda actualmente seleccionado
+        let   matched    = 0;
+
+        // Mezclar la columna derecha (Fisher-Yates)
+        for (let i = rights.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [rights[i], rights[j]] = [rights[j], rights[i]];
+        }
+
+        // Construir tabla de dos columnas
+        const grid = document.createElement('div');
+        grid.style.cssText = `display:grid; grid-template-columns:1fr 1fr; gap:8px;
+                               margin:16px 0;`;
+
+        const styleItem = (el, side) => {
+            el.style.cssText = `padding:12px; border-radius:8px; border:2px solid #dee2e6;
+                                  background:#fff; cursor:pointer; text-align:center;
+                                  font-size:0.95rem; transition: background 0.15s, border-color 0.15s;
+                                  min-height:44px; display:flex; align-items:center;
+                                  justify-content:center;`;
+            el.dataset.seSide = side;
+        };
+
+        lefts.forEach(el  => styleItem(el, 'left'));
+        rights.forEach(el => styleItem(el, 'right'));
+
+        // Colocar en columnas: primero todos los lefts, luego todos los rights
+        // usando CSS grid con grid-column para que queden lado a lado fila a fila
+        const maxRows = Math.max(lefts.length, rights.length);
+        for (let r = 0; r < maxRows; r++) {
+            if (lefts[r])  grid.appendChild(lefts[r]);
+            else           grid.appendChild(document.createElement('div')); // placeholder
+            if (rights[r]) grid.appendChild(rights[r]);
+            else           grid.appendChild(document.createElement('div'));
+        }
+
+        // Eliminar elementos originales del DOM
+        [...lefts, ...rights].forEach(el => {
+            if (el.parentNode && el.parentNode !== grid) el.parentNode.removeChild(el);
+        });
+
+        slide.appendChild(grid);
+
+        // Lógica de selección y emparejamiento
+        const handleClick = (el) => {
+            if (el.dataset.seMatched || el.dataset.seSide === undefined) return;
+
+            const feedback = document.getElementById(feedbackId);
+
+            if (el.dataset.seSide === 'left') {
+                // Deseleccionar el anterior izquierdo si lo había
+                if (selected) {
+                    selected.style.background   = '#fff';
+                    selected.style.borderColor  = '#dee2e6';
+                }
+                selected = el;
+                el.style.background  = '#eaf6ff';
+                el.style.borderColor = '#3498db';
+
+            } else if (el.dataset.seSide === 'right' && selected) {
+                // Intentar emparejar
+                const isCorrect = selected.dataset.sePair === el.dataset.sePair;
+
+                if (isCorrect) {
+                    // Marcar ambos como emparejados
+                    [selected, el].forEach(item => {
+                        item.style.background   = '#d4edda';
+                        item.style.borderColor  = '#28a745';
+                        item.style.color        = '#155724';
+                        item.style.cursor       = 'default';
+                        item.dataset.seMatched  = 'true';
+                    });
+                    matched++;
+                    selected = null;
+
+                    if (feedback) {
+                        feedback.innerHTML  = `✅ Correct pair! (${matched}/${lefts.length} matched)`;
+                        feedback.style.color = '#27ae60';
+                        feedback.style.display = 'block';
+                    }
+
+                    // Comprobar si todos están emparejados
+                    if (matched === lefts.length) {
+                        if (feedback) feedback.innerHTML = '✅ All pairs matched! Excellent work.';
+                        const nextBtn = slide.querySelector('.btn-next');
+                        if (nextBtn) nextBtn.style.display = 'block';
+                    }
+
+                } else {
+                    // Fallo: parpadeo rojo y reset
+                    [selected, el].forEach(item => {
+                        item.style.background  = '#f8d7da';
+                        item.style.borderColor = '#dc3545';
+                    });
+                    if (feedback) {
+                        feedback.innerHTML  = '❌ That pair doesn\'t match — try again!';
+                        feedback.style.color = '#c0392b';
+                        feedback.style.display = 'block';
+                    }
+                    window.mistakes++;
+
+                    const prevSelected = selected;
+                    selected = null;
+                    setTimeout(() => {
+                        [prevSelected, el].forEach(item => {
+                            if (!item.dataset.seMatched) {
+                                item.style.background  = '#fff';
+                                item.style.borderColor = '#dee2e6';
+                            }
+                        });
+                    }, 800);
+                }
+            }
+        };
+
+        [...lefts, ...rights].forEach(el => {
+            el.addEventListener('click', () => handleClick(el));
+        });
+
+        // Feedback
+        const feedback = document.createElement('div');
+        feedback.id    = feedbackId;
+        feedback.style.cssText = 'display:none; margin-top:10px; padding:10px;' +
+                                  'border-radius:5px; font-weight:bold;';
+        slide.appendChild(feedback);
+
+        _appendNextButton(slide, { hidden: true });
+    }
+};
