@@ -9,10 +9,8 @@
     
     <script src="../../js/activity-tracker.js"></script>
     <script src="../../js/essay-handler.js"></script>
-    <script src="../../js/ui-tools.js"></script>
     <script src="../../js/report.js"></script>
-    <script src="../../js/module-logic.js" defer></script>
-    <script src="../../js/ui-components.js" defer></script>
+    <script src="../../js/slide-engine.js" defer></script>
 </head>
 <body>
 
@@ -21,129 +19,105 @@
         <div class="progress-fill" id="progressBar"></div>
     </div>
 
-    <div class="slide active" id="slide0">
+    <!-- SLIDE 0 — VIDEO -->
+    <div class="slide active" data-type="VIDEO">
         <h2>The P.E.E.R. Framework</h2>
-        <div class="video-container" style="position: relative; overflow: hidden; width: 100%; background: #000; border-radius: 8px;">
-            <iframe src="https://docs.google.com/presentation/d/1GJHDTE2ztnrm5EvUncHSe45R7k2rlKYxvcMQoYRys0g/embed"
-                frameborder="0" width="100%" height="320" allowfullscreen></iframe>
-        </div>
-        <div id="btn0"></div>
+        <iframe data-se-src="https://docs.google.com/presentation/d/1GJHDTE2ztnrm5EvUncHSe45R7k2rlKYxvcMQoYRys0g/embed"
+                data-se-height="320"></iframe>
     </div>
 
-    <div class="slide" id="slide1">
+    <!-- SLIDE 1 — CONTENT -->
+    <div class="slide" data-type="CONTENT">
         <h2>What is it?</h2>
         <p>The P.E.E.R. structure is a method for organizing paragraphs to ensure every argument is solid, supported, and connected to your thesis.</p>
         <p>This framework is essential for building a strong <strong>Body Paragraph</strong> that guides the reader through your logic.</p>
-        <div id="btn1"></div>
     </div>
 
-    <div class="slide" id="slide2">
+    <!-- SLIDE 2 — QUIZ: The Point -->
+    <div class="slide" data-type="QUIZ">
         <h2>The Point</h2>
-        <div id="quiz2"></div>
-        <div id="btn2"></div>
+        <p data-se-question>What is the primary function of the 'Point' at the start?</p>
+        <div data-se-option>A. To list bibliographic sources.</div>
+        <div data-se-option data-se-correct>B. To present the main Topic Sentence you will defend.</div>
     </div>
 
-    <div class="slide" id="slide3">
+    <!-- SLIDE 3 — QUIZ: The Evidence -->
+    <div class="slide" data-type="QUIZ">
         <h2>The Evidence</h2>
-        <div id="quiz3"></div>
-        <div id="btn3"></div>
+        <p data-se-question>In the 'Evidence' phase, what information is most appropriate?</p>
+        <div data-se-option data-se-correct>A. Direct quotes, statistics, or data from reliable sources.</div>
+        <div data-se-option>B. Personal opinions based on general feelings.</div>
     </div>
 
-    <div class="slide" id="slide4">
+    <!-- SLIDE 4 — CONTENT: Explanation -->
+    <div class="slide" data-type="CONTENT">
         <h2>Deepening: Explanation</h2>
         <p>The most critical step is the <strong>Explanation</strong>. It is not enough to simply provide a quote; you must explain <em>how</em> that evidence proves your initial point.</p>
-        <div id="btn4"></div>
     </div>
 
-    <div class="slide" id="slide5">
+    <!-- SLIDE 5 — QUIZ: Quick Check -->
+    <div class="slide" data-type="QUIZ">
         <h2>Quick Check</h2>
-        <div id="quiz5"></div>
-        <div id="btn5"></div>
+        <p data-se-question>If a student provides a statistic but fails to analyze it, which part is missing?</p>
+        <div data-se-option>A. Point</div>
+        <div data-se-option data-se-correct>B. Explanation</div>
     </div>
 
-    <div class="slide" id="slide6">
+    <!-- SLIDE 6 — CONTENT: Relevance -->
+    <div class="slide" data-type="CONTENT">
         <h2>Deepening: Relevance</h2>
         <p>The final step, <strong>Relevance</strong> (Link), connects the paragraph back to the thesis or acts as a bridge. It answers: "Why does this matter?"</p>
-        <div id="btn6"></div>
     </div>
 
-    <div class="slide" id="slide7">
+    <!-- SLIDE 7 — CONTRAST: Balance -->
+    <div class="slide" data-type="CONTRAST">
         <h2>Deepening: Balance</h2>
         <p>A strong P.E.E.R. paragraph prioritizes your voice over the sources.</p>
-        <div id="contrast7"></div>
-        <div id="btn7"></div>
+
+        <div data-se-correct data-se-label="Analytical Balance">
+            60% Explanation &amp; Relevance / 40% Evidence.
+        </div>
+        <div data-se-incorrect data-se-label="Evidence Dump">
+            80% Quotes / 20% Own analysis.
+        </div>
     </div>
 
-    <div class="slide" id="slide8">
+    <!-- SLIDE 8 — QUIZ: Mastered? -->
+    <div class="slide" data-type="QUIZ">
         <h2>Mastered?</h2>
-        <div id="quiz8"></div>
-        <div id="btn8"></div>
+        <p data-se-question>What is the risk of omitting the 'R' (Relevance) at the end?</p>
+        <div data-se-option>A. The teacher might think the quote is fake.</div>
+        <div data-se-option data-se-correct>B. The paragraph will look like a list of isolated facts without a connection to the thesis.</div>
     </div>
 
-    <div class="slide" id="preEssaySlide">
-        <div id="warningArea"></div>
+    <!-- ESSAY — Warning -->
+    <div class="slide" id="preEssaySlide"
+         data-type="ESSAY" data-se-role="warning"
+         data-se-lesson="peer structure">
+        <h2>Writing Task Instructions</h2>
+        <p data-se-warning>
+            You are about to write a P.E.E.R. paragraph. This will require approximately
+            10 minutes of focused writing.
+        </p>
     </div>
 
-    <div class="slide" id="essaySlide">
-        <div id="essayArea"></div>
+    <!-- ESSAY — Workspace -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="peer structure">
+        <p data-se-prompt>
+            Write a single paragraph (100–150 words) about the importance of bilingual education.
+            Ensure you follow the P.E.E.R. structure: Point, Evidence, Explanation, and Relevance.
+        </p>
     </div>
+
 </div>
 
 <script>
     window.onload = () => {
-        const UI = AcademicUI;
-        const LESSON_ID = 'peer structure';
-
-        // 1. Botones Dinámicos
-        document.getElementById('btn0').innerHTML = UI.createButton('Start Lesson →');
-        document.getElementById('btn1').innerHTML = UI.createButton('Next →');
-        document.getElementById('btn2').innerHTML = UI.createButton('Next →', null, 'next2', true);
-        document.getElementById('btn3').innerHTML = UI.createButton('Next →', null, 'next3', true);
-        document.getElementById('btn4').innerHTML = UI.createButton('Continue →');
-        document.getElementById('btn5').innerHTML = UI.createButton('Next →', null, 'next5', true);
-        document.getElementById('btn6').innerHTML = UI.createButton('Continue →');
-        document.getElementById('btn7').innerHTML = UI.createButton('Final Test →');
-        document.getElementById('btn8').innerHTML = UI.createButton('Go to Writing Exercise →', null, 'next8', true);
-
-        // 2. Quices
-        document.getElementById('quiz2').innerHTML = UI.createQuizBlock('s2', 
-            "What is the primary function of the 'Point' at the start?", 
-            [{ text: "A. To list bibliographic sources.", isCorrect: false }, 
-             { text: "B. To present the main Topic Sentence you will defend.", isCorrect: true }]);
-
-        document.getElementById('quiz3').innerHTML = UI.createQuizBlock('s3', 
-            "In the 'Evidence' phase, what information is most appropriate?", 
-            [{ text: "A. Direct quotes, statistics, or data from reliable sources.", isCorrect: true }, 
-             { text: "B. Personal opinions based on general feelings.", isCorrect: false }]);
-
-        document.getElementById('quiz5').innerHTML = UI.createQuizBlock('s5', 
-            "If a student provides a statistic but fails to analyze it, which part is missing?", 
-            [{ text: "A. Point", isCorrect: false }, 
-             { text: "B. Explanation", isCorrect: true }]);
-
-        document.getElementById('quiz8').innerHTML = UI.createQuizBlock('s8', 
-            "What is the risk of omitting the 'R' (Relevance) at the end?", 
-            [{ text: "A. The teacher might think the quote is fake.", isCorrect: false }, 
-             { text: "B. The paragraph will look like a list of isolated facts without a connection to the thesis.", isCorrect: true }]);
-
-        // 3. Contraste de Balance
-        document.getElementById('contrast7').innerHTML = 
-            UI.createContrastBox('correct', 'Analytical Balance', '60% Explanation & Relevance / 40% Evidence.') +
-            UI.createContrastBox('incorrect', 'Evidence Dump', '80% Quotes / 20% Own analysis.');
-
-        // 4. Secciones Finales
-        document.getElementById('warningArea').innerHTML = UI.createEssayWarning(
-            LESSON_ID,
-            "You are about to write a P.E.E.R. paragraph. This will require approximately 10 minutes of focused writing."
-        );
-
-        document.getElementById('essayArea').innerHTML = UI.renderEssaySection(
-            LESSON_ID,
-            "Write a single paragraph (100-150 words) about the importance of bilingual education. Ensure you follow the P.E.E.R. structure: Point, Evidence, Explanation, and Relevance."
-        );
+        SlideEngine.init('peer structure');
+        ActivityTracker.init('peer structure');
     };
-
-    ActivityTracker.init('peer structure');
 </script>
 
 </body>
