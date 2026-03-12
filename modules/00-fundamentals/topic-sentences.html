@@ -9,11 +9,8 @@
     
     <script src="../../js/activity-tracker.js"></script>
     <script src="../../js/essay-handler.js"></script>
-    <script src="../../js/ui-tools.js"></script>
     <script src="../../js/report.js"></script>
-    <script src="../../js/module-logic.js" defer></script>
-    <script src="../../js/ui-components.js" defer></script>
-    <script src="../../js/interactions-handler.js"></script> 
+    <script src="../../js/slide-engine.js" defer></script>
 </head>
 <body>
 
@@ -22,145 +19,116 @@
         <div class="progress-fill" id="progressBar"></div>
     </div>
 
-    <div class="slide active" id="slide0">
+    <!-- SLIDE 0 — VIDEO -->
+    <div class="slide active" data-type="VIDEO">
         <h2>The Remote Control</h2>
-        <div class="video-container" style="position: relative; overflow: hidden; width: 100%; background: #000; border-radius: 8px;">
-            <iframe src="https://docs.google.com/presentation/d/1uw-ubcgtqEiswx6O12rX24F-0w5LZ1NTZ2vMOQ8S-6s/embed"
-                frameborder="0" width="100%" height="320" allowfullscreen></iframe>
-        </div>
-        <div id="btn0"></div>
+        <iframe data-se-src="https://docs.google.com/presentation/d/1uw-ubcgtqEiswx6O12rX24F-0w5LZ1NTZ2vMOQ8S-6s/embed"
+                data-se-height="320"></iframe>
     </div>
 
-    <div class="slide" id="slide1">
+    <!-- SLIDE 1 — CONTENT -->
+    <div class="slide" data-type="CONTENT">
         <h2>What is it?</h2>
-        <p>Imagine your paragraph is a TV. The <strong>Topic Sentence</strong> is the remote control. It tells the reader exactly which "channel" (specific idea) they are going to watch.</p>
-        <p class="note"><strong>Key Fact:</strong> It is usually the first sentence. It must be clear, specific, and avoid being overly broad.</p>
-        <div id="btn1"></div>
+        <p>Imagine your paragraph is a TV. The <strong>Topic Sentence</strong> is the remote control.
+           It tells the reader exactly which "channel" (specific idea) they are going to watch.</p>
+        <p><strong>Key Fact:</strong> It is usually the first sentence. It must be clear, specific,
+           and avoid being overly broad.</p>
     </div>
 
-    <div class="slide" id="slide2">
+    <!-- SLIDE 2 — DRAG_DROP: Build a Topic Sentence
+         El alumno arrastra dos fragmentos a sus zonas:
+         - "Social media"                       → zona TOPIC
+         - "has negatively impacted..."         → zona CONTROLLING IDEA
+    -->
+    <div class="slide" data-type="DRAG_DROP">
         <h2>Identifying the Components</h2>
         <p>Drag the fragments to build a professional Topic Sentence:</p>
-        <div class="drag-container" id="source-container">
-            <div class="draggable" draggable="true" id="frag1" data-type="topic">"Social media"</div>
-            <div class="draggable" draggable="true" id="frag2" data-type="control">"has negatively impacted the attention span of teenagers."</div>
-        </div>
-        <div class="drop-area">
-            <div class="drop-zone" id="zone-topic" data-accept="topic">DROP TOPIC HERE</div>
-            <div class="drop-zone" id="zone-control" data-accept="control">DROP CONTROLLING IDEA HERE</div>
-        </div>
-        <div id="btn2"></div>
+
+        <div data-se-drag data-se-drag-type="topic">"Social media"</div>
+        <div data-se-drag data-se-drag-type="controlling">"has negatively impacted the attention span of teenagers."</div>
+
+        <div data-se-drop data-se-drop-accepts="topic"       data-se-label="DROP TOPIC HERE"></div>
+        <div data-se-drop data-se-drop-accepts="controlling" data-se-label="DROP CONTROLLING IDEA HERE"></div>
     </div>
 
-    <div class="slide" id="slide3">
+    <!-- SLIDE 3 — QUIZ: Fact vs Topic Sentence -->
+    <div class="slide" data-type="QUIZ">
         <h2>Fact vs. Topic Sentence</h2>
-        <div id="quiz3"></div>
-        <div id="btn3"></div>
+        <p data-se-question>Which of these is a more effective Topic Sentence?</p>
+        <div data-se-option>A. The university was founded in 1950. (Static Fact)</div>
+        <div data-se-option data-se-correct>B. The university's historic architecture creates an inspiring environment. (Arguable Claim)</div>
     </div>
 
-    <div class="slide" id="slide4">
+    <!-- SLIDE 4 — QUIZ: Kitchen Sink -->
+    <div class="slide" data-type="QUIZ">
         <h2>Avoiding the "Kitchen Sink"</h2>
-        <div id="quiz4"></div>
-        <div id="btn4"></div>
+        <p data-se-question>
+            Identify the error: <em>'Modern architecture is beautiful, expensive, uses glass, and helps the environment.'</em>
+        </p>
+        <div data-se-option>A. Clean Focus</div>
+        <div data-se-option data-se-correct>B. Kitchen Sink Error (Too many ideas)</div>
     </div>
 
-    <div class="slide" id="slide5">
+    <!-- SLIDE 5 — QUIZ: Practice Time -->
+    <div class="slide" data-type="QUIZ">
         <h2>Practice Time</h2>
-        <div id="quiz5"></div>
-        <div id="btn5"></div>
+        <p data-se-question>Which sentence is too broad for a single paragraph?</p>
+        <div data-se-option data-se-correct>A. Global warming is a complex problem with international solutions.</div>
+        <div data-se-option>B. One immediate effect of global warming is rising sea levels in coastal cities.</div>
     </div>
 
-    <div class="slide" id="slide6">
+    <!-- SLIDE 6 — CONTRAST + QUIZ: The "So What?" Test -->
+    <div class="slide" data-type="CONTRAST">
         <h2>The "So What?" Test</h2>
-        <div id="contrast6"></div>
-        <div id="quiz6"></div>
-        <div id="btn6"></div>
+
+        <div data-se-incorrect data-se-label="Weak Statement">I think apples are good.</div>
+        <div data-se-correct  data-se-label="Academic Claim">Apples are the most versatile fruit for healthy cooking.</div>
     </div>
 
-    <div class="slide" id="slide7">
+    <!-- SLIDE 7 — QUIZ: So What? applied -->
+    <div class="slide" data-type="QUIZ">
+        <h2>The "So What?" Test — Apply it</h2>
+        <p data-se-question>How would you pass the 'So What?' test for exercise?</p>
+        <div data-se-option>A. Many people go to the gym every day to lose weight.</div>
+        <div data-se-option data-se-correct>B. Regular physical activity is essential for maintaining cognitive function in elderly adults.</div>
+    </div>
+
+    <!-- SLIDE 8 — QUIZ: Mastered? -->
+    <div class="slide" data-type="QUIZ">
         <h2>Mastered?</h2>
-        <div id="quiz7"></div>
-        <div id="btn7"></div>
+        <p data-se-question>Select the most effective academic Topic Sentence:</p>
+        <div data-se-option>A. In this paragraph, I will talk about video games.</div>
+        <div data-se-option data-se-correct>B. Playing strategic video games can significantly improve problem-solving skills.</div>
     </div>
 
-    <div class="slide" id="preEssaySlide">
-        <div id="warningArea"></div>
+    <!-- ESSAY — Warning -->
+    <div class="slide" id="preEssaySlide"
+         data-type="ESSAY" data-se-role="warning"
+         data-se-lesson="topic sentences">
+        <h2>Writing Task Instructions</h2>
+        <p data-se-warning>
+            You will write a paragraph about technology in education.
+            This will take about 5–10 minutes.
+        </p>
     </div>
 
-    <div class="slide" id="essaySlide">
-        <div id="essayArea"></div>
+    <!-- ESSAY — Workspace -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="topic sentences">
+        <p data-se-prompt>
+            Write a single paragraph (100–150 words) that begins with a strong academic
+            Topic Sentence about the impact of technology on education.
+        </p>
     </div>
+
 </div>
 
 <script>
     window.onload = () => {
-        const UI = AcademicUI;
-        const LESSON_ID = 'topic sentences';
-
-        // 1. Botones Dinámicos
-        document.getElementById('btn0').innerHTML = UI.createButton('Start Lesson →');
-        document.getElementById('btn1').innerHTML = UI.createButton('Next →');
-        document.getElementById('btn2').innerHTML = UI.createButton('Next →', null, 'next2', true); // Bloqueado hasta completar Drag&Drop
-        document.getElementById('btn3').innerHTML = UI.createButton('Next →', null, 'next3', true);
-        document.getElementById('btn4').innerHTML = UI.createButton('Next →', null, 'next4', true);
-        document.getElementById('btn5').innerHTML = UI.createButton('Next →', null, 'next5', true);
-        document.getElementById('btn6').innerHTML = UI.createButton('Next →', null, 'next6', true);
-        document.getElementById('btn7').innerHTML = UI.createButton('Go to Final Writing Exercise →');
-
-        // 2. Quices
-        document.getElementById('quiz3').innerHTML = UI.createQuizBlock('s3', 
-            "Which of these is a more effective Topic Sentence?", 
-            [{ text: "A. The university was founded in 1950. (Static Fact)", isCorrect: false }, 
-             { text: "B. The university's historic architecture creates an inspiring environment. (Arguable Claim)", isCorrect: true }]);
-
-        document.getElementById('quiz4').innerHTML = UI.createQuizBlock('s4', 
-            "Identify the error: 'Modern architecture is beautiful, expensive, uses glass, and helps the environment.'", 
-            [{ text: "A. Clean Focus", isCorrect: false }, 
-             { text: "B. Kitchen Sink Error (Too many ideas)", isCorrect: true }]);
-
-        document.getElementById('quiz5').innerHTML = UI.createQuizBlock('s5', 
-            "Which sentence is too broad for a single paragraph?", 
-            [{ text: "A. Global warming is a complex problem with international solutions.", isCorrect: true }, 
-             { text: "B. One immediate effect of global warming is rising sea levels in coastal cities.", isCorrect: false }]);
-
-        document.getElementById('quiz6').innerHTML = UI.createQuizBlock('s6', 
-            "How would you pass the 'So What?' test for exercise?", 
-            [{ text: "A. Many people go to the gym every day to lose weight.", isCorrect: false }, 
-             { text: "B. Regular physical activity is essential for maintaining cognitive function in elderly adults.", isCorrect: true }]);
-
-        document.getElementById('quiz7').innerHTML = UI.createQuizBlock('s7', 
-            "Select the most effective academic Topic Sentence:", 
-            [{ text: "A. In this paragraph, I will talk about video games.", isCorrect: false }, 
-             { text: "B. Playing strategic video games can significantly improve problem-solving skills.", isCorrect: true }]);
-
-        // 3. Contrastes
-        document.getElementById('contrast6').innerHTML = 
-            UI.createContrastBox('incorrect', 'Weak Statement', 'I think apples are good.') +
-            UI.createContrastBox('correct', 'Academic Claim', 'Apples are the most versatile fruit for healthy cooking.');
-
-        // 4. Secciones de Ensayo (Warning + Writing)
-        document.getElementById('warningArea').innerHTML = UI.createEssayWarning(
-            LESSON_ID,
-            "You will write a paragraph about technology in education. This will take about 5-10 minutes."
-        );
-
-        document.getElementById('essayArea').innerHTML = UI.renderEssaySection(
-            LESSON_ID,
-            "Write a single paragraph (100-150 words) that begins with a strong academic Topic Sentence about the impact of technology on education."
-        );
-
-        // Inicializar Observador para componentes especiales (Drag & Drop)
-        const _observer = new MutationObserver(() => {
-            if (document.getElementById('slide2').classList.contains('active')) {
-                if (window.Interactions && Interactions.DragDrop) {
-                    Interactions.DragDrop.init();
-                }
-            }
-        });
-        _observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class'] });
+        SlideEngine.init('topic sentences');
+        ActivityTracker.init('topic sentences');
     };
-
-    ActivityTracker.init('topic sentences');
 </script>
 
 </body>
