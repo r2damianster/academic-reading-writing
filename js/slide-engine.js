@@ -76,7 +76,10 @@ const SlideEngine = (function () {
                 case 'ESSAY':          SlideTypes.ESSAY.mount(slide, index, lessonName); break;
                 case 'SORT_PARAGRAPH': SlideTypes.SORT_PARAGRAPH.mount(slide, index);   break;
                 case 'HIGHLIGHT':      SlideTypes.HIGHLIGHT.mount(slide, index);        break;
-                case 'MATCH':          SlideTypes.MATCH.mount(slide, index);            break;
+                case 'MATCH':           SlideTypes.MATCH.mount(slide, index);                     break;
+                case 'WORD_BANK':       SlideTypes.WORD_BANK.mount(slide, index);                  break;
+                case 'CATEGORIZE':      SlideTypes.CATEGORIZE.mount(slide, index);                 break;
+                case 'CHOOSE_CONTEXT':  SlideTypes.CHOOSE_CONTEXT.mount(slide, index);             break;
                 // Sin data-type → slide estática, sin procesamiento adicional
             }
         });
@@ -1339,6 +1342,510 @@ SlideTypes.MATCH = {
         feedback.style.cssText = 'display:none; margin-top:10px; padding:10px;' +
                                   'border-radius:5px; font-weight:bold;';
         slide.appendChild(feedback);
+
+        _appendNextButton(slide, { hidden: true });
+    }
+};
+
+/* =============================================================================
+   SECCIÓN 6 — TIPOS PARA MÓDULO DE CONNECTORS
+   Diseñados específicamente para ejercicios de selección y clasificación
+   de conectores y marcadores del discurso.
+
+   NUEVOS TIPOS:
+   ─────────────────────────────────────────────────────────────────────────────
+     data-type="WORD_BANK"      → Banco de palabras clicables → se insertan en blancos
+     data-type="CATEGORIZE"     → Clasificar items en columnas por categoría semántica
+     data-type="CHOOSE_CONTEXT" → Elegir entre dos opciones incrustadas en la oración
+   ─────────────────────────────────────────────────────────────────────────────
+   Los tres siguen la misma convención data-se-* del resto del engine.
+   Los tres registran mistakes en window.mistakes.
+   Los tres revelan btn-next solo al completar correctamente.
+   ============================================================================= */
+
+
+/* -----------------------------------------------------------------------------
+   TIPO: WORD_BANK
+   Banco de palabras clicables que se insertan en los blancos del texto.
+   Hay más palabras en el banco que blancos — los extras son distractores.
+   Al hacer clic en una palabra del banco → se inserta en el blanco activo.
+   Al hacer clic en una zona ya ocupada → la palabra regresa al banco.
+   Botón "Check" valida todos los blancos. Next aparece al acertar.
+
+   USO EN HTML:
+   ─────────────────────────────────────────────────────────────────────────────
+   <div class="slide" data-type="WORD_BANK">
+     <h2>Choose the right connector</h2>
+
+     <!-- Banco: más palabras que blancos. Las extras son distractores. -->
+     <div data-se-bank>
+       <span data-se-word>however</span>
+       <span data-se-word>therefore</span>
+       <span data-se-word>although</span>
+       <span data-se-word>due to</span>
+       <span data-se-word>furthermore</span>
+       <span data-se-word>despite</span>
+     </div>
+
+     <!-- Texto con blancos: data-se-blank + data-se-answer -->
+     <p data-se-sentence>
+       The study was inconclusive;
+       <span data-se-blank data-se-answer="however">[ ? ]</span>,
+       a second trial produced clearer results.
+     </p>
+     <p data-se-sentence>
+       Sales dropped
+       <span data-se-blank data-se-answer="due to">[ ? ]</span>
+       disruptions in the supply chain.
+     </p>
+   </div>
+   ─────────────────────────────────────────────────────────────────────────────
+   NOTAS:
+   - data-se-answer debe coincidir con el texto de un data-se-word (case-insensitive)
+   - Un blanco solo acepta una palabra a la vez
+   - Las palabras usadas se ocultan del banco; al devolverse reaparecen
+   - La validación admite includes() bidireccional
+----------------------------------------------------------------------------- */
+SlideTypes.WORD_BANK = {
+    mount(slide, index) {
+        const bankEl     = slide.querySelector('[data-se-bank]');
+        const blanks     = Array.from(slide.querySelectorAll('[data-se-blank]'));
+        const feedbackId = `se-wb-feedback-${index}`;
+        if (!bankEl || blanks.length === 0) return;
+
+        bankEl.style.cssText = `display:flex; flex-wrap:wrap; gap:8px; padding:14px;
+                                  background:#eaf6ff; border-radius:10px; margin-bottom:16px;
+                                  border:2px dashed #3498db; min-height:50px;`;
+
+        const words = Array.from(bankEl.querySelectorAll('[data-se-word]'));
+        words.forEach(word => {
+            word.style.cssText = `padding:6px 14px; background:#3498db; color:white;
+                                   border-radius:20px; cursor:pointer; font-size:0.95rem;
+                                   font-weight:500; user-select:none; transition:background 0.15s;`;
+            word.addEventListener('mouseenter', () => { word.style.background = '#2980b9'; });
+            word.addEventListener('mouseleave', () => { word.style.background = '#3498db'; });
+        });
+
+        let activeBlank = null;
+
+        blanks.forEach((blank, i) => {
+            const answer = blank.dataset.seAnswer || '';
+            const zone   = document.createElement('span');
+            zone.id      = `se-wb-blank-${index}-${i}`;
+            zone.dataset.seAnswer = answer;
+            zone.dataset.seEmpty  = 'true';
+            zone.dataset.seWord   = '';
+            zone.style.cssText = `display:inline-block;
+                                   min-width:${Math.max(answer.length * 11, 80)}px;
+                                   padding:2px 10px; border-bottom:2px solid #3498db;
+                                   background:#f0f8ff; border-radius:4px; cursor:pointer;
+                                   text-align:center; font-weight:600; color:#7f8c8d;
+                                   margin:0 4px; font-size:inherit; transition:background 0.15s;`;
+            zone.textContent = '?';
+
+            zone.addEventListener('click', () => {
+                if (zone.dataset.seEmpty === 'false') {
+                    const wordText = zone.dataset.seWord;
+                    zone.textContent      = '?';
+                    zone.dataset.seEmpty  = 'true';
+                    zone.dataset.seWord   = '';
+                    zone.style.background = '#f0f8ff';
+                    zone.style.borderColor = '#3498db';
+                    zone.style.color      = '#7f8c8d';
+                    SlideTypes.WORD_BANK._returnWordToBank(bankEl, wordText);
+                    activeBlank = null;
+                    return;
+                }
+                slide.querySelectorAll(`[id^="se-wb-blank-${index}-"]`).forEach(z => {
+                    if (z.dataset.seEmpty === 'true') z.style.background = '#f0f8ff';
+                });
+                zone.style.background = '#d6eaf8';
+                activeBlank = zone;
+            });
+
+            blank.replaceWith(zone);
+        });
+
+        const getZones = () => Array.from(
+            slide.querySelectorAll(`[id^="se-wb-blank-${index}-"]`)
+        );
+
+        words.forEach(word => {
+            word.addEventListener('click', () => {
+                let target = (activeBlank && activeBlank.dataset.seEmpty === 'true')
+                    ? activeBlank
+                    : getZones().find(z => z.dataset.seEmpty === 'true') || null;
+                if (!target) return;
+
+                target.textContent       = word.textContent;
+                target.dataset.seEmpty   = 'false';
+                target.dataset.seWord    = word.textContent;
+                target.style.background  = '#d5f5e3';
+                target.style.borderColor = '#2ecc71';
+                target.style.color       = '#1a5276';
+                activeBlank = null;
+                word.style.display = 'none';
+            });
+        });
+
+        const checkBtn = document.createElement('button');
+        checkBtn.textContent  = 'Check Answers';
+        checkBtn.style.cssText = `margin-top:14px; padding:10px 24px; background:#3498db;
+                                   color:white; border:none; border-radius:8px;
+                                   cursor:pointer; font-size:1rem; display:block;`;
+        checkBtn.addEventListener('click', () => {
+            SlideTypes.WORD_BANK._validate(slide, index, feedbackId, getZones());
+        });
+        slide.appendChild(checkBtn);
+
+        const fb = document.createElement('div');
+        fb.id    = feedbackId;
+        fb.style.cssText = 'display:none; margin-top:10px; padding:10px; border-radius:5px; font-weight:bold;';
+        slide.appendChild(fb);
+
+        _appendNextButton(slide, { hidden: true });
+    },
+
+    _returnWordToBank(bankEl, wordText) {
+        const match = Array.from(bankEl.querySelectorAll('[data-se-word]'))
+            .find(w => w.textContent.toLowerCase().trim() === wordText.toLowerCase().trim());
+        if (match) match.style.display = '';
+    },
+
+    _validate(slide, index, feedbackId, zones) {
+        const fb = document.getElementById(feedbackId);
+        let allCorrect = true;
+
+        zones.forEach(zone => {
+            const expected = (zone.dataset.seAnswer || '').toLowerCase().trim();
+            const given    = (zone.dataset.seWord   || '').toLowerCase().trim();
+            const correct  = given === expected || given.includes(expected) || expected.includes(given);
+            zone.style.borderColor = correct ? '#2ecc71' : '#e74c3c';
+            zone.style.background  = correct ? '#d4edda' : '#f8d7da';
+            zone.style.color       = correct ? '#155724' : '#721c24';
+            if (!correct) allCorrect = false;
+        });
+
+        if (fb) {
+            fb.style.display = 'block';
+            if (allCorrect) {
+                fb.innerHTML  = '✅ All correct! Well done.';
+                fb.style.color = '#27ae60';
+                const nextBtn = slide.querySelector('.btn-next');
+                if (nextBtn) nextBtn.style.display = 'block';
+            } else {
+                fb.innerHTML  = '❌ Some connectors are not right — try again!';
+                fb.style.color = '#c0392b';
+                window.mistakes++;
+            }
+        }
+    }
+};
+
+
+/* -----------------------------------------------------------------------------
+   TIPO: CATEGORIZE
+   El alumno arrastra items a columnas de categorías semánticas.
+   A diferencia de MATCH (1:1), aquí varias palabras pueden ir a la misma columna.
+   El botón "Check" valida. Next aparece si todo es correcto.
+
+   USO EN HTML:
+   ─────────────────────────────────────────────────────────────────────────────
+   <div class="slide" data-type="CATEGORIZE">
+     <h2>Sort by function</h2>
+     <p>Drag each connector to its correct category.</p>
+
+     <div data-se-item data-se-category="contrast">nevertheless</div>
+     <div data-se-item data-se-category="contrast">on the other hand</div>
+     <div data-se-item data-se-category="addition">moreover</div>
+     <div data-se-item data-se-category="addition">in addition</div>
+     <div data-se-item data-se-category="cause">since</div>
+     <div data-se-item data-se-category="result">consequently</div>
+
+     <div data-se-category-zone data-se-accepts="contrast" data-se-label="Contrast"></div>
+     <div data-se-category-zone data-se-accepts="addition" data-se-label="Addition"></div>
+     <div data-se-category-zone data-se-accepts="cause"    data-se-label="Cause / Reason"></div>
+     <div data-se-category-zone data-se-accepts="result"   data-se-label="Result"></div>
+   </div>
+   ─────────────────────────────────────────────────────────────────────────────
+   NOTAS:
+   - data-se-category debe coincidir con data-se-accepts de la zona correcta
+   - Múltiples items pueden compartir la misma categoría
+   - Items mal colocados se pueden mover sin reiniciar
+   - La validación comprueba que TODOS los items estén en su zona correcta
+----------------------------------------------------------------------------- */
+SlideTypes.CATEGORIZE = {
+    mount(slide, index) {
+        const items      = Array.from(slide.querySelectorAll('[data-se-item]'));
+        const zones      = Array.from(slide.querySelectorAll('[data-se-category-zone]'));
+        const feedbackId = `se-cat-feedback-${index}`;
+        if (items.length === 0 || zones.length === 0) return;
+
+        const pool = document.createElement('div');
+        pool.id    = `se-cat-pool-${index}`;
+        pool.style.cssText = `display:flex; flex-wrap:wrap; gap:8px; padding:12px;
+                               background:#f8f9fa; border-radius:10px; margin-bottom:16px;
+                               border:2px dashed #adb5bd; min-height:52px;`;
+
+        for (let i = items.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [items[i], items[j]] = [items[j], items[i]];
+        }
+
+        items.forEach((el, i) => {
+            el.id = `se-cat-item-${index}-${i}`;
+            el.setAttribute('draggable', 'true');
+            el.style.cssText = `padding:7px 16px; background:#2c3e50; color:white;
+                                 border-radius:20px; cursor:grab; font-size:0.9rem;
+                                 font-weight:500; user-select:none; transition:opacity 0.15s;`;
+            el.addEventListener('dragstart', e => {
+                e.dataTransfer.setData('text/plain', el.id);
+                el.style.opacity = '0.4';
+            });
+            el.addEventListener('dragend', () => { el.style.opacity = '1'; });
+            pool.appendChild(el);
+        });
+
+        const firstZone = zones[0];
+        slide.insertBefore(pool, firstZone);
+
+        pool.addEventListener('dragover', e => e.preventDefault());
+        pool.addEventListener('drop', e => {
+            e.preventDefault();
+            const dragged = document.getElementById(e.dataTransfer.getData('text/plain'));
+            if (dragged) pool.appendChild(dragged);
+        });
+
+        // ── Guardar referencia al padre ANTES de mover nada ──────────────
+        // firstZone.parentNode se pierde en cuanto la zona se mueve al grid
+        const slideParent  = slide;
+        const insertAnchor = firstZone.nextSibling;
+
+        // Eliminar zonas del DOM antes de construir el grid
+        zones.forEach(z => z.parentNode && z.parentNode.removeChild(z));
+
+        const cols = Math.min(zones.length, 2);
+        const grid = document.createElement('div');
+        grid.style.cssText = `display:grid; grid-template-columns:repeat(${cols},1fr);
+                               gap:10px; margin:10px 0;`;
+
+        zones.forEach(zone => {
+            const label = zone.dataset.seLabel || zone.dataset.seAccepts;
+            zone.style.cssText = `min-height:90px; padding:10px; border-radius:8px;
+                                   border:2px dashed #adb5bd; background:#fff;
+                                   display:flex; flex-wrap:wrap; gap:6px;
+                                   align-content:flex-start;
+                                   transition:background 0.15s, border-color 0.15s;`;
+
+            const labelEl = document.createElement('div');
+            labelEl.textContent = label;
+            labelEl.style.cssText = `width:100%; font-size:0.75rem; font-weight:700;
+                                      text-transform:uppercase; color:#6c757d;
+                                      letter-spacing:0.05em; margin-bottom:6px;
+                                      pointer-events:none;`;
+            zone.prepend(labelEl);
+
+            zone.addEventListener('dragover', e => {
+                e.preventDefault();
+                zone.style.background  = '#eaf6ff';
+                zone.style.borderColor = '#3498db';
+            });
+            zone.addEventListener('dragleave', e => {
+                if (!zone.contains(e.relatedTarget)) {
+                    zone.style.background  = '#fff';
+                    zone.style.borderColor = '#adb5bd';
+                }
+            });
+            zone.addEventListener('drop', e => {
+                e.preventDefault();
+                zone.style.background  = '#fff';
+                zone.style.borderColor = '#adb5bd';
+                const dragged = document.getElementById(e.dataTransfer.getData('text/plain'));
+                if (dragged) zone.appendChild(dragged);
+            });
+
+            grid.appendChild(zone);
+        });
+
+        // Insertar el grid usando la referencia al slide directamente
+        slideParent.insertBefore(grid, insertAnchor);
+
+        const checkBtn = document.createElement('button');
+        checkBtn.textContent  = 'Check Categories';
+        checkBtn.style.cssText = `margin-top:14px; padding:10px 24px; background:#3498db;
+                                   color:white; border:none; border-radius:8px;
+                                   cursor:pointer; font-size:1rem; display:block;`;
+        checkBtn.addEventListener('click', () => {
+            SlideTypes.CATEGORIZE._validate(slide, feedbackId, items);
+        });
+        slide.appendChild(checkBtn);
+
+        const fb = document.createElement('div');
+        fb.id    = feedbackId;
+        fb.style.cssText = 'display:none; margin-top:10px; padding:10px; border-radius:5px; font-weight:bold;';
+        slide.appendChild(fb);
+
+        _appendNextButton(slide, { hidden: true });
+    },
+
+    _validate(slide, feedbackId, items) {
+        const fb = document.getElementById(feedbackId);
+        let correct = 0;
+
+        items.forEach(item => {
+            const pz        = item.closest('[data-se-category-zone]');
+            const isCorrect = pz && pz.dataset.seAccepts === item.dataset.seCategory;
+            item.style.background = isCorrect ? '#2ecc71' : '#e74c3c';
+            if (isCorrect) correct++;
+        });
+
+        const allCorrect = correct === items.length;
+        if (fb) {
+            fb.style.display = 'block';
+            if (allCorrect) {
+                fb.innerHTML  = `✅ Perfect! All ${items.length} connectors correctly categorised.`;
+                fb.style.color = '#27ae60';
+                const nextBtn = slide.querySelector('.btn-next');
+                if (nextBtn) nextBtn.style.display = 'block';
+            } else {
+                fb.innerHTML  = `❌ ${correct} of ${items.length} correct — fix the red ones and try again.`;
+                fb.style.color = '#c0392b';
+                window.mistakes++;
+                setTimeout(() => {
+                    items.forEach(item => {
+                        const pz = item.closest('[data-se-category-zone]');
+                        if (!(pz && pz.dataset.seAccepts === item.dataset.seCategory)) {
+                            item.style.background = '#2c3e50';
+                        }
+                    });
+                }, 1500);
+            }
+        }
+    }
+};
+
+
+/* -----------------------------------------------------------------------------
+   TIPO: CHOOSE_CONTEXT
+   Dos opciones incrustadas dentro de la oración misma — no como botones externos.
+   El alumno hace clic en la opción correcta directamente en el flujo del texto.
+   Feedback inmediato por oración. Next aparece cuando todas están resueltas.
+
+   USO EN HTML:
+   ─────────────────────────────────────────────────────────────────────────────
+   <div class="slide" data-type="CHOOSE_CONTEXT">
+     <h2>Which connector fits?</h2>
+
+     <p data-se-sentence>
+       Sales dropped significantly last quarter
+       <span data-se-choice>
+         <span data-se-option>due to</span>
+         <span data-se-option data-se-correct>because of</span>
+       </span>
+       a disruption in the supply chain.
+     </p>
+
+     <p data-se-sentence>
+       <span data-se-choice>
+         <span data-se-option data-se-correct>Although</span>
+         <span data-se-option>Despite</span>
+       </span>
+       the team worked overtime, the deadline was missed.
+     </p>
+   </div>
+   ─────────────────────────────────────────────────────────────────────────────
+   NOTAS:
+   - Cada data-se-sentence tiene exactamente un data-se-choice con dos data-se-option
+   - Solo uno lleva data-se-correct
+   - Al acertar, ambas opciones se bloquean (la incorrecta se desvanece)
+   - Al fallar, el botón parpadea en rojo y permite reintentar
+----------------------------------------------------------------------------- */
+SlideTypes.CHOOSE_CONTEXT = {
+    mount(slide, index) {
+        const sentences  = Array.from(slide.querySelectorAll('[data-se-sentence]'));
+        const feedbackId = `se-cc-feedback-${index}`;
+        if (sentences.length === 0) return;
+
+        let solvedCount = 0;
+        const total     = sentences.length;
+
+        sentences.forEach(sentence => {
+            const choiceEl = sentence.querySelector('[data-se-choice]');
+            if (!choiceEl) return;
+
+            const options = Array.from(choiceEl.querySelectorAll('[data-se-option]'));
+            const wrapper = document.createElement('span');
+            wrapper.style.cssText = `display:inline-flex; gap:4px; flex-wrap:wrap;
+                                      vertical-align:middle; margin:0 3px;`;
+
+            options.forEach(opt => {
+                const isCorrect = opt.hasAttribute('data-se-correct');
+                const btn       = document.createElement('button');
+                btn.textContent = opt.textContent.trim();
+                btn.style.cssText = `padding:3px 12px; border-radius:20px; cursor:pointer;
+                                      border:2px solid #3498db; background:#eaf6ff;
+                                      color:#2c3e50; font-size:inherit; font-family:inherit;
+                                      font-weight:600; transition:background 0.15s;`;
+                btn.addEventListener('mouseenter', () => { if (!btn.disabled) btn.style.background = '#d6eaf8'; });
+                btn.addEventListener('mouseleave', () => { if (!btn.disabled) btn.style.background = '#eaf6ff'; });
+
+                btn.addEventListener('click', () => {
+                    if (btn.disabled) return;
+                    const fb = document.getElementById(feedbackId);
+
+                    if (isCorrect) {
+                        btn.style.background  = '#2ecc71';
+                        btn.style.borderColor = '#27ae60';
+                        btn.style.color       = 'white';
+                        wrapper.querySelectorAll('button').forEach(b => {
+                            b.disabled = true;
+                            if (b !== btn) {
+                                b.style.opacity     = '0.3';
+                                b.style.background  = '#f8f9fa';
+                                b.style.borderColor = '#dee2e6';
+                                b.style.color       = '#adb5bd';
+                            }
+                        });
+                        solvedCount++;
+                        if (fb) {
+                            fb.style.display = 'block';
+                            fb.innerHTML  = solvedCount === total
+                                ? '✅ All correct! Great choices.'
+                                : `✅ Correct! (${solvedCount}/${total} done)`;
+                            fb.style.color = '#27ae60';
+                        }
+                        if (solvedCount === total) {
+                            const nextBtn = slide.querySelector('.btn-next');
+                            if (nextBtn) nextBtn.style.display = 'block';
+                        }
+                    } else {
+                        btn.style.background  = '#e74c3c';
+                        btn.style.borderColor = '#c0392b';
+                        btn.style.color       = 'white';
+                        window.mistakes++;
+                        if (fb) {
+                            fb.innerHTML  = '❌ Not quite — try the other option!';
+                            fb.style.color = '#c0392b';
+                            fb.style.display = 'block';
+                        }
+                        setTimeout(() => {
+                            btn.style.background  = '#eaf6ff';
+                            btn.style.borderColor = '#3498db';
+                            btn.style.color       = '#2c3e50';
+                        }, 800);
+                    }
+                });
+
+                wrapper.appendChild(btn);
+            });
+
+            choiceEl.replaceWith(wrapper);
+        });
+
+        const fb = document.createElement('div');
+        fb.id    = feedbackId;
+        fb.style.cssText = 'display:none; margin-top:14px; padding:10px; border-radius:5px; font-weight:bold;';
+        slide.appendChild(fb);
 
         _appendNextButton(slide, { hidden: true });
     }
