@@ -249,4 +249,8 @@ body, html {
 
 /* UI Elements */
 .btn-report { background: var(--secondary); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px;}
+.btn-primary { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 5px; cursor: pointer; font-weight: 600; transition: background 0.3s ease; }
+.btn-primary:hover { background: #2c3e7a; }
+.btn-secondary { background: #95a5a6; color: white; border: none; padding: 12px 25px; border-radius: 5px; cursor: pointer; font-weight: 600; transition: background 0.3s ease; }
+.btn-secondary:hover { background: #7f8c8d; }
 .modal-content input, .modal-content select { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
