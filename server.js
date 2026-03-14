@@ -19,10 +19,9 @@ const MIME = {
 };
 
 const server = http.createServer(async (req, res) => {
-    // Log para ver qué está pidiendo el navegador
     console.log(`${req.method} ${req.url}`);
 
-    // ─── 1. RUTA DE LA API (VALIDACIÓN DE ESTUDIANTE) ───
+    // ─── 1. RUTA DE LA API ───
     if (req.method === 'POST' && req.url === '/api/validate-student') {
         let body = '';
         req.on('data', chunk => { body += chunk.toString(); });
@@ -35,35 +34,36 @@ const server = http.createServer(async (req, res) => {
                     return res.end(JSON.stringify({ message: 'Email is required' }));
                 }
 
-                // Consulta flexible a Supabase
-                // .ilike permite ignorar mayúsculas/minúsculas
+                // Normalización extrema: minúsculas, sin espacios y sin "live."
+                const cleanEmail = email.toLowerCase().trim().replace('live.', '');
+                console.log(`🔍 Buscando en DB: [${cleanEmail}]`);
+
                 const { data, error } = await supabase
                     .from('students')
                     .select('*')
-                    .ilike('email', email.trim()) 
+                    .ilike('email', cleanEmail) 
                     .limit(1);
 
-                // Si hay error de Supabase o el array llega vacío
                 if (error || !data || data.length === 0) {
-                    console.log(`❌ Estudiante no encontrado: ${email}`);
+                    console.log(`❌ Estudiante no encontrado: ${cleanEmail}`);
                     res.writeHead(404, { 'Content-Type': 'application/json' });
+                    // IMPORTANTE: Aquí enviamos JSON para que auth.js no explote
                     return res.end(JSON.stringify({ message: 'Student not found in database.' }));
                 }
 
-                // Éxito: Extraemos el primer (y único) estudiante del array
                 const student = data[0];
-                console.log(`✅ Estudiante validado: ${student.name}`);
+                console.log(`✅ Validado: ${student.name}`);
 
                 res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify(student));
+                return res.end(JSON.stringify(student));
 
             } catch (e) {
-                console.error("🔥 Server Error parsing JSON:", e);
+                console.error("🔥 Server Error:", e);
                 res.writeHead(500, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ message: 'Internal Server Error' }));
+                return res.end(JSON.stringify({ message: 'Internal Server Error' }));
             }
         });
-        return; 
+        return; // Detiene el flujo para que no intente cargar archivos estáticos
     }
 
     // ─── 2. SERVIDOR DE ARCHIVOS ESTÁTICOS ───
@@ -76,10 +76,9 @@ const server = http.createServer(async (req, res) => {
 
     fs.readFile(filePath, (err, data) => {
         if (err) {
-            console.log(`⚠️ File not found: ${filePath}`);
+            console.log(`⚠️ Archivo no encontrado: ${filePath}`);
             res.writeHead(404, { 'Content-Type': 'text/html' });
-            res.end('<h1>404 — Not Found</h1>');
-            return;
+            return res.end('<h1>404 — Not Found</h1>');
         }
         res.writeHead(200, { 'Content-Type': mimeType });
         res.end(data);
@@ -89,6 +88,5 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, () => {
     console.log(`----------------------------------------`);
     console.log(`🚀 Server running at http://localhost:${PORT}`);
-    console.log(`📅 Started at: ${new Date().toLocaleString()}`);
     console.log(`----------------------------------------`);
 });
