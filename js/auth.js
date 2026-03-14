@@ -1,92 +1,132 @@
 /* js/auth.js 
- * Versión corregida para 2 consentimientos
+ * Versión 1.7: Corregido mapeo de columnas y lógica de limpieza
  */
 
 document.addEventListener('DOMContentLoaded', () => checkStudentStatus());
 
-function checkStudentStatus() {
-    const name           = localStorage.getItem('studentName');
+async function checkStudentStatus() {
+    const email = localStorage.getItem('studentEmail');
+    const modal = document.getElementById('welcomeModal');
+    const display = document.getElementById('studentDisplay');
     const loginTimestamp = localStorage.getItem('lastLoginTimestamp');
-    const modal          = document.getElementById('welcomeModal');
-    const display        = document.getElementById('studentDisplay');
 
+    // Sesión de 4 horas
     const expirationTime = 4 * 60 * 60 * 1000;
     if (loginTimestamp && (new Date().getTime() - loginTimestamp > expirationTime)) {
+        console.log("Sesión expirada");
         resetApp();
         return;
     }
 
-    if (!name) {
+    if (!email) {
         if (modal) modal.style.display = 'flex';
-    } else {
-        if (modal) modal.style.display = 'none';
-        if (display) display.innerText = "Student: " + name;
-        // Solo intentamos cargar la página si existe la función loadPage
-        if (typeof loadPage === 'function') {
-            loadPage('welcome-content.html');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/validate-student', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        });
+
+        // Verificamos si la respuesta es exitosa antes de parsear
+        if (!response.ok) {
+            // Si el servidor responde 404 o 500, limpiamos para evitar bucles
+            console.warn("Usuario no válido en la base de datos, limpiando sesión...");
+            localStorage.clear(); 
+            if (modal) modal.style.display = 'flex';
+            return;
         }
+
+        const serverResult = await response.json();
+
+        // 2️⃣ Guardar/actualizar datos (USANDO name y major)
+        localStorage.setItem('studentName',        serverResult.name || "Authorized User");
+        localStorage.setItem('studentEmail',       serverResult.email);
+        localStorage.setItem('studentCourse',      serverResult.course || "N/A");
+        localStorage.setItem('studentMajor',       serverResult.major || "Student");
+        localStorage.setItem('studentInstitution', "ULEAM");
+        localStorage.setItem('lastLoginTimestamp', new Date().getTime());
+
+        // 3️⃣ UI Update
+        if (modal) modal.style.display = 'none';
+        if (display) display.innerText = "Active: " + (serverResult.name || "Student");
+
+        // Solo cargar si estamos en el index y el frame está vacío
+        const frame = document.getElementById('contentFrame');
+        if (frame && frame.src.includes('welcome-content.html')) {
+            // Ya está cargado o se cargará por defecto
+        }
+
+    } catch (err) {
+        console.error("Connection Error:", err);
+        // No reseteamos aquí por si es un fallo temporal del WiFi
+        if (modal) modal.style.display = 'none'; // Opcional: permitir ver contenido offline
     }
 }
 
-function saveAndStart() {
-    // 1. Obtener valores de texto
-    const name            = document.getElementById('inputName').value.trim();
-    const email           = document.getElementById('inputEmail').value.trim();
-    const course          = document.getElementById('inputCourse').value.trim();
-    const major           = document.getElementById('inputMajor').value.trim();
-    const institution     = document.getElementById('inputInstitution').value.trim();
-    const practiceType    = document.getElementById('inputPracticeType').value.trim();
-    
-    // 2. Obtener valores de los 2 checkboxes actuales
+async function saveAndStart() {
+    const emailInput = document.getElementById('inputEmail');
+    const email = emailInput ? emailInput.value.trim() : "";
+    const practiceType = document.getElementById('inputPracticeType').value;
     const academicConsent = document.getElementById('inputConsent').checked;
     const researchConsent = document.getElementById('inputResearchConsent').checked;
 
-    // 3. Validar campos vacíos
-    if (!name || !email || !course || !major || !institution || !practiceType) {
-        showModalError("Please complete all fields before continuing.");
+    if (!email) {
+        showModalError("Email is required.", "step1Error");
         return;
     }
 
-    // 4. Validar formato de correo institucional
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@(live\.)?uleam\.edu\.ec$/;
-    if (!emailPattern.test(email)) {
-        showModalError("Only institutional emails (@uleam.edu.ec or @live.uleam.edu.ec) are accepted.");
-        return;
-    }
-
-    // 5. Validar consentimiento obligatorio (El de integridad académica)
     if (!academicConsent) {
-        showModalError("You must accept the data monitoring policy to continue.");
+        showModalError("Please accept the monitoring policy.", "step2Error");
         return;
     }
 
-    // 6. Guardar en LocalStorage
-    localStorage.setItem('studentName',         name);
-    localStorage.setItem('studentEmail',        email);
-    localStorage.setItem('studentCourse',       course);
-    localStorage.setItem('studentMajor',        major);
-    localStorage.setItem('studentInstitution',  institution);
-    localStorage.setItem('studentPracticeType', practiceType);
-    
-    // Guardamos los estados de los 2 consentimientos
-    localStorage.setItem('studentAcademicConsent', academicConsent ? 'Yes' : 'No');
-    localStorage.setItem('studentResearchConsent', researchConsent ? 'Yes' : 'No');
-    
-    localStorage.setItem('lastLoginTimestamp',  new Date().getTime());
+    try {
+        showModalError("Verifying credentials...", "step2Error");
 
-    // 7. Reiniciar para aplicar cambios y entrar
-    location.reload();
+        const response = await fetch('/api/validate-student', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        });
+
+        const serverResult = await response.json();
+
+        if (!response.ok) {
+            showModalError(serverResult.message || "User not found.", "step2Error");
+            return;
+        }
+
+        // 3. AUTO-CARGA DE DATOS
+        localStorage.setItem('studentName',        serverResult.name || "Authorized User");
+        localStorage.setItem('studentEmail',       serverResult.email);
+        localStorage.setItem('studentCourse',      serverResult.course || "N/A");
+        localStorage.setItem('studentMajor',       serverResult.major || "Student");
+        localStorage.setItem('studentInstitution', "ULEAM");
+        
+        // Datos específicos de la sesión
+        localStorage.setItem('studentPracticeType', practiceType);
+        localStorage.setItem('studentAcademicConsent', 'Yes');
+        localStorage.setItem('studentResearchConsent', researchConsent ? 'Yes' : 'No');
+        localStorage.setItem('lastLoginTimestamp', new Date().getTime());
+
+        // 4. Entrar
+        location.reload();
+
+    } catch (err) {
+        console.error("Connection Error:", err);
+        showModalError("Server connection failed.", "step2Error");
+    }
 }
 
-function showModalError(msg) {
-    let err = document.getElementById('modalError');
-    if (!err) {
-        err = document.createElement('p');
-        err.id = 'modalError';
-        err.style.cssText = 'color:#e74c3c;font-size:0.85rem;margin-top:8px;text-align:center;';
-        document.querySelector('.modal-content').appendChild(err);
+function showModalError(msg, targetId) {
+    const errDisplay = document.getElementById(targetId);
+    if (errDisplay) {
+        errDisplay.innerText = msg;
+        errDisplay.style.color = "#e74c3c";
     }
-    err.innerText = msg;
 }
 
 function resetApp() {
