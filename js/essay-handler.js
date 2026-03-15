@@ -155,6 +155,26 @@ window.EssayHandler = (function () {
         }
     }
 
-    return { init, submit };
+    function getLiveStats() {
+        const textarea  = document.getElementById(_textareaId);
+        const totalChars = textarea ? textarea.value.trim().length : 0;
+        const now        = Date.now();
+        const writingDuration = (_firstKeyTime && _lastKeyTime)
+            ? Math.round((_lastKeyTime - _firstKeyTime) / 1000)
+            : 0;
+        const tabSwitches = (typeof ActivityTracker !== 'undefined')
+            ? (ActivityTracker.getActivityAudit().tabSwitches || 0)
+            : 0;
+        return {
+            keystrokes:      _totalKeys,
+            deletions:       _deletions,
+            pastes:          _pastesMade,
+            tabSwitches:     tabSwitches,
+            totalChars:      totalChars,
+            writingDuration: writingDuration
+        };
+    }
+
+    return { init, submit, getLiveStats };
 
 })();
