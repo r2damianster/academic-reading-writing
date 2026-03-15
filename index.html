@@ -15,6 +15,20 @@
     <!-- Flyout backdrop -->
     <div id="flyoutBackdrop" class="flyout-backdrop" onclick="closeFlyout()"></div>
 
+    <!-- Search modal -->
+    <div id="searchModal" class="search-modal-backdrop" onclick="closeSearch(event)">
+        <div class="search-modal-box" onclick="event.stopPropagation()">
+            <div class="search-modal-input-row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-modal-icon"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                <input id="searchModalInput" class="search-modal-input"
+                       placeholder="Search any lesson…" autocomplete="off"
+                       oninput="runSearch(this.value)" onkeydown="searchKeyNav(event)">
+                <button class="search-modal-esc" onclick="closeSearch()">Esc</button>
+            </div>
+            <div id="searchModalResults" class="search-modal-results"></div>
+        </div>
+    </div>
+
     <!-- Flyout: panel izquierdo (grupos) + panel derecho (ítems) -->
     <div id="flyoutPanel" class="flyout-panel">
 
@@ -87,9 +101,22 @@
             </div>
             <ul class="nav-menu" id="navMenu"></ul>
             <div class="sidebar-footer">
-                <button class="btn-report" onclick="generateReport()" title="Download & Send Progress">⬇</button>
-                <a href="#" onclick="loadPage('modules/ethics-and-data.html')" style="display:none;">🔒 Ethics & Privacy Policy</a>
-                <button onclick="resetApp()" title="Not you? Logout">⏏</button>
+                <!-- Search -->
+                <button class="sf-btn" onclick="openSearch()" title="Search lessons">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                </button>
+                <!-- Ethics & Privacy -->
+                <button class="sf-btn" onclick="loadPage('modules/ethics-and-data.html')" title="Ethics & Privacy Policy">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </button>
+                <!-- Download report -->
+                <button class="sf-btn sf-btn--accent" onclick="generateReport()" title="Download & Send Progress">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                </button>
+                <!-- Logout -->
+                <button onclick="resetApp()" class="sf-btn sf-btn--ghost" title="Not you? Logout">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                </button>
             </div>
         </nav>
 
@@ -279,6 +306,110 @@
         };
 
         document.addEventListener('DOMContentLoaded', buildSlimMenu);
+
+    })();
+    </script>
+
+    <!-- =====================================================================
+         SEARCH SYSTEM
+         ===================================================================== -->
+    <script>
+    (function () {
+
+        function buildIndex() {
+            if (typeof MENU === 'undefined') return [];
+            const index = [];
+            function walk(items, breadcrumb) {
+                items.forEach(item => {
+                    if (item.path && item.label !== 'Main') {
+                        index.push({ label: item.label, path: item.path, crumb: breadcrumb });
+                    }
+                    if (item.children) walk(item.children, breadcrumb ? breadcrumb + ' \u203a ' + item.label : item.label);
+                });
+            }
+            walk(MENU, '');
+            return index;
+        }
+
+        let INDEX = [];
+        let activeIdx = -1;
+
+        window.openSearch = function () {
+            if (!INDEX.length) INDEX = buildIndex();
+            document.getElementById('searchModal').classList.add('open');
+            const input = document.getElementById('searchModalInput');
+            input.value = '';
+            document.getElementById('searchModalResults').innerHTML = '';
+            activeIdx = -1;
+            setTimeout(() => input.focus(), 60);
+            document.addEventListener('keydown', escListener);
+        };
+
+        function escListener(e) { if (e.key === 'Escape') _closeSearch(); }
+
+        window.closeSearch = function (e) {
+            if (e && e.target !== document.getElementById('searchModal')) return;
+            _closeSearch();
+        };
+
+        function _closeSearch() {
+            document.getElementById('searchModal').classList.remove('open');
+            document.removeEventListener('keydown', escListener);
+        }
+
+        window.runSearch = function (q) {
+            activeIdx = -1;
+            const box = document.getElementById('searchModalResults');
+            if (!q.trim()) { box.innerHTML = ''; return; }
+            const terms = q.toLowerCase().split(/\s+/);
+            const hits = INDEX.filter(item =>
+                terms.every(t => item.label.toLowerCase().includes(t) || item.crumb.toLowerCase().includes(t))
+            ).slice(0, 12);
+
+            if (!hits.length) {
+                box.innerHTML = '<div class="sr-empty">No results for &ldquo;' + q + '&rdquo;</div>';
+                return;
+            }
+
+            const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+            box.innerHTML = hits.map((h, i) => {
+                const hl = h.label.replace(re, '<mark>$1</mark>');
+                const crumb = h.crumb ? '<span class="sr-crumb">' + h.crumb + '</span>' : '';
+                return '<button class="sr-item" data-path="' + h.path + '" onclick="searchGo(\'' + h.path + '\')" onmouseenter="setSearchActive(' + i + ')">' +
+                    crumb + '<span class="sr-label">' + hl + '</span></button>';
+            }).join('');
+        };
+
+        window.setSearchActive = function (i) {
+            activeIdx = i;
+            document.querySelectorAll('.sr-item').forEach((el, j) => el.classList.toggle('active', j === i));
+        };
+
+        window.searchKeyNav = function (e) {
+            const items = document.querySelectorAll('.sr-item');
+            if (!items.length) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeIdx = Math.min(activeIdx + 1, items.length - 1);
+                window.setSearchActive(activeIdx);
+                items[activeIdx].scrollIntoView({ block: 'nearest' });
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeIdx = Math.max(activeIdx - 1, 0);
+                window.setSearchActive(activeIdx);
+                items[activeIdx].scrollIntoView({ block: 'nearest' });
+            } else if (e.key === 'Enter') {
+                const active = document.querySelector('.sr-item.active');
+                if (active) window.searchGo(active.dataset.path);
+                else if (items.length) window.searchGo(items[0].dataset.path);
+            }
+        };
+
+        window.searchGo = function (path) {
+            loadPage(path);
+            _closeSearch();
+            if (typeof closeFlyout === 'function') closeFlyout();
+        };
 
     })();
     </script>
