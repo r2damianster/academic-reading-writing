@@ -1,6 +1,139 @@
-<!-- CREAR PROXIMAMENTE -->
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>Coming Soon</title></head>
-<body><p>🚧 This lesson is coming soon.</p></body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Review Checklist | Academic Workspace</title>
+    <link rel="stylesheet" href="../../css/modules.css">
+    <script src="../../js/activity-tracker.js"></script>
+    <script src="../../js/essay-handler.js"></script>
+    <script src="../../js/report.js"></script>
+    <script src="../../js/slide-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — VIDEO -->
+    <div class="slide active" data-type="VIDEO">
+        <h2>The Review Checklist</h2>
+        <iframe data-se-src="https://docs.google.com/presentation/d/REPLACE_ID_HERE/embed?start=false&loop=false&delayms=3000"
+                data-se-height="320"></iframe>
+    </div>
+
+    <!-- SLIDE 1 — CONTENT: Why order matters -->
+    <div class="slide" data-type="CONTENT">
+        <h2>Review in the Right Order</h2>
+        <p>Not all writing problems carry the same weight — and fixing a lower-priority problem before a higher-priority one wastes effort. If you spend time correcting the grammar of a paragraph that later gets deleted, that work is lost.</p>
+
+        <div style="background:#f8fafc; border-radius:12px; padding:4px; margin:14px 0;">
+            <div style="background:#dbeafe; border-left:5px solid #3b82f6; padding:11px; margin:5px; border-radius:8px;">
+                <strong style="color:#1e40af;">Priority 1 — Argument and structure</strong><br>
+                Does the essay have a clear thesis? Does each paragraph support it? Is the overall structure logical?
+            </div>
+            <div style="background:#dbeafe; border-left:5px solid #3b82f6; padding:11px; margin:5px; border-radius:8px;">
+                <strong style="color:#1e40af;">Priority 2 — Development of ideas</strong><br>
+                Is each point sufficiently developed? Is the evidence relevant and analysed, not just summarised?
+            </div>
+            <div style="background:#dbeafe; border-left:5px solid #3b82f6; padding:11px; margin:5px; border-radius:8px;">
+                <strong style="color:#1e40af;">Priority 3 — Coherence and flow</strong><br>
+                Do paragraphs connect? Are transitions and connectors accurate and varied?
+            </div>
+            <div style="background:#dbeafe; border-left:5px solid #3b82f6; padding:11px; margin:5px; border-radius:8px;">
+                <strong style="color:#1e40af;">Priority 4 — Language and vocabulary</strong><br>
+                Is the register consistently academic? Are grammar and sentence structure correct?
+            </div>
+            <div style="background:#dbeafe; border-left:5px solid #3b82f6; padding:11px; margin:5px; border-radius:8px;">
+                <strong style="color:#1e40af;">Priority 5 — Format and conventions</strong><br>
+                Are citations, references, and formatting correct? Is the word count appropriate?
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 2 — SORT_PARAGRAPH: Order the review tasks -->
+    <div class="slide" data-type="SORT_PARAGRAPH">
+        <h2>Put the Review Tasks in Order</h2>
+        <p>These five review tasks are listed randomly. Put them in the correct order from most to least important.</p>
+
+        <div data-se-sentences>
+            <div data-se-sentence data-se-order="4">Check that the register is consistently academic and that vocabulary is precise throughout.</div>
+            <div data-se-sentence data-se-order="1">Read the essay to assess whether the thesis is clear and whether each paragraph advances the central argument.</div>
+            <div data-se-sentence data-se-order="5">Verify that citations follow the correct format and that the reference list is complete and accurate.</div>
+            <div data-se-sentence data-se-order="3">Check that transitions between paragraphs are logical and that connectors are used accurately.</div>
+            <div data-se-sentence data-se-order="2">Evaluate whether the evidence in each paragraph is relevant, sufficient, and analysed rather than simply reported.</div>
+        </div>
+    </div>
+
+    <!-- SLIDE 3 — CATEGORIZE: Problem → priority level -->
+    <div class="slide" data-type="CATEGORIZE">
+        <h2>Which Priority Does This Belong To?</h2>
+        <p>Drag each writing problem to the review priority it falls under.</p>
+
+        <div data-se-item data-se-category="argument">The essay has three body paragraphs, but only two of them relate to the thesis.</div>
+        <div data-se-item data-se-category="argument">The conclusion introduces a new argument not developed in the body.</div>
+        <div data-se-item data-se-category="development">The evidence in paragraph 2 is a direct quote with no explanation of its relevance.</div>
+        <div data-se-item data-se-category="development">Paragraph 3 makes a claim but provides no supporting evidence.</div>
+        <div data-se-item data-se-category="language">The essay uses "a lot of" and "really important" throughout.</div>
+        <div data-se-item data-se-category="language">Three sentences use the wrong tense in the methods section.</div>
+        <div data-se-item data-se-category="format">The in-text citations do not follow APA 7 format.</div>
+        <div data-se-item data-se-category="format">The reference list is missing two of the sources cited in the essay.</div>
+
+        <div data-se-category-zone data-se-accepts="argument"    data-se-label="Priority 1 — Argument & structure"></div>
+        <div data-se-category-zone data-se-accepts="development" data-se-label="Priority 2 — Development of ideas"></div>
+        <div data-se-category-zone data-se-accepts="language"    data-se-label="Priority 4 — Language & vocabulary"></div>
+        <div data-se-category-zone data-se-accepts="format"      data-se-label="Priority 5 — Format & conventions"></div>
+    </div>
+
+    <!-- SLIDE 4 — QUIZ: What to address first? -->
+    <div class="slide" data-type="QUIZ">
+        <h2>What Should the Reviewer Address First?</h2>
+        <p data-se-question>
+            A reviewer is reading a peer's essay and notices the following problems:<br><br>
+            — The thesis statement is vague and does not take a clear position<br>
+            — One paragraph uses informal language ("it's pretty obvious that")<br>
+            — Two citations are missing from the reference list<br>
+            — The transition between paragraphs 2 and 3 is weak<br><br>
+            What should the reviewer prioritise in their feedback?
+        </p>
+        <div data-se-option data-se-correct>A. The vague thesis — this is a structural problem that affects the entire essay and must be resolved before lower-priority issues.</div>
+        <div data-se-option>B. The informal language — register errors are visible to the reader immediately.</div>
+        <div data-se-option>C. The missing citations — these are an academic integrity issue and must be addressed urgently.</div>
+        <div data-se-option>D. All problems have equal priority and should be listed in the order they appear in the essay.</div>
+    </div>
+
+    <!-- SLIDE 5 — CHOOSE_CONTEXT: Which problem to tackle first? -->
+    <div class="slide" data-type="CHOOSE_CONTEXT">
+        <h2>First Things First</h2>
+        <p>In each scenario, choose the problem the writer should address first when revising their own work.</p>
+
+        <p data-se-sentence>
+            <em>A writer has limited time before submission and finds two problems: a comma splice in paragraph 1 and a body paragraph that does not connect to the thesis.</em><br><br>
+            <span data-se-choice>
+                <span data-se-option>Fix the comma splice first — grammar errors are penalised in marking.</span>
+                <span data-se-option data-se-correct>Address the paragraph that doesn't connect to the thesis first — a structural problem is higher priority than a punctuation error.</span>
+            </span>
+        </p>
+
+        <p data-se-sentence>
+            <em>A peer reviewer notices that the introduction is excellent but the conclusion simply repeats the thesis word for word, and there is also a minor spelling error in the title.</em><br><br>
+            <span data-se-choice>
+                <span data-se-option>Mention the spelling error first — it is the first thing the reader sees.</span>
+                <span data-se-option data-se-correct>Prioritise the conclusion — repeating the thesis without synthesis is a structural weakness that affects the quality of the argument. The spelling error can be noted briefly at the end.</span>
+            </span>
+        </p>
+    </div>
+
+</div>
+
+<script>
+    window.onload = () => {
+        SlideEngine.init('review checklist');
+        ActivityTracker.init('review checklist');
+    };
+</script>
+
+</body>
 </html>
