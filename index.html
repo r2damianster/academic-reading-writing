@@ -49,7 +49,7 @@
 
     </div>
 
-    <!-- Welcome Modal (sin cambios) -->
+    <!-- Welcome Modal -->
     <div id="welcomeModal" class="modal">
         <div class="modal-content">
             <div id="step1">
@@ -131,8 +131,6 @@
             const email = document.getElementById('inputEmail').value.trim();
             const err = document.getElementById('step1Error');
             if (!email) { err.textContent = 'Email is required.'; return; }
-            const emailPattern = /^[a-zA-Z0-9._%+-]+@(live\.)?uleam\.edu\.ec$/;
-            if (!emailPattern.test(email)) { err.textContent = 'Please use your @uleam.edu.ec account.'; return; }
             err.textContent = '';
             document.getElementById('step1').style.display = 'none';
             document.getElementById('step2').style.display = 'block';
