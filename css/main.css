@@ -382,3 +382,244 @@ body, html {
     width: 100%; padding: 10px; margin: 8px 0;
     border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;
 }
+
+/* ==========================================================================
+   FLYOUT — DOBLE PANEL (grupos izq. → ítems der.)
+   ========================================================================== */
+
+/* El panel ahora es un flex row de dos columnas */
+.flyout-panel {
+    position: fixed;
+    top: 0;
+    left: var(--sidebar-width);
+    /* ancho total = panel-L + panel-R */
+    width: calc(var(--flyout-l-width, 170px) + var(--flyout-r-width, 190px));
+    height: 100vh;
+    background: transparent;   /* cada sub-panel tiene su propio fondo */
+    z-index: 2000;
+    display: flex;
+    flex-direction: row;
+    box-shadow: 6px 0 24px rgba(0,0,0,0.28);
+
+    transform: translateX(-110%);
+    opacity: 0;
+    transition: transform 0.22s cubic-bezier(0.4,0,0.2,1), opacity 0.18s ease;
+    pointer-events: none;
+}
+.flyout-panel.open {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* --- Panel izquierdo (sección + grupos) --- */
+.flyout-l {
+    width: var(--flyout-l-width, 170px);
+    min-width: var(--flyout-l-width, 170px);
+    background: #1e3580;
+    display: flex;
+    flex-direction: column;
+    border-right: 0.5px solid rgba(255,255,255,0.1);
+    height: 100vh;
+}
+
+.flyout-header {
+    padding: 14px 12px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 0.5px solid rgba(255,255,255,0.1);
+    flex-shrink: 0;
+}
+.flyout-header-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.75);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.flyout-close {
+    background: none; border: none;
+    color: rgba(255,255,255,0.3);
+    cursor: pointer; font-size: 20px;
+    line-height: 1; padding: 0; margin-left: 6px; flex-shrink: 0;
+    transition: color 0.15s;
+}
+.flyout-close:hover { color: white; }
+
+.flyout-l-scroll {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 6px 0 16px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.12) transparent;
+}
+
+/* Hub button (opens the section overview) */
+.fl-hub {
+    display: block;
+    width: calc(100% - 16px);
+    margin: 0 8px 2px;
+    padding: 8px 10px;
+    background: rgba(52,152,219,0.2);
+    border: 0.5px solid rgba(52,152,219,0.4);
+    border-radius: 7px;
+    color: #7ec8f0;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    transition: background 0.15s;
+}
+.fl-hub:hover { background: rgba(52,152,219,0.35); }
+
+/* Section label ("Topics") */
+.fl-sep {
+    font-size: 8.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: rgba(255,255,255,0.28);
+    font-weight: 700;
+    padding: 10px 12px 4px;
+}
+
+/* Group row (click → load right panel) */
+.fl-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 8px 10px 8px 12px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.58);
+    font-size: 12px;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    transition: background 0.12s, color 0.12s;
+    border-left: 2px solid transparent;
+}
+.fl-group:hover {
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.9);
+}
+.fl-group.active {
+    background: rgba(52,152,219,0.18);
+    color: white;
+    border-left-color: #3498db;
+}
+.fl-arrow {
+    font-size: 13px;
+    color: rgba(255,255,255,0.25);
+    flex-shrink: 0;
+    margin-left: 4px;
+    transition: color 0.12s;
+}
+.fl-group.active .fl-arrow,
+.fl-group:hover .fl-arrow { color: #7ec8f0; }
+
+/* Flat leaf (sections without sub-groups) */
+.fl-leaf {
+    display: block;
+    width: 100%;
+    padding: 7px 12px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.55);
+    font-size: 12px;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    transition: background 0.12s, color 0.12s;
+}
+.fl-leaf:hover { background: rgba(255,255,255,0.07); color: white; }
+
+/* --- Panel derecho (ítems del grupo) --- */
+.flyout-r {
+    width: var(--flyout-r-width, 190px);
+    min-width: var(--flyout-r-width, 190px);
+    background: #243d8f;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.flyout-r-header {
+    padding: 14px 14px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-bottom: 0.5px solid rgba(255,255,255,0.08);
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.flyout-r-scroll {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 6px 0 16px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+
+/* Sub-hub link (e.g. "Unit 1 Essays hub") */
+.fr-hub {
+    display: block;
+    width: calc(100% - 16px);
+    margin: 4px 8px 6px;
+    padding: 7px 10px;
+    background: rgba(52,152,219,0.15);
+    border: 0.5px solid rgba(52,152,219,0.3);
+    border-radius: 6px;
+    color: #7ec8f0;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    transition: background 0.15s;
+}
+.fr-hub:hover { background: rgba(52,152,219,0.28); }
+
+/* Individual lesson link */
+.fr-leaf {
+    display: block;
+    width: 100%;
+    padding: 7px 14px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.58);
+    font-size: 12px;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    transition: background 0.12s, color 0.12s;
+}
+.fr-leaf:hover { background: rgba(255,255,255,0.07); color: white; }
+
+/* Mobile: stack panels vertically */
+@media (max-width: 768px) {
+    .flyout-panel {
+        flex-direction: column;
+        width: min(320px, 82vw);
+        left: var(--sidebar-width);
+    }
+    .flyout-l, .flyout-r {
+        width: 100%;
+        min-width: 0;
+        height: auto;
+        max-height: 45vh;
+    }
+    .flyout-r { border-top: 0.5px solid rgba(255,255,255,0.1); }
+}

@@ -12,59 +12,58 @@
     <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
     <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-    <!-- =====================================================================
-         FLYOUT BACKDROP (click outside to close)
-         ===================================================================== -->
+    <!-- Flyout backdrop -->
     <div id="flyoutBackdrop" class="flyout-backdrop" onclick="closeFlyout()"></div>
 
-    <!-- =====================================================================
-         FLYOUT PANEL (populated by JS)
-         ===================================================================== -->
+    <!-- Flyout: panel izquierdo (grupos) + panel derecho (ítems) -->
     <div id="flyoutPanel" class="flyout-panel">
-        <div class="flyout-header">
-            <span class="flyout-header-title" id="flyoutTitle">Menu</span>
-            <button class="flyout-close" onclick="closeFlyout()">×</button>
+
+        <!-- Panel L: sección + lista de grupos -->
+        <div class="flyout-l" id="flyoutL">
+            <div class="flyout-header">
+                <span class="flyout-header-title" id="flyoutTitle">Menu</span>
+                <button class="flyout-close" onclick="closeFlyout()">×</button>
+            </div>
+            <div class="flyout-l-scroll" id="flyoutLScroll"></div>
         </div>
-        <div id="flyoutContent" class="flyout-scroll"></div>
+
+        <!-- Panel R: ítems del grupo seleccionado -->
+        <div class="flyout-r" id="flyoutR">
+            <div class="flyout-r-header" id="flyoutRHeader"></div>
+            <div class="flyout-r-scroll" id="flyoutRScroll"></div>
+        </div>
+
     </div>
 
-    <!-- =====================================================================
-         WELCOME MODAL (unchanged)
-         ===================================================================== -->
+    <!-- Welcome Modal (sin cambios) -->
     <div id="welcomeModal" class="modal">
         <div class="modal-content">
-
             <div id="step1">
                 <h2>Institutional Access</h2>
-                <p style="font-size:0.9rem;color:#666;margin-bottom:20px;">
-                    Enter your institutional email to access your personalized workspace.
-                </p>
+                <p style="font-size:0.9rem;color:#666;margin-bottom:20px;">Enter your institutional email to access your personalized workspace.</p>
                 <input type="email" id="inputEmail" placeholder="user@uleam.edu.ec  OR  user@live.uleam.edu.ec"
-                       style="width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                       style="width:100%;padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:8px;">
                 <p id="step1Error" style="color:#e74c3c;font-size:0.82rem;margin-top:8px;min-height:18px;text-align:center;"></p>
-                <button onclick="goToStep2()" class="btn-primary" style="width: 100%;">Next →</button>
+                <button onclick="goToStep2()" class="btn-primary" style="width:100%;">Next →</button>
             </div>
-
             <div id="step2" style="display:none;">
                 <h2>Session Details</h2>
-                <p style="font-size:0.9rem;color:#666;margin-bottom:16px;">
-                    Help us contextualize your activity today.
-                </p>
+                <p style="font-size:0.9rem;color:#666;margin-bottom:16px;">Help us contextualize your activity today.</p>
                 <label style="font-size:0.85rem;font-weight:bold;color:#2980b9;display:block;margin-bottom:6px;">★ Session Type:</label>
-                <select id="inputPracticeType" style="border:2px solid #2980b9; width: 100%; padding: 10px; border-radius: 8px; margin-bottom: 20px;">
+                <select id="inputPracticeType" style="border:2px solid #2980b9;width:100%;padding:10px;border-radius:8px;margin-bottom:20px;">
                     <option value="In-class practice" selected>In-class practice</option>
                     <option value="Personal practice">Personal practice</option>
                     <option value="Exam preparation">Exam preparation</option>
                     <option value="Other">Other</option>
                 </select>
-                <div class="consent-box" style="background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 4px solid #2980b9;">
-                    <label class="consent-label" style="display: flex; gap: 10px; cursor: pointer; font-size: 0.85rem;">
+                <div class="consent-box" style="background:#f9f9f9;padding:15px;border-radius:8px;border-left:4px solid #2980b9;">
+                    <label class="consent-label" style="display:flex;gap:10px;cursor:pointer;font-size:0.85rem;">
                         <input type="checkbox" id="inputConsent" checked>
                         <span>I understand that my activity is monitored for academic integrity and course improvement.</span>
                     </label>
                 </div>
-                <div class="consent-box" style="margin-top:10px; background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 4px solid #27ae60;">
-                    <label class="consent-label" style="display: flex; gap: 10px; cursor: pointer; font-size: 0.85rem;">
+                <div class="consent-box" style="margin-top:10px;background:#f9f9f9;padding:15px;border-radius:8px;border-left:4px solid #27ae60;">
+                    <label class="consent-label" style="display:flex;gap:10px;cursor:pointer;font-size:0.85rem;">
                         <input type="checkbox" id="inputResearchConsent" checked>
                         <span>I authorize the use of my anonymized writing samples for Dr. Arturo Rodriguez's research project.</span>
                     </label>
@@ -75,50 +74,31 @@
                     <button onclick="saveAndStart()" class="btn-primary" style="flex:2;">Start Learning</button>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- =====================================================================
-         APP LAYOUT
-         ===================================================================== -->
+    <!-- App layout -->
     <div class="app-container">
 
-        <!-- SLIM SIDEBAR -->
         <nav class="sidebar">
             <div class="sidebar-header">
                 <h1>AW</h1>
                 <p id="studentDisplay">Loading…</p>
             </div>
-
-            <!-- nav-menu is built by nav.js buildMenu(), then restyled below -->
             <ul class="nav-menu" id="navMenu"></ul>
-
             <div class="sidebar-footer">
-                <!-- Icon-only download button -->
-                <button class="btn-report" onclick="generateReport()" title="Download & Send Progress">
-                    ⬇
-                </button>
-                <!-- Ethics link (hidden in slim mode but kept in DOM for JS compatibility) -->
-                <a href="#" onclick="loadPage('modules/ethics-and-data.html')"
-                   style="display:none;">🔒 Ethics & Privacy Policy</a>
-                <!-- Logout -->
-                <button onclick="resetApp()" title="Not you? Logout">
-                    ⏏
-                </button>
+                <button class="btn-report" onclick="generateReport()" title="Download & Send Progress">⬇</button>
+                <a href="#" onclick="loadPage('modules/ethics-and-data.html')" style="display:none;">🔒 Ethics & Privacy Policy</a>
+                <button onclick="resetApp()" title="Not you? Logout">⏏</button>
             </div>
         </nav>
 
-        <!-- CONTENT FRAME -->
         <main class="content-area">
             <iframe name="contentFrame" id="contentFrame" src="welcome-content.html" frameborder="0"
                 style="width:100%;height:100%;min-height:100vh;"></iframe>
         </main>
     </div>
 
-    <!-- =====================================================================
-         INLINE SCRIPTS (modal steps + sidebar toggle — same as before)
-         ===================================================================== -->
     <script>
         function goToStep2() {
             const email = document.getElementById('inputEmail').value.trim();
@@ -135,14 +115,11 @@
             document.getElementById('step1').style.display = 'block';
         }
         function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
         }
     </script>
 
-    <!-- Load order must stay the same -->
     <script src="js/nav.js?v=1.0"></script>
     <script src="js/auth.js?v=1.4"></script>
     <script src="js/essay-handler.js?v=1.2"></script>
@@ -151,44 +128,34 @@
     <script src="js/report.js?v=1.2"></script>
 
     <!-- =====================================================================
-         FLYOUT SYSTEM
-         Runs AFTER nav.js so MENU is available.
-         Replaces the hover sub-menus with click-to-open flyout panel.
-         Does NOT change MENU data, hub paths, or loadPage().
+         FLYOUT SYSTEM — Doble panel (grupos → ítems)
+         No modifica MENU, nav.js, hubs, ni loadPage().
          ===================================================================== -->
     <script>
     (function () {
 
-        /* ---- SVG icons for each top-level section ---- */
         const ICONS = {
-            'Main':            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>',
-            '00. Fundamentals':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>',
+            'Main':             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>',
+            '00. Fundamentals': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>',
             '01. Core Syllabus':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>',
-            '02. Toolbox':     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>',
-            '03. Peer System': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
-            '04. Tests':       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>'
+            '02. Toolbox':      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>',
+            '03. Peer System':  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
+            '04. Tests':        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>'
         };
 
-        /* Short labels for the icon rail */
         const SHORT = {
-            'Main': 'Main',
-            '00. Fundamentals': 'Fund.',
-            '01. Core Syllabus': 'Core',
-            '02. Toolbox': 'Tools',
-            '03. Peer System': 'Peer',
-            '04. Tests': 'Tests'
+            'Main':'Main', '00. Fundamentals':'Fund.', '01. Core Syllabus':'Core',
+            '02. Toolbox':'Tools', '03. Peer System':'Peer', '04. Tests':'Tests'
         };
 
-        /* ---- Rebuild navMenu as slim icon buttons ---- */
+        /* ---- Build slim icon rail ---- */
         function buildSlimMenu() {
             const ul = document.getElementById('navMenu');
             if (!ul || typeof MENU === 'undefined') return;
             ul.innerHTML = '';
-
             MENU.forEach(item => {
                 const li = document.createElement('li');
                 li.className = 'menu-item';
-
                 const btn = document.createElement('button');
                 btn.className = 'section-header';
                 btn.title = item.label;
@@ -196,100 +163,122 @@
                     `<span class="nav-label">${SHORT[item.label] || item.label.split('.')[0]}</span>`;
 
                 const hasChildren = item.children && item.children.length > 0;
-
                 btn.onclick = () => {
                     if (hasChildren) {
                         openFlyout(item, btn);
                     } else {
-                        // Direct navigation (Main page)
                         if (item.path) loadPage(item.path);
                         setActive(btn);
                         closeFlyout();
                     }
                 };
-
                 li.appendChild(btn);
                 ul.appendChild(li);
             });
         }
 
-        /* ---- Set active state on icon ---- */
         function setActive(btn) {
             document.querySelectorAll('.section-header').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            if (btn) btn.classList.add('active');
         }
 
         /* ---- Open flyout with section data ---- */
         function openFlyout(item, btn) {
             setActive(btn);
-
             document.getElementById('flyoutTitle').textContent = item.label;
 
-            const content = document.getElementById('flyoutContent');
-            content.innerHTML = '';
+            const lScroll = document.getElementById('flyoutLScroll');
+            lScroll.innerHTML = '';
 
-            // Hub button at top
+            // Hub button at top of left panel
             if (item.path) {
                 const hubBtn = document.createElement('button');
-                hubBtn.className = 'flyout-hub-link';
-                hubBtn.textContent = 'Open ' + item.label + ' overview →';
+                hubBtn.className = 'fl-hub';
+                hubBtn.textContent = 'Overview →';
                 hubBtn.onclick = () => { loadPage(item.path); closeFlyout(); };
-                content.appendChild(hubBtn);
+                lScroll.appendChild(hubBtn);
             }
 
-            // Children
-            item.children.forEach(child => {
-                if (child.children && child.children.length > 0) {
-                    // Group label
-                    const groupLabel = document.createElement('div');
-                    groupLabel.className = 'flyout-group-label';
-                    groupLabel.textContent = child.label;
-                    content.appendChild(groupLabel);
+            // Separator label
+            const sep = document.createElement('div');
+            sep.className = 'fl-sep';
+            sep.textContent = 'Topics';
+            lScroll.appendChild(sep);
 
-                    // Sub-hub link
-                    if (child.path) {
-                        const subHubBtn = document.createElement('button');
-                        subHubBtn.className = 'flyout-item';
-                        subHubBtn.style.fontWeight = '600';
-                        subHubBtn.style.color = 'rgba(255,255,255,0.8)';
-                        subHubBtn.textContent = '↳ ' + child.label + ' hub';
-                        subHubBtn.onclick = () => { loadPage(child.path); closeFlyout(); };
-                        content.appendChild(subHubBtn);
-                    }
+            // Check if children have grandchildren (need group rows) or are flat leaves
+            const hasGroups = item.children.some(c => c.children && c.children.length > 0);
 
-                    // Leaves
-                    child.children.forEach(leaf => {
-                        const leafBtn = document.createElement('button');
-                        leafBtn.className = 'flyout-item';
-                        leafBtn.textContent = leaf.label;
-                        leafBtn.onclick = () => { loadPage(leaf.path); closeFlyout(); };
-                        content.appendChild(leafBtn);
-                    });
+            if (hasGroups) {
+                // Each child is a "group" row — click opens its leaves in right panel
+                item.children.forEach((child, idx) => {
+                    const groupBtn = document.createElement('button');
+                    groupBtn.className = 'fl-group';
+                    groupBtn.dataset.idx = idx;
+                    groupBtn.innerHTML = `<span>${child.label}</span><span class="fl-arrow">›</span>`;
+                    groupBtn.onclick = () => selectGroup(item, child, groupBtn);
+                    lScroll.appendChild(groupBtn);
+                });
+                // Auto-select first group
+                const firstGroupBtn = lScroll.querySelector('.fl-group');
+                if (firstGroupBtn) selectGroup(item, item.children[0], firstGroupBtn);
 
-                } else {
-                    // Simple leaf
-                    const itemBtn = document.createElement('button');
-                    itemBtn.className = 'flyout-item';
-                    itemBtn.textContent = child.label;
-                    itemBtn.onclick = () => { loadPage(child.path); closeFlyout(); };
-                    content.appendChild(itemBtn);
-                }
-            });
+            } else {
+                // Flat list — no right panel needed, hide it
+                document.getElementById('flyoutR').style.display = 'none';
+                item.children.forEach(child => {
+                    const leafBtn = document.createElement('button');
+                    leafBtn.className = 'fl-leaf';
+                    leafBtn.textContent = child.label;
+                    leafBtn.onclick = () => { loadPage(child.path); closeFlyout(); };
+                    lScroll.appendChild(leafBtn);
+                });
+            }
 
             document.getElementById('flyoutPanel').classList.add('open');
             document.getElementById('flyoutBackdrop').classList.add('open');
         }
 
-        /* ---- Close flyout ---- */
+        /* ---- Select a group → populate right panel ---- */
+        function selectGroup(section, group, btn) {
+            // Highlight active group
+            document.querySelectorAll('.fl-group').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const rPanel = document.getElementById('flyoutR');
+            const rHeader = document.getElementById('flyoutRHeader');
+            const rScroll = document.getElementById('flyoutRScroll');
+
+            rPanel.style.display = 'flex';
+            rHeader.textContent = group.label;
+            rScroll.innerHTML = '';
+
+            // Sub-hub link if group has its own path
+            if (group.path) {
+                const subHub = document.createElement('button');
+                subHub.className = 'fr-hub';
+                subHub.textContent = 'Hub →';
+                subHub.onclick = () => { loadPage(group.path); closeFlyout(); };
+                rScroll.appendChild(subHub);
+            }
+
+            // Leaves
+            const leaves = group.children || [];
+            leaves.forEach(leaf => {
+                const leafBtn = document.createElement('button');
+                leafBtn.className = 'fr-leaf';
+                leafBtn.textContent = leaf.label;
+                leafBtn.onclick = () => { loadPage(leaf.path); closeFlyout(); };
+                rScroll.appendChild(leafBtn);
+            });
+        }
+
+        /* ---- Close ---- */
         window.closeFlyout = function () {
             document.getElementById('flyoutPanel').classList.remove('open');
             document.getElementById('flyoutBackdrop').classList.remove('open');
         };
 
-        /* ---- Init ---- */
-        document.addEventListener('DOMContentLoaded', () => {
-            buildSlimMenu();
-        });
+        document.addEventListener('DOMContentLoaded', buildSlimMenu);
 
     })();
     </script>
