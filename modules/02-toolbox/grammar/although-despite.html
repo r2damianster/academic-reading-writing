@@ -1,6 +1,283 @@
-<!-- CREAR PROXIMAMENTE -->
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>Coming Soon</title></head>
-<body><p>🚧 This lesson is coming soon.</p></body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Although &amp; Despite | Academic Workspace</title>
+    <link rel="stylesheet" href="../../../css/modules.css">
+    <script src="../../../js/activity-tracker.js"></script>
+    <script src="../../../js/essay-handler.js"></script>
+    <script src="../../../js/report.js"></script>
+    <script src="../../../js/slide-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — VIDEO -->
+    <div class="slide active" data-type="VIDEO">
+        <h2>Although &amp; Despite</h2>
+        <!-- REPLACE with actual Google Slides embed ID -->
+        <iframe data-se-src="https://docs.google.com/presentation/d/REPLACE_ID_HERE/embed?start=false&loop=false&delayms=3000"
+                data-se-height="320"></iframe>
+    </div>
+
+    <!-- SLIDE 1 — CONTENT: 4 positional patterns -->
+    <div class="slide" data-type="CONTENT">
+        <h2>Four Patterns, One Rule</h2>
+        <p>You already know the core rule: <em>although</em> takes a clause; <em>despite</em> takes a noun phrase or gerund. This lesson is about what you can do with that rule — specifically, how position changes emphasis.</p>
+
+        <div style="background:#f8fafc; border-radius:12px; padding:4px; margin:14px 0;">
+            <div style="background:#dbeafe; border-left:5px solid #3b82f6; padding:12px; margin:6px; border-radius:8px;">
+                <strong style="color:#1e40af;">Pattern A</strong> — Initial <em>although</em>: concession first, main claim second<br>
+                <em>"<strong>Although</strong> the sample was small, the findings were statistically significant."</em><br>
+                <span style="font-size:0.85rem; color:#64748b;">→ Reader processes the limitation before the result. Softens the claim.</span>
+            </div>
+            <div style="background:#dbeafe; border-left:5px solid #3b82f6; padding:12px; margin:6px; border-radius:8px;">
+                <strong style="color:#1e40af;">Pattern B</strong> — Final <em>although</em>: main claim first, concession second<br>
+                <em>"The findings were statistically significant, <strong>although</strong> the sample was small."</em><br>
+                <span style="font-size:0.85rem; color:#64748b;">→ Reader receives the claim first, then the qualification. Stronger assertion.</span>
+            </div>
+            <div style="background:#dcfce7; border-left:5px solid #16a34a; padding:12px; margin:6px; border-radius:8px;">
+                <strong style="color:#15803d;">Pattern C</strong> — Initial <em>despite</em>: concession (noun) first<br>
+                <em>"<strong>Despite</strong> the small sample size, the findings were statistically significant."</em><br>
+                <span style="font-size:0.85rem; color:#64748b;">→ Same as Pattern A, but more compressed. Common in abstracts.</span>
+            </div>
+            <div style="background:#dcfce7; border-left:5px solid #16a34a; padding:12px; margin:6px; border-radius:8px;">
+                <strong style="color:#15803d;">Pattern D</strong> — Final <em>despite</em>: main claim first<br>
+                <em>"The findings were statistically significant <strong>despite</strong> the small sample size."</em><br>
+                <span style="font-size:0.85rem; color:#64748b;">→ Same as Pattern B. The claim lands first and stays dominant.</span>
+            </div>
+        </div>
+
+        <p><strong>Rhetorical choice:</strong> Initial position foregrounds the concession — use it when you want to be transparent about limitations before asserting. Final position foregrounds the claim — use it when the result is your main point.</p>
+    </div>
+
+    <!-- SLIDE 2 — SORT_PARAGRAPH: Order by positional correctness -->
+    <div class="slide" data-type="SORT_PARAGRAPH">
+        <h2>Rebuild the Argument</h2>
+        <p>These four sentences each use a different positional pattern. Put them in the order that builds the argument most effectively — strongest claim first, supporting qualifications after.</p>
+
+        <div data-se-sentences>
+            <div data-se-sentence data-se-order="1">Universal basic income has demonstrated measurable effects on poverty reduction in every pilot programme conducted to date.</div>
+            <div data-se-sentence data-se-order="2">The results held, although the duration of most pilots was limited to two years or fewer.</div>
+            <div data-se-sentence data-se-order="3">Despite significant variation in programme design across national contexts, the core outcomes remained consistent.</div>
+            <div data-se-sentence data-se-order="4">Although long-term fiscal sustainability remains an open question, the short-term evidence is sufficiently robust to warrant broader implementation trials.</div>
+        </div>
+    </div>
+
+    <!-- SLIDE 3 — CHOOSE_CONTEXT: Initial vs. final position for rhetorical effect -->
+    <div class="slide" data-type="CHOOSE_CONTEXT">
+        <h2>Which Position Fits the Purpose?</h2>
+        <p>The same information, two positions. Choose the version that best serves the writer's stated purpose.</p>
+
+        <p data-se-sentence>
+            <em>Purpose: The writer wants to foreground the limitation before stating the conclusion.</em><br><br>
+            <span data-se-choice>
+                <span data-se-option data-se-correct>Although the methodology has been criticised for relying on self-report data, the conclusions are supported by three independent replications.</span>
+                <span data-se-option>The conclusions are supported by three independent replications, although the methodology has been criticised for relying on self-report data.</span>
+            </span>
+        </p>
+
+        <p data-se-sentence>
+            <em>Purpose: The writer wants the result to land first and remain dominant.</em><br><br>
+            <span data-se-choice>
+                <span data-se-option>Despite considerable institutional resistance, the reform was successfully implemented within the projected timeframe.</span>
+                <span data-se-option data-se-correct>The reform was successfully implemented within the projected timeframe despite considerable institutional resistance.</span>
+            </span>
+        </p>
+
+        <p data-se-sentence>
+            <em>Purpose: An abstract — maximum compression, limitation acknowledged but subordinate.</em><br><br>
+            <span data-se-choice>
+                <span data-se-option data-se-correct>Despite limited sample diversity, this study provides preliminary evidence that cognitive training delays age-related memory decline.</span>
+                <span data-se-option>Although the sample lacked diversity, this study provides preliminary evidence that cognitive training delays age-related memory decline.</span>
+            </span>
+        </p>
+    </div>
+
+    <!-- SLIDE 4 — CONTENT: Nominalization as the bridge -->
+    <div class="slide" data-type="CONTENT">
+        <h2>The Nominalisation Bridge</h2>
+        <p>The most powerful skill in this lesson: converting an <em>although + clause</em> into a <em>despite + noun phrase</em>. This compresses two patterns into one — and teaches you to nominalise at the same time.</p>
+
+        <div style="background:#faf5ff; border-radius:10px; padding:16px; margin:12px 0; line-height:2.2;">
+            <strong>Step 1 — Start with the clause:</strong><br>
+            <em>"Although the government <strong>increased</strong> funding significantly..."</em><br><br>
+            <strong>Step 2 — Nominalise the verb:</strong><br>
+            <em>increase → the significant increase in funding</em><br><br>
+            <strong>Step 3 — Replace although + clause with despite + noun phrase:</strong><br>
+            <em>"Despite the significant <strong>increase</strong> in funding..."</em>
+        </div>
+
+        <div style="background:#fef3c7; border-left:4px solid #d97706; padding:12px; border-radius:6px; margin:10px 0;">
+            <strong>Common nominalisations for this pattern:</strong><br>
+            <em>failed → failure / improved → improvement / recognised → recognition /
+            opposed → opposition / limited → limitation / declined → decline /
+            intervened → intervention / grew → growth</em>
+        </div>
+
+        <p>This is not just a grammar exercise. <strong>Nominalisation into despite-phrases is a core feature of academic abstract writing</strong> — where every word counts and clauses are too costly.</p>
+    </div>
+
+    <!-- SLIDE 5 — FILL_BLANK: Transform clause → noun phrase for despite -->
+    <div class="slide" data-type="FILL_BLANK">
+        <h2>Build the Noun Phrase</h2>
+        <p>Each sentence uses <em>although + clause</em>. Rewrite it as <em>despite + noun phrase</em> by nominalising the verb or adjective shown. Write only the noun phrase that follows <em>despite</em>.</p>
+
+        <p data-se-sentence>
+            Although the government <strong>failed</strong> to meet its emissions targets...<br>
+            → Despite the government's
+            <span data-se-blank data-se-answer="failure">___</span>
+            to meet its emissions targets...
+        </p>
+
+        <p data-se-sentence>
+            Although participation rates <strong>improved</strong> substantially...<br>
+            → Despite the substantial
+            <span data-se-blank data-se-answer="improvement">___</span>
+            in participation rates...
+        </p>
+
+        <p data-se-sentence>
+            Although the committee <strong>opposed</strong> the proposal...<br>
+            → Despite the committee's
+            <span data-se-blank data-se-answer="opposition">___</span>
+            to the proposal...
+        </p>
+
+        <p data-se-sentence>
+            Although access to healthcare <strong>declined</strong> in rural areas...<br>
+            → Despite the
+            <span data-se-blank data-se-answer="decline">___</span>
+            in rural healthcare access...
+        </p>
+
+        <button data-se-check>Check my answers</button>
+    </div>
+
+    <!-- SLIDE 6 — MATCH: although version ↔ despite version -->
+    <div class="slide" data-type="MATCH">
+        <h2>Match the Equivalents</h2>
+        <p>Each <em>although</em> sentence on the left has an exact equivalent using <em>despite</em> on the right. Match them.</p>
+
+        <div data-se-left data-se-pair="a">Although the intervention was costly, outcomes improved markedly.</div>
+        <div data-se-left data-se-pair="b">Although researchers acknowledged the limitations, the study was widely cited.</div>
+        <div data-se-left data-se-pair="c">Although demand grew rapidly, supply remained constrained.</div>
+        <div data-se-left data-se-pair="d">Although the policy faced strong opposition, it was passed with a clear majority.</div>
+
+        <div data-se-right data-se-pair="c">Despite rapid growth in demand, supply remained constrained.</div>
+        <div data-se-right data-se-pair="a">Despite the considerable cost of the intervention, outcomes improved markedly.</div>
+        <div data-se-right data-se-pair="d">Despite strong opposition, the policy was passed with a clear majority.</div>
+        <div data-se-right data-se-pair="b">Despite acknowledged limitations, the study was widely cited.</div>
+    </div>
+
+    <!-- SLIDE 7 — WORD_BANK: Paragraph with 4 blanks, form distractors -->
+    <div class="slide" data-type="WORD_BANK">
+        <h2>Complete the Paragraph</h2>
+        <p>Click a word or phrase from the bank, then click the blank. Some items are distractors — wrong form or wrong connector.</p>
+
+        <div data-se-bank>
+            <span data-se-word>Although</span>
+            <span data-se-word>Despite</span>
+            <span data-se-word>despite</span>
+            <span data-se-word>although</span>
+            <span data-se-word>Despite the fact that</span>
+            <span data-se-word>however</span>
+        </div>
+
+        <p data-se-sentence>
+            <span data-se-blank data-se-answer="Although">[ ? ]</span>
+            universal access to primary education has been achieved in most OECD countries,
+            significant disparities in educational outcomes persist along socioeconomic lines.
+            <span data-se-blank data-se-answer="Despite">[ ? ]</span>
+            decades of targeted policy intervention, the attainment gap between the highest and lowest income quartiles has narrowed only marginally since 2000.
+            <span data-se-blank data-se-answer="despite">[ ? ]</span>
+            receiving additional resources, schools in high-deprivation areas continue to underperform relative to national benchmarks.
+            These patterns persist
+            <span data-se-blank data-se-answer="although">[ ? ]</span>
+            the evidence for early intervention programmes — particularly in the first five years of life — is now considered conclusive.
+        </p>
+    </div>
+
+    <!-- SLIDE 8 — CONTRAST: Monotonous position vs. varied position -->
+    <div class="slide" data-type="CONTRAST">
+        <h2>Structural Variety</h2>
+        <p data-se-intro>Same argument, same information. One version places every concession in initial position — grammatically correct but monotonous. The other varies position for emphasis and flow.</p>
+
+        <div data-se-incorrect data-se-label="Monotonous — all initial position ❌">
+            Although funding was increased, outcomes did not improve proportionally.
+            Although new staff were recruited, training remained inadequate.
+            Although the technology was available, implementation was delayed.
+            Although the report was published, its recommendations were not acted upon.
+        </div>
+
+        <div data-se-correct data-se-label="Varied — position serves emphasis ✅">
+            Outcomes did not improve proportionally, although funding was substantially increased.
+            Despite the recruitment of new staff, training remained critically inadequate.
+            The technology was available; its implementation was delayed, however, by a failure of political will.
+            Although the report's recommendations were never acted upon, its publication shifted the terms of the public debate permanently.
+        </div>
+    </div>
+
+    <!-- SLIDE 9 — HIGHLIGHT: Two errors — despite + clause, although + noun -->
+    <div class="slide" data-type="HIGHLIGHT">
+        <h2>Find the Errors</h2>
+        <p data-se-instruction>
+            This paragraph contains two grammatical errors: one <em>despite</em> incorrectly followed by a full clause, and one <em>although</em> incorrectly followed by a noun phrase. Click on the sentence that contains the first error you find.
+        </p>
+
+        <div data-se-paragraph>
+            <span data-se-sentence>The relationship between economic growth and environmental sustainability has long been treated as a zero-sum trade-off.</span>
+            <span data-se-sentence data-se-highlight-correct>Despite that renewable energy investment has increased substantially, carbon emissions in the industrial sector have continued to rise.</span>
+            <span data-se-sentence>Although the transition to clean energy presents significant upfront costs, the long-term fiscal case for investment is well-established.</span>
+            <span data-se-sentence>Despite mounting evidence of climate risk, institutional inertia continues to delay meaningful policy reform in most major economies.</span>
+            <span data-se-sentence>The most significant barrier is not technological but political: the concentration of economic interests in fossil fuel industries remains a structural impediment to rapid decarbonisation.</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 10 — PRE-ESSAY -->
+    <div class="slide" id="preEssaySlide"
+         data-type="ESSAY" data-se-role="warning"
+         data-se-lesson="although despite">
+        <h2>Writing Task Instructions</h2>
+        <p data-se-warning>
+            You will write a paragraph that demonstrates full command of although and despite —
+            including positional variation and at least one nominalisation.
+            Your writing will be evaluated on grammatical accuracy, positional variety,
+            and register appropriateness.
+            Target length: 120–150 words. Allow approximately 10–12 minutes.
+            Your writing will be tracked for academic integrity purposes.
+        </p>
+    </div>
+
+    <!-- SLIDE 11 — ESSAY -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="although despite">
+        <p data-se-prompt>
+            Write a paragraph (120–150 words) on the following topic:<br><br>
+            <em>"The expansion of social media has produced both opportunities and significant risks for democratic participation."</em><br><br>
+            Requirements:<br>
+            — Use <strong>although</strong> at least twice — once in initial position, once in final position<br>
+            — Use <strong>despite</strong> at least once — followed by a nominalised noun phrase (not a clause)<br>
+            — At least one of your <em>despite</em> constructions must be a nominalisation of a verb from your own argument (not a ready-made noun)<br>
+            — Maintain formal academic register throughout<br>
+            — Do not use <em>however</em> or <em>nevertheless</em> — all concession must be expressed through <em>although</em> and <em>despite</em>
+        </p>
+    </div>
+
+</div>
+
+<script>
+    window.onload = () => {
+        SlideEngine.init('although despite');
+        ActivityTracker.init('although despite');
+    };
+</script>
+
+</body>
 </html>

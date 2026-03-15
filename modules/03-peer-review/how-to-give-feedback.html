@@ -1,6 +1,154 @@
-<!-- CREAR PROXIMAMENTE -->
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>Coming Soon</title></head>
-<body><p>🚧 This lesson is coming soon.</p></body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>How to Give Feedback | Academic Workspace</title>
+    <link rel="stylesheet" href="../../css/modules.css">
+    <script src="../../js/activity-tracker.js"></script>
+    <script src="../../js/essay-handler.js"></script>
+    <script src="../../js/report.js"></script>
+    <script src="../../js/slide-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — VIDEO -->
+    <div class="slide active" data-type="VIDEO">
+        <h2>How to Give Feedback</h2>
+        <iframe data-se-src="https://docs.google.com/presentation/d/REPLACE_ID_HERE/embed?start=false&loop=false&delayms=3000"
+                data-se-height="320"></iframe>
+    </div>
+
+    <!-- SLIDE 1 — CONTENT: Three qualities of useful feedback -->
+    <div class="slide" data-type="CONTENT">
+        <h2>What Makes Feedback Useful?</h2>
+        <p>Not all feedback helps the writer improve. Useful academic feedback has three qualities that work together:</p>
+
+        <div style="background:#f8fafc; border-radius:12px; padding:4px; margin:14px 0;">
+            <div style="background:#dbeafe; border-left:5px solid #3b82f6; padding:13px; margin:6px; border-radius:8px;">
+                <strong style="color:#1e40af;">(1) Specific</strong> — points to exactly what and where<br><br>
+                ❌ <em>"This paragraph is confusing."</em><br>
+                ✅ <em>"The topic sentence in paragraph 2 introduces two separate claims. The reader loses track of which one you are developing."</em>
+            </div>
+            <div style="background:#dcfce7; border-left:5px solid #16a34a; padding:13px; margin:6px; border-radius:8px;">
+                <strong style="color:#15803d;">(2) Actionable</strong> — the writer knows exactly what to do next<br><br>
+                ❌ <em>"Your argument needs to be stronger."</em><br>
+                ✅ <em>"The evidence in paragraph 3 supports the claim but is not analysed — try explaining what the statistic means for your argument."</em>
+            </div>
+            <div style="background:#fdf4ff; border-left:5px solid #a855f7; padding:13px; margin:6px; border-radius:8px;">
+                <strong style="color:#7e22ce;">(3) Balanced</strong> — acknowledges what works, not just what doesn't<br><br>
+                ❌ <em>"There are many problems with this essay."</em><br>
+                ✅ <em>"Your introduction is clear and well-structured. The main area to develop is the analysis of evidence in the body paragraphs."</em>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 2 — CONTRAST: Vague vs. useful feedback -->
+    <div class="slide" data-type="CONTRAST">
+        <h2>Vague vs. Useful</h2>
+        <p data-se-intro>Same observation, two ways of expressing it. One leaves the writer uncertain what to do. The other gives them a clear next step.</p>
+
+        <div data-se-incorrect data-se-label="Vague — not actionable ❌">
+            This essay has some good points but the argument is not very clear. The paragraphs need more development and the conclusion could be better. The language is sometimes too informal. Overall it needs more work before it is ready to submit.
+        </div>
+        <div data-se-correct data-se-label="Specific and actionable ✅">
+            Your thesis statement clearly identifies the problem, which gives the essay a strong starting point. In paragraph 2, the topic sentence makes two separate claims — focusing on one would make the argument easier to follow. The evidence in paragraph 3 (the WHO statistic) is relevant but not analysed; a sentence explaining what it means for your argument would strengthen the paragraph significantly. The conclusion restates the thesis but does not address the broader implications — consider adding one sentence connecting your findings to the wider debate.
+        </div>
+    </div>
+
+    <!-- SLIDE 3 — QUIZ: Which comment is most useful? -->
+    <div class="slide" data-type="QUIZ">
+        <h2>Which Comment Is Most Useful?</h2>
+        <p data-se-question>A student has written a body paragraph about the causes of urban poverty. Which reviewer comment is most useful?</p>
+        <div data-se-option>A. "This paragraph is quite good but could be improved."</div>
+        <div data-se-option>B. "You need to add more evidence and analysis to make your argument stronger."</div>
+        <div data-se-option data-se-correct>C. "Your topic sentence clearly states the claim. The evidence from the UN report (line 4) supports it well, but the explanation stops there — the reader needs one more sentence connecting this evidence back to your central argument about structural inequality."</div>
+        <div data-se-option>D. "I don't think this argument works. Urban poverty is much more complex than this."</div>
+    </div>
+
+    <!-- SLIDE 4 — CHOOSE_CONTEXT: Vague vs. specific in context -->
+    <div class="slide" data-type="CHOOSE_CONTEXT">
+        <h2>Specific or Vague?</h2>
+        <p>Choose the comment that is specific, actionable, and appropriate in tone.</p>
+
+        <p data-se-sentence>
+            <em>Situation: The writer's introduction lacks a clear thesis statement.</em><br><br>
+            <span data-se-choice>
+                <span data-se-option>The introduction is not very good and doesn't really say what the essay is about.</span>
+                <span data-se-option data-se-correct>The introduction provides relevant background context, but the final sentence does not state your position clearly — the reader is not sure what argument the essay will make. A one-sentence thesis at the end of the introduction would solve this.</span>
+            </span>
+        </p>
+
+        <p data-se-sentence>
+            <em>Situation: The writer uses informal language in an academic essay.</em><br><br>
+            <span data-se-choice>
+                <span data-se-option data-se-correct>In paragraph 2, phrases like "a lot of people think" and "it's really obvious that" reduce the academic register. Replacing these with "a significant proportion of the population" and "the evidence clearly demonstrates" would bring the language in line with academic expectations.</span>
+                <span data-se-option>Your language is too informal throughout. You need to use more academic words.</span>
+            </span>
+        </p>
+
+        <p data-se-sentence>
+            <em>Situation: The conclusion simply repeats the introduction word for word.</em><br><br>
+            <span data-se-choice>
+                <span data-se-option>The conclusion is basically the same as the introduction, which is a problem.</span>
+                <span data-se-option data-se-correct>The conclusion restates the thesis almost verbatim from the introduction. It would be stronger if it synthesised the evidence developed in the body paragraphs and pointed toward the broader implications of your argument rather than repeating the opening.</span>
+            </span>
+        </p>
+    </div>
+
+    <!-- SLIDE 5 — HIGHLIGHT: Inappropriate comments -->
+    <div class="slide" data-type="HIGHLIGHT">
+        <h2>What Should Not Be in Feedback</h2>
+        <p data-se-instruction>
+            This peer feedback contains one comment that is personal or offensive rather than focused on the writing. Click on that comment.
+        </p>
+
+        <div data-se-paragraph>
+            <span data-se-sentence>The essay has a clear structure with an introduction, three body paragraphs, and a conclusion — this makes it easy to follow.</span>
+            <span data-se-sentence data-se-highlight-correct>Honestly, it's surprising this was submitted — it reads like it was written at the last minute and shows a lack of effort or care.</span>
+            <span data-se-sentence>The thesis statement in the introduction identifies the topic but does not take a clear position — adding a specific claim would strengthen the essay's direction.</span>
+            <span data-se-sentence>The evidence in paragraph 2 is relevant, but the analysis is brief — expanding the explanation of how the statistic supports the argument would improve this section.</span>
+            <span data-se-sentence>The conclusion introduces a new idea that was not developed in the body paragraphs; it would be stronger to synthesise the existing argument rather than opening a new point.</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 6 — CONTENT: The language of feedback -->
+    <div class="slide" data-type="CONTENT">
+        <h2>The Language of Constructive Feedback</h2>
+        <p>How you say something matters as much as what you say. These patterns signal that feedback is a suggestion from a reader — not a correction from an authority:</p>
+
+        <div style="background:#f8fafc; border-radius:10px; padding:14px; margin:12px 0; line-height:2.4;">
+            <strong>Suggesting rather than instructing:</strong><br>
+            ✅ <em>"You might consider..."</em> / <em>"It could be worth..."</em> / <em>"One option would be..."</em><br><br>
+
+            <strong>Framing as reader experience:</strong><br>
+            ✅ <em>"The reader may benefit from..."</em> / <em>"At this point, I was unsure whether..."</em> / <em>"I found it difficult to follow..."</em><br><br>
+
+            <strong>Acknowledging alternatives:</strong><br>
+            ✅ <em>"It would strengthen the argument if..."</em> / <em>"This might be clearer if..."</em><br><br>
+
+            <strong>Separating observation from judgement:</strong><br>
+            ✅ <em>"The paragraph currently does X — if you want to achieve Y, you might try Z."</em>
+        </div>
+
+        <p style="background:#fef3c7; border-left:4px solid #d97706; padding:10px; border-radius:6px;">
+            The goal of peer feedback is to give the writer more information about how their text is being read — not to rewrite it for them or to evaluate their effort.
+        </p>
+    </div>
+
+</div>
+
+<script>
+    window.onload = () => {
+        SlideEngine.init('how to give feedback');
+        ActivityTracker.init('how to give feedback');
+    };
+</script>
+
+</body>
 </html>

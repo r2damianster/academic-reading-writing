@@ -1,6 +1,285 @@
-<!-- CREAR PROXIMAMENTE -->
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>Coming Soon</title></head>
-<body><p>🚧 This lesson is coming soon.</p></body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Conditionals | Academic Workspace</title>
+    <link rel="stylesheet" href="../../../css/modules.css">
+    <script src="../../../js/activity-tracker.js"></script>
+    <script src="../../../js/essay-handler.js"></script>
+    <script src="../../../js/report.js"></script>
+    <script src="../../../js/slide-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — VIDEO -->
+    <div class="slide active" data-type="VIDEO">
+        <h2>Conditionals in Academic Writing</h2>
+        <iframe data-se-src="https://docs.google.com/presentation/d/REPLACE_ID_HERE/embed?start=false&loop=false&delayms=3000"
+                data-se-height="320"></iframe>
+    </div>
+
+    <!-- SLIDE 1 — CONTENT: Four types in academic context -->
+    <div class="slide" data-type="CONTENT">
+        <h2>Conditionals in Academic Argument</h2>
+        <p>Conditionals are not just grammar — they encode the writer's relationship to evidence, possibility, and counterfactual reasoning. Each type signals a different epistemic stance:</p>
+
+        <div style="background:#f8fafc; border-radius:12px; padding:4px; margin:14px 0;">
+            <div style="background:#dcfce7; border-left:5px solid #16a34a; padding:12px; margin:6px; border-radius:8px;">
+                <strong style="color:#15803d;">ZERO — Universal truth / scientific law</strong><br>
+                <em>If + present simple → present simple</em><br>
+                <em>"If temperature <strong>rises</strong>, ice <strong>melts</strong>."</em><br>
+                <span style="font-size:0.85rem; color:#475569;">Use for established principles, definitions, and laws. The result always follows the condition.</span>
+            </div>
+            <div style="background:#dbeafe; border-left:5px solid #3b82f6; padding:12px; margin:6px; border-radius:8px;">
+                <strong style="color:#1e40af;">FIRST — Real / likely prediction</strong><br>
+                <em>If + present simple → will + infinitive</em><br>
+                <em>"If funding <strong>is</strong> maintained, the programme <strong>will</strong> produce measurable outcomes by 2027."</em><br>
+                <span style="font-size:0.85rem; color:#475569;">Use for predictions based on evidence where the condition is realistic.</span>
+            </div>
+            <div style="background:#fdf4ff; border-left:5px solid #a855f7; padding:12px; margin:6px; border-radius:8px;">
+                <strong style="color:#7e22ce;">SECOND — Hypothetical / theoretical</strong><br>
+                <em>If + past simple → would + infinitive</em><br>
+                <em>"If this model <strong>were</strong> accurate, it <strong>would</strong> predict a non-linear relationship between the variables."</em><br>
+                <span style="font-size:0.85rem; color:#475569;">Use for theoretical reasoning, hypotheses, and scenarios the writer considers unlikely or unverified. Note: <em>were</em> (not <em>was</em>) for all persons in formal writing.</span>
+            </div>
+            <div style="background:#fee2e2; border-left:5px solid #dc2626; padding:12px; margin:6px; border-radius:8px;">
+                <strong style="color:#991b1b;">THIRD — Counterfactual / past hypothetical</strong><br>
+                <em>If + past perfect → would have + past participle</em><br>
+                <em>"If the intervention <strong>had been</strong> implemented earlier, the outcomes <strong>would have been</strong> substantially different."</em><br>
+                <span style="font-size:0.85rem; color:#475569;">Use for retrospective analysis — what would have happened under different conditions. Common in policy analysis and historical argument.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 2 — CATEGORIZE: 8 conditionals → 4 types -->
+    <div class="slide" data-type="CATEGORIZE">
+        <h2>Identify the Type</h2>
+        <p>Drag each conditional sentence to its correct type.</p>
+
+        <div data-se-item data-se-category="zero">If a variable correlates with the outcome, it does not necessarily cause it.</div>
+        <div data-se-item data-se-category="zero">If the sample size falls below 30, the results lose statistical reliability.</div>
+        <div data-se-item data-se-category="first">If the government adopts the proposed framework, carbon emissions will fall by an estimated 18% within a decade.</div>
+        <div data-se-item data-se-category="first">If current trends continue, urban populations will exceed 70% of the global total by 2050.</div>
+        <div data-se-item data-se-category="second">If this hypothesis were correct, we would expect to observe a significant interaction effect between the two variables.</div>
+        <div data-se-item data-se-category="second">If resources were allocated more equitably, the attainment gap would narrow considerably within a single generation.</div>
+        <div data-se-item data-se-category="third">If the original study had used a control group, its conclusions would have carried considerably more weight.</div>
+        <div data-se-item data-se-category="third">If the policy had been introduced five years earlier, the housing crisis would not have reached its current severity.</div>
+
+        <div data-se-category-zone data-se-accepts="zero"   data-se-label="Zero — universal truth / scientific law"></div>
+        <div data-se-category-zone data-se-accepts="first"  data-se-label="First — real / likely prediction"></div>
+        <div data-se-category-zone data-se-accepts="second" data-se-label="Second — hypothetical / theoretical"></div>
+        <div data-se-category-zone data-se-accepts="third"  data-se-label="Third — counterfactual / past hypothetical"></div>
+    </div>
+
+    <!-- SLIDE 3 — CONTENT: The underused Second Conditional -->
+    <div class="slide" data-type="CONTENT">
+        <h2>The Second Conditional: Academic Rigour, Not Doubt</h2>
+        <p>The second conditional is systematically underused by academic writers who confuse it with personal uncertainty. In academic argument, it signals something quite different:</p>
+
+        <div style="background:#fdf4ff; border-radius:10px; padding:16px; margin:12px 0;">
+            <p><strong>Testing a hypothesis:</strong><br>
+            <em>"If Bourdieu's model <strong>were</strong> fully applicable here, we <strong>would</strong> expect habitus to override individual rational choice entirely — yet the data does not support this prediction."</em><br>
+            <span style="font-size:0.88rem; color:#475569;">→ The writer is not expressing doubt. They are using the second conditional to set up a logical test of the theory.</span></p>
+
+            <p style="margin-top:12px;"><strong>Proposing a theoretical scenario:</strong><br>
+            <em>"If universal basic income <strong>were</strong> implemented at scale, labour market participation patterns <strong>would</strong> shift in ways that current models cannot fully predict."</em><br>
+            <span style="font-size:0.88rem; color:#475569;">→ The writer is not saying UBI is impossible. They are reasoning about an as-yet-unrealised scenario.</span></p>
+        </div>
+
+        <p style="background:#fef3c7; border-left:4px solid #d97706; padding:10px; border-radius:6px;">
+            ⚠️ In formal academic writing, use <strong><em>were</em></strong> for all persons in second conditional if-clauses — not <em>was</em>. <em>"If this were true..."</em> not <em>"If this was true..."</em>
+        </p>
+    </div>
+
+    <!-- SLIDE 4 — CHOOSE_CONTEXT: Right conditional for the logical relationship -->
+    <div class="slide" data-type="CHOOSE_CONTEXT">
+        <h2>Which Type Fits the Logic?</h2>
+        <p>The correct conditional depends on the writer's epistemic relationship to the condition. Read carefully.</p>
+
+        <p data-se-sentence>
+            <em>Context: Discussing a well-established biological principle.</em><br><br>
+            If a cell
+            <span data-se-choice>
+                <span data-se-option data-se-correct>is deprived of oxygen, it begins to die within minutes.</span>
+                <span data-se-option>were deprived of oxygen, it would begin to die within minutes.</span>
+            </span>
+        </p>
+
+        <p data-se-sentence>
+            <em>Context: Testing whether a theoretical model holds against empirical data.</em><br><br>
+            If the rational choice framework
+            <span data-se-choice>
+                <span data-se-option>is correct, we will observe consistent utility-maximising behaviour across all income groups.</span>
+                <span data-se-option data-se-correct>were correct, we would observe consistent utility-maximising behaviour across all income groups — a pattern the data does not support.</span>
+            </span>
+        </p>
+
+        <p data-se-sentence>
+            <em>Context: Counterfactual analysis of a past policy failure.</em><br><br>
+            If stricter regulatory oversight
+            <span data-se-choice>
+                <span data-se-option data-se-correct>had been in place, the financial collapse of 2008 would have been significantly less severe.</span>
+                <span data-se-option>were in place, the financial collapse of 2008 would be significantly less severe.</span>
+            </span>
+        </p>
+    </div>
+
+    <!-- SLIDE 5 — FILL_BLANK: Complete both clauses -->
+    <div class="slide" data-type="FILL_BLANK">
+        <h2>Complete Both Clauses</h2>
+        <p>Write the correct verb form in each blank. Pay attention to which type of conditional the sentence requires.</p>
+
+        <p data-se-sentence>
+            If the concentration of a substance
+            <span data-se-blank data-se-answer="exceeds">___</span>
+            the threshold level, a toxic reaction occurs. <em>(Zero)</em>
+        </p>
+
+        <p data-se-sentence>
+            If current deforestation rates
+            <span data-se-blank data-se-answer="continue">___</span>,
+            the Amazon basin will lose a further 15% of its coverage by 2035. <em>(First)</em>
+        </p>
+
+        <p data-se-sentence>
+            If this model
+            <span data-se-blank data-se-answer="were">___</span>
+            accurate, it would predict a negative correlation between the two variables — which is not observed. <em>(Second)</em>
+        </p>
+
+        <p data-se-sentence>
+            If the original researchers
+            <span data-se-blank data-se-answer="had controlled">___</span>
+            for socioeconomic status, their conclusions would have been substantially more robust. <em>(Third)</em>
+        </p>
+
+        <button data-se-check>Check my answers</button>
+    </div>
+
+    <!-- SLIDE 6 — MATCH: If-clause → correct result clause -->
+    <div class="slide" data-type="MATCH">
+        <h2>Match the Clauses</h2>
+        <p>Match each if-clause with the result clause that completes it correctly. Watch the tense in both clauses.</p>
+
+        <div data-se-left data-se-pair="a">If the data is normally distributed,</div>
+        <div data-se-left data-se-pair="b">If this assumption were removed from the model,</div>
+        <div data-se-left data-se-pair="c">If the intervention had been introduced in the first trimester,</div>
+        <div data-se-left data-se-pair="d">If emissions continue at their current rate,</div>
+
+        <div data-se-right data-se-pair="b">the predicted outcomes would change significantly.</div>
+        <div data-se-right data-se-pair="a">a parametric test is the appropriate analytical choice.</div>
+        <div data-se-right data-se-pair="d">global temperatures will exceed the 1.5°C threshold before 2040.</div>
+        <div data-se-right data-se-pair="c">the developmental outcomes would have been measurably better.</div>
+    </div>
+
+    <!-- SLIDE 7 — WORD_BANK: Theoretical discussion paragraph, 3 conditionals -->
+    <div class="slide" data-type="WORD_BANK">
+        <h2>Complete the Theoretical Discussion</h2>
+        <p>Click a verb form from the bank, then click the blank. Wrong tense forms are distractors.</p>
+
+        <div data-se-bank>
+            <span data-se-word>were</span>
+            <span data-se-word>would produce</span>
+            <span data-se-word>had been adopted</span>
+            <span data-se-word>would have prevented</span>
+            <span data-se-word>continues</span>
+            <span data-se-word>will face</span>
+            <span data-se-word>was</span>
+            <span data-se-word>produced</span>
+        </div>
+
+        <p data-se-sentence>
+            If this theoretical framework
+            <span data-se-blank data-se-answer="were">[ ? ]</span>
+            applied consistently across cases, it
+            <span data-se-blank data-se-answer="would produce">[ ? ]</span>
+            predictions that diverge significantly from observed outcomes — suggesting the framework requires modification.
+            If the policy recommendations
+            <span data-se-blank data-se-answer="had been adopted">[ ? ]</span>
+            when first proposed in 2010, the subsequent deterioration in outcomes
+            <span data-se-blank data-se-answer="would have prevented">[ ? ]</span>
+            considerable institutional damage.
+            If current investment patterns
+            <span data-se-blank data-se-answer="continues">[ ? ]</span>
+            unchecked, the sector
+            <span data-se-blank data-se-answer="will face">[ ? ]</span>
+            a structural funding crisis within a decade.
+        </p>
+    </div>
+
+    <!-- SLIDE 8 — HIGHLIGHT: Wrong verb form in conditional -->
+    <div class="slide" data-type="HIGHLIGHT">
+        <h2>Wrong Form</h2>
+        <p data-se-instruction>
+            One sentence in this paragraph uses the wrong verb form in a conditional clause — mixing tenses in a way that creates a logical inconsistency. Click on that sentence.
+        </p>
+
+        <div data-se-paragraph>
+            <span data-se-sentence>The policy implications of these findings depend significantly on which causal mechanism is operating.</span>
+            <span data-se-sentence>If the relationship is driven primarily by socioeconomic factors, targeted redistribution will address the root cause more effectively than universal programmes.</span>
+            <span data-se-sentence data-se-highlight-correct>If the original trial would have used a larger sample, the effect size would have been estimated with greater precision.</span>
+            <span data-se-sentence>If this alternative interpretation were correct, we would expect to observe a significant moderating effect of institutional quality — which the data does not support.</span>
+            <span data-se-sentence>Future research should therefore focus on disentangling these competing explanations before policy recommendations are drawn.</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 9 — SORT_PARAGRAPH: Hypothetical argument in logical order -->
+    <div class="slide" data-type="SORT_PARAGRAPH">
+        <h2>Order the Hypothetical Argument</h2>
+        <p>These four sentences build a conditional argument. Put them in the order that makes the logical progression clearest.</p>
+
+        <div data-se-sentences>
+            <div data-se-sentence data-se-order="1">The model predicts a strong positive correlation between institutional trust and civic participation.</div>
+            <div data-se-sentence data-se-order="2">If this prediction were accurate, we would expect countries with higher trust scores to show significantly higher voter turnout.</div>
+            <div data-se-sentence data-se-order="3">The data, however, reveals no such pattern across the 28 countries examined.</div>
+            <div data-se-sentence data-se-order="4">If the model had accounted for structural barriers to participation — registration requirements, electoral system design — its predictive validity would have been substantially stronger.</div>
+        </div>
+    </div>
+
+    <!-- SLIDE 10 — PRE-ESSAY -->
+    <div class="slide" id="preEssaySlide"
+         data-type="ESSAY" data-se-role="warning"
+         data-se-lesson="conditionals">
+        <h2>Writing Task Instructions</h2>
+        <p data-se-warning>
+            You will write a paragraph of theoretical or policy analysis that demonstrates
+            deliberate use of at least two different conditional types. Each conditional
+            must be grammatically correct and epistemically justified by the context.
+            Target length: 120–150 words. Allow approximately 12 minutes.
+            Your writing will be tracked for academic integrity purposes.
+        </p>
+    </div>
+
+    <!-- SLIDE 11 — ESSAY -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="conditionals">
+        <p data-se-prompt>
+            Write a paragraph (120–150 words) analysing the following policy scenario:<br><br>
+            <em>A government introduced a sugar tax in 2018. Consumption of sugary drinks fell by 22% within two years. However, critics argue the tax was not implemented early enough and that the revenue was not ring-fenced for public health programmes.</em><br><br>
+            Your paragraph must include:<br>
+            — A <strong>first conditional</strong> making a prediction about future policy based on current trends<br>
+            — A <strong>second conditional</strong> testing a theoretical claim about the policy mechanism<br>
+            — A <strong>third conditional</strong> performing a counterfactual analysis of what would have happened under different conditions<br>
+            — Correct verb forms in both clauses of every conditional<br>
+            — <em>Were</em> (not <em>was</em>) in the if-clause of your second conditional
+        </p>
+    </div>
+
+</div>
+
+<script>
+    window.onload = () => {
+        SlideEngine.init('conditionals');
+        ActivityTracker.init('conditionals');
+    };
+</script>
+
+</body>
 </html>

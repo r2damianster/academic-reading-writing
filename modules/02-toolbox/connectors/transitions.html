@@ -1,6 +1,266 @@
-<!-- CREAR PROXIMAMENTE -->
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>Coming Soon</title></head>
-<body><p>🚧 This lesson is coming soon.</p></body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Transitions | Academic Workspace</title>
+    <link rel="stylesheet" href="../../../css/modules.css">
+    <script src="../../../js/activity-tracker.js"></script>
+    <script src="../../../js/essay-handler.js"></script>
+    <script src="../../../js/report.js"></script>
+    <script src="../../../js/slide-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — VIDEO -->
+    <div class="slide active" data-type="VIDEO">
+        <h2>Transitions</h2>
+        <iframe data-se-src="https://docs.google.com/presentation/d/1qLbFE7br2l65b2qo3DhaWgaumSeqUvbtWE_jvIBKyJQ/embed?start=false&loop=false&delayms=3000"
+                data-se-height="320"></iframe>
+    </div>
+
+    <!-- SLIDE 1 — CONTENT: Three scales -->
+    <div class="slide" data-type="CONTENT">
+        <h2>Three Scales of Linking</h2>
+        <p>Everything you have studied in this module operates at one of three scales. A complete academic essay requires all three:</p>
+
+        <div style="background:#f8fafc; border-radius:12px; padding:4px; margin:14px 0;">
+            <div style="background:#dbeafe; border-radius:8px; padding:14px; margin:6px; border-left:5px solid #3b82f6;">
+                <strong style="color:#1e40af;">SCALE 1 — Sentence connector</strong><br>
+                Links two ideas within or between sentences. <em>however / therefore / furthermore / although</em><br>
+                <span style="font-size:0.85rem; color:#64748b;">Scope: one sentence or two adjacent sentences</span>
+            </div>
+            <div style="background:#dcfce7; border-radius:8px; padding:14px; margin:6px; border-left:5px solid #16a34a;">
+                <strong style="color:#15803d;">SCALE 2 — Discourse marker</strong><br>
+                Frames a new section, reformulates, or signals the writer's stance. <em>with regard to / admittedly / in other words</em><br>
+                <span style="font-size:0.85rem; color:#64748b;">Scope: opening of a paragraph or major shift</span>
+            </div>
+            <div style="background:#fdf4ff; border-radius:8px; padding:14px; margin:6px; border-left:5px solid #a855f7;">
+                <strong style="color:#7e22ce;">SCALE 3 — Full transition</strong><br>
+                A complete sentence (or two) that <strong>closes the previous argument</strong>, <strong>bridges</strong> the two ideas, and <strong>opens the next argument</strong>.<br>
+                <span style="font-size:0.85rem; color:#64748b;">Scope: the hinge between two paragraphs</span><br><br>
+                <em>"These economic pressures have fundamentally reshaped individual behaviour. Yet the structural conditions that generate those pressures have received far less attention. It is at this structural level that the most significant interventions are required."</em>
+            </div>
+        </div>
+
+        <p>A single connector cannot replace a full transition. A full transition cannot replace a sentence connector. Each operates at its own level.</p>
+    </div>
+
+    <!-- SLIDE 2 — SORT_PARAGRAPH: Reorder a broken transition -->
+    <div class="slide" data-type="SORT_PARAGRAPH">
+        <h2>Rebuild the Transition</h2>
+        <p>These four sentences form a complete paragraph-level transition. Put them in the correct order.</p>
+
+        <div data-se-sentences>
+            <div data-se-sentence data-se-order="2">Yet the evidence reviewed so far addresses only the supply side of the equation.</div>
+            <div data-se-sentence data-se-order="1">The preceding analysis has established that housing supply has failed to keep pace with urban population growth across most OECD economies.</div>
+            <div data-se-sentence data-se-order="3">An equally significant set of pressures operates on the demand side, shaped by shifts in household formation patterns and changing expectations around tenure.</div>
+            <div data-se-sentence data-se-order="4">It is to these demand-side dynamics that the following section now turns.</div>
+        </div>
+    </div>
+
+    <!-- SLIDE 3 — CONTRAST: Abrupt vs. full transition -->
+    <div class="slide" data-type="CONTRAST">
+        <h2>Connector vs. Full Transition</h2>
+        <p data-se-intro>Same movement between two arguments. One uses only a connector; the other builds a complete transition. The difference is not cosmetic — it is structural.</p>
+
+        <div data-se-incorrect data-se-label="Connector only — abrupt ❌">
+            [End of paragraph on economic causes]
+            However, the social consequences of the crisis have been equally severe, particularly among younger generations who entered the labour market during the recession years.
+        </div>
+        <div data-se-correct data-se-label="Full transition — structured ✅">
+            [End of paragraph on economic causes]
+            The economic dimensions of the crisis are therefore well-documented. What remains less examined is how those economic shifts translated into lived social experience — particularly for younger generations whose entry into the labour market coincided with the deepest years of the recession. It is this social dimension that the following section addresses.
+        </div>
+    </div>
+
+    <!-- SLIDE 4 — DRAG_DROP: Place transitions between paragraphs -->
+    <div class="slide" data-type="DRAG_DROP">
+        <h2>Place the Transitions</h2>
+        <p>Drag each transition sentence to the correct gap between paragraphs.</p>
+
+        <div data-se-text>
+            <p style="background:#f8fafc; padding:12px; border-radius:8px; font-style:italic; font-size:0.9rem; color:#475569;">
+                ¶1 — The digital transformation of the workplace has accelerated dramatically since 2020, driven by the global shift to remote working during the pandemic. Organisations that had previously resisted digital adoption were compelled to implement new technologies within weeks rather than years.
+            </p>
+            <span data-se-drop data-se-answer="This rapid adoption has, however, exposed significant gaps in workforce digital literacy that now require systematic attention.">[___]</span>
+            <p style="background:#f8fafc; padding:12px; border-radius:8px; font-style:italic; font-size:0.9rem; color:#475569;">
+                ¶2 — Research consistently shows that digital skills training has failed to keep pace with the rate of technological change. Employees across sectors report feeling underprepared for the tools their organisations have introduced.
+            </p>
+            <span data-se-drop data-se-answer="The human dimension of this skills deficit points toward a broader question about organisational responsibility for workforce development.">[___]</span>
+            <p style="background:#f8fafc; padding:12px; border-radius:8px; font-style:italic; font-size:0.9rem; color:#475569;">
+                ¶3 — The question of who bears responsibility for digital upskilling — employer, employee, or state — is increasingly contested. Different national contexts have produced markedly different policy responses.
+            </p>
+        </div>
+
+        <div data-se-options>
+            <span data-se-option>This rapid adoption has, however, exposed significant gaps in workforce digital literacy that now require systematic attention.</span>
+            <span data-se-option>The human dimension of this skills deficit points toward a broader question about organisational responsibility for workforce development.</span>
+            <span data-se-option>Furthermore, digital transformation is an ongoing process with no clear endpoint.</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 5 — CHOOSE_CONTEXT: Which transition connects better? -->
+    <div class="slide" data-type="CHOOSE_CONTEXT">
+        <h2>Which Transition Works?</h2>
+        <p>Choose the transition that connects the two arguments most naturally and precisely.</p>
+
+        <p data-se-sentence>
+            [Previous paragraph argued that climate policy has focused too narrowly on technological solutions.]<br><br>
+            <span data-se-choice>
+                <span data-se-option>However, behavioural change is also important and should not be ignored by policymakers.</span>
+                <span data-se-option data-se-correct>This technological focus, while necessary, leaves a critical dimension underexplored: the role of behavioural and cultural change in driving sustained emissions reductions.</span>
+            </span>
+        </p>
+
+        <p data-se-sentence>
+            [Previous paragraph established that early childhood interventions produce long-term educational gains.]<br><br>
+            <span data-se-choice>
+                <span data-se-option data-se-correct>The evidence for early intervention is compelling. Yet the policy infrastructure required to deliver such programmes at scale remains underdeveloped in most national contexts.</span>
+                <span data-se-option>In addition, we need to also consider the policy infrastructure, which is not well developed.</span>
+            </span>
+        </p>
+
+        <p data-se-sentence>
+            [Previous paragraph examined individual motivations for entrepreneurship.]<br><br>
+            <span data-se-choice>
+                <span data-se-option>Secondly, the structural environment also plays a role in entrepreneurship.</span>
+                <span data-se-option data-se-correct>Individual motivation, however powerful, does not operate in a vacuum. The structural conditions that enable or constrain entrepreneurial activity — access to capital, regulatory burden, market density — shape outcomes as decisively as personal disposition.</span>
+            </span>
+        </p>
+    </div>
+
+    <!-- SLIDE 6 — CATEGORIZE: 8 transition sentences → 3 functions -->
+    <div class="slide" data-type="CATEGORIZE">
+        <h2>What Does Each Sentence Do?</h2>
+        <p>Every full transition performs one of three moves. Drag each sentence to its function.</p>
+
+        <div data-se-item data-se-category="closes">"The preceding section has therefore demonstrated that supply-side interventions alone are insufficient to resolve the housing crisis."</div>
+        <div data-se-item data-se-category="closes">"These findings confirm the central argument of the first section: that regulatory failure, not market forces, drove the collapse."</div>
+        <div data-se-item data-se-category="bridge">"Yet the evidence reviewed so far addresses only the economic dimension of the problem."</div>
+        <div data-se-item data-se-category="bridge">"What remains unexamined, however, is how these structural pressures translate into individual experience."</div>
+        <div data-se-item data-se-category="opens">"It is to the social consequences of this failure that the following section now turns."</div>
+        <div data-se-item data-se-category="opens">"The next section examines how demand-side dynamics compound the supply pressures already described."</div>
+        <div data-se-item data-se-category="bridge">"This economic analysis sets the stage for a more fundamental question about political accountability."</div>
+        <div data-se-item data-se-category="opens">"With regard to the policy implications of these findings, three distinct approaches have been proposed in the literature."</div>
+
+        <div data-se-category-zone data-se-accepts="closes" data-se-label="Closes previous argument"></div>
+        <div data-se-category-zone data-se-accepts="bridge" data-se-label="Bridges the two arguments"></div>
+        <div data-se-category-zone data-se-accepts="opens"  data-se-label="Opens the next argument"></div>
+    </div>
+
+    <!-- SLIDE 7 — HIGHLIGHT: Missing or broken transition -->
+    <div class="slide" data-type="HIGHLIGHT">
+        <h2>Where Is the Transition Missing?</h2>
+        <p data-se-instruction>
+            One of the paragraph-opening sentences below makes an abrupt leap — it begins a new argument without closing the previous one or bridging the gap. Click on that sentence.
+        </p>
+
+        <div data-se-paragraph>
+            <span data-se-sentence>The evidence examined in the preceding paragraphs suggests that austerity policies produced measurable harm to public health outcomes across multiple European countries.</span>
+            <span data-se-sentence>This harm was not evenly distributed: communities with higher pre-existing vulnerability bore a disproportionate share of the burden, a pattern consistent with findings from earlier fiscal crises.</span>
+            <span data-se-sentence data-se-highlight-correct>Mental health services were also cut significantly during this period and many people were unable to access support.</span>
+            <span data-se-sentence>The concentration of harm among already-disadvantaged populations raises important questions about the political economy of austerity — specifically, whose interests such policies serve and whose they consistently sacrifice.</span>
+            <span data-se-sentence>It is this distributional dimension, rather than the aggregate fiscal data, that deserves closer scrutiny in the policy analysis that follows.</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 8 — WORD_BANK: 3 incomplete transitions, mixed connectors and markers -->
+    <div class="slide" data-type="WORD_BANK">
+        <h2>Complete the Transitions</h2>
+        <p>Each sentence is the hinge between two paragraphs. Click a word or phrase from the bank, then click the blank. One item is a distractor.</p>
+
+        <div data-se-bank>
+            <span data-se-word>therefore</span>
+            <span data-se-word>Yet</span>
+            <span data-se-word>with regard to</span>
+            <span data-se-word>however</span>
+            <span data-se-word>It is worth noting</span>
+            <span data-se-word>firstly</span>
+        </div>
+
+        <p data-se-sentence>
+            The macroeconomic argument for intervention is, <span data-se-blank data-se-answer="therefore">[ ? ]</span>, well-established.
+            What the literature has not resolved is whether the political conditions for such intervention currently exist.
+        </p>
+
+        <p data-se-sentence>
+            <span data-se-blank data-se-answer="Yet">[ ? ]</span>
+            the most significant gap in the research is not methodological but conceptual: existing frameworks cannot account for the speed at which digital behaviours evolve.
+        </p>
+
+        <p data-se-sentence>
+            <span data-se-blank data-se-answer="with regard to">[ ? ]</span>
+            the long-term consequences of these policy choices, the evidence from comparable national contexts suggests that short-term gains were consistently offset by structural damage that took decades to repair.
+        </p>
+    </div>
+
+    <!-- SLIDE 9 — FILL_BLANK: Write transition elements by hand -->
+    <div class="slide" data-type="FILL_BLANK">
+        <h2>Write the Transition Element</h2>
+        <p>Complete each transition with the precise word or phrase that best performs the required function.</p>
+
+        <p data-se-sentence>
+            The case for reform is
+            <span data-se-blank data-se-answer="therefore">___</span>
+            compelling on both economic and social grounds. What remains contested is the pace and sequencing of implementation.
+        </p>
+
+        <p data-se-sentence>
+            <span data-se-blank data-se-answer="With regard to">___</span>
+            the international evidence, three countries — Finland, Canada, and New Zealand — have implemented comparable reforms with broadly positive outcomes.
+        </p>
+
+        <button data-se-check>Check my answers</button>
+    </div>
+
+    <!-- SLIDE 10 — PRE-ESSAY -->
+    <div class="slide" id="preEssaySlide"
+         data-type="ESSAY" data-se-role="warning"
+         data-se-lesson="transitions">
+        <h2>Writing Task Instructions</h2>
+        <p data-se-warning>
+            You will write the three transition sentences that connect the four paragraphs
+            of a given essay outline. You are not writing the paragraphs themselves — only
+            the hinge sentences that close, bridge, and open each argument.
+            This is a precision task. Each transition must perform all three moves.
+            Target length: 3 transitions of 2–3 sentences each. Allow approximately 12 minutes.
+            Your writing will be tracked for academic integrity purposes.
+        </p>
+    </div>
+
+    <!-- SLIDE 11 — ESSAY -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="transitions">
+        <p data-se-prompt>
+            Below is the outline of a four-paragraph essay. Write <strong>only the three transitions</strong> — the hinge sentences between each pair of paragraphs. Do not write the paragraphs themselves.<br><br>
+            <strong>Essay topic:</strong> <em>"The regulation of artificial intelligence requires international coordination, not national solutions."</em><br><br>
+            <strong>¶1</strong> — National AI regulation has produced a fragmented and inconsistent global landscape.<br>
+            <strong>¶2</strong> — This fragmentation creates opportunities for regulatory arbitrage that undermine the intended protections.<br>
+            <strong>¶3</strong> — International coordination mechanisms exist in comparable domains (nuclear, chemical weapons, financial regulation).<br>
+            <strong>¶4</strong> — The political obstacles to international AI governance are real but not insurmountable.<br><br>
+            For each transition (¶1→¶2, ¶2→¶3, ¶3→¶4), write 2–3 sentences that:<br>
+            — <strong>Close</strong> the preceding argument<br>
+            — <strong>Bridge</strong> the logical gap<br>
+            — <strong>Open</strong> the next argument<br><br>
+            Use language from across the module: sentence connectors, discourse markers, and full transition structures as appropriate.
+        </p>
+    </div>
+
+</div>
+
+<script>
+    window.onload = () => {
+        SlideEngine.init('transitions');
+        ActivityTracker.init('transitions');
+    };
+</script>
+
+</body>
 </html>

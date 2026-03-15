@@ -3,21 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome - Academic Workspace</title>
+    <title>Welcome - Academic Reading & Writing</title>
     <link rel="stylesheet" href="css/welcome.css">
+    <style>
+        /* Estilos rápidos por si el CSS tarda en cargar */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .hero h1 span { color: #2980b9; text-transform: capitalize; }
+        .instructor-photo { object-fit: cover; border-radius: 50%; }
+        .step-card-link { text-decoration: none; color: inherit; }
+    </style>
 </head>
 <body>
 
     <div class="hero">
-        <h1>Welcome back!</h1>
-        <p>This is your Academic Reading & Writing workspace. Use the sidebar to navigate through lessons and tools.</p>
+        <h1>Welcome back, <span id="userName">Student</span>!</h1>
+        <p>This is your Academic Reading & Writing workspace. Use the modules below or the sidebar to explore our research-based tools.</p>
     </div>
 
     <div class="instructor-profile">
-        <img src="css/foto.png" alt="Dr. Arturo Rodríguez Zambrano" class="instructor-photo">
+        <img src="css/foto.png" alt="Dr. Arturo Rodríguez Zambrano" class="instructor-photo" onerror="this.src='https://via.placeholder.com/100'">
         <div class="instructor-text">
             <h2>Hi! I'm Dr. Arturo Rodríguez</h2>
-            <p>"He creado esta plataforma con mucho cariño para apoyarte en tu camino hacia la excelencia académica..."</p>
+            <p>"He creado esta plataforma con mucho cariño para apoyarte en tu camino hacia la excelencia académica y la fluidez en el idioma inglés."</p>
             <a href="https://orcid.org/0000-0002-7017-9443" target="_blank" class="orcid-link">
                 <img src="https://orcid.org/assets/vectors/orcid.logo.icon.svg" width="20" alt="ORCID logo">
                 0000-0002-7017-9443
@@ -25,58 +32,81 @@
         </div>
     </div>
 
-    <h2>How to use this platform:</h2>
+    <h2 style="margin-left: 20px;">Explore your Learning Modules:</h2>
     
     <div class="steps-container" id="mouseWheelArea">
-        <div class="steps" id="cardsWrapper"></div>
+        <div class="steps" id="cardsWrapper">
+            </div>
     </div>
 
-    <footer style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px; text-align: center; color: #777;">
-        <p>© Todos los derechos reservados</p>
+    <footer style="margin-top: 60px; border-top: 1px solid #eee; padding: 40px 20px; text-align: center; color: #777; font-size: 0.9rem;">
+        <p>© 2026 Todos los derechos reservados</p>
         <p><strong>Arturo Rodriguez, PhD.</strong></p>
-        <p>Pedagogía de los Idiomas Nacionales y Extranjeros </p>
+        <p>Investigador de Pedagogía de los Idiomas Nacionales y Extranjeros</p>
+        <p style="font-size: 0.8rem; margin-top: 10px; color: #bdc3c7;">Uleam — Universidad Laica Eloy Alfaro de Manabí</p>
     </footer>
 
     <script src="js/nav.js"></script>
 
     <script>
         /**
-         * Genera las tarjetas basadas en el objeto MENU de nav.js
+         * 1. Personaliza el saludo con el nombre del LocalStorage
+         */
+        function personalizeWelcome() {
+            const storedName = localStorage.getItem('studentName');
+            if (storedName) {
+                document.getElementById('userName').innerText = storedName.split(' ')[0]; // Solo el primer nombre
+            }
+        }
+
+        /**
+         * 2. Genera las tarjetas basadas en el objeto MENU de nav.js
          */
         function generateCards() {
             const wrapper = document.getElementById('cardsWrapper');
-            if (!wrapper || typeof MENU === 'undefined') return;
+            if (!wrapper || typeof MENU === 'undefined') {
+                console.error("No se encontró el menú en nav.js");
+                return;
+            }
 
-            // Filtrar 'Main' y generar el resto
-            const modules = MENU.filter(item => item.label !== 'Main');
+            // Limpiamos el contenedor
+            wrapper.innerHTML = '';
+
+            // Filtramos 'Main' y el contenido actual para no repetirlos
+            const modules = MENU.filter(item => 
+                item.label !== 'Main' && 
+                item.path !== 'welcome-content.html'
+            );
 
             modules.forEach(item => {
                 const cardLink = document.createElement('a');
                 cardLink.href = "#";
                 cardLink.className = 'step-card-link';
                 
-                // Conexión con la función loadPage del index
                 cardLink.onclick = (e) => {
                     e.preventDefault();
-                    if (parent && parent.loadPage) {
-                        parent.loadPage(item.path);
+                    // Intentamos usar la función del index (parent)
+                    if (window.parent && typeof window.parent.loadPage === 'function') {
+                        window.parent.loadPage(item.path);
                     } else {
                         window.location.href = item.path;
                     }
                 };
 
-                // Estructura de la tarjeta usando la descripción de nav.js
                 cardLink.innerHTML = `
                     <div class="step-card">
+                        <div class="card-icon" style="font-size: 2rem; margin-bottom: 10px;">📘</div>
                         <h3>${item.label}</h3>
-                        <p>${item.description || 'Explore the lessons and tools in this module.'}</p>
+                        <p>${item.description || 'Access the academic tools and practice exercises for this module.'}</p>
                     </div>
                 `;
                 wrapper.appendChild(cardLink);
             });
         }
 
-        // Efecto de movimiento por mouse
+        /**
+         * 3. Efecto de desplazamiento horizontal con el mouse
+         */
         function initMouseEffect() {
             const container = document.getElementById('mouseWheelArea');
             const wrapper = document.getElementById('cardsWrapper');
@@ -91,18 +121,16 @@
                 const rect = container.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const percentage = x / visibleWidth;
+                
+                // Suavizado del movimiento
                 const moveX = percentage * maxMove;
-
                 wrapper.style.transform = `translateX(-${moveX}px)`;
-            });
-
-            container.addEventListener('touchstart', () => {
-                wrapper.style.transition = 'none';
             });
         }
 
-        // Ejecutar todo al cargar
+        // Inicializar al cargar
         document.addEventListener('DOMContentLoaded', () => {
+            personalizeWelcome();
             generateCards();
             initMouseEffect();
         });

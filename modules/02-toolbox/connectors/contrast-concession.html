@@ -1,6 +1,276 @@
-<!-- CREAR PROXIMAMENTE -->
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>Coming Soon</title></head>
-<body><p>🚧 This lesson is coming soon.</p></body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Contrast &amp; Concession | Academic Workspace</title>
+    <link rel="stylesheet" href="../../../css/modules.css">
+    <script src="../../../js/activity-tracker.js"></script>
+    <script src="../../../js/essay-handler.js"></script>
+    <script src="../../../js/report.js"></script>
+    <script src="../../../js/slide-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — VIDEO -->
+    <div class="slide active" data-type="VIDEO">
+        <h2>Contrast &amp; Concession</h2>
+        <iframe data-se-src="https://docs.google.com/presentation/d/1M71CweaZLRlVhYfdcWbI0YtzONdg8FFwWxRSedi3t9E/embed?start=false&loop=false&delayms=3000"
+                data-se-height="320"></iframe>
+    </div>
+
+    <!-- SLIDE 1 — CONTENT: Two different operations -->
+    <div class="slide" data-type="CONTENT">
+        <h2>Two Different Operations</h2>
+        <p>These connectors look similar but do fundamentally different things in an argument:</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0;">
+            <div style="background:#dbeafe; border-left:5px solid #3b82f6; padding:14px; border-radius:8px;">
+                <strong style="color:#1d4ed8;">CONTRAST</strong><br><br>
+                Two ideas of <em>equal weight</em> placed against each other. Neither side wins — you are simply showing a difference.<br><br>
+                <em>"Urban areas offer more job opportunities. <strong>However</strong>, rural areas provide a higher quality of life."</em>
+            </div>
+            <div style="background:#dcfce7; border-left:5px solid #16a34a; padding:14px; border-radius:8px;">
+                <strong style="color:#15803d;">CONCESSION</strong><br><br>
+                You <em>acknowledge something true</em> on the opposing side, then immediately defend your own position. One side wins.<br><br>
+                <em>"<strong>Although</strong> urban areas offer more opportunities, rural communities consistently report greater life satisfaction."</em>
+            </div>
+        </div>
+
+        <p><strong>Key test:</strong> If you remove the connector and both sentences still stand independently, it is contrast. If removing it breaks the logical movement of the argument, it is concession.</p>
+    </div>
+
+    <!-- SLIDE 2 — CATEGORIZE: Contrast vs. Concession -->
+    <div class="slide" data-type="CATEGORIZE">
+        <h2>Sort the Connectors</h2>
+        <p>Drag each connector to its correct family.</p>
+
+        <div data-se-item data-se-category="contrast">however</div>
+        <div data-se-item data-se-category="contrast">nevertheless</div>
+        <div data-se-item data-se-category="contrast">yet</div>
+        <div data-se-item data-se-category="contrast">on the other hand</div>
+        <div data-se-item data-se-category="concession">although</div>
+        <div data-se-item data-se-category="concession">despite</div>
+        <div data-se-item data-se-category="concession">even though</div>
+        <div data-se-item data-se-category="concession">while</div>
+
+        <div data-se-category-zone data-se-accepts="contrast"   data-se-label="Contrast — equal weight, between sentences"></div>
+        <div data-se-category-zone data-se-accepts="concession" data-se-label="Concession — acknowledge then defend, within or between sentences"></div>
+    </div>
+
+    <!-- SLIDE 3 — CHOOSE_CONTEXT: however vs. although -->
+    <div class="slide" data-type="CHOOSE_CONTEXT">
+        <h2>Between Sentences or Inside?</h2>
+        <p><em>However</em> connects two independent sentences. <em>Although</em> subordinates one idea to another — it lives inside a sentence structure. Read each carefully.</p>
+
+        <p data-se-sentence>
+            The intervention reduced hospital readmission rates by 31%.
+            <span data-se-choice>
+                <span data-se-option data-se-correct>However</span>
+                <span data-se-option>Although</span>
+            </span>
+            , the overall cost to the health system increased significantly during the same period.
+        </p>
+
+        <p data-se-sentence>
+            <span data-se-choice>
+                <span data-se-option data-se-correct>Although</span>
+                <span data-se-option>However</span>
+            </span>
+            the intervention reduced readmission rates, overall costs to the health system increased significantly.
+        </p>
+
+        <p data-se-sentence>
+            Remote work has increased employee satisfaction scores across most sectors.
+            <span data-se-choice>
+                <span data-se-option data-se-correct>Nevertheless</span>
+                <span data-se-option>Even though</span>
+            </span>
+            , concerns about collaboration and innovation remain widespread among senior managers.
+        </p>
+    </div>
+
+    <!-- SLIDE 4 — CONTENT: The grammar trap -->
+    <div class="slide" data-type="CONTENT">
+        <h2>The Grammar Trap</h2>
+        <p>This is the most frequent error with concession connectors. The rule is rigid:</p>
+
+        <div style="background:#f0fdf4; border:2px solid #16a34a; border-radius:10px; padding:16px; margin:12px 0;">
+            <strong style="color:#15803d;">ALTHOUGH / EVEN THOUGH / WHILE</strong> → followed by a <strong>full clause</strong> (subject + verb)<br><br>
+            ✅ <em>"Although the results were promising, further testing is required."</em><br>
+            ✅ <em>"Even though costs rose, the programme was retained."</em>
+        </div>
+
+        <div style="background:#fef9c3; border:2px solid #ca8a04; border-radius:10px; padding:16px; margin:12px 0;">
+            <strong style="color:#92400e;">DESPITE / IN SPITE OF</strong> → followed by a <strong>noun, noun phrase, or gerund (-ing)</strong> — never a full clause<br><br>
+            ✅ <em>"Despite the promising results, further testing is required."</em><br>
+            ✅ <em>"Despite showing promise, the drug requires further testing."</em><br><br>
+            ❌ <em>"Despite the results were promising, further testing is required."</em><br>
+            ❌ <em>"Despite that the results were promising..."</em>
+        </div>
+
+        <p style="background:#fee2e2; border-left:4px solid #dc2626; padding:10px; border-radius:6px;">
+            <strong>Quick fix:</strong> After writing <em>despite</em>, ask yourself — is the next word a verb? If yes, convert to a gerund or switch to <em>although</em>.
+        </p>
+    </div>
+
+    <!-- SLIDE 5 — CHOOSE_CONTEXT: although vs. despite + grammar -->
+    <div class="slide" data-type="CHOOSE_CONTEXT">
+        <h2>Although or Despite?</h2>
+        <p>Choose the option that is both semantically and grammatically correct.</p>
+
+        <p data-se-sentence>
+            <span data-se-choice>
+                <span data-se-option data-se-correct>Despite facing</span>
+                <span data-se-option>Although facing</span>
+            </span>
+            significant budget constraints, the research team published three peer-reviewed articles within the year.
+        </p>
+
+        <p data-se-sentence>
+            <span data-se-choice>
+                <span data-se-option>Despite the government introduced</span>
+                <span data-se-option data-se-correct>Although the government introduced</span>
+            </span>
+            stricter regulations, carbon emissions continued to rise throughout the decade.
+        </p>
+
+        <p data-se-sentence>
+            <span data-se-choice>
+                <span data-se-option data-se-correct>Despite the considerable opposition</span>
+                <span data-se-option>Although the considerable opposition</span>
+            </span>
+            from industry groups, the policy was passed with a strong parliamentary majority.
+        </p>
+    </div>
+
+    <!-- SLIDE 6 — DRAG_DROP: Claim → Concession → Refutation -->
+    <div class="slide" data-type="DRAG_DROP">
+        <h2>Build the Argument</h2>
+        <p>Drag the correct connector to complete each move in this Claim → Concession → Refutation paragraph.</p>
+
+        <div data-se-text>
+            <p>
+                Social media platforms represent a genuine threat to democratic discourse.
+                <span data-se-drop data-se-answer="Admittedly">[___]</span>,
+                these platforms have enabled marginalised voices to participate in public debate in unprecedented ways.
+                <span data-se-drop data-se-answer="Nevertheless">[___]</span>,
+                the structural incentives that prioritise engagement over accuracy continue to amplify misinformation at scale.
+                <span data-se-drop data-se-answer="Even though">[___]</span>
+                individual users can develop media literacy skills, the systemic problem requires regulatory intervention, not individual solutions.
+            </p>
+        </div>
+
+        <div data-se-options>
+            <span data-se-option>Nevertheless</span>
+            <span data-se-option>Even though</span>
+            <span data-se-option>Admittedly</span>
+            <span data-se-option>Because</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 7 — WORD_BANK: Full paragraph, 4 blanks + 1 causal distractor -->
+    <div class="slide" data-type="WORD_BANK">
+        <h2>Complete the Paragraph</h2>
+        <p>Click a word from the bank, then click the blank. One word is a distractor — it does not belong here.</p>
+
+        <div data-se-bank>
+            <span data-se-word>Although</span>
+            <span data-se-word>nevertheless</span>
+            <span data-se-word>despite</span>
+            <span data-se-word>even though</span>
+            <span data-se-word>however</span>
+            <span data-se-word>on the other hand</span>
+            <span data-se-word>yet</span>
+            <span data-se-word>while</span>
+            <span data-se-word>therefore</span>
+        </div>
+
+        <p data-se-sentence>
+            <span data-se-blank data-se-answer="Although">[ ? ]</span>
+            universal basic income has been piloted successfully in several Scandinavian countries,
+            critics argue that its implementation at national scale remains economically unfeasible.
+            <span data-se-blank data-se-answer="nevertheless">[ ? ]</span>,
+            proponents maintain that the long-term social benefits outweigh the short-term fiscal burden.
+            <span data-se-blank data-se-answer="despite">[ ? ]</span>
+            the ideological resistance from centre-right parties,
+            the policy has gained traction among younger voters across the political spectrum.
+            <span data-se-blank data-se-answer="even though">[ ? ]</span>
+            full implementation remains a distant prospect, the conversation has shifted the boundaries of mainstream economic debate.
+        </p>
+    </div>
+
+    <!-- SLIDE 8 — HIGHLIGHT: Contrast used where concession should be -->
+    <div class="slide" data-type="HIGHLIGHT">
+        <h2>Wrong Operation</h2>
+        <p data-se-instruction>
+            One sentence uses a contrast connector where the logic requires a concession. The writer acknowledges an opposing point — but fails to subordinate it correctly. Click on the sentence that contains the error.
+        </p>
+
+        <div data-se-paragraph>
+            <span data-se-sentence>Access to higher education has expanded significantly over the past three decades.</span>
+            <span data-se-sentence>Enrolment rates in OECD countries have nearly doubled since 1995, driven largely by policy investment and shifting labour market demands.</span>
+            <span data-se-sentence data-se-highlight-correct>However the financial burden on individual students has increased considerably, graduate outcomes remain broadly positive relative to non-graduates.</span>
+            <span data-se-sentence>Indeed, the graduate wage premium, although slightly compressed in recent years, continues to justify the cost of tertiary education in most disciplines.</span>
+            <span data-se-sentence>Nevertheless, calls for structural reform — including fee caps and income-contingent loan systems — have intensified across the political spectrum.</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 9 — SORT_PARAGRAPH: Build a concession structure -->
+    <div class="slide" data-type="SORT_PARAGRAPH">
+        <h2>Rebuild the Concession</h2>
+        <p>These four sentences form a correct academic concession. Put them in the right order.</p>
+
+        <div data-se-sentences>
+            <div data-se-sentence data-se-order="1">Artificial intelligence presents significant potential for improving diagnostic accuracy in clinical medicine.</div>
+            <div data-se-sentence data-se-order="3">Nevertheless, the technology should be understood as a tool to support clinical judgement, not replace it.</div>
+            <div data-se-sentence data-se-order="2">Admittedly, concerns about algorithmic bias and data privacy present legitimate challenges that cannot be dismissed.</div>
+            <div data-se-sentence data-se-order="4">Even though these challenges are real, the evidence consistently shows that AI-assisted diagnosis outperforms unaided human assessment across multiple specialties.</div>
+        </div>
+    </div>
+
+    <!-- SLIDE 10 — PRE-ESSAY -->
+    <div class="slide" id="preEssaySlide"
+         data-type="ESSAY" data-se-role="warning"
+         data-se-lesson="contrast concession">
+        <h2>Writing Task Instructions</h2>
+        <p data-se-warning>
+            You will write a paragraph using the Claim → Concession → Refutation structure.
+            You must demonstrate accurate use of both contrast and concession connectors,
+            with correct grammar after <em>despite</em> and <em>although</em>.
+            Target length: 120–150 words. Allow approximately 10–12 minutes.
+            Your writing will be tracked for academic integrity purposes.
+        </p>
+    </div>
+
+    <!-- SLIDE 11 — ESSAY -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="contrast concession">
+        <p data-se-prompt>
+            Write a paragraph (120–150 words) using the <strong>Claim → Concession → Refutation</strong> structure on the following topic:<br><br>
+            <em>"Online learning cannot fully replace face-to-face university education."</em><br><br>
+            Requirements:<br>
+            — Use at least <strong>two concession connectors</strong> (<em>although, despite, even though, while, admittedly</em>)<br>
+            — Use at least <strong>two contrast connectors</strong> (<em>however, nevertheless, yet, on the other hand</em>)<br>
+            — After <em>despite</em>, use only a noun phrase or gerund — never a full clause<br>
+            — Your paragraph must follow this structure: state your claim → acknowledge the opposing view → refute it and reaffirm your position
+        </p>
+    </div>
+
+</div>
+
+<script>
+    window.onload = () => {
+        SlideEngine.init('contrast concession');
+        ActivityTracker.init('contrast concession');
+    };
+</script>
+
+</body>
 </html>

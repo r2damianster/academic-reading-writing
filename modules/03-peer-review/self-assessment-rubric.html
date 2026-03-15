@@ -1,6 +1,166 @@
-<!-- CREAR PROXIMAMENTE -->
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>Coming Soon</title></head>
-<body><p>🚧 This lesson is coming soon.</p></body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Self-Assessment Rubric | Academic Workspace</title>
+    <link rel="stylesheet" href="../../css/modules.css">
+    <script src="../../js/activity-tracker.js"></script>
+    <script src="../../js/essay-handler.js"></script>
+    <script src="../../js/report.js"></script>
+    <script src="../../js/slide-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — VIDEO -->
+    <div class="slide active" data-type="VIDEO">
+        <h2>Self-Assessment Rubric</h2>
+        <iframe data-se-src="https://docs.google.com/presentation/d/REPLACE_ID_HERE/embed?start=false&loop=false&delayms=3000"
+                data-se-height="320"></iframe>
+    </div>
+
+    <!-- SLIDE 1 — CONTENT: Why self-assessment works -->
+    <div class="slide" data-type="CONTENT">
+        <h2>Why Self-Assessment Matters</h2>
+        <p>Writers who can accurately assess their own work improve faster than those who rely entirely on external feedback. The key word is <strong>accurately</strong> — uncalibrated self-assessment (simply saying "I think it's good") has little value.</p>
+
+        <div style="background:#f8fafc; border-radius:12px; padding:4px; margin:14px 0;">
+            <div style="background:#dbeafe; border-left:5px solid #3b82f6; padding:12px; margin:6px; border-radius:8px;">
+                <strong style="color:#1e40af;">Calibrated self-assessment:</strong><br>
+                Identifying a specific weakness before a marker or peer reviewer does — and knowing what to do about it — is more valuable than finding out after submission.<br><br>
+                <em>"My argument in paragraph 3 is clear, but the evidence is only summarised, not analysed. I need to add two sentences explaining what the statistic means for my central claim."</em>
+            </div>
+            <div style="background:#dcfce7; border-left:5px solid #16a34a; padding:12px; margin:6px; border-radius:8px;">
+                <strong style="color:#15803d;">The metacognitive loop:</strong><br>
+                Writing → Self-assessing against criteria → Revising → Re-assessing → Submitting<br><br>
+                Each pass through this loop produces better writing and stronger awareness of your own patterns of error.
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 2 — CONTRAST: Superficial vs. calibrated self-assessment -->
+    <div class="slide" data-type="CONTRAST">
+        <h2>Superficial vs. Calibrated</h2>
+        <p data-se-intro>Same writer, same essay. One self-assessment is vague and offers no path forward. The other is specific, honest, and actionable.</p>
+
+        <div data-se-incorrect data-se-label="Superficial — no diagnostic value ❌">
+            I think my essay is quite good overall. The introduction is clear and the argument makes sense. There might be some small language issues but nothing major. I'm fairly happy with it and think it's ready to submit.
+        </div>
+        <div data-se-correct data-se-label="Calibrated — specific and actionable ✅">
+            The introduction clearly states the thesis and provides relevant background — I would score this 3/4. The argument in paragraphs 1 and 2 is logically structured, but paragraph 3 makes a claim without analysing the evidence — I need to add one or two sentences connecting the statistic to my central argument before this reaches a 3. The language is consistently formal except for two phrases in paragraph 4 ("it's clear that" and "a lot of research") which I will replace. The reference list needs checking against APA 7 before submission.
+        </div>
+    </div>
+
+    <!-- SLIDE 3 — QUIZ: Is this self-assessment accurate? -->
+    <div class="slide" data-type="QUIZ">
+        <h2>Is This Self-Assessment Accurate?</h2>
+        <p data-se-question>
+            A student writes: <em>"My essay has a strong argument and the evidence is well-integrated."</em><br><br>
+            Their essay has a clear thesis, but two of the three body paragraphs include evidence that is quoted directly with no analysis or explanation of its relevance to the argument.<br><br>
+            How would you describe this self-assessment?
+        </p>
+        <div data-se-option>A. Accurate — the thesis is strong and the evidence is present in all paragraphs.</div>
+        <div data-se-option data-se-correct>B. Too generous — the student has not distinguished between including evidence and integrating it analytically. The evidence is present but not yet analysed.</div>
+        <div data-se-option>C. Too severe — the student is being overly self-critical about the quality of their evidence.</div>
+        <div data-se-option>D. It is impossible to assess without reading the full essay.</div>
+    </div>
+
+    <!-- SLIDE 4 — CHOOSE_CONTEXT: Most useful self-assessment statement -->
+    <div class="slide" data-type="CHOOSE_CONTEXT">
+        <h2>Which Self-Assessment Is Most Useful?</h2>
+        <p>Choose the statement that reflects the most calibrated, actionable self-assessment.</p>
+
+        <p data-se-sentence>
+            <em>Criterion being assessed: Development of evidence</em><br><br>
+            <span data-se-choice>
+                <span data-se-option>I think I've used good evidence throughout the essay.</span>
+                <span data-se-option data-se-correct>The evidence in paragraphs 1 and 3 is relevant and analysed. In paragraph 2, the quotation from the WHO report is included but not explained — I need to add a sentence showing how it supports my claim about healthcare inequality.</span>
+            </span>
+        </p>
+
+        <p data-se-sentence>
+            <em>Criterion being assessed: Academic register</em><br><br>
+            <span data-se-choice>
+                <span data-se-option data-se-correct>The register is consistently formal except for two phrases: "a lot of studies" (paragraph 1, line 3) and "it's pretty obvious" (paragraph 4, line 1). I will replace these with "a substantial body of research" and "the evidence clearly demonstrates" before submitting.</span>
+                <span data-se-option>My language is mostly academic but there are a few informal words that I should fix.</span>
+            </span>
+        </p>
+    </div>
+
+    <!-- SLIDE 5 — CONTENT: The rubric -->
+    <div class="slide" data-type="CONTENT">
+        <h2>The Self-Assessment Rubric</h2>
+        <p>Use this rubric to evaluate your own writing before submitting or sharing for peer review. Score each criterion honestly using the descriptors below.</p>
+
+        <div style="overflow-x:auto; margin:12px 0;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+                <thead>
+                    <tr style="background:#1e40af; color:white;">
+                        <th style="padding:10px; text-align:left; border:1px solid #dee2e6;">Criterion</th>
+                        <th style="padding:10px; text-align:center; border:1px solid #dee2e6;">1 — Beginning</th>
+                        <th style="padding:10px; text-align:center; border:1px solid #dee2e6;">2 — Developing</th>
+                        <th style="padding:10px; text-align:center; border:1px solid #dee2e6;">3 — Proficient</th>
+                        <th style="padding:10px; text-align:center; border:1px solid #dee2e6;">4 — Excellent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background:#f8fafc;">
+                        <td style="padding:9px; border:1px solid #dee2e6; font-weight:600;">Argument</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">No clear thesis; paragraphs unfocused</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Thesis present but vague; some paragraphs off-topic</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Clear thesis; most paragraphs support it</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Precise thesis; all paragraphs advance the argument coherently</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:9px; border:1px solid #dee2e6; font-weight:600;">Evidence</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Little or no evidence; claims unsupported</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Evidence present but not always relevant or analysed</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Relevant evidence with some analysis</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Relevant evidence fully integrated and analytically connected to the argument</td>
+                    </tr>
+                    <tr style="background:#f8fafc;">
+                        <td style="padding:9px; border:1px solid #dee2e6; font-weight:600;">Structure</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">No clear introduction, body, or conclusion</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Basic structure present; transitions weak or absent</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Clear structure; most transitions effective</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Coherent structure throughout; transitions precise and varied</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:9px; border:1px solid #dee2e6; font-weight:600;">Language</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Frequently informal; significant grammar errors</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Some informal language; occasional grammar errors</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Mostly formal; minor errors that do not impede meaning</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Consistently formal and precise; no grammar errors</td>
+                    </tr>
+                    <tr style="background:#f8fafc;">
+                        <td style="padding:9px; border:1px solid #dee2e6; font-weight:600;">Conventions</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Citations absent or incorrect throughout</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Citations present but inconsistently formatted</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Citations mostly correct; minor formatting errors</td>
+                        <td style="padding:9px; border:1px solid #dee2e6;">Citations and references fully correct in APA 7 format</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="background:#fef9c3; border-left:4px solid #d97706; padding:10px; border-radius:6px; margin-top:12px;">
+            For each criterion below 4, write one specific sentence identifying what needs to change and where. That sentence is your revision plan.
+        </p>
+    </div>
+
+</div>
+
+<script>
+    window.onload = () => {
+        SlideEngine.init('self assessment rubric');
+        ActivityTracker.init('self assessment rubric');
+    };
+</script>
+
+</body>
 </html>

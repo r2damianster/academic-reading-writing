@@ -1,6 +1,221 @@
-<!-- CREAR PROXIMAMENTE -->
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>Coming Soon</title></head>
-<body><p>🚧 This lesson is coming soon.</p></body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Adding Information | Academic Workspace</title>
+
+    <link rel="stylesheet" href="../../../css/modules.css">
+
+    <script src="../../../js/activity-tracker.js"></script>
+    <script src="../../../js/essay-handler.js"></script>
+    <script src="../../../js/report.js"></script>
+    <script src="../../../js/slide-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — VIDEO -->
+    <div class="slide active" data-type="VIDEO">
+        <h2>Adding Information</h2>
+        <iframe data-se-src="https://docs.google.com/presentation/d/1yEtwNbLAKC6aaVy8pO6mZMRTv16Tmr5tfF6nLDG8ocQ/embed?start=false&loop=false&delayms=3000"
+                data-se-height="320"></iframe>
+    </div>
+
+    <!-- SLIDE 1 — CONTENT: The 6 connectors -->
+    <div class="slide" data-type="CONTENT">
+        <h2>Six Ways to Add Information</h2>
+        <p>These connectors all add a new point to support your argument — but they are not interchangeable. Register and position matter:</p>
+        <ul>
+            <li><strong>Furthermore</strong> — formal. Adds a stronger or more important point. Usually at the start of a sentence.</li>
+            <li><strong>Moreover</strong> — formal. Similar to furthermore, but often signals the most significant addition.</li>
+            <li><strong>In addition</strong> — neutral-formal. Safe in most academic contexts. Can open a sentence or clause.</li>
+            <li><strong>Besides</strong> — semi-formal. Slightly informal; use with care in academic writing.</li>
+            <li><strong>Also</strong> — semi-formal. Flexible position (start, mid-sentence), but overused. Avoid repeating it.</li>
+            <li><strong>What is more</strong> — formal. Emphasises that the new point is even stronger than the previous one.</li>
+        </ul>
+        <p><strong>None of these ever appear at the end of a sentence.</strong></p>
+    </div>
+
+    <!-- SLIDE 2 — CATEGORIZE: Formal vs. Semi-formal -->
+    <div class="slide" data-type="CATEGORIZE">
+        <h2>Register Check</h2>
+        <p>Drag each connector to its correct register category.</p>
+
+        <div data-se-item data-se-category="formal">furthermore</div>
+        <div data-se-item data-se-category="formal">moreover</div>
+        <div data-se-item data-se-category="formal">in addition</div>
+        <div data-se-item data-se-category="formal">what is more</div>
+        <div data-se-item data-se-category="semiformal">besides</div>
+        <div data-se-item data-se-category="semiformal">also</div>
+
+        <div data-se-category-zone data-se-accepts="formal"     data-se-label="Formal — safe in academic essays"></div>
+        <div data-se-category-zone data-se-accepts="semiformal" data-se-label="Semi-formal — use with caution"></div>
+    </div>
+
+    <!-- SLIDE 3 — CONTENT: Position in the sentence -->
+    <div class="slide" data-type="CONTENT">
+        <h2>Position Matters</h2>
+        <p>Where you place these connectors changes the rhythm and emphasis of your sentence. Most can appear in two positions:</p>
+        <div style="background:#f0f4f8; border-radius:10px; padding:16px; margin:14px 0; line-height:2.2;">
+            <strong>Sentence-initial (most common):</strong><br>
+            <em>"Furthermore, the data confirms a significant reduction in emissions."</em><br><br>
+            <strong>Mid-sentence after semicolon:</strong><br>
+            <em>"The data is conclusive; moreover, it has been replicated in three independent studies."</em><br><br>
+            <strong>❌ Never at the end:</strong><br>
+            <em>"The results were positive, furthermore." ← Incorrect</em>
+        </div>
+        <p><strong>Also</strong> is the most flexible — it can go before the main verb: <em>"The study also confirmed..."</em> — but this flexibility makes it easy to overuse.</p>
+    </div>
+
+    <!-- SLIDE 4 — CHOOSE_CONTEXT: Register in context -->
+    <div class="slide" data-type="CHOOSE_CONTEXT">
+        <h2>Choose the Right Register</h2>
+        <p>Read the full sentence and choose the connector that fits the register of the text.</p>
+
+        <p data-se-sentence>
+            The programme reduced dropout rates by 18%.
+            <span data-se-choice>
+                <span data-se-option data-se-correct>Furthermore</span>
+                <span data-se-option>Also</span>
+            </span>
+            , it improved average grades across all participating schools.
+        </p>
+
+        <p data-se-sentence>
+            The new policy is cost-effective.
+            <span data-se-choice>
+                <span data-se-option>Moreover</span>
+                <span data-se-option data-se-correct>In addition</span>
+            </span>
+            , it has received cross-party support in parliament.
+        </p>
+
+        <p data-se-sentence>
+            Renewable energy reduces carbon emissions.
+            <span data-se-choice>
+                <span data-se-option data-se-correct>What is more</span>
+                <span data-se-option>Besides</span>
+            </span>
+            , recent data shows it now generates more jobs than fossil fuel industries.
+        </p>
+    </div>
+
+    <!-- SLIDE 5 — WORD_BANK: Paragraph with distractors -->
+    <div class="slide" data-type="WORD_BANK">
+        <h2>Complete the Paragraph</h2>
+        <p>Click a word from the bank, then click the blank where it belongs. Two words are distractors — they do not belong here.</p>
+
+        <div data-se-bank>
+            <span data-se-word>In addition</span>
+            <span data-se-word>Furthermore</span>
+            <span data-se-word>moreover</span>
+            <span data-se-word>however</span>
+            <span data-se-word>because</span>
+        </div>
+
+        <p data-se-sentence>
+            Bilingual education produces measurable cognitive benefits.
+            <span data-se-blank data-se-answer="In addition">[ ? ]</span>,
+            it improves long-term academic performance across all subjects, not only in language classes.
+            <span data-se-blank data-se-answer="Furthermore">[ ? ]</span>,
+            students in bilingual programmes consistently demonstrate stronger problem-solving abilities.
+            Research confirms these advantages are cumulative;
+            <span data-se-blank data-se-answer="moreover">[ ? ]</span>,
+            they intensify with each additional year of exposure.
+        </p>
+    </div>
+
+    <!-- SLIDE 6 — CONTRAST: Repetition vs. variety -->
+    <div class="slide" data-type="CONTRAST">
+        <h2>Variety vs. Repetition</h2>
+        <p data-se-intro>Same argument. One version overuses a single connector; the other demonstrates academic range.</p>
+
+        <div data-se-incorrect data-se-label="Repetitive ❌">
+            Physical activity benefits cardiovascular health. Also, it reduces stress levels significantly.
+            Also, people who exercise regularly report better sleep quality. Also, regular movement has been
+            linked to improved concentration in academic and professional settings. Also, it strengthens
+            the immune system over time.
+        </div>
+        <div data-se-correct data-se-label="Varied and Academic ✅">
+            Physical activity benefits cardiovascular health. In addition, it reduces stress levels significantly.
+            Furthermore, people who exercise regularly report better sleep quality. What is more, regular movement
+            has been linked to improved concentration in academic and professional settings; moreover, it
+            strengthens the immune system over time.
+        </div>
+    </div>
+
+    <!-- SLIDE 7 — QUIZ: Correct use of 'moreover' -->
+    <div class="slide" data-type="QUIZ">
+        <h2>Spot the Error</h2>
+        <p data-se-question>Which sentence uses <strong>moreover</strong> correctly?</p>
+        <div data-se-option>A. "The experiment was successful, moreover."</div>
+        <div data-se-option>B. "The results were promising. Moreover it showed no side effects."</div>
+        <div data-se-option data-se-correct>C. "The results were promising. Moreover, the study showed no adverse side effects across all age groups."</div>
+        <div data-se-option>D. "Moreover the cost was reduced and the quality improved at the same time."</div>
+    </div>
+
+    <!-- SLIDE 8 — FILL_BLANK: Write the connector -->
+    <div class="slide" data-type="FILL_BLANK">
+        <h2>Write the Connector</h2>
+        <p>Complete each sentence with the most appropriate connector. Write it exactly as it would appear in academic text.</p>
+
+        <p data-se-sentence>
+            The study confirmed a strong link between diet and cognitive performance.
+            <span data-se-blank data-se-answer="furthermore">___</span>,
+            it identified specific nutrients that directly support memory retention.
+        </p>
+
+        <p data-se-sentence>
+            Access to clean water remains a global challenge.
+            <span data-se-blank data-se-answer="in addition">___</span>,
+            sanitation infrastructure in rural areas continues to lag behind urban development.
+        </p>
+
+        <button data-se-check>Check my answers</button>
+    </div>
+
+    <!-- SLIDE 9 — PRE-ESSAY -->
+    <div class="slide" id="preEssaySlide"
+         data-type="ESSAY" data-se-role="warning"
+         data-se-lesson="adding information">
+        <h2>Writing Task Instructions</h2>
+        <p data-se-warning>
+            You will write a paragraph that demonstrates your ability to use a range
+            of additive connectors accurately and with appropriate register.
+            Avoid repeating the same connector more than once.
+            Target length: 100–130 words. Allow approximately 8–10 minutes.
+            Your writing will be tracked for academic integrity purposes.
+        </p>
+    </div>
+
+    <!-- SLIDE 10 — ESSAY -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="adding information">
+        <p data-se-prompt>
+            Topic Sentence: <em>"University education offers benefits that extend well beyond professional preparation."</em><br><br>
+            Write a paragraph (100–130 words) that develops this claim using <strong>at least three different additive connectors</strong>
+            from the lesson (<em>furthermore, moreover, in addition, what is more, besides, also</em>).<br><br>
+            Rules:<br>
+            — Do not repeat any connector more than once.<br>
+            — Use at least one connector in a mid-sentence position (after a semicolon).<br>
+            — Maintain a formal academic register throughout.
+        </p>
+    </div>
+
+</div>
+
+<script>
+    window.onload = () => {
+        SlideEngine.init('adding information');
+        ActivityTracker.init('adding information');
+    };
+</script>
+
+</body>
 </html>

@@ -1,6 +1,560 @@
-<!-- CREAR PROXIMAMENTE -->
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>Coming Soon</title></head>
-<body><p>🚧 This lesson is coming soon.</p></body>
-</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Peer Review Form | Academic Workspace</title>
+    <link rel="stylesheet" href="../../css/modules.css">
+    <script src="../../js/activity-tracker.js"></script>
+    <style>
+        /* ── Form-specific styles ─────────────────────────────────── */
+        .pr-wrapper {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 20px 16px 60px;
+            font-family: inherit;
+        }
+        .pr-header {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+        .pr-header h1 { margin: 0 0 6px; font-size: 1.4rem; }
+        .pr-header p  { margin: 0; opacity: 0.9; font-size: 0.9rem; }
+
+        /* ── Calibration section ──────────────────────────────────── */
+        .pr-section {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 18px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .pr-section h2 {
+            font-size: 1rem;
+            color: #1e40af;
+            margin: 0 0 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #dbeafe;
+        }
+
+        /* ── Rating rows ──────────────────────────────────────────── */
+        .criterion-row {
+            margin-bottom: 20px;
+        }
+        .criterion-label {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+        .criterion-desc {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+        .rating-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .rating-btn {
+            padding: 8px 18px;
+            border: 2px solid #d1d5db;
+            background: #f9fafb;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #374151;
+            transition: all 0.15s;
+            min-width: 48px;
+            text-align: center;
+        }
+        .rating-btn:hover  { border-color: #3b82f6; background: #eff6ff; }
+        .rating-btn.active { border-color: #1e40af; background: #1e40af; color: white; }
+
+        .rating-descriptors {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .rating-desc-item {
+            font-size: 0.72rem;
+            color: #9ca3af;
+            padding: 4px 6px;
+            background: #f9fafb;
+            border-radius: 5px;
+            line-height: 1.3;
+            text-align: center;
+        }
+        .rating-desc-item span {
+            display: block;
+            font-weight: 700;
+            color: #6b7280;
+            margin-bottom: 2px;
+        }
+
+        /* ── Textarea fields ──────────────────────────────────────── */
+        .pr-field {
+            width: 100%;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 90px;
+            transition: border-color 0.15s;
+            box-sizing: border-box;
+            color: #1f2937;
+        }
+        .pr-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        .pr-field::placeholder { color: #9ca3af; }
+
+        .field-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .field-hint {
+            font-size: 0.78rem;
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        /* ── Submit area ──────────────────────────────────────────── */
+        .pr-submit {
+            text-align: center;
+            margin-top: 28px;
+        }
+        .btn-submit {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 14px 36px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .btn-submit:hover { background: #1d4ed8; }
+        .btn-submit:disabled { background: #9ca3af; cursor: not-allowed; }
+
+        .pr-confirmation {
+            display: none;
+            background: #dcfce7;
+            border: 2px solid #16a34a;
+            color: #15803d;
+            padding: 16px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        /* ── Word counter ─────────────────────────────────────────── */
+        .word-count {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            text-align: right;
+            margin-top: 4px;
+        }
+        .word-count.ok   { color: #16a34a; }
+        .word-count.warn { color: #d97706; }
+
+        /* ── Calibration quiz ─────────────────────────────────────── */
+        .calib-option {
+            display: block;
+            padding: 10px 14px;
+            margin: 6px 0;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            transition: all 0.15s;
+            background: #f9fafb;
+        }
+        .calib-option:hover  { border-color: #3b82f6; background: #eff6ff; }
+        .calib-option.right  { border-color: #16a34a; background: #dcfce7; color: #15803d; font-weight: 600; }
+        .calib-option.wrong  { border-color: #dc2626; background: #fee2e2; color: #991b1b; }
+        .calib-feedback { margin-top: 10px; font-size: 0.85rem; font-weight: 600; display: none; }
+        .calib-next { display: none; margin-top: 12px; }
+        .btn-next-section {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* ── Progress steps ───────────────────────────────────────── */
+        .pr-steps {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .step-dot {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700;
+            border: 2px solid #d1d5db;
+            background: #f9fafb;
+            color: #9ca3af;
+        }
+        .step-dot.done    { background: #dcfce7; border-color: #16a34a; color: #15803d; }
+        .step-dot.current { background: #1e40af; border-color: #1e40af; color: white; }
+
+        .pr-page { display: none; }
+        .pr-page.active { display: block; }
+    </style>
+</head>
+<body>
+
+<div class="pr-wrapper">
+
+    <div class="pr-header">
+        <h1>📝 Peer Review Form</h1>
+        <p>Complete all sections before submitting. Your feedback will be shared with your peer.</p>
+    </div>
+
+    <!-- Progress dots -->
+    <div class="pr-steps">
+        <div class="step-dot current" id="dot-1">1</div>
+        <div class="step-dot" id="dot-2">2</div>
+        <div class="step-dot" id="dot-3">3</div>
+        <div class="step-dot" id="dot-4">4</div>
+        <div class="step-dot" id="dot-5">✓</div>
+    </div>
+
+    <!-- ── PAGE 1: Instructions + calibration ──────────────────── -->
+    <div class="pr-page active" id="page-1">
+        <div class="pr-section">
+            <h2>Before You Begin — Calibration</h2>
+            <p style="font-size:0.9rem; color:#374151; margin-bottom:14px;">
+                Read this paragraph written by a student. Then answer the calibration question to practise using the rubric before reviewing your peer's work.
+            </p>
+            <div style="background:#f0f4f8; border-radius:8px; padding:14px; font-style:italic; font-size:0.88rem; line-height:1.7; margin-bottom:16px; color:#374151;">
+                "Social media has a big impact on young people. There are a lot of studies that show this. For example, one study found that teenagers who use social media more than 3 hours a day are more likely to feel depressed. This shows that social media is bad for mental health. Governments should do something about this."
+            </div>
+
+            <p style="font-weight:600; font-size:0.9rem; margin-bottom:10px;">
+                How would you score this paragraph on <strong>Evidence</strong> (1–4)?
+            </p>
+            <div id="calib-options">
+                <label class="calib-option" data-score="1">1 — Beginning: Little or no evidence; claims unsupported</label>
+                <label class="calib-option" data-score="2">2 — Developing: Evidence present but not analysed or explained</label>
+                <label class="calib-option" data-score="3">3 — Proficient: Relevant evidence with some analysis</label>
+                <label class="calib-option" data-score="4">4 — Excellent: Evidence fully integrated and analytically connected</label>
+            </div>
+            <div class="calib-feedback" id="calib-feedback"></div>
+            <div class="calib-next" id="calib-next">
+                <button class="btn-next-section" onclick="goToPage(2)">Continue to the review →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── PAGE 2: Peer's text + identification ─────────────────── -->
+    <div class="pr-page" id="page-2">
+        <div class="pr-section">
+            <h2>Step 1 — Identify the Work Being Reviewed</h2>
+            <label class="field-label">Your name</label>
+            <input type="text" id="reviewer-name" class="pr-field" style="min-height:unset; height:42px; margin-bottom:14px;" placeholder="Your full name">
+
+            <label class="field-label">Peer's name (author of the work)</label>
+            <input type="text" id="author-name" class="pr-field" style="min-height:unset; height:42px; margin-bottom:14px;" placeholder="Your peer's full name">
+
+            <label class="field-label">Assignment / essay title</label>
+            <input type="text" id="essay-title" class="pr-field" style="min-height:unset; height:42px;" placeholder="Title of the work being reviewed">
+        </div>
+
+        <div class="pr-section">
+            <h2>Step 2 — Paste or Summarise the Work</h2>
+            <label class="field-label">Paste the text you are reviewing (or a summary if it is long)</label>
+            <p class="field-hint">Having the text here helps you refer back to specific passages as you complete the form.</p>
+            <textarea class="pr-field" id="peer-text" style="min-height:160px;" placeholder="Paste your peer's text here..."></textarea>
+        </div>
+
+        <div style="text-align:right; margin-top:10px;">
+            <button class="btn-next-section" onclick="goToPage(3)">Next: Rate the work →</button>
+        </div>
+    </div>
+
+    <!-- ── PAGE 3: Ratings ───────────────────────────────────────── -->
+    <div class="pr-page" id="page-3">
+        <div class="pr-section">
+            <h2>Step 3 — Rate Each Criterion (1–4)</h2>
+
+            <!-- Argument -->
+            <div class="criterion-row">
+                <div class="criterion-label">Argument</div>
+                <div class="criterion-desc">Is there a clear thesis? Does each paragraph support it?</div>
+                <div class="rating-group" data-criterion="argument">
+                    <button class="rating-btn" data-val="1">1</button>
+                    <button class="rating-btn" data-val="2">2</button>
+                    <button class="rating-btn" data-val="3">3</button>
+                    <button class="rating-btn" data-val="4">4</button>
+                </div>
+                <div class="rating-descriptors">
+                    <div class="rating-desc-item"><span>1</span>No clear thesis; paragraphs unfocused</div>
+                    <div class="rating-desc-item"><span>2</span>Thesis vague; some paragraphs off-topic</div>
+                    <div class="rating-desc-item"><span>3</span>Clear thesis; most paragraphs support it</div>
+                    <div class="rating-desc-item"><span>4</span>Precise thesis; all paragraphs coherent</div>
+                </div>
+            </div>
+
+            <!-- Evidence -->
+            <div class="criterion-row">
+                <div class="criterion-label">Evidence</div>
+                <div class="criterion-desc">Is the evidence relevant, sufficient, and analytically connected to the argument?</div>
+                <div class="rating-group" data-criterion="evidence">
+                    <button class="rating-btn" data-val="1">1</button>
+                    <button class="rating-btn" data-val="2">2</button>
+                    <button class="rating-btn" data-val="3">3</button>
+                    <button class="rating-btn" data-val="4">4</button>
+                </div>
+                <div class="rating-descriptors">
+                    <div class="rating-desc-item"><span>1</span>Little or no evidence; claims unsupported</div>
+                    <div class="rating-desc-item"><span>2</span>Evidence present but not analysed</div>
+                    <div class="rating-desc-item"><span>3</span>Relevant evidence with some analysis</div>
+                    <div class="rating-desc-item"><span>4</span>Evidence fully integrated and analytical</div>
+                </div>
+            </div>
+
+            <!-- Structure -->
+            <div class="criterion-row">
+                <div class="criterion-label">Structure</div>
+                <div class="criterion-desc">Is the overall structure clear? Do transitions connect paragraphs effectively?</div>
+                <div class="rating-group" data-criterion="structure">
+                    <button class="rating-btn" data-val="1">1</button>
+                    <button class="rating-btn" data-val="2">2</button>
+                    <button class="rating-btn" data-val="3">3</button>
+                    <button class="rating-btn" data-val="4">4</button>
+                </div>
+                <div class="rating-descriptors">
+                    <div class="rating-desc-item"><span>1</span>No clear intro, body, or conclusion</div>
+                    <div class="rating-desc-item"><span>2</span>Basic structure; transitions weak</div>
+                    <div class="rating-desc-item"><span>3</span>Clear structure; most transitions work</div>
+                    <div class="rating-desc-item"><span>4</span>Coherent throughout; transitions precise</div>
+                </div>
+            </div>
+
+            <!-- Language -->
+            <div class="criterion-row">
+                <div class="criterion-label">Language</div>
+                <div class="criterion-desc">Is the register consistently academic? Are grammar and vocabulary accurate?</div>
+                <div class="rating-group" data-criterion="language">
+                    <button class="rating-btn" data-val="1">1</button>
+                    <button class="rating-btn" data-val="2">2</button>
+                    <button class="rating-btn" data-val="3">3</button>
+                    <button class="rating-btn" data-val="4">4</button>
+                </div>
+                <div class="rating-descriptors">
+                    <div class="rating-desc-item"><span>1</span>Frequently informal; significant errors</div>
+                    <div class="rating-desc-item"><span>2</span>Some informal language; some errors</div>
+                    <div class="rating-desc-item"><span>3</span>Mostly formal; minor errors</div>
+                    <div class="rating-desc-item"><span>4</span>Consistently formal and precise</div>
+                </div>
+            </div>
+
+            <!-- Conventions -->
+            <div class="criterion-row">
+                <div class="criterion-label">Conventions</div>
+                <div class="criterion-desc">Are citations and references present and correctly formatted in APA 7?</div>
+                <div class="rating-group" data-criterion="conventions">
+                    <button class="rating-btn" data-val="1">1</button>
+                    <button class="rating-btn" data-val="2">2</button>
+                    <button class="rating-btn" data-val="3">3</button>
+                    <button class="rating-btn" data-val="4">4</button>
+                </div>
+                <div class="rating-descriptors">
+                    <div class="rating-desc-item"><span>1</span>Citations absent or incorrect throughout</div>
+                    <div class="rating-desc-item"><span>2</span>Citations present but inconsistent</div>
+                    <div class="rating-desc-item"><span>3</span>Mostly correct; minor errors</div>
+                    <div class="rating-desc-item"><span>4</span>Fully correct in APA 7</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:right; margin-top:10px;">
+            <button class="btn-next-section" onclick="goToPage(4)">Next: Write your comments →</button>
+        </div>
+    </div>
+
+    <!-- ── PAGE 4: Written feedback ─────────────────────────────── -->
+    <div class="pr-page" id="page-4">
+        <div class="pr-section">
+            <h2>Step 4 — Written Feedback</h2>
+            <p style="font-size:0.85rem; color:#6b7280; margin-bottom:16px;">
+                For each section, be specific: reference particular paragraphs, sentences, or passages. Aim for actionable suggestions, not general observations.
+            </p>
+
+            <label class="field-label">What works well? (strengths)</label>
+            <p class="field-hint">Identify at least one specific strength with reference to where in the text it appears.</p>
+            <textarea class="pr-field" id="fb-strengths" oninput="countWords(this, 'wc-strengths', 20, 80)"
+                placeholder="e.g. The thesis statement in the introduction clearly states the argument and establishes a clear roadmap for the essay..."></textarea>
+            <div class="word-count" id="wc-strengths">0 words</div>
+
+            <label class="field-label" style="margin-top:16px;">What needs development? (areas for improvement)</label>
+            <p class="field-hint">Be specific: which paragraph, which sentence? What exactly should change and why?</p>
+            <textarea class="pr-field" id="fb-improve" oninput="countWords(this, 'wc-improve', 30, 150)"
+                placeholder="e.g. In paragraph 2, the evidence from the WHO report is included but not analysed — adding a sentence explaining what the statistic means for the central argument would strengthen this section significantly..."></textarea>
+            <div class="word-count" id="wc-improve">0 words</div>
+
+            <label class="field-label" style="margin-top:16px;">One priority suggestion</label>
+            <p class="field-hint">If the writer could only change one thing before resubmitting, what should it be?</p>
+            <textarea class="pr-field" id="fb-priority" style="min-height:70px;" oninput="countWords(this, 'wc-priority', 10, 60)"
+                placeholder="e.g. Strengthen the analysis of evidence in paragraph 3 by connecting the statistics directly to the thesis..."></textarea>
+            <div class="word-count" id="wc-priority">0 words</div>
+        </div>
+
+        <div style="text-align:right; margin-top:10px;">
+            <button class="btn-next-section" onclick="goToPage(5)">Review and submit →</button>
+        </div>
+    </div>
+
+    <!-- ── PAGE 5: Summary + submit ─────────────────────────────── -->
+    <div class="pr-page" id="page-5">
+        <div class="pr-section">
+            <h2>Step 5 — Review and Submit</h2>
+            <div id="summary-box" style="background:#f8fafc; border-radius:8px; padding:16px; font-size:0.88rem; line-height:1.8; color:#374151;"></div>
+        </div>
+
+        <div class="pr-submit">
+            <button class="btn-submit" id="submit-btn" onclick="submitReview()">Submit Peer Review</button>
+        </div>
+        <div class="pr-confirmation" id="pr-confirmation">
+            ✅ Your peer review has been submitted successfully. Thank you for your feedback.
+        </div>
+    </div>
+
+</div>
+
+<script>
+// ── State ────────────────────────────────────────────────────────
+const scores = { argument: 0, evidence: 0, structure: 0, language: 0, conventions: 0 };
+let calibDone = false;
+
+// ── Calibration ───────────────────────────────────────────────────
+document.querySelectorAll('.calib-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+        if (calibDone) return;
+        const score = parseInt(opt.dataset.score);
+        const fb    = document.getElementById('calib-feedback');
+        const next  = document.getElementById('calib-next');
+
+        document.querySelectorAll('.calib-option').forEach(o => o.style.pointerEvents = 'none');
+
+        if (score === 2) {
+            opt.classList.add('right');
+            fb.style.display = 'block';
+            fb.style.color   = '#15803d';
+            fb.textContent   = '✅ Correct — score 2. The evidence (one study) is present but the result is stated without explanation or analysis. The paragraph does not connect the statistic to the argument.';
+        } else {
+            opt.classList.add('wrong');
+            fb.style.display = 'block';
+            fb.style.color   = '#991b1b';
+            fb.textContent   = score < 2
+                ? '❌ Score 2 is more accurate — there is evidence present (the study), even if it is not analysed.'
+                : '❌ Score 2 is more accurate — the evidence is not analysed or connected to the argument, so it does not yet reach a 3.';
+            document.querySelector(`.calib-option[data-score="2"]`).classList.add('right');
+        }
+        calibDone = true;
+        next.style.display = 'block';
+    });
+});
+
+// ── Rating buttons ────────────────────────────────────────────────
+document.querySelectorAll('.rating-group').forEach(group => {
+    group.querySelectorAll('.rating-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            group.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            scores[group.dataset.criterion] = parseInt(btn.dataset.val);
+        });
+    });
+});
+
+// ── Word counter ──────────────────────────────────────────────────
+function countWords(el, counterId, min, max) {
+    const words = el.value.trim() === '' ? 0 : el.value.trim().split(/\s+/).length;
+    const el2   = document.getElementById(counterId);
+    el2.textContent = `${words} words`;
+    el2.className   = 'word-count' + (words >= min ? ' ok' : words > 0 ? ' warn' : '');
+}
+
+// ── Page navigation ───────────────────────────────────────────────
+function goToPage(n) {
+    document.querySelectorAll('.pr-page').forEach(p => p.classList.remove('active'));
+    document.getElementById(`page-${n}`).classList.add('active');
+
+    document.querySelectorAll('.step-dot').forEach((d, i) => {
+        d.className = 'step-dot' + (i + 1 < n ? ' done' : i + 1 === n ? ' current' : '');
+    });
+
+    if (n === 5) buildSummary();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Summary builder ───────────────────────────────────────────────
+function buildSummary() {
+    const box = document.getElementById('summary-box');
+    const criterionLabels = { argument: 'Argument', evidence: 'Evidence', structure: 'Structure', language: 'Language', conventions: 'Conventions' };
+    const ratingLabels    = { 1: 'Beginning', 2: 'Developing', 3: 'Proficient', 4: 'Excellent' };
+
+    let html = `<strong>Reviewer:</strong> ${document.getElementById('reviewer-name').value || '—'}<br>`;
+    html    += `<strong>Author:</strong> ${document.getElementById('author-name').value || '—'}<br>`;
+    html    += `<strong>Work:</strong> ${document.getElementById('essay-title').value || '—'}<br><br>`;
+    html    += `<strong>Ratings:</strong><br>`;
+
+    Object.entries(scores).forEach(([k, v]) => {
+        html += `&nbsp;&nbsp;${criterionLabels[k]}: <strong>${v > 0 ? v + ' — ' + ratingLabels[v] : 'Not rated'}</strong><br>`;
+    });
+
+    html += `<br><strong>Strengths:</strong><br><em>${document.getElementById('fb-strengths').value || '—'}</em><br><br>`;
+    html += `<strong>Areas for improvement:</strong><br><em>${document.getElementById('fb-improve').value || '—'}</em><br><br>`;
+    html += `<strong>Priority suggestion:</strong><br><em>${document.getElementById('fb-priority').value || '—'}</em>`;
+
+    box.innerHTML = html;
+}
+
+// ── Submit ────────────────────────────────────────────────────────
+function submitReview() {
+    document.getElementById('submit-btn').disabled = true;
+    document.getElementById('pr-confirmation').style.display = 'block';
+
+    // Log to ActivityTracker if available
+    if (window.ActivityTracker) {
+        ActivityTracker.log('peer_review_submitted', {
+            reviewer : document.getElementById('reviewer-name').value,
+            author   : document.getElementById('author-name').value,
+            scores,
+            strengths : document.getElementById('fb-strengths').value,
+            improve   : document.getElementById('fb-improve').value,
+            priority  : document.getElementById('fb-priority').value,
+        });
+    }
+}
+
+// Init
+ActivityTracker.init('peer review form');
+</script>
+
+</body>
+      </html>
