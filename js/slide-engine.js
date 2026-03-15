@@ -826,45 +826,48 @@ SlideTypes.ESSAY = {
                        border:1px solid #ccc; font-family:'Georgia',serif;
                        line-height:1.6; font-size:16px; box-sizing:border-box;
                        resize:vertical;"></textarea>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
                 <span style="font-size:0.85rem; color:#666;">
                     Word count: <span id="wordCountDisplay">0</span> words
                 </span>
-                <button onclick="skipLessonWithData('${lessonName}')"
-                        style="background:none; border:none; color:#999; font-size:0.85rem;
-                               cursor:pointer; text-decoration:underline;">
-                    Discard and Exit →
-                </button>
-            </div>
-            <div id="integrityDashboard"
-                 style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;
-                        padding:10px 14px; background:#f1f3f5; border-radius:8px;
-                        border:1px solid #dee2e6;">
-                <div style="font-size:0.75rem; font-weight:700; color:#6c757d;
-                             width:100%; margin-bottom:2px; letter-spacing:0.04em;">
-                    INTEGRITY INDICATORS
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span id="se-integrity-icon" style="font-size:1.1rem;">&#x2705;</span>
+                        <span style="font-size:0.82rem; color:#666; font-weight:600;">Integrity:</span>
+                        <span id="se-integrity-score"
+                              style="font-size:0.9rem; font-weight:700; color:#27ae60;">100%</span>
+                        <div style="position:relative; display:inline-block;">
+                            <span id="se-info-btn"
+                                  style="display:inline-flex; align-items:center; justify-content:center;
+                                         width:17px; height:17px; border-radius:50%;
+                                         background:#adb5bd; color:#fff; font-size:0.65rem;
+                                         font-weight:700; cursor:default; user-select:none;">i</span>
+                            <div id="se-integrity-tooltip"
+                                 style="display:none; position:absolute; right:0; bottom:26px;
+                                        width:230px; background:#2c3e50; color:#ecf0f1;
+                                        border-radius:8px; padding:12px 14px; font-size:0.78rem;
+                                        line-height:1.7; z-index:999; box-shadow:0 4px 16px rgba(0,0,0,0.25);
+                                        pointer-events:none;">
+                                <div style="font-weight:700; margin-bottom:6px; letter-spacing:0.04em;
+                                             color:#bdc3c7; font-size:0.72rem;">INTEGRITY BREAKDOWN</div>
+                                <div id="se-tip-paste"></div>
+                                <div id="se-tip-ratio"></div>
+                                <div id="se-tip-tabs"></div>
+                                <div id="se-tip-del"></div>
+                                <div id="se-tip-dur"></div>
+                                <div style="position:absolute; right:6px; bottom:-6px; width:0; height:0;
+                                             border-left:6px solid transparent; border-right:6px solid transparent;
+                                             border-top:6px solid #2c3e50;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="skipLessonWithData('${lessonName}')"
+                            style="background:none; border:none; color:#999; font-size:0.82rem;
+                                   cursor:pointer; text-decoration:underline;">
+                        Discard and Exit &#x2192;
+                    </button>
                 </div>
-                <span id="se-stat-keys"   class="se-stat-chip">⌨ Keys: 0</span>
-                <span id="se-stat-del"    class="se-stat-chip">⌫ Deletions: 0</span>
-                <span id="se-stat-paste"  class="se-stat-chip">📋 Pastes: 0</span>
-                <span id="se-stat-tabs"   class="se-stat-chip">🔀 Tab switches: 0</span>
-                <span id="se-stat-ratio"  class="se-stat-chip">📊 Typed ratio: —</span>
-                <span id="se-stat-dur"    class="se-stat-chip">⏱ Writing time: —</span>
             </div>
-            <style>
-                .se-stat-chip {
-                    display:inline-block;
-                    padding:3px 10px;
-                    background:#fff;
-                    border:1px solid #ced4da;
-                    border-radius:20px;
-                    font-size:0.78rem;
-                    color:#495057;
-                    font-family: monospace;
-                }
-                .se-stat-chip.se-warn { border-color:#f0ad4e; background:#fff8e7; color:#856404; }
-                .se-stat-chip.se-alert { border-color:#e74c3c; background:#fdf2f2; color:#c0392b; }
-            </style>
             <button class="btn-next" id="finalBtn" style="display:block; margin-top:20px; width:100%;"
                     onclick="if(window.EssayHandler) EssayHandler.submit();
                              else finishLessonWithEssay('${lessonName}',
@@ -878,45 +881,121 @@ SlideTypes.ESSAY = {
         const textarea = workspace.querySelector('#essayInput');
         const counter  = workspace.querySelector('#wordCountDisplay');
 
-        function _setChip(id, text, level) {
-            const el = document.getElementById(id);
-            if (!el) return;
-            el.textContent = text;
-            el.className = 'se-stat-chip' + (level === 'warn' ? ' se-warn' : level === 'alert' ? ' se-alert' : '');
+        // ── Integrity score calculation ───────────────────────────────────────
+        // Returns 0–100. Starts at 100 and deducts weighted penalties.
+        // Each signal is relative (not binary) so occasional deletions don't
+        // collapse the score — only genuine anomaly patterns do.
+        function _calcIntegrity(s, words) {
+            let score = 100;
+            const lines = [];
+
+            // 1. PASTE PENALTY — heavy: each paste deducts 25pts (max -50)
+            if (s.pastes > 0) {
+                const pen = Math.min(s.pastes * 25, 50);
+                score -= pen;
+                lines.push(`📋 Pastes detected: ${s.pastes} (-${pen}pts)`);
+            }
+
+            // 2. TYPED RATIO — checks if chars were actually typed
+            //    Only applied once there are enough chars to be meaningful (>30)
+            if (s.totalChars > 30) {
+                const ratio = Math.round((s.keystrokes / s.totalChars) * 100);
+                if (ratio < 40) {
+                    const pen = 30;
+                    score -= pen;
+                    lines.push(`⌨ Low typed ratio: ${ratio}% (-${pen}pts)`);
+                } else if (ratio < 70) {
+                    const pen = 15;
+                    score -= pen;
+                    lines.push(`⌨ Typed ratio: ${ratio}% (-${pen}pts)`);
+                }
+            }
+
+            // 3. TAB SWITCHES — leaving the window mid-essay
+            if (s.tabSwitches >= 5) {
+                const pen = Math.min(s.tabSwitches * 4, 25);
+                score -= pen;
+                lines.push(`🔀 Tab switches: ${s.tabSwitches} (-${pen}pts)`);
+            } else if (s.tabSwitches >= 2) {
+                const pen = s.tabSwitches * 3;
+                score -= pen;
+                lines.push(`🔀 Tab switches: ${s.tabSwitches} (-${pen}pts)`);
+            }
+
+            // 4. EXCESSIVE DELETIONS relative to word count
+            //    A student editing naturally deletes ~10-20% of chars; > 60% is suspicious
+            if (words > 10 && s.deletions > 0) {
+                const delRatio = s.deletions / Math.max(s.keystrokes, 1);
+                if (delRatio > 0.6) {
+                    const pen = 10;
+                    score -= pen;
+                    lines.push(`⌫ High deletion rate: ${Math.round(delRatio*100)}% (-${pen}pts)`);
+                }
+            }
+
+            // 5. WRITING DURATION — flag very fast completion
+            //    < 30s for > 30 words is suspicious
+            if (words > 30 && s.writingDuration > 0 && s.writingDuration < 30) {
+                const pen = 15;
+                score -= pen;
+                lines.push(`⏱ Very fast completion: ${s.writingDuration}s (-${pen}pts)`);
+            }
+
+            score = Math.max(0, score);
+
+            // If all good, show positive note
+            if (lines.length === 0) {
+                lines.push('✅ No integrity flags detected.');
+            }
+
+            return { score, lines };
         }
 
         function _refreshStats() {
-            // Word count
             const words = textarea.value.trim().split(/\s+/).filter(w => w.length > 0).length;
             counter.textContent = words;
 
-            // Pull live data from EssayHandler internals (exposed via a new getter below)
             const h = window.EssayHandler;
             if (!h || typeof h.getLiveStats !== 'function') return;
             const s = h.getLiveStats();
 
-            _setChip('se-stat-keys',  `⌨ Keys: ${s.keystrokes}`);
-            _setChip('se-stat-del',   `⌫ Deletions: ${s.deletions}`,
-                                       s.deletions > 30 ? 'warn' : '');
-            _setChip('se-stat-paste', `📋 Pastes: ${s.pastes}`,
-                                       s.pastes >= 1 ? 'alert' : '');
-            _setChip('se-stat-tabs',  `🔀 Tab switches: ${s.tabSwitches}`,
-                                       s.tabSwitches >= 3 ? 'warn' : s.tabSwitches >= 5 ? 'alert' : '');
+            const { score, lines } = _calcIntegrity(s, words);
 
-            const ratio = s.totalChars > 0
-                ? Math.round((s.keystrokes / s.totalChars) * 100) : null;
-            _setChip('se-stat-ratio', ratio !== null ? `📊 Typed ratio: ${ratio}%` : `📊 Typed ratio: —`,
-                                      ratio !== null && ratio < 50 ? 'alert' : ratio !== null && ratio < 80 ? 'warn' : '');
+            // Update score badge
+            const scoreEl = document.getElementById('se-integrity-score');
+            const iconEl  = document.getElementById('se-integrity-icon');
+            if (scoreEl) {
+                scoreEl.textContent = score + '%';
+                if (score >= 85) {
+                    scoreEl.style.color = '#27ae60';
+                    if (iconEl) iconEl.textContent = '\u2705'; // ✅
+                } else if (score >= 60) {
+                    scoreEl.style.color = '#e67e22';
+                    if (iconEl) iconEl.textContent = '\u26A0\uFE0F'; // ⚠️
+                } else {
+                    scoreEl.style.color = '#e74c3c';
+                    if (iconEl) iconEl.textContent = '\u274C'; // ❌
+                }
+            }
 
-            const dur = s.writingDuration;
-            _setChip('se-stat-dur',   dur > 0 ? `⏱ Writing time: ${dur}s` : `⏱ Writing time: —`);
+            // Update tooltip lines
+            ['paste','ratio','tabs','del','dur'].forEach((k, i) => {
+                const el = document.getElementById('se-tip-' + k);
+                if (el) el.textContent = lines[i] || '';
+            });
+        }
+
+        // Tooltip show/hide on hover
+        const infoBtn  = workspace.querySelector('#se-info-btn');
+        const tooltip  = workspace.querySelector('#se-integrity-tooltip');
+        if (infoBtn && tooltip) {
+            infoBtn.addEventListener('mouseenter', () => { tooltip.style.display = 'block'; });
+            infoBtn.addEventListener('mouseleave', () => { tooltip.style.display = 'none';  });
         }
 
         textarea.addEventListener('input',   _refreshStats);
         textarea.addEventListener('keydown', _refreshStats);
         textarea.addEventListener('paste',   () => setTimeout(_refreshStats, 50));
-
-        // Poll tab-switch count every 2s (ActivityTracker updates it externally)
         setInterval(_refreshStats, 2000);
     }
 };
