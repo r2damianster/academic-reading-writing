@@ -630,12 +630,20 @@ body, html {
         flex-direction: column;
         width: min(320px, 82vw);
         left: var(--sidebar-width);
+        height: auto;
+        max-height: 92dvh;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
     .flyout-l, .flyout-r {
         width: 100%;
         min-width: 0;
         height: auto;
-        max-height: 45vh;
+        max-height: none;
+    }
+    .flyout-l-scroll, .flyout-r-scroll {
+        max-height: none;
+        overflow-y: visible;
     }
     .flyout-r { border-top: 0.5px solid rgba(255,255,255,0.1); }
 }

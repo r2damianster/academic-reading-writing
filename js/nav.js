@@ -13,7 +13,6 @@ const MENU = [
     path: 'modules/00-fundamentals/fundamentals-hub.html',
     description: 'Master paragraph rules, structures, and the <strong>PEER</strong> model.',
     children: [
-      { label: '0. Fundamentals Hub',           path: 'modules/00-fundamentals/fundamentals-hub.html' },
       { label: '1. Why Write?',                 path: 'modules/00-fundamentals/why-write.html' },
       { label: '2. The One-Point Rule',         path: 'modules/00-fundamentals/one-idea.html' },
       { label: '3. Topic Sentences',            path: 'modules/00-fundamentals/topic-sentences.html' },
