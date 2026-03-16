@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Academic Style | Academic Workspace</title>
+    
+    <link rel="stylesheet" href="../../css/modules.css">
+    
+    <script src="../../js/activity-tracker.js"></script>
+    <script src="../../js/essay-handler.js"></script>
+    <script src="../../js/report.js"></script>
+
+    <script src="../../js/slide-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <div class="slide active" data-type="VIDEO">
+        <h2>Introduction</h2>
+        <iframe data-se-src="https://docs.google.com/presentation/d/1cG1sVjhJqYC_KAsRpy06RbXG1gqRirRKaIx70-k7bgA/embed?start=false&loop=false&delayms=3000"
+                data-se-height="320"></iframe>
+        <p style="text-align: center; margin-top: 10px;">Follow the presentation as we discuss the core features.</p>
+    </div>
+
+    <div class="slide" data-type="CONTENT">
+        <h2>Identifying Your Audience</h2>
+        <p>Writing is always communicative. Every text has a <strong>sender</strong>, a <strong>message</strong>, and a <strong>receiver</strong>.</p>
+        <p>To deliver a successful argument, you must identify your target reader and understand what they already know about the topic.</p>
+    </div>
+
+    <div class="slide" data-type="QUIZ">
+        <h2>Quick Check</h2>
+        <p data-se-question>In an academic context, what is the primary nature of the 'message' being delivered?</p>
+        <div data-se-option>A. A collection of personal feelings</div>
+        <div data-se-option data-se-correct>B. A fact-based argument</div>
+        <div data-se-option>C. An informal update</div>
+    </div>
+
+    <div class="slide" data-type="CONTENT">
+        <h2>The Rule of Objectivity</h2>
+        <p>Academic writing must be objective. This means avoiding biased language and keeping your personal opinions separate from the evidence.</p>
+        <p>Your goal is to <strong>shed light on the topic</strong> through analysis, not to present a subjective statement.</p>
+    </div>
+
+    <div class="slide" data-type="CONTRAST">
+        <h2>Finding the Right Tone</h2>
+        <p data-se-intro>Compare these two ways of presenting a finding:</p>
+
+        <div data-se-correct data-se-label="Objective Approach">
+            "The evidence suggests that the policy had a measurable impact on inflation."
+        </div>
+        <div data-se-incorrect data-se-label="Subjective Approach">
+            "I feel that the policy was a complete disaster for everyone involved."
+        </div>
+    </div>
+
+    <div class="slide" data-type="CONTENT">
+        <h2>Register and Style</h2>
+        <p>Academic writing follows a strict <strong>formal register</strong>. Using the wrong style is often compared to wearing inappropriate clothing for a formal event.</p>
+        <p>What is effective in a text message or a blog post is usually not suitable for a university essay or a research paper.</p>
+    </div>
+
+    <div class="slide" data-type="QUIZ">
+        <h2>Adaptability</h2>
+        <p data-se-question>How should a student determine the appropriate 'dress code' (style) for their writing?</p>
+        <div data-se-option>A. By using the most complex words possible.</div>
+        <div data-se-option data-se-correct>B. By studying texts and journals within their specific discipline.</div>
+        <div data-se-option>C. By following the same style for every subject.</div>
+    </div>
+
+    <div class="slide" data-type="CONTRAST">
+        <h2>Disciplinary Variation</h2>
+        <p data-se-intro>While the basics of clarity remain, structures vary by field:</p>
+
+        <div data-se-correct data-se-label="Correct Understanding">
+            An article in Physics may use different referencing than one in History.
+        </div>
+        <div data-se-incorrect data-se-label="Common Mistake">
+            Assuming that 'Academic Writing' is identical for all departments.
+        </div>
+    </div>
+
+    <div class="slide" data-type="QUIZ">
+        <h2>Final Review</h2>
+        <p data-se-question>Which of the following is essential for successful university-level writing?</p>
+        <div data-se-option>A. Including as much personal bias as possible.</div>
+        <div data-se-option>B. Ignoring the specific conventions of the discipline.</div>
+        <div data-se-option data-se-correct>C. Maintaining an objective and formal tone.</div>
+    </div>
+
+    <div class="slide" id="preEssaySlide"
+         data-type="ESSAY" data-se-role="warning"
+         data-se-lesson="academic style">
+        <h2>Reflective Writing</h2>
+        <p data-se-warning>
+            Now that we have discussed the theory, let's take a moment for reflection. 
+            This task will help you connect the concepts to your personal academic journey.
+        </p>
+    </div>
+
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="academic style">
+        <p data-se-prompt>
+            Besides completing this course, why are you interested in improving your academic writing? 
+            What personal or professional goals do you hope to achieve with better writing skills?
+        </p>
+    </div>
+
+</div>
+
+<script>
+    window.onload = () => {
+        SlideEngine.init('academic style');
+        ActivityTracker.init('academic style');
+    };
+</script>
+
+</body>
+</html>

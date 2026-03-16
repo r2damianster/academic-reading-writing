@@ -14,17 +14,18 @@ const MENU = [
     description: 'Master paragraph rules, structures, and the <strong>PEER</strong> model.',
     children: [
       { label: '0. Fundamentals Hub',           path: 'modules/00-fundamentals/fundamentals-hub.html' },
-      { label: '1. The One-Point Rule',         path: 'modules/00-fundamentals/one-idea.html' },
-      { label: '2. Topic Sentences',            path: 'modules/00-fundamentals/topic-sentences.html' },
-      { label: '3. Supporting Sentences',       path: 'modules/00-fundamentals/supporting-sentences.html' },
-      { label: '4. PEER model',                 path: 'modules/00-fundamentals/peer.html' },
-      { label: '5. Paragraph Review',           path: 'modules/00-fundamentals/paragraph-review.html' },
-      { label: '6. Organizational Patterns',    path: 'modules/00-fundamentals/organizational-patterns.html' },
-      { label: '7. Body Paragraphs',            path: 'modules/00-fundamentals/body-paragraphs.html' },
-      { label: '8. Conclusion Paragraphs',      path: 'modules/00-fundamentals/conclusion-paragraphs.html' },
-      { label: '9. From Paragraphs to Essay',   path: 'modules/00-fundamentals/paragraphs-to-essay.html' },
-      { label: '10. Introduction Strategies',   path: 'modules/00-fundamentals/introduction-strategies.html' },
-      { label: '11. Integrating Visuals',       path: 'modules/00-fundamentals/integrating-visuals.html' }
+      { label: '1. Why Write?',                 path: 'modules/00-fundamentals/why-write.html' },
+      { label: '2. The One-Point Rule',         path: 'modules/00-fundamentals/one-idea.html' },
+      { label: '3. Topic Sentences',            path: 'modules/00-fundamentals/topic-sentences.html' },
+      { label: '4. Supporting Sentences',       path: 'modules/00-fundamentals/supporting-sentences.html' },
+      { label: '5. PEER model',                 path: 'modules/00-fundamentals/peer.html' },
+      { label: '6. Paragraph Review',           path: 'modules/00-fundamentals/paragraph-review.html' },
+      { label: '7. Organizational Patterns',    path: 'modules/00-fundamentals/organizational-patterns.html' },
+      { label: '8. Body Paragraphs',            path: 'modules/00-fundamentals/body-paragraphs.html' },
+      { label: '9. Conclusion Paragraphs',      path: 'modules/00-fundamentals/conclusion-paragraphs.html' },
+      { label: '10. From Paragraphs to Essay',  path: 'modules/00-fundamentals/paragraphs-to-essay.html' },
+      { label: '11. Introduction Strategies',   path: 'modules/00-fundamentals/introduction-strategies.html' },
+      { label: '12. Integrating Visuals',       path: 'modules/00-fundamentals/integrating-visuals.html' }
     ]
   },
   {

@@ -775,27 +775,57 @@ SlideTypes.ESSAY = {
                                'border:1px solid #dee2e6;';
         panel.innerHTML = `
             ${warningText ? `<p>${warningText}</p>` : ''}
-            <div style="background:#fff; padding:10px; border-radius:5px; font-size:0.85rem;
-                         color:#555; border-left:4px solid #007bff; margin:15px 0;">
-                <strong>Research Tracking Active:</strong> This exercise records integrity data.
+            <div style="border-left:4px solid #c0392b; background:#fff; border-radius:0 8px 8px 0;
+                        padding:14px 16px; margin:15px 0; border-top:0.5px solid #e0e0e0;
+                        border-right:0.5px solid #e0e0e0; border-bottom:0.5px solid #e0e0e0;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0">
+                        <path d="M8 1.5L14.5 13H1.5L8 1.5Z" stroke="#c0392b" stroke-width="1.5" stroke-linejoin="round"/>
+                        <line x1="8" y1="6" x2="8" y2="9.5" stroke="#c0392b" stroke-width="1.5" stroke-linecap="round"/>
+                        <circle cx="8" cy="11.5" r="0.75" fill="#c0392b"/>
+                    </svg>
+                    <span style="font-size:13px; font-weight:600; color:#c0392b; letter-spacing:0.02em;">
+                        Academic Integrity — Active Monitoring
+                    </span>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:6px; font-size:12.5px; color:#555;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="color:#27ae60; font-size:14px;">✓</span>
+                        <span>Work <strong>entirely in your own words</strong>, without external help.</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="color:#c0392b; font-size:14px;">✕</span>
+                        <span><strong>Do not copy</strong> text from any source — paste detection is enabled.</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="color:#c0392b; font-size:14px;">✕</span>
+                        <span><strong>Do not switch tabs</strong> or leave this window — tab-switching is logged.</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="color:#c0392b; font-size:14px;">✕</span>
+                        <span><strong>Do not use AI tools</strong> or external dictionaries during this exercise.</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="color:#27ae60; font-size:14px;">✓</span>
+                        <span>Your <strong>integrity score affects your final grade</strong> — 100% is achievable.</span>
+                    </div>
+                </div>
             </div>
             <div style="display:flex; gap:10px;">
                 <button class="btn-start-essay"
                         style="flex:2; display:block; padding:12px; background:#2c3e50; color:white;
-                               border:none; border-radius:8px; cursor:pointer;
-                               font-size:1rem; font-weight:600;">
+                            border:none; border-radius:8px; cursor:pointer;
+                            font-size:1rem; font-weight:600;">
                     Understand &amp; Start Essay →
                 </button>
                 <button class="btn-skip-essay"
                         style="flex:1; background:#6c757d; color:white; border:none;
-                               border-radius:5px; cursor:pointer; padding:10px;
-                               font-size:0.95rem;">
+                            border-radius:5px; cursor:pointer; padding:10px;
+                            font-size:0.95rem;">
                     Skip Writing
                 </button>
             </div>`;
 
-        // ── Botón principal: navegar al essay + iniciar EssayHandler ──────────
-        // Se usa addEventListener para evitar la fragilidad de onclick con múltiples sentencias
         panel.querySelector('.btn-start-essay').addEventListener('click', () => {
             SlideEngine.goTo('essaySlide');
             if (window.EssayHandler) EssayHandler.init(lessonName);
