@@ -271,6 +271,7 @@ const SlideEngine = (function () {
             timeToFirstKey:   String(a.timeToFirstKey  || '0'),
             writingDuration:  String(a.writingDuration || '0'),
             charsTypedRatio:  String(a.charsTypedRatio || '0'),
+            integrityScore:   String(a.integrityScore  != null ? a.integrityScore : ''),
             essay:            essay || '',
             isEssayUpdate:    'No'
         };
@@ -291,6 +292,7 @@ const SlideEngine = (function () {
             timeToFirstKey:  String(a.timeToFirstKey  || '0'),
             writingDuration: String(a.writingDuration || '0'),
             charsTypedRatio: String(a.charsTypedRatio || '0'),
+            integrityScore:  String(a.integrityScore  != null ? a.integrityScore : ''),
             essay:           String(essay || ''),
             isEssayUpdate:   'Yes'
         };
@@ -889,29 +891,23 @@ SlideTypes.ESSAY = {
             let score = 100;
             const lines = [];
 
-            // 1. PASTE PENALTY — heavy: each paste deducts 25pts (max -50)
-            if (s.pastes > 0) {
-                const pen = Math.min(s.pastes * 25, 50);
+            // 1. PASTE: severity depends on how much was actually pasted
+            if (s.pastes > 0 && s.totalChars > 30) {
+                const ratio     = Math.round((s.keystrokes / s.totalChars) * 100);
+                const pastedPct = Math.max(0, 100 - ratio);
+                let pen = 0;
+                if      (pastedPct >= 60) pen = 50;
+                else if (pastedPct >= 30) pen = 25;
+                else if (pastedPct >= 10) pen = 10;
+                else                      pen = 5;
                 score -= pen;
-                lines.push(`📋 Pastes detected: ${s.pastes} (-${pen}pts)`);
+                lines.push(`📋 Paste detected (~${pastedPct}% pasted) (-${pen}pts)`);
+            } else if (s.pastes > 0) {
+                score -= 20;
+                lines.push(`📋 Paste detected (short text) (-20pts)`);
             }
 
-            // 2. TYPED RATIO — checks if chars were actually typed
-            //    Only applied once there are enough chars to be meaningful (>30)
-            if (s.totalChars > 30) {
-                const ratio = Math.round((s.keystrokes / s.totalChars) * 100);
-                if (ratio < 40) {
-                    const pen = 30;
-                    score -= pen;
-                    lines.push(`⌨ Low typed ratio: ${ratio}% (-${pen}pts)`);
-                } else if (ratio < 70) {
-                    const pen = 15;
-                    score -= pen;
-                    lines.push(`⌨ Typed ratio: ${ratio}% (-${pen}pts)`);
-                }
-            }
-
-            // 3. TAB SWITCHES — leaving the window mid-essay
+            // 2. TAB SWITCHES
             if (s.tabSwitches >= 5) {
                 const pen = Math.min(s.tabSwitches * 4, 25);
                 score -= pen;
@@ -922,8 +918,7 @@ SlideTypes.ESSAY = {
                 lines.push(`🔀 Tab switches: ${s.tabSwitches} (-${pen}pts)`);
             }
 
-            // 4. EXCESSIVE DELETIONS relative to word count
-            //    A student editing naturally deletes ~10-20% of chars; > 60% is suspicious
+            // 3. EXCESSIVE DELETIONS
             if (words > 10 && s.deletions > 0) {
                 const delRatio = s.deletions / Math.max(s.keystrokes, 1);
                 if (delRatio > 0.6) {
@@ -933,9 +928,8 @@ SlideTypes.ESSAY = {
                 }
             }
 
-            // 5. WRITING DURATION — flag very fast completion
-            //    < 30s for > 30 words is suspicious
-            if (words > 30 && s.writingDuration > 0 && s.writingDuration < 30) {
+            // 4. FAST COMPLETION — only when no paste explains the speed
+            if (s.pastes === 0 && words > 30 && s.writingDuration > 0 && s.writingDuration < 30) {
                 const pen = 15;
                 score -= pen;
                 lines.push(`⏱ Very fast completion: ${s.writingDuration}s (-${pen}pts)`);

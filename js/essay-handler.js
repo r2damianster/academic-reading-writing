@@ -96,6 +96,37 @@ window.EssayHandler = (function () {
         console.log("✍️ EssayHandler initialized for:", _lessonName);
     }
 
+    // Mirrors the same logic as _calcIntegrity in slide-engine.js.
+    // Kept here so the final audit is self-contained at submit time.
+    function _calcIntegrityScore(pastes, keystrokes, totalChars, tabSwitches, deletions, writingDuration, words) {
+        let score = 100;
+
+        // PASTE: severity depends on how much text was actually pasted (inverse of typed ratio)
+        // A paste of a short quote with ratio=94% is very different from dumping a full essay
+        if (pastes > 0 && totalChars > 30) {
+            const ratio     = Math.round((keystrokes / totalChars) * 100);
+            const pastedPct = Math.max(0, 100 - ratio);
+            if      (pastedPct >= 60) score -= 50;
+            else if (pastedPct >= 30) score -= 25;
+            else if (pastedPct >= 10) score -= 10;
+            else                      score -= 5;   // paste detected but typed almost everything
+        } else if (pastes > 0) {
+            score -= 20; // not enough chars to judge — conservative
+        }
+
+        if (tabSwitches >= 5)        score -= Math.min(tabSwitches * 4, 25);
+        else if (tabSwitches >= 2)   score -= tabSwitches * 3;
+
+        if (words > 10 && deletions > 0) {
+            const delRatio = deletions / Math.max(keystrokes, 1);
+            if (delRatio > 0.6)      score -= 10;
+        }
+        // Fast completion only flags genuine speed — not when paste explains it
+        if (pastes === 0 && words > 30 && writingDuration > 0 && writingDuration < 30) score -= 15;
+
+        return Math.max(0, score);
+    }
+
     function submit() {
         try {
             const textarea   = document.getElementById(_textareaId);
@@ -120,17 +151,24 @@ window.EssayHandler = (function () {
                 ? Math.round((_totalKeys / totalChars) * 100)
                 : 0;
 
+            const tabSwitches = activityAudit.tabSwitches || 0;
+
+            const integrityScore = _calcIntegrityScore(
+                _pastesMade, _totalKeys, totalChars,
+                tabSwitches, _deletions, writingDuration, words
+            );
+
             // 2. CONSTRUIR EL AUDIT — nombres canónicos usados en TODO el sistema
-            // ✅ Alineado con: ui-tools.js, report.js y Apps Script
             const fullAudit = {
                 words:           words,
                 pastes:          _pastesMade,
-                tabSwitches:     activityAudit.tabSwitches || 0,
-                keystrokes:      _totalKeys,        // canónico: "keystrokes"
+                tabSwitches:     tabSwitches,
+                keystrokes:      _totalKeys,
                 deletions:       _deletions,
-                timeToFirstKey:  timeToFirstKey,    // canónico: "timeToFirstKey"
-                writingDuration: writingDuration,   // canónico: "writingDuration"
-                charsTypedRatio: charsTypedRatio
+                timeToFirstKey:  timeToFirstKey,
+                writingDuration: writingDuration,
+                charsTypedRatio: charsTypedRatio,
+                integrityScore:  integrityScore      // ← nuevo campo canónico
             };
 
             console.log("🚀 Enviando auditoría completa:", fullAudit);

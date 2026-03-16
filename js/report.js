@@ -58,22 +58,70 @@ async function generateReport() {
         const audit = item.audit || null;
         if (audit && (audit.words > 0 || audit.keystrokes > 0)) {
             if (y > 260) { doc.addPage(); y = 20; }
-            doc.setFillColor(245, 245, 245);
-            doc.roundedRect(18, y - 4, 175, 22, 2, 2, 'F');
-            doc.setTextColor(50);
+
+            // Calculate integrity score on the fly if not stored (backwards compat)
+            function _calcScore(a) {
+                let s = 100;
+                const pastes = a.pastes    || 0;
+                const keys   = a.keystrokes || 0;
+                const ratio  = a.charsTypedRatio != null ? a.charsTypedRatio : null;
+                const tabs   = a.tabSwitches || 0;
+                const dels   = a.deletions  || 0;
+                const dur    = a.writingDuration || 0;
+                const words  = a.words      || 0;
+
+                if (pastes > 0 && ratio !== null) {
+                    const pastedPct = Math.max(0, 100 - ratio);
+                    if      (pastedPct >= 60) s -= 50;
+                    else if (pastedPct >= 30) s -= 25;
+                    else if (pastedPct >= 10) s -= 10;
+                    else                      s -= 5;
+                } else if (pastes > 0) {
+                    s -= 20;
+                }
+                if (tabs >= 5)           s -= Math.min(tabs * 4, 25);
+                else if (tabs >= 2)      s -= tabs * 3;
+                if (words > 10 && dels > 0) {
+                    const delRatio = dels / Math.max(keys, 1);
+                    if (delRatio > 0.6)  s -= 10;
+                }
+                if (pastes === 0 && words > 30 && dur > 0 && dur < 30) s -= 15;
+                return Math.max(0, s);
+            }
+
+            const stored = audit.integrityScore;
+            const iScore = (stored != null && !isNaN(Number(stored)))
+                ? Number(stored)
+                : _calcScore(audit);
+            const hasScore = true;
+            const bandColor = hasScore
+                ? (iScore >= 85 ? [39, 174, 96] : iScore >= 60 ? [230, 126, 34] : [231, 76, 60])
+                : [149, 165, 166];
+
+            doc.setFillColor(...bandColor);
+            doc.roundedRect(18, y - 4, 175, hasScore ? 30 : 22, 2, 2, 'F');
+            doc.setTextColor(255, 255, 255);
             doc.setFontSize(8);
             doc.setFont("helvetica", "bold");
-            doc.text("INTEGRITY ANALYSIS", 23, y + 2);
+
+            if (hasScore) {
+                const label = iScore >= 85 ? 'GOOD' : iScore >= 60 ? 'MODERATE' : 'LOW';
+                doc.text(`INTEGRITY ANALYSIS   |   Score: ${iScore}%  [${label}]`, 23, y + 2);
+            } else {
+                doc.text("INTEGRITY ANALYSIS", 23, y + 2);
+            }
+
             doc.setFont("helvetica", "normal");
-
             const row1 = `Words: ${audit.words || 0}  |  Pastes: ${audit.pastes || 0}  |  Tabs: ${audit.tabSwitches || 0}  |  Keys: ${audit.keystrokes || 0}  |  Dels: ${audit.deletions || 0}`;
-            doc.text(row1, 23, y + 8);
+            doc.text(row1, 23, y + 9);
 
-            const t1 = audit.timeToFirstKey  ? `${audit.timeToFirstKey}s`  : "—";
-            const tD = audit.writingDuration ? `${audit.writingDuration}s` : "—";
-            const rA = audit.charsTypedRatio ? `${audit.charsTypedRatio}%` : "—";
-            doc.text(`Time to first: ${t1}  |  Duration: ${tD}  |  Typed ratio: ${rA}`, 23, y + 14);
-            y += 28;
+            const t1 = audit.timeToFirstKey  != null ? `${audit.timeToFirstKey}s`  : "—";
+            const tD = audit.writingDuration != null ? `${audit.writingDuration}s` : "—";
+            const rA = audit.charsTypedRatio != null ? `${audit.charsTypedRatio}%` : "—";
+            doc.text(`Time to first: ${t1}  |  Duration: ${tD}  |  Typed ratio: ${rA}`, 23, y + 16);
+
+            doc.setTextColor(0);
+            y += hasScore ? 36 : 28;
         }
 
         // Texto del ensayo
