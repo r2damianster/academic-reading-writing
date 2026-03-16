@@ -32,7 +32,7 @@ body, html {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100vh;
+    height: 100dvh; 
     box-sizing: border-box;
     box-shadow: 2px 0 12px rgba(0,0,0,0.18);
     z-index: 2001;
@@ -150,22 +150,32 @@ body, html {
     font-weight: normal !important;
     margin: 0 !important;
 }
-.sidebar-footer .btn-report:hover { background: rgba(52,152,219,0.45) !important; }
-
-/* "Not you?" reset button */
-.sidebar-footer button[onclick*="resetApp"] {
-    background: none !important;
-    border: none !important;
-    color: rgba(255,255,255,0.2) !important;
-    font-size: 8px !important;
-    cursor: pointer;
-    text-decoration: underline;
-    text-align: center;
-    padding: 0 !important;
-    width: auto !important;
-    margin: 0 !important;
+.sidebar-footer .btn-report:hover { 
+    background: rgba(52,152,219,0.45) !important; 
 }
-.sidebar-footer button[onclick*="resetApp"]:hover { color: rgba(255,255,255,0.5) !important; }
+
+/* "Not you?" reset button - Mejorado para visibilidad y clic en móviles */
+.sidebar-footer button[onclick*="resetApp"] {
+    background: rgba(255, 255, 255, 0.08) !important; /* Fondo sutil tipo botón */
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: rgba(255, 255, 255, 0.7) !important; /* Texto más claro */
+    font-size: 10px !important;
+    cursor: pointer;
+    text-decoration: none !important; /* Más limpio sin subrayado */
+    text-align: center;
+    padding: 8px 12px !important; /* Área de toque más amplia para el dedo */
+    width: 85% !important; /* Se ajusta mejor al ancho del sidebar */
+    margin: 8px 0 !important;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: block;
+}
+
+.sidebar-footer button[onclick*="resetApp"]:hover { 
+    background: rgba(231, 76, 60, 0.2) !important; /* Rojo sutil al pasar el mouse */
+    color: #ffcccc !important; 
+    border-color: rgba(231, 76, 60, 0.3) !important;
+}
 
 /* Ethics link inside footer */
 .sidebar-footer a {
