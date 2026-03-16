@@ -98,19 +98,19 @@
             <ul class="nav-menu" id="navMenu"></ul>
             <div class="sidebar-footer">
                 <!-- Search -->
-                <button class="sf-btn" onclick="openSearch()" title="Search lessons">
+                <button class="sf-btn" onclick="closeFlyout(); openSearch()" title="Search lessons">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
                 </button>
                 <!-- Ethics & Privacy -->
-                <button class="sf-btn" onclick="loadPage('modules/ethics-and-data.html')" title="Ethics & Privacy Policy">
+                <button class="sf-btn" onclick="closeFlyout(); loadPage('modules/ethics-and-data.html')" title="Ethics & Privacy Policy">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </button>
                 <!-- Download report -->
-                <button class="sf-btn sf-btn--accent" onclick="generateReport()" title="Download & Send Progress">
+                <button class="sf-btn sf-btn--accent" onclick="closeFlyout(); generateReport()" title="Download & Send Progress">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 </button>
                 <!-- Logout -->
-                <button onclick="resetApp()" class="sf-btn sf-btn--ghost" title="Not you? Logout">
+                <button onclick="closeFlyout(); resetApp()" class="sf-btn sf-btn--ghost" title="Not you? Logout">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                 </button>
             </div>
