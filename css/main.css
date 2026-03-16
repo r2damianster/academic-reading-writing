@@ -465,8 +465,11 @@ body, html {
     overflow-y: auto;
     overflow-x: hidden;
     padding: 6px 0 16px;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,0.12) transparent;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+.flyout-l-scroll::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
 }
 
 /* Hub button (opens the section overview) */
@@ -579,15 +582,18 @@ body, html {
     overflow-y: auto;
     overflow-x: hidden;
     padding: 6px 0 16px;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,0.1) transparent;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+.flyout-r-scroll::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
 }
 
 /* Sub-hub link (e.g. "Unit 1 Essays hub") */
 .fr-hub {
     display: block;
     width: calc(100% - 16px);
-    margin: 4px 8px 6px;
+    margin: 4px 8px 10px;
     padding: 7px 10px;
     background: rgba(52,152,219,0.15);
     border: 0.5px solid rgba(52,152,219,0.3);
@@ -606,7 +612,7 @@ body, html {
 .fr-leaf {
     display: block;
     width: 100%;
-    padding: 7px 14px;
+    padding: 6px 14px;
     background: none;
     border: none;
     color: rgba(255,255,255,0.58);
