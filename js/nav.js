@@ -7,15 +7,17 @@ const MENU = [
     label: 'Main',
     path: 'welcome-content.html'
   },
+  // ... dentro de MENU en nav.js
   {
     label: '00. Fundamentals',
     path: 'modules/00-fundamentals/fundamentals-hub.html',
     description: 'Master paragraph rules, structures, and the <strong>PEER</strong> model.',
     children: [
+      { label: '0. Fundamentals Hub',           path: 'modules/00-fundamentals/fundamentals-hub.html' },
       { label: '1. The One-Point Rule',         path: 'modules/00-fundamentals/one-idea.html' },
       { label: '2. Topic Sentences',            path: 'modules/00-fundamentals/topic-sentences.html' },
-      { label: '3. PEER',                        path: 'modules/00-fundamentals/peer.html' },
-      { label: '4. Supporting Sentences',       path: 'modules/00-fundamentals/supporting-sentences.html' },
+      { label: '3. Supporting Sentences',       path: 'modules/00-fundamentals/supporting-sentences.html' },
+      { label: '4. PEER model',                 path: 'modules/00-fundamentals/peer.html' },
       { label: '5. Paragraph Review',           path: 'modules/00-fundamentals/paragraph-review.html' },
       { label: '6. Organizational Patterns',    path: 'modules/00-fundamentals/organizational-patterns.html' },
       { label: '7. Body Paragraphs',            path: 'modules/00-fundamentals/body-paragraphs.html' },
