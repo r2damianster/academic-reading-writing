@@ -85,6 +85,7 @@ const SlideEngine = (function () {
         });
 
         _updateProgress();
+        _flushRetryQueue();
         console.log(`✅ SlideEngine iniciado: "${lessonName}" — ${_slides.length} slides`);
     }
 
@@ -243,71 +244,156 @@ const SlideEngine = (function () {
 
 
     /* ===========================================================================
-       SECCIÓN 2 — SHEET: Envío de datos a Google Sheets
-       Dos funciones: una para lección completa, otra solo para actualizar essay.
+       SECCIÓN 2 — SUPABASE: Envío de datos a activity_logs y essay_submissions
+       Reemplaza Google Sheets. Dos tablas separadas, vinculadas por student_id.
+
+       CONFIGURACIÓN:
+         Reemplaza SUPABASE_URL y SUPABASE_ANON_KEY con los valores de tu proyecto.
+         Encuéntralos en: Supabase Dashboard → Settings → API
        =========================================================================== */
 
-    const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwkGu5Guzmy7tEVR4YJ8hSrFgUe69tUsyzGthPzWivMxEpe6tFezWb60D_oWt0cAH14/exec';
+    const SUPABASE_URL      = 'https://kuvyvyzmpfbndpkzbosb.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1dnl2eXptcGZibmRwa3pib3NiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0NDEwMzksImV4cCI6MjA4OTAxNzAzOX0.E9ftrQR0DojGLRUkMj4w2LUBWFnumK6lRr5M1WXiRNc';
 
-    function _sendLessonToSheet(lessonName, lessonEntry, audit, essay) {
-        const a = audit || {};
-        const payload = {
-            timestamp:        new Date().toLocaleString(),
-            name:             localStorage.getItem('studentName')            || '',
-            email:            localStorage.getItem('studentEmail')           || '',
-            course:           localStorage.getItem('studentCourse')          || '',
-            role:             localStorage.getItem('studentMajor')           || '',
-            institution:      localStorage.getItem('studentInstitution')     || '',
-            practiceType:     localStorage.getItem('studentPracticeType')    || '',
-            dataConsent:      localStorage.getItem('studentAcademicConsent') || 'Yes',
-            researchConsent:  localStorage.getItem('studentResearchConsent') || 'Yes',
-            activity:         String(lessonEntry.module || lessonName),
-            result:           String(lessonEntry.result || ''),
-            words:            String(a.words           || '0'),
-            pastes:           String(a.pastes          || '0'),
-            tabSwitches:      String(a.tabSwitches     || '0'),
-            keystrokes:       String(a.keystrokes      || '0'),
-            deletions:        String(a.deletions       || '0'),
-            timeToFirstKey:   String(a.timeToFirstKey  || '0'),
-            writingDuration:  String(a.writingDuration || '0'),
-            charsTypedRatio:  String(a.charsTypedRatio || '0'),
-            integrityScore:   String(a.integrityScore  != null ? a.integrityScore : ''),
-            essay:            essay || '',
-            isEssayUpdate:    'No'
-        };
-        _beacon(payload, `LESSON "${lessonName}"`);
-    }
+    // ── Resolución de student_id ─────────────────────────────────────────────────
+    // Busca el UUID del estudiante en la tabla students usando su email.
+    // El resultado se cachea en localStorage para no repetir la consulta.
+    async function _resolveStudentId() {
+        const cached = localStorage.getItem('studentId');
+        if (cached) return cached;
 
-    function _sendEssayToSheet(lessonName, essay, audit) {
-        const a = audit || {};
-        const payload = {
-            timestamp:       new Date().toLocaleString(),
-            email:           localStorage.getItem('studentEmail') || '',
-            activity:        String(lessonName),
-            words:           String(a.words           || '0'),
-            pastes:          String(a.pastes          || '0'),
-            tabSwitches:     String(a.tabSwitches     || '0'),
-            keystrokes:      String(a.keystrokes      || '0'),
-            deletions:       String(a.deletions       || '0'),
-            timeToFirstKey:  String(a.timeToFirstKey  || '0'),
-            writingDuration: String(a.writingDuration || '0'),
-            charsTypedRatio: String(a.charsTypedRatio || '0'),
-            integrityScore:  String(a.integrityScore  != null ? a.integrityScore : ''),
-            essay:           String(essay || ''),
-            isEssayUpdate:   'Yes'
-        };
-        _beacon(payload, `ESSAY "${lessonName}"`);
-    }
+        const email = localStorage.getItem('studentEmail') || '';
+        if (!email) return null;
 
-    function _beacon(payload, label) {
-        const params = new URLSearchParams();
-        for (const key in payload) params.append(key, payload[key]);
-        const sent = navigator.sendBeacon(SHEET_URL, params);
-        console.log(`📡 sendBeacon ${label}:`, sent ? 'encolado ✅' : 'falló ❌');
-        if (!sent) {
-            fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', body: params })
-                .catch(err => console.error('Fetch fallback falló:', err));
+        try {
+            const res = await fetch(
+                `${SUPABASE_URL}/rest/v1/students?email=eq.${encodeURIComponent(email)}&select=id&limit=1`,
+                { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+            );
+            const rows = await res.json();
+            if (rows && rows.length > 0) {
+                localStorage.setItem('studentId', rows[0].id);
+                return rows[0].id;
+            }
+        } catch (e) {
+            console.error('❌ _resolveStudentId falló:', e);
         }
+        return null;
+    }
+
+    // ── Registro de actividad — solo quiz ────────────────────────────────────────
+    // activity_logs registra ÚNICAMENTE el resultado del quiz (score, errores).
+    // Las métricas de escritura van exclusivamente en essay_submissions.
+    // Si la lección tiene quiz + essay, se generan dos filas en tablas separadas.
+    async function _sendLessonToSheet(lessonName, lessonEntry, audit, essay) {
+        const studentId = await _resolveStudentId();
+
+        const record = {
+            student_id: studentId,
+            activity:   String(lessonEntry.module || lessonName),
+            result:     String(lessonEntry.result || '')
+        };
+
+        _insertToSupabase('activity_logs', record, `LESSON "${lessonName}"`);
+
+        // Si hay essay asociado, registrarlo de forma independiente
+        if (essay && essay.trim().length > 5) {
+            _sendEssayToSheet(lessonName, essay, audit, studentId);
+        }
+    }
+
+    // ── Registro de ensayo ───────────────────────────────────────────────────────
+    // Escribe en la tabla: essay_submissions — solo student_id, sin datos de perfil.
+    async function _sendEssayToSheet(lessonName, essay, audit, studentId) {
+        const a  = audit || {};
+        const id = studentId || await _resolveStudentId();
+
+        const record = {
+            student_id:        id,
+            activity:          String(lessonName),
+            essay_text:        String(essay || ''),
+            words:             a.words           != null ? Number(a.words)           : null,
+            pastes:            a.pastes          != null ? Number(a.pastes)          : null,
+            tab_switches:      a.tabSwitches     != null ? Number(a.tabSwitches)     : null,
+            keystrokes:        a.keystrokes      != null ? Number(a.keystrokes)      : null,
+            deletions:         a.deletions       != null ? Number(a.deletions)       : null,
+            time_to_first_key: a.timeToFirstKey  != null ? Number(a.timeToFirstKey)  : null,
+            writing_duration:  a.writingDuration != null ? Number(a.writingDuration) : null,
+            chars_typed_ratio: a.charsTypedRatio != null ? Number(a.charsTypedRatio) : null,
+            integrity_score:   a.integrityScore  != null ? Number(a.integrityScore)  : null,
+            is_update:         false
+        };
+
+        _insertToSupabase('essay_submissions', record, `ESSAY "${lessonName}"`);
+    }
+
+    // ── Insert genérico ──────────────────────────────────────────────────────────
+    // fetch con credentials:'omit' — evita el error CORS de Supabase con wildcard.
+    // sendBeacon fuerza credentials:'include' y es rechazado; no se usa.
+    function _insertToSupabase(table, record, label) {
+        const url  = `${SUPABASE_URL}/rest/v1/${table}`;
+        const headers = {
+            'Content-Type':  'application/json',
+            'apikey':         SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Prefer':        'return=minimal'
+        };
+
+        fetch(url, { method: 'POST', headers, body: JSON.stringify(record), credentials: 'omit' })
+            .then(r => {
+                if (r.ok) {
+                    console.log(`📡 Supabase → ${label} ✅`);
+                } else {
+                    r.text().then(t => console.error(`❌ Supabase ${table} [${r.status}]:`, t));
+                    _queueFailedRecord(table, record, label);
+                }
+            })
+            .catch(e => {
+                console.error(`❌ Supabase → ${label} falló:`, e);
+                _queueFailedRecord(table, record, label);
+            });
+    }
+
+    // ── Cola de reintentos offline ───────────────────────────────────────────────
+    // Si el fetch también falla (sin conexión), guarda el registro en localStorage.
+    // Al próximo init() del engine, intenta reenviar la cola.
+    function _queueFailedRecord(table, record, label) {
+        const key   = 'supabase_retry_queue';
+        const queue = JSON.parse(localStorage.getItem(key)) || [];
+        queue.push({ table, record, label, queuedAt: new Date().toISOString() });
+        localStorage.setItem(key, JSON.stringify(queue));
+        console.warn(`⚠️ ${label} guardado en cola de reintentos (sin conexión).`);
+    }
+
+    async function _flushRetryQueue() {
+        const key   = 'supabase_retry_queue';
+        const queue = JSON.parse(localStorage.getItem(key)) || [];
+        if (queue.length === 0) return;
+
+        console.log(`🔄 Reintentando ${queue.length} registros pendientes...`);
+        const remaining = [];
+
+        for (const item of queue) {
+            try {
+                const r = await fetch(`${SUPABASE_URL}/rest/v1/${item.table}`, {
+                    method:  'POST',
+                    headers: {
+                        'Content-Type':  'application/json',
+                        'apikey':         SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Prefer':        'return=minimal'
+                    },
+                    body: JSON.stringify(item.record)
+                });
+                if (r.ok) console.log(`✅ Reintento exitoso: ${item.label}`);
+                else remaining.push(item);
+            } catch (_) {
+                remaining.push(item);
+            }
+        }
+
+        localStorage.setItem(key, JSON.stringify(remaining));
+        if (remaining.length === 0) console.log('✅ Cola de reintentos vacía.');
     }
 
     // API pública del engine
