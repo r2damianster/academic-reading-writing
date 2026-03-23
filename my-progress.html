@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Progress</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: #f4f6f9;
+    color: #2c3e50;
+    padding: 28px 24px 48px;
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .header-left h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a2535;
+    letter-spacing: -0.02em;
+  }
+  .header-left p {
+    font-size: 0.83rem;
+    color: #7f8c8d;
+    margin-top: 4px;
+    font-family: 'Arial', sans-serif;
+  }
+  .btn-refresh {
+    padding: 8px 18px;
+    background: #2c3e50;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: 'Arial', sans-serif;
+  }
+  .btn-refresh:hover { background: #1a252f; }
+
+  /* ── Summary cards ── */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px 14px;
+    text-align: center;
+    border: 1px solid #e8ecf0;
+  }
+  .card-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .card-value.green  { color: #27ae60; }
+  .card-value.amber  { color: #e67e22; }
+  .card-value.blue   { color: #2980b9; }
+  .card-value.red    { color: #e74c3c; }
+  .card-label {
+    font-size: 0.72rem;
+    color: #95a5a6;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    font-family: 'Arial', sans-serif;
+  }
+
+  /* ── Progress bar global ── */
+  .global-progress {
+    background: #fff;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 28px;
+    border: 1px solid #e8ecf0;
+  }
+  .gp-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-family: 'Arial', sans-serif;
+    font-size: 0.82rem;
+    color: #555;
+  }
+  .gp-row strong { color: #2c3e50; font-size: 0.9rem; }
+  .bar-track {
+    background: #eaeef2;
+    border-radius: 99px;
+    height: 10px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width .6s ease;
+  }
+  .bar-fill.quiz    { background: linear-gradient(90deg, #2980b9, #3498db); }
+  .bar-fill.essay   { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+  .bar-fill.integrity { background: linear-gradient(90deg, #e67e22, #f39c12); }
+
+  /* ── Section title ── */
+  .section-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: #95a5a6;
+    margin-bottom: 10px;
+    font-family: 'Arial', sans-serif;
+  }
+
+  /* ── Lesson table ── */
+  .lesson-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e8ecf0;
+    font-family: 'Arial', sans-serif;
+    font-size: 0.8rem;
+    margin-bottom: 32px;
+  }
+  .lesson-table thead tr {
+    background: #2c3e50;
+    color: #fff;
+  }
+  .lesson-table th {
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+  .lesson-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #f0f3f6;
+    vertical-align: middle;
+  }
+  .lesson-table tr:last-child td { border-bottom: none; }
+  .lesson-table tr:hover td { background: #f8fafc; }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .badge-done     { background: #d4efdf; color: #1e8449; }
+  .badge-quiz     { background: #d6eaf8; color: #1a5276; }
+  .badge-essay    { background: #fdebd0; color: #935116; }
+  .badge-pending  { background: #f0f3f6; color: #7f8c8d; }
+
+  .score-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.75rem;
+  }
+  .score-good    { background: #d4efdf; color: #1e8449; }
+  .score-mid     { background: #fef9e7; color: #b7950b; }
+  .score-low     { background: #fdecea; color: #c0392b; }
+  .score-none    { color: #bdc3c7; }
+
+  /* ── Loading / error ── */
+  .state-msg {
+    text-align: center;
+    padding: 40px 20px;
+    color: #95a5a6;
+    font-family: 'Arial', sans-serif;
+    font-size: 0.9rem;
+  }
+  .state-msg.error { color: #e74c3c; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>My Progress</h1>
+    <p id="studentMeta">Loading…</p>
+  </div>
+  <button class="btn-refresh" onclick="loadProgress()">↻ Refresh</button>
+</div>
+
+<!-- Summary cards -->
+<div class="summary-grid" id="summaryGrid">
+  <div class="card"><div class="card-value" id="cardDone">—</div><div class="card-label">Activities done</div></div>
+  <div class="card"><div class="card-value blue" id="cardCoverage">—</div><div class="card-label">Course coverage</div></div>
+  <div class="card"><div class="card-value green" id="cardScore">—</div><div class="card-label">Avg quiz score</div></div>
+  <div class="card"><div class="card-value amber" id="cardIntegrity">—</div><div class="card-label">Avg integrity</div></div>
+  <div class="card"><div class="card-value" id="cardWords">—</div><div class="card-label">Words written</div></div>
+  <div class="card"><div class="card-value red" id="cardPastes">—</div><div class="card-label">Total pastes</div></div>
+</div>
+
+<!-- Global progress bars -->
+<div class="global-progress">
+  <div class="gp-row"><strong>Quiz coverage</strong><span id="pctQuiz">0%</span></div>
+  <div class="bar-track"><div class="bar-fill quiz" id="barQuiz" style="width:0%"></div></div>
+  <div class="gp-row" style="margin-top:10px"><strong>Essay coverage</strong><span id="pctEssay">0%</span></div>
+  <div class="bar-track"><div class="bar-fill essay" id="barEssay" style="width:0%"></div></div>
+  <div class="gp-row" style="margin-top:10px"><strong>Avg integrity (completed essays)</strong><span id="pctIntegrity">—</span></div>
+  <div class="bar-track"><div class="bar-fill integrity" id="barIntegrity" style="width:0%"></div></div>
+</div>
+
+<!-- Lesson detail table -->
+<div class="section-title">Lesson by lesson</div>
+<div id="tableContainer"><div class="state-msg">Loading your progress…</div></div>
+
+<script>
+const SB_URL = 'https://kuvyvyzmpfbndpkzbosb.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1dnl2eXptcGZibmRwa3pib3NiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0NDEwMzksImV4cCI6MjA4OTAxNzAzOX0.E9ftrQR0DojGLRUkMj4w2LUBWFnumK6lRr5M1WXiRNc';
+const TOTAL  = 59; // total de lecciones del curso
+
+// Leer email: primero window.parent.localStorage, luego URL, luego localStorage propio
+function getEmailFromURL() {
+  try {
+    const e = window.parent.localStorage.getItem('studentEmail');
+    if (e) return e;
+  } catch(_) {}
+  try {
+    const e = new URLSearchParams(window.location.search).get('email');
+    if (e) return e;
+  } catch(_) {}
+  return localStorage.getItem('studentEmail') || '';
+}
+
+async function sbGet(path) {
+  const r = await fetch(`${SB_URL}/rest/v1/${path}`, {
+    headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` },
+    credentials: 'omit'
+  });
+  if (!r.ok) throw new Error(`${r.status}`);
+  return r.json();
+}
+
+function scorePill(val) {
+  if (val == null) return '<span class="score-none">—</span>';
+  const v = Number(val);
+  const cls = v >= 85 ? 'score-good' : v >= 60 ? 'score-mid' : 'score-low';
+  return `<span class="score-pill ${cls}">${v}%</span>`;
+}
+
+function statusBadge(hasQuiz, hasEssay) {
+  if (hasQuiz && hasEssay) return '<span class="badge badge-done">Complete</span>';
+  if (hasQuiz)             return '<span class="badge badge-quiz">Quiz only</span>';
+  if (hasEssay)            return '<span class="badge badge-essay">Essay only</span>';
+  return                          '<span class="badge badge-pending">Pending</span>';
+}
+
+async function loadProgress() {
+  const email = getEmailFromURL();
+  if (!email) {
+    document.getElementById('tableContainer').innerHTML =
+      '<div class="state-msg error">No session found. Please log in first.</div>';
+    return;
+  }
+
+  document.getElementById('tableContainer').innerHTML = '<div class="state-msg">Loading…</div>';
+
+  // DEBUG — quitar después
+  console.log('📧 Email usado:', email);
+
+  try {
+    // 1. Student profile
+    const students = await sbGet(`students?email=eq.${encodeURIComponent(email)}&select=id,name,email,course,major,period&limit=1`);
+    if (!students.length) throw new Error('Student not found');
+    const st = students[0];
+
+    document.getElementById('studentMeta').textContent =
+      `${st.name}  ·  ${st.course}  ·  Period ${st.period || '—'}`;
+
+    // 2. Activity logs (quizzes)
+    const logs = await sbGet(`activity_logs?student_id=eq.${st.id}&select=activity,result,created_at&order=created_at.asc`);
+
+    // 3. Essay submissions
+    const essays = await sbGet(`essay_submissions?student_id=eq.${st.id}&select=activity,words,pastes,tab_switches,integrity_score,chars_typed_ratio,writing_duration,created_at&order=created_at.asc`);
+
+    // 4. Build per-activity map (latest essay per activity)
+    const essayMap = {};
+    essays.forEach(e => { essayMap[e.activity] = e; });
+
+    // Group quiz attempts: avg score per activity
+    const quizMap = {};
+    logs.forEach(l => {
+      const m = l.result.match(/Score:\s*(\d+)%/);
+      const score = m ? Number(m[1]) : null;
+      if (!quizMap[l.activity]) quizMap[l.activity] = { scores: [], result: l.result, date: l.created_at };
+      if (score !== null) quizMap[l.activity].scores.push(score);
+    });
+
+    const allActivities = [...new Set([
+      ...Object.keys(quizMap),
+      ...Object.keys(essayMap)
+    ])].sort();
+
+    // 5. Summary stats
+    const quizDone   = Object.keys(quizMap).length;
+    const essayDone  = Object.keys(essayMap).length;
+    const totalDone  = new Set([...Object.keys(quizMap), ...Object.keys(essayMap)]).size;
+
+    const quizScores = Object.values(quizMap).flatMap(q => q.scores).filter(s => s != null);
+    const avgScore   = quizScores.length ? Math.round(quizScores.reduce((a,b)=>a+b,0) / quizScores.length) : null;
+
+    const intScores  = essays.map(e => e.integrity_score).filter(s => s != null);
+    const avgInt     = intScores.length ? Math.round(intScores.reduce((a,b)=>a+b,0) / intScores.length) : null;
+
+    const totalWords  = essays.reduce((s,e) => s + (e.words||0), 0);
+    const totalPastes = essays.reduce((s,e) => s + (e.pastes||0), 0);
+
+    const quizCov  = Math.min(100, Math.round(quizDone  / TOTAL * 100));
+    const essayCov = Math.min(100, Math.round(essayDone / TOTAL * 100));
+
+    // 6. Update cards
+    document.getElementById('cardDone').textContent      = `${totalDone}/${TOTAL}`;
+    document.getElementById('cardCoverage').textContent  = `${Math.round(totalDone/TOTAL*100)}%`;
+    document.getElementById('cardScore').textContent     = avgScore != null ? `${avgScore}%` : '—';
+    document.getElementById('cardIntegrity').textContent = avgInt   != null ? `${avgInt}%`   : '—';
+    document.getElementById('cardWords').textContent     = totalWords.toLocaleString();
+    document.getElementById('cardPastes').textContent    = totalPastes;
+
+    // Color cards dynamically
+    if (avgScore != null) {
+      const el = document.getElementById('cardScore');
+      el.className = 'card-value ' + (avgScore >= 85 ? 'green' : avgScore >= 60 ? 'amber' : 'red');
+    }
+    if (avgInt != null) {
+      const el = document.getElementById('cardIntegrity');
+      el.className = 'card-value ' + (avgInt >= 85 ? 'green' : avgInt >= 60 ? 'amber' : 'red');
+    }
+
+    // 7. Progress bars
+    document.getElementById('pctQuiz').textContent     = `${quizCov}%`;
+    document.getElementById('barQuiz').style.width     = `${quizCov}%`;
+    document.getElementById('pctEssay').textContent    = `${essayCov}%`;
+    document.getElementById('barEssay').style.width    = `${essayCov}%`;
+    document.getElementById('pctIntegrity').textContent = avgInt != null ? `${avgInt}%` : '—';
+    document.getElementById('barIntegrity').style.width = avgInt != null ? `${avgInt}%` : '0%';
+
+    // 8. Lesson table
+    if (!allActivities.length) {
+      document.getElementById('tableContainer').innerHTML =
+        '<div class="state-msg">No activities completed yet. Start a lesson to see your progress here.</div>';
+      return;
+    }
+
+    const rows = allActivities.map(activity => {
+      const q = quizMap[activity];
+      const e = essayMap[activity];
+      const avgQ = q && q.scores.length ? Math.round(q.scores.reduce((a,b)=>a+b,0)/q.scores.length) : null;
+      const attempts = q ? q.scores.length : 0;
+      const date = (q?.date || e?.created_at || '').slice(0,10);
+
+      return `<tr>
+        <td style="font-weight:600;color:#2c3e50;">${activity}</td>
+        <td>${statusBadge(!!q, !!e)}</td>
+        <td>${avgQ != null ? scorePill(avgQ) : '<span class="score-none">—</span>'}${attempts > 1 ? ` <span style="font-size:.68rem;color:#aaa">(${attempts}x)</span>` : ''}</td>
+        <td>${e ? scorePill(e.integrity_score) : '<span class="score-none">—</span>'}</td>
+        <td style="color:#555;">${e ? (e.words||0) : '—'}</td>
+        <td style="color:#555;">${date || '—'}</td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('tableContainer').innerHTML = `
+      <table class="lesson-table">
+        <thead><tr>
+          <th>Lesson</th><th>Status</th><th>Quiz score</th>
+          <th>Integrity</th><th>Words</th><th>Date</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+
+  } catch(err) {
+    console.error(err);
+    document.getElementById('tableContainer').innerHTML =
+      `<div class="state-msg error">Could not load progress. Please check your connection.<br><small>${err.message}</small></div>`;
+  }
+}
+
+loadProgress();
+</script>
+</body>
+</html>

@@ -45,7 +45,9 @@ const SlideEngine = (function () {
     // Llama esto en window.onload de cada lección.
     // Activa todos los tipos de slide que encuentre en el DOM.
     function init(lessonName) {
-        _lessonName        = lessonName;
+        // Normalizar: guiones → espacios, minúsculas, sin espacios extra
+        // Garantiza que "formal-language" y "formal language" sean la misma actividad
+        _lessonName        = lessonName.toLowerCase().replace(/-/g, ' ').replace(/\s+/g, ' ').trim();
         _slides            = Array.from(document.querySelectorAll('.slide'));
         _mistakes          = 0;
         _scoreAlreadySaved = false;
