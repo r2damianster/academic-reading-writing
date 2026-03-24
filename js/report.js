@@ -1,54 +1,48 @@
 /* js/report.js
- * ÚNICA responsabilidad: generar el PDF.
- * Lee datos del estudiante y progreso desde Supabase.
- * localStorage se usa solo como fallback si Supabase no responde.
+ * Genera el PDF de progreso del estudiante.
+ * Lee de Supabase: perfil, activity_logs, essay_submissions, essay_requirements.
+ * Para cada ensayo muestra compliance contra los requisitos de la lección.
+ * localStorage como fallback si Supabase no responde.
  */
 
 const _REPORT_SUPABASE_URL = 'https://kuvyvyzmpfbndpkzbosb.supabase.co';
 const _REPORT_ANON_KEY     = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1dnl2eXptcGZibmRwa3pib3NiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0NDEwMzksImV4cCI6MjA4OTAxNzAzOX0.E9ftrQR0DojGLRUkMj4w2LUBWFnumK6lRr5M1WXiRNc';
 
-// ── Fetch helper ─────────────────────────────────────────────────────────────
 async function _sbGet(path) {
     const res = await fetch(`${_REPORT_SUPABASE_URL}/rest/v1/${path}`, {
-        headers: {
-            'apikey':        _REPORT_ANON_KEY,
-            'Authorization': `Bearer ${_REPORT_ANON_KEY}`
-        },
+        headers: { 'apikey': _REPORT_ANON_KEY, 'Authorization': `Bearer ${_REPORT_ANON_KEY}` },
         credentials: 'omit'
     });
-    if (!res.ok) throw new Error(`Supabase error ${res.status} on ${path}`);
+    if (!res.ok) throw new Error(`Supabase ${res.status}`);
     return res.json();
 }
 
-// ── Cargar datos del estudiante y su progreso desde Supabase ─────────────────
 async function _loadReportData() {
     const email = localStorage.getItem('studentEmail') || '';
     if (!email) return null;
 
-    // 1. Perfil del estudiante
     const students = await _sbGet(
         `students?email=eq.${encodeURIComponent(email)}&select=id,name,email,course,major,period&limit=1`
     );
-    if (!students || students.length === 0) return null;
+    if (!students || !students.length) return null;
     const student = students[0];
 
-    // 2. Todas las actividades completadas (quiz scores)
-    const logs = await _sbGet(
-        `activity_logs?student_id=eq.${student.id}&select=activity,result,created_at&order=created_at.asc`
-    );
+    const [logs, essays, requirements] = await Promise.all([
+        _sbGet(`activity_logs?student_id=eq.${student.id}&select=activity,result,created_at&order=created_at.asc`),
+        _sbGet(`essay_submissions?student_id=eq.${student.id}&select=activity,essay_text,words,pastes,tab_switches,keystrokes,deletions,time_to_first_key,writing_duration,chars_typed_ratio,integrity_score,created_at&order=created_at.asc`),
+        _sbGet(`essay_requirements?select=activity_key,lesson_title,min_words,max_words,min_integrity_score_required,max_pastes_allowed,target_keywords,required_markers,forbidden_words,min_keyword_matches`)
+    ]);
 
-    // 3. Todos los ensayos enviados
-    const essays = await _sbGet(
-        `essay_submissions?student_id=eq.${student.id}&select=activity,essay_text,words,pastes,tab_switches,keystrokes,deletions,time_to_first_key,writing_duration,chars_typed_ratio,integrity_score,created_at&order=created_at.asc`
-    );
-
-    // 4. Un Map para quedarnos con el ensayo más reciente por actividad
-    const essayMap = {};
-    for (const e of essays) {
-        essayMap[e.activity] = e;
+    // Índice de requirements normalizado (guiones → espacios, minúsculas)
+    const reqMap = {};
+    for (const r of requirements) {
+        reqMap[r.activity_key.toLowerCase().replace(/-/g, ' ')] = r;
     }
 
-    // 5. Unir actividades únicas de ambas fuentes
+    // Último ensayo por actividad
+    const essayMap = {};
+    for (const e of essays) essayMap[e.activity] = e;
+
     const allActivities = [...new Set([
         ...logs.map(l => l.activity),
         ...essays.map(e => e.activity)
@@ -57,22 +51,21 @@ async function _loadReportData() {
     const progress = allActivities.map(activity => {
         const log   = logs.find(l => l.activity === activity);
         const essay = essayMap[activity] || null;
+        const req   = reqMap[activity.toLowerCase()] || null;
         return {
             activity,
-            result: log ? log.result : 'Essay only',
-            date:   log ? log.created_at : (essay ? essay.created_at : null),
-            essay:  essay ? essay.essay_text : '',
-            audit:  essay ? {
-                words:           essay.words,
-                pastes:          essay.pastes,
-                tabSwitches:     essay.tab_switches,
-                keystrokes:      essay.keystrokes,
-                deletions:       essay.deletions,
-                timeToFirstKey:  essay.time_to_first_key,
-                writingDuration: essay.writing_duration,
-                charsTypedRatio: essay.chars_typed_ratio,
-                integrityScore:  essay.integrity_score
-            } : null
+            result:     log ? log.result : 'Essay only',
+            date:       log ? log.created_at : (essay ? essay.created_at : null),
+            essay:      essay ? essay.essay_text : '',
+            audit:      essay ? {
+                words: essay.words, pastes: essay.pastes,
+                tabSwitches: essay.tab_switches, keystrokes: essay.keystrokes,
+                deletions: essay.deletions, timeToFirstKey: essay.time_to_first_key,
+                writingDuration: essay.writing_duration, charsTypedRatio: essay.chars_typed_ratio,
+                integrityScore: essay.integrity_score
+            } : null,
+            req,
+            compliance: essay && req ? _checkCompliance(essay, req) : null
         };
     });
 
@@ -80,28 +73,103 @@ async function _loadReportData() {
     return { student, progress };
 }
 
+// ── Compliance checker ────────────────────────────────────────────────────────
+// target_keywords y forbidden_words son ahora JSONB: {"word": "label"}
+function _checkCompliance(essay, req) {
+    const text      = (essay.essay_text || '').toLowerCase();
+    const rawText   = essay.essay_text || '';
+    const words     = essay.words || 0;
+    const integrity = essay.integrity_score ?? 100;
+    const pastes    = essay.pastes ?? 0;
+    const checks    = [];
+    let passed      = 0;
+
+    // Helper: convierte JSONB {word:label} o array legacy a objeto {word:label}
+    function toMap(val) {
+        if (!val) return {};
+        if (Array.isArray(val)) return Object.fromEntries(val.map(w => [w, '']));
+        if (typeof val === 'object') return val;
+        return {};
+    }
+
+    // 1. Palabras
+    const minW = req.min_words || 0;
+    const maxW = req.max_words;
+    const wordOk = words >= minW && (maxW == null || words <= maxW);
+    checks.push({ ok: wordOk, label: `Words: ${words} / required ${minW}–${maxW ?? '∞'}` });
+    if (wordOk) passed++;
+
+    // 2. Integridad
+    const minInt = req.min_integrity_score_required ?? 80;
+    const intOk  = integrity >= minInt;
+    checks.push({ ok: intOk, label: `Integrity: ${integrity}% (min ${minInt}%)` });
+    if (intOk) passed++;
+
+    // 3. Pastes
+    const maxPastes = req.max_pastes_allowed ?? 0;
+    const pasteOk   = pastes <= maxPastes;
+    checks.push({ ok: pasteOk, label: `Pastes: ${pastes} (max ${maxPastes})` });
+    if (pasteOk) passed++;
+
+    // 4. Keywords — formato compacto: palabra ✓/✗  palabra ✓/✗ ...
+    const kwMap      = toMap(req.target_keywords);
+    const kwEntries  = Object.entries(kwMap);
+    const minMatches = req.min_keyword_matches || 0;
+    if (kwEntries.length > 0 && minMatches > 0) {
+        const results = kwEntries.map(([word, label]) => ({
+            word, label, found: text.includes(word.toLowerCase())
+        }));
+        const foundCount = results.filter(r => r.found).length;
+        const kwOk = foundCount >= minMatches;
+
+        // Línea compacta: "furthermore ✓  moreover ✓  in addition ✗ ..."
+        const inline = results.map(r => `${r.word} ${r.found ? '✓' : '✗'}`).join('   ');
+        checks.push({ ok: kwOk, label: `Keywords (${foundCount}/${minMatches}): ${inline}` });
+        if (kwOk) passed++;
+    }
+
+    // 5. Required markers
+    const markers = req.required_markers || [];
+    if (markers.length > 0) {
+        const missing  = markers.filter(m => !rawText.includes(m));
+        const markerOk = missing.length === 0;
+        checks.push({ ok: markerOk, label: `Required markers: ${markerOk ? 'all present' : 'missing: ' + missing.slice(0,3).join(', ')}` });
+        if (markerOk) passed++;
+    }
+
+    // 6. Forbidden words — formato: "word (label)"
+    const forbMap     = toMap(req.forbidden_words);
+    const forbEntries = Object.entries(forbMap);
+    if (forbEntries.length > 0) {
+        const found    = forbEntries.filter(([w]) => text.includes(w.toLowerCase()));
+        const forbidOk = found.length === 0;
+        const inline   = found.map(([w, lbl]) => `"${w}"${lbl ? ' (' + lbl + ')' : ''}`).join(', ');
+        checks.push({ ok: forbidOk, label: `Forbidden: ${forbidOk ? 'none detected' : 'found → ' + inline}` });
+        if (forbidOk) passed++;
+    }
+
+    const total = checks.length;
+    const pct   = total > 0 ? Math.round((passed / total) * 100) : 100;
+    return { checks, passed, total, pct };
+}
+
 // ── Generación del PDF ────────────────────────────────────────────────────────
 async function generateReport() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    // Feedback visual mientras carga
     const btn = document.querySelector('[onclick*="generateReport"]');
     const originalText = btn ? btn.innerText : '';
-    if (btn) { btn.innerText = 'Loading from server…'; btn.disabled = true; }
+    if (btn) { btn.innerText = 'Loading…'; btn.disabled = true; }
 
     let student, progress;
 
     try {
         const data = await _loadReportData();
-        if (data) {
-            student  = data.student;
-            progress = data.progress;
-        } else {
-            throw new Error('No Supabase data');
-        }
+        if (data) { student = data.student; progress = data.progress; }
+        else throw new Error('No Supabase data');
     } catch (err) {
-        console.warn('⚠️ Supabase falló, usando localStorage como fallback:', err);
+        console.warn('⚠️ Fallback a localStorage:', err);
         student = {
             name:   localStorage.getItem('studentName')   || 'Student',
             email:  localStorage.getItem('studentEmail')  || 'N/A',
@@ -110,11 +178,8 @@ async function generateReport() {
             period: '—'
         };
         progress = (JSON.parse(localStorage.getItem('course_progress')) || []).map(item => ({
-            activity: item.module,
-            result:   item.result,
-            essay:    item.essay || '',
-            audit:    item.audit || null,
-            date:     item.timestamp || null
+            activity: item.module, result: item.result, essay: item.essay || '',
+            audit: item.audit || null, req: null, compliance: null, date: item.timestamp || null
         }));
     } finally {
         if (btn) { btn.innerText = originalText; btn.disabled = false; }
@@ -150,53 +215,68 @@ async function generateReport() {
 
     for (const item of progress) {
         if (!item.result || item.result === 'Visited') continue;
+        if (y > 245) { doc.addPage(); y = 20; }
 
-        if (y > 250) { doc.addPage(); y = 20; }
-
+        // Título
         doc.setTextColor(0);
         doc.setFontSize(11);
         doc.setFont("helvetica", "bold");
         doc.text(`${count}. ${item.activity}`, 15, y);
-
         doc.setFontSize(10);
         doc.setFont("helvetica", "normal");
         doc.setTextColor(60);
         doc.text(`Result: ${item.result}`, 20, y + 7);
-        y += 15;
+        y += 16;
 
-        // ── Cuadro de integridad ──────────────────────────────────────────────
+        // Integrity box
         const audit = item.audit;
         if (audit && (audit.words > 0 || audit.keystrokes > 0)) {
             if (y > 260) { doc.addPage(); y = 20; }
-
             const iScore    = (audit.integrityScore != null && !isNaN(Number(audit.integrityScore)))
-                ? Number(audit.integrityScore)
-                : _calcIntegrityFallback(audit);
+                ? Number(audit.integrityScore) : _calcIntegrityFallback(audit);
             const label     = iScore >= 85 ? 'GOOD' : iScore >= 60 ? 'MODERATE' : 'LOW';
             const bandColor = iScore >= 85 ? [39, 174, 96] : iScore >= 60 ? [230, 126, 34] : [231, 76, 60];
-
             doc.setFillColor(...bandColor);
             doc.roundedRect(18, y - 4, 175, 30, 2, 2, 'F');
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(8);
             doc.setFont("helvetica", "bold");
             doc.text(`INTEGRITY ANALYSIS   |   Score: ${iScore}%  [${label}]`, 23, y + 2);
-
             doc.setFont("helvetica", "normal");
-            doc.text(
-                `Words: ${audit.words || 0}  |  Pastes: ${audit.pastes || 0}  |  Tabs: ${audit.tabSwitches || 0}  |  Keys: ${audit.keystrokes || 0}  |  Dels: ${audit.deletions || 0}`,
-                23, y + 9
-            );
-            doc.text(
-                `Time to first: ${audit.timeToFirstKey ?? '—'}s  |  Duration: ${audit.writingDuration ?? '—'}s  |  Typed ratio: ${audit.charsTypedRatio ?? '—'}%`,
-                23, y + 16
-            );
-
+            doc.text(`Words: ${audit.words || 0}  |  Pastes: ${audit.pastes || 0}  |  Tabs: ${audit.tabSwitches || 0}  |  Keys: ${audit.keystrokes || 0}  |  Dels: ${audit.deletions || 0}`, 23, y + 9);
+            doc.text(`Time to first: ${audit.timeToFirstKey ?? '—'}s  |  Duration: ${audit.writingDuration ?? '—'}s  |  Typed ratio: ${audit.charsTypedRatio ?? '—'}%`, 23, y + 16);
             doc.setTextColor(0);
             y += 36;
         }
 
-        // ── Texto del ensayo ──────────────────────────────────────────────────
+        // Compliance box (NUEVO)
+        const comp = item.compliance;
+        if (comp) {
+            if (y > 250) { doc.addPage(); y = 20; }
+            const rowH    = 7.5;
+            const boxH    = 12 + (comp.checks.length * rowH);
+            const compColor = comp.pct >= 80 ? [41, 128, 185] : comp.pct >= 50 ? [108, 52, 131] : [120, 120, 120];
+
+            doc.setFillColor(...compColor);
+            doc.roundedRect(18, y - 4, 175, boxH, 2, 2, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(8);
+            doc.setFont("helvetica", "bold");
+            doc.text(`ESSAY REQUIREMENTS   |   ${comp.passed}/${comp.total} criteria met  [${comp.pct}%]`, 23, y + 2);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(7.5);
+
+            comp.checks.forEach((check, i) => {
+                const cy = y + 11 + (i * rowH);
+                if (cy > 287) return;
+                doc.text((check.ok ? '\u2713  ' : '\u2717  ') + check.label, 24, cy);
+            });
+
+            doc.setTextColor(0);
+            y += boxH + 6;
+        }
+
+        // Essay text
         if (item.essay && item.essay.trim().length > 5) {
             if (y > 260) { doc.addPage(); y = 20; }
             doc.setTextColor(0);
@@ -204,7 +284,6 @@ async function generateReport() {
             doc.setFont("helvetica", "bold");
             doc.text("Submitted Writing:", 20, y);
             y += 6;
-
             doc.setFont("helvetica", "italic");
             doc.setTextColor(40);
             const lines = doc.splitTextToSize(item.essay.trim(), 165);
@@ -225,26 +304,19 @@ async function generateReport() {
     doc.save(`Report_${studentName.replace(/\s+/g, '_')}_${student.period || 'period'}.pdf`);
 }
 
-// ── Fallback de cálculo de integridad ────────────────────────────────────────
 function _calcIntegrityFallback(a) {
     let s = 100;
     const pastes = a.pastes || 0, keys = a.keystrokes || 0;
     const ratio  = a.charsTypedRatio != null ? a.charsTypedRatio : null;
     const tabs   = a.tabSwitches || 0, dels = a.deletions || 0;
     const dur    = a.writingDuration || 0, words = a.words || 0;
-
     if (pastes > 0 && ratio !== null) {
         const pp = Math.max(0, 100 - ratio);
-        if      (pp >= 60) s -= 50;
-        else if (pp >= 30) s -= 25;
-        else if (pp >= 10) s -= 10;
-        else               s -= 5;
+        if (pp >= 60) s -= 50; else if (pp >= 30) s -= 25;
+        else if (pp >= 10) s -= 10; else s -= 5;
     } else if (pastes > 0) { s -= 20; }
-
-    if      (tabs >= 5) s -= Math.min(tabs * 4, 25);
-    else if (tabs >= 2) s -= tabs * 3;
+    if (tabs >= 5) s -= Math.min(tabs * 4, 25); else if (tabs >= 2) s -= tabs * 3;
     if (words > 10 && dels > 0 && dels / Math.max(keys, 1) > 0.6) s -= 10;
     if (pastes === 0 && words > 30 && dur > 0 && dur < 30) s -= 15;
-
     return Math.max(0, s);
 }
