@@ -292,14 +292,17 @@ async function loadProgress() {
       `${st.name}  ·  ${st.course}  ·  Period ${st.period || '—'}`;
 
     // 2. Activity logs (quizzes)
-    const logs = await sbGet(`activity_logs?student_id=eq.${st.id}&select=activity,result,created_at&order=created_at.asc`);
-
-    // 3. Essay submissions
-    const essays = await sbGet(`essay_submissions?student_id=eq.${st.id}&select=activity,words,pastes,tab_switches,integrity_score,chars_typed_ratio,writing_duration,created_at&order=created_at.asc`);
+    const [logs, essays, compRows] = await Promise.all([
+      sbGet(`activity_logs?student_id=eq.${st.id}&select=activity,result,created_at&order=created_at.asc`),
+      sbGet(`essay_submissions?student_id=eq.${st.id}&select=activity,words,pastes,tab_switches,integrity_score,chars_typed_ratio,writing_duration,created_at&order=created_at.asc`),
+      sbGet(`essay_compliance_results?student_id=eq.${st.id}&select=activity,compliance_pct,criteria_met,criteria_total&order=created_at.asc`)
+    ]);
 
     // 4. Build per-activity map (latest essay per activity)
     const essayMap = {};
     essays.forEach(e => { essayMap[e.activity] = e; });
+    const compMap = {};
+    compRows.forEach(c => { compMap[c.activity] = c; });
 
     // Group quiz attempts: avg score per activity
     const quizMap = {};
@@ -372,11 +375,16 @@ async function loadProgress() {
       const attempts = q ? q.scores.length : 0;
       const date = (q?.date || e?.created_at || '').slice(0,10);
 
+      const comp = compMap[activity] || null;
+      const compPill = comp
+        ? `<span class="score-pill ${comp.compliance_pct >= 80 ? 'score-good' : comp.compliance_pct >= 50 ? 'score-mid' : 'score-low'}">${comp.compliance_pct}%</span>`
+        : '<span class="score-none">—</span>';
       return `<tr>
         <td style="font-weight:600;color:#2c3e50;">${activity}</td>
         <td>${statusBadge(!!q, !!e)}</td>
         <td>${avgQ != null ? scorePill(avgQ) : '<span class="score-none">—</span>'}${attempts > 1 ? ` <span style="font-size:.68rem;color:#aaa">(${attempts}x)</span>` : ''}</td>
         <td>${e ? scorePill(e.integrity_score) : '<span class="score-none">—</span>'}</td>
+        <td>${compPill}</td>
         <td style="color:#555;">${e ? (e.words||0) : '—'}</td>
         <td style="color:#555;">${date || '—'}</td>
       </tr>`;
@@ -386,7 +394,7 @@ async function loadProgress() {
       <table class="lesson-table">
         <thead><tr>
           <th>Lesson</th><th>Status</th><th>Quiz score</th>
-          <th>Integrity</th><th>Words</th><th>Date</th>
+          <th>Integrity</th><th>Compliance</th><th>Words</th><th>Date</th>
         </tr></thead>
         <tbody>${rows}</tbody>
       </table>`;

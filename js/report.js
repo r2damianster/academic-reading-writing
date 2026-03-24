@@ -27,21 +27,20 @@ async function _loadReportData() {
     if (!students || !students.length) return null;
     const student = students[0];
 
-    const [logs, essays, requirements] = await Promise.all([
+    // Cargar en paralelo: logs, ensayos y compliance guardado
+    const [logs, essays, complianceRows] = await Promise.all([
         _sbGet(`activity_logs?student_id=eq.${student.id}&select=activity,result,created_at&order=created_at.asc`),
-        _sbGet(`essay_submissions?student_id=eq.${student.id}&select=activity,essay_text,words,pastes,tab_switches,keystrokes,deletions,time_to_first_key,writing_duration,chars_typed_ratio,integrity_score,created_at&order=created_at.asc`),
-        _sbGet(`essay_requirements?select=activity_key,lesson_title,min_words,max_words,min_integrity_score_required,max_pastes_allowed,target_keywords,required_markers,forbidden_words,min_keyword_matches`)
+        _sbGet(`essay_submissions?student_id=eq.${student.id}&select=id,activity,essay_text,words,pastes,tab_switches,keystrokes,deletions,time_to_first_key,writing_duration,chars_typed_ratio,integrity_score,created_at&order=created_at.asc`),
+        _sbGet(`essay_compliance_results?student_id=eq.${student.id}&select=submission_id,activity,criteria_met,criteria_total,compliance_pct,snapshot&order=created_at.asc`)
     ]);
-
-    // Índice de requirements normalizado (guiones → espacios, minúsculas)
-    const reqMap = {};
-    for (const r of requirements) {
-        reqMap[r.activity_key.toLowerCase().replace(/-/g, ' ')] = r;
-    }
 
     // Último ensayo por actividad
     const essayMap = {};
     for (const e of essays) essayMap[e.activity] = e;
+
+    // Último compliance por actividad (vinculado por submission_id)
+    const compMap = {};
+    for (const c of complianceRows) compMap[c.activity] = c;
 
     const allActivities = [...new Set([
         ...logs.map(l => l.activity),
@@ -49,108 +48,39 @@ async function _loadReportData() {
     ])];
 
     const progress = allActivities.map(activity => {
-        const log   = logs.find(l => l.activity === activity);
-        const essay = essayMap[activity] || null;
-        const req   = reqMap[activity.toLowerCase()] || null;
+        const log    = logs.find(l => l.activity === activity);
+        const essay  = essayMap[activity] || null;
+        const compRaw = compMap[activity] || null;
+
+        // Reconstruir compliance desde el snapshot guardado
+        let compliance = null;
+        if (compRaw && compRaw.snapshot) {
+            compliance = {
+                passed: compRaw.criteria_met,
+                total:  compRaw.criteria_total,
+                pct:    compRaw.compliance_pct,
+                checks: compRaw.snapshot.checks || []
+            };
+        }
+
         return {
             activity,
-            result:     log ? log.result : 'Essay only',
-            date:       log ? log.created_at : (essay ? essay.created_at : null),
-            essay:      essay ? essay.essay_text : '',
-            audit:      essay ? {
+            result: log ? log.result : 'Essay only',
+            date:   log ? log.created_at : (essay ? essay.created_at : null),
+            essay:  essay ? essay.essay_text : '',
+            audit:  essay ? {
                 words: essay.words, pastes: essay.pastes,
                 tabSwitches: essay.tab_switches, keystrokes: essay.keystrokes,
                 deletions: essay.deletions, timeToFirstKey: essay.time_to_first_key,
                 writingDuration: essay.writing_duration, charsTypedRatio: essay.chars_typed_ratio,
                 integrityScore: essay.integrity_score
             } : null,
-            req,
-            compliance: essay && req ? _checkCompliance(essay, req) : null
+            compliance
         };
     });
 
     progress.sort((a, b) => new Date(a.date) - new Date(b.date));
     return { student, progress };
-}
-
-// ── Compliance checker ────────────────────────────────────────────────────────
-// target_keywords y forbidden_words son ahora JSONB: {"word": "label"}
-function _checkCompliance(essay, req) {
-    const text      = (essay.essay_text || '').toLowerCase();
-    const rawText   = essay.essay_text || '';
-    const words     = essay.words || 0;
-    const integrity = essay.integrity_score ?? 100;
-    const pastes    = essay.pastes ?? 0;
-    const checks    = [];
-    let passed      = 0;
-
-    // Helper: convierte JSONB {word:label} o array legacy a objeto {word:label}
-    function toMap(val) {
-        if (!val) return {};
-        if (Array.isArray(val)) return Object.fromEntries(val.map(w => [w, '']));
-        if (typeof val === 'object') return val;
-        return {};
-    }
-
-    // 1. Palabras
-    const minW = req.min_words || 0;
-    const maxW = req.max_words;
-    const wordOk = words >= minW && (maxW == null || words <= maxW);
-    checks.push({ ok: wordOk, label: `Words: ${words} / required ${minW}–${maxW ?? '∞'}` });
-    if (wordOk) passed++;
-
-    // 2. Integridad
-    const minInt = req.min_integrity_score_required ?? 80;
-    const intOk  = integrity >= minInt;
-    checks.push({ ok: intOk, label: `Integrity: ${integrity}% (min ${minInt}%)` });
-    if (intOk) passed++;
-
-    // 3. Pastes
-    const maxPastes = req.max_pastes_allowed ?? 0;
-    const pasteOk   = pastes <= maxPastes;
-    checks.push({ ok: pasteOk, label: `Pastes: ${pastes} (max ${maxPastes})` });
-    if (pasteOk) passed++;
-
-    // 4. Keywords — formato compacto: palabra ✓/✗  palabra ✓/✗ ...
-    const kwMap      = toMap(req.target_keywords);
-    const kwEntries  = Object.entries(kwMap);
-    const minMatches = req.min_keyword_matches || 0;
-    if (kwEntries.length > 0 && minMatches > 0) {
-        const results = kwEntries.map(([word, label]) => ({
-            word, label, found: text.includes(word.toLowerCase())
-        }));
-        const foundCount = results.filter(r => r.found).length;
-        const kwOk = foundCount >= minMatches;
-
-        // Línea compacta: "furthermore ✓  moreover ✓  in addition ✗ ..."
-        const inline = results.map(r => `${r.word} ${r.found ? '✓' : '✗'}`).join('   ');
-        checks.push({ ok: kwOk, label: `Keywords (${foundCount}/${minMatches}): ${inline}` });
-        if (kwOk) passed++;
-    }
-
-    // 5. Required markers
-    const markers = req.required_markers || [];
-    if (markers.length > 0) {
-        const missing  = markers.filter(m => !rawText.includes(m));
-        const markerOk = missing.length === 0;
-        checks.push({ ok: markerOk, label: `Required markers: ${markerOk ? 'all present' : 'missing: ' + missing.slice(0,3).join(', ')}` });
-        if (markerOk) passed++;
-    }
-
-    // 6. Forbidden words — formato: "word (label)"
-    const forbMap     = toMap(req.forbidden_words);
-    const forbEntries = Object.entries(forbMap);
-    if (forbEntries.length > 0) {
-        const found    = forbEntries.filter(([w]) => text.includes(w.toLowerCase()));
-        const forbidOk = found.length === 0;
-        const inline   = found.map(([w, lbl]) => `"${w}"${lbl ? ' (' + lbl + ')' : ''}`).join(', ');
-        checks.push({ ok: forbidOk, label: `Forbidden: ${forbidOk ? 'none detected' : 'found → ' + inline}` });
-        if (forbidOk) passed++;
-    }
-
-    const total = checks.length;
-    const pct   = total > 0 ? Math.round((passed / total) * 100) : 100;
-    return { checks, passed, total, pct };
 }
 
 // ── Generación del PDF ────────────────────────────────────────────────────────
