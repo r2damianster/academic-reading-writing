@@ -326,7 +326,176 @@ const SlideEngine = (function () {
             is_update:         false
         };
 
-        _insertToSupabase('essay_submissions', record, `ESSAY "${lessonName}"`);
+        // INSERT en essay_submissions con Prefer: return=representation para obtener el UUID
+        try {
+            const res = await fetch(`${SUPABASE_URL}/rest/v1/essay_submissions`, {
+                method:  'POST',
+                headers: {
+                    'Content-Type':  'application/json',
+                    'apikey':         SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                    'Prefer':        'return=representation'
+                },
+                body:        JSON.stringify(record),
+                credentials: 'omit'
+            });
+
+            if (res.ok) {
+                const rows = await res.json();
+                const submissionId = rows[0]?.id || null;
+                console.log(`📡 Supabase → ESSAY "${lessonName}" ✅ (id: ${submissionId})`);
+
+                // Calcular y guardar compliance si hay requirements para esta lección
+                if (submissionId) {
+                    _saveComplianceResult(submissionId, id, lessonName, essay, audit);
+                }
+            } else {
+                const errText = await res.text();
+                console.error(`❌ Supabase essay_submissions [${res.status}]:`, errText);
+                _queueFailedRecord('essay_submissions', record, `ESSAY "${lessonName}"`);
+            }
+        } catch (e) {
+            console.error(`❌ Supabase → ESSAY "${lessonName}" falló:`, e);
+            _queueFailedRecord('essay_submissions', record, `ESSAY "${lessonName}"`);
+        }
+    }
+
+    // ── Compliance checker + INSERT en essay_compliance_results ──────────────────
+    // Busca los requirements de la lección, calcula el compliance y lo guarda
+    // como snapshot inmutable vinculado al submission_id.
+    async function _saveComplianceResult(submissionId, studentId, lessonName, essayText, audit) {
+        try {
+            // Buscar requirements para esta lección
+            const reqRes = await fetch(
+                `${SUPABASE_URL}/rest/v1/essay_requirements?activity_key=eq.${encodeURIComponent(lessonName)}&select=*&limit=1`,
+                {
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+                    credentials: 'omit'
+                }
+            );
+            if (!reqRes.ok) return;
+            const reqs = await reqRes.json();
+            if (!reqs || !reqs.length) return; // Sin requirements definidos, no hay compliance que guardar
+
+            const req  = reqs[0];
+            const comp = _calcCompliance(essayText, audit, req);
+
+            const record = {
+                submission_id:  submissionId,
+                student_id:     studentId,
+                activity:       String(lessonName),
+                criteria_met:   comp.passed,
+                criteria_total: comp.total,
+                compliance_pct: comp.pct,
+                words_ok:       comp.flags.words,
+                integrity_ok:   comp.flags.integrity,
+                pastes_ok:      comp.flags.pastes,
+                keywords_ok:    comp.flags.keywords,
+                markers_ok:     comp.flags.markers,
+                forbidden_ok:   comp.flags.forbidden,
+                snapshot:       comp.snapshot
+            };
+
+            _insertToSupabase('essay_compliance_results', record, `COMPLIANCE "${lessonName}"`);
+
+        } catch (e) {
+            console.warn('⚠️ _saveComplianceResult falló (no crítico):', e);
+        }
+    }
+
+    // ── Cálculo de compliance (espejo del checker en report.js) ──────────────────
+    // Retorna: { passed, total, pct, flags: {words,integrity,...}, snapshot: {...} }
+    function _calcCompliance(essayText, audit, req) {
+        const text    = (essayText || '').toLowerCase();
+        const rawText = essayText  || '';
+        const a       = audit      || {};
+        const words   = a.words    ?? 0;
+        const integ   = a.integrityScore ?? 100;
+        const pastes  = a.pastes   ?? 0;
+
+        function toMap(val) {
+            if (!val) return {};
+            if (Array.isArray(val)) return Object.fromEntries(val.map(w => [w, '']));
+            if (typeof val === 'object') return val;
+            return {};
+        }
+
+        const checks   = [];
+        const flags    = {};
+        const snapshot = { checks: [], keywords_found: [], keywords_missing: [], forbidden_found: [], markers_missing: [] };
+        let passed     = 0;
+
+        // 1. Palabras
+        const minW   = req.min_words || 0;
+        const maxW   = req.max_words;
+        const wordOk = words >= minW && (maxW == null || words <= maxW);
+        flags.words  = wordOk;
+        checks.push({ ok: wordOk, label: `Words: ${words} / ${minW}–${maxW ?? '∞'}` });
+        if (wordOk) passed++;
+
+        // 2. Integridad
+        const minInt  = req.min_integrity_score_required ?? 80;
+        const intOk   = integ >= minInt;
+        flags.integrity = intOk;
+        checks.push({ ok: intOk, label: `Integrity: ${integ}% (min ${minInt}%)` });
+        if (intOk) passed++;
+
+        // 3. Pastes
+        const maxP    = req.max_pastes_allowed ?? 0;
+        const pasteOk = pastes <= maxP;
+        flags.pastes  = pasteOk;
+        checks.push({ ok: pasteOk, label: `Pastes: ${pastes} (max ${maxP})` });
+        if (pasteOk) passed++;
+
+        // 4. Keywords
+        const kwMap   = toMap(req.target_keywords);
+        const kwList  = Object.keys(kwMap);
+        const minKw   = req.min_keyword_matches || 0;
+        if (kwList.length > 0 && minKw > 0) {
+            const found   = kwList.filter(k => text.includes(k.toLowerCase()));
+            const missing = kwList.filter(k => !text.includes(k.toLowerCase()));
+            const kwOk    = found.length >= minKw;
+            flags.keywords = kwOk;
+            snapshot.keywords_found   = found;
+            snapshot.keywords_missing = missing;
+            checks.push({ ok: kwOk, label: `Keywords: ${found.length}/${minKw}` });
+            if (kwOk) passed++;
+        } else {
+            flags.keywords = null; // No aplica
+        }
+
+        // 5. Required markers
+        const markers  = req.required_markers || [];
+        if (markers.length > 0) {
+            const missing  = markers.filter(m => !rawText.includes(m));
+            const markerOk = missing.length === 0;
+            flags.markers  = markerOk;
+            snapshot.markers_missing = missing;
+            checks.push({ ok: markerOk, label: `Markers: ${markerOk ? 'all present' : missing.length + ' missing'}` });
+            if (markerOk) passed++;
+        } else {
+            flags.markers = null;
+        }
+
+        // 6. Forbidden words
+        const forbMap  = toMap(req.forbidden_words);
+        const forbList = Object.keys(forbMap);
+        if (forbList.length > 0) {
+            const found    = forbList.filter(w => text.includes(w.toLowerCase()));
+            const forbidOk = found.length === 0;
+            flags.forbidden = forbidOk;
+            snapshot.forbidden_found = found.map(w => ({ word: w, label: forbMap[w] || '' }));
+            checks.push({ ok: forbidOk, label: `Forbidden: ${forbidOk ? 'none' : found.length + ' detected'}` });
+            if (forbidOk) passed++;
+        } else {
+            flags.forbidden = null;
+        }
+
+        const total = checks.length;
+        const pct   = total > 0 ? Math.round((passed / total) * 100) : 100;
+        snapshot.checks = checks;
+
+        return { passed, total, pct, flags, snapshot };
     }
 
     // ── Insert genérico ──────────────────────────────────────────────────────────
