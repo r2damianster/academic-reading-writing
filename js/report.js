@@ -30,8 +30,8 @@ async function _loadReportData() {
     // Cargar en paralelo: logs, ensayos y compliance guardado
     const [logs, essays, complianceRows] = await Promise.all([
         _sbGet(`activity_logs?student_id=eq.${student.id}&select=activity,result,created_at&order=created_at.asc`),
-        _sbGet(`essay_submissions?student_id=eq.${student.id}&select=id,activity,essay_text,words,pastes,tab_switches,keystrokes,deletions,time_to_first_key,writing_duration,chars_typed_ratio,integrity_score,created_at&order=created_at.asc`),
-        _sbGet(`essay_compliance_results?student_id=eq.${student.id}&select=submission_id,activity,criteria_met,criteria_total,compliance_pct,snapshot&order=created_at.asc`)
+        _sbGet(`essay_submissions?student_id=eq.${student.id}&select=id,activity,essay_text,words,pastes,tab_switches,keystrokes,deletions,time_to_first_key,writing_duration,chars_typed_ratio,integrity_score,created_at&order=created_at.desc`),
+        _sbGet(`essay_compliance_results?student_id=eq.${student.id}&select=submission_id,activity,criteria_met,criteria_total,compliance_pct,snapshot&order=created_at.desc`)
     ]);
 
     // Último ensayo por actividad

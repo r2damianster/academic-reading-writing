@@ -367,7 +367,7 @@ const SlideEngine = (function () {
         try {
             // Buscar requirements para esta lección
             const reqRes = await fetch(
-                `${SUPABASE_URL}/rest/v1/essay_requirements?activity_key=eq.${encodeURIComponent(lessonName)}&select=*&limit=1`,
+                `${SUPABASE_URL}/rest/v1/essay_requirements?activity_key=eq.${encodeURIComponent(lessonName.replace(/ /g, '-'))}&select=*&limit=1`,
                 {
                     headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
                     credentials: 'omit'
