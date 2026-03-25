@@ -5,8 +5,13 @@
  * localStorage como fallback si Supabase no responde.
  */
 
-const _REPORT_SUPABASE_URL = 'https://kuvyvyzmpfbndpkzbosb.supabase.co';
-const _REPORT_ANON_KEY     = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1dnl2eXptcGZibmRwa3pib3NiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0NDEwMzksImV4cCI6MjA4OTAxNzAzOX0.E9ftrQR0DojGLRUkMj4w2LUBWFnumK6lRr5M1WXiRNc';
+// Credenciales cargadas desde /api/config — no hardcodeadas.
+let _REPORT_SUPABASE_URL = '';
+let _REPORT_ANON_KEY     = '';
+fetch('/api/config').then(r=>r.json()).then(cfg=>{
+    _REPORT_SUPABASE_URL = cfg.supabaseUrl || '';
+    _REPORT_ANON_KEY     = cfg.supabaseKey || '';
+}).catch(()=>{});
 
 async function _sbGet(path) {
     const res = await fetch(`${_REPORT_SUPABASE_URL}/rest/v1/${path}`, {

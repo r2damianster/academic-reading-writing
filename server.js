@@ -21,7 +21,16 @@ const MIME = {
 const server = http.createServer(async (req, res) => {
     console.log(`${req.method} ${req.url}`);
 
-    // ─── 1. RUTA DE LA API ───
+    // ─── 1. RUTA DE CONFIGURACIÓN (Para el Frontend) ───
+    if (req.method === 'GET' && req.url === '/api/config') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({
+            supabaseUrl: process.env.SUPABASE_URL,
+            supabaseKey: process.env.SUPABASE_KEY 
+        }));
+    }
+
+    // ─── 2. RUTA DE LA API (Validación de Estudiante) ───
     if (req.method === 'POST' && req.url === '/api/validate-student') {
         let body = '';
         req.on('data', chunk => { body += chunk.toString(); });
@@ -34,7 +43,7 @@ const server = http.createServer(async (req, res) => {
                     return res.end(JSON.stringify({ message: 'Email is required' }));
                 }
 
-                // Normalización extrema: minúsculas, sin espacios y sin "live."
+                // Tu normalización original
                 const cleanEmail = email.toLowerCase().trim().replace('live.', '');
                 console.log(`🔍 Buscando en DB: [${cleanEmail}]`);
 
@@ -47,7 +56,6 @@ const server = http.createServer(async (req, res) => {
                 if (error || !data || data.length === 0) {
                     console.log(`❌ Estudiante no encontrado: ${cleanEmail}`);
                     res.writeHead(404, { 'Content-Type': 'application/json' });
-                    // IMPORTANTE: Aquí enviamos JSON para que auth.js no explote
                     return res.end(JSON.stringify({ message: 'Student not found in database.' }));
                 }
 
@@ -63,10 +71,10 @@ const server = http.createServer(async (req, res) => {
                 return res.end(JSON.stringify({ message: 'Internal Server Error' }));
             }
         });
-        return; // Detiene el flujo para que no intente cargar archivos estáticos
+        return; 
     }
 
-    // ─── 2. SERVIDOR DE ARCHIVOS ESTÁTICOS ───
+    // ─── 3. SERVIDOR DE ARCHIVOS ESTÁTICOS ───
     let urlPath = req.url === '/' ? '/index.html' : req.url;
     urlPath = urlPath.split('?')[0];
 

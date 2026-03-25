@@ -229,8 +229,9 @@
 <div id="tableContainer"><div class="state-msg">Loading your progress…</div></div>
 
 <script>
-const SB_URL = 'https://kuvyvyzmpfbndpkzbosb.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1dnl2eXptcGZibmRwa3pib3NiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0NDEwMzksImV4cCI6MjA4OTAxNzAzOX0.E9ftrQR0DojGLRUkMj4w2LUBWFnumK6lRr5M1WXiRNc';
+// Credenciales cargadas desde /api/config
+let SB_URL = '';
+let SB_KEY = '';
 const TOTAL  = 59; // total de lecciones del curso
 
 // Leer email: primero window.parent.localStorage, luego URL, luego localStorage propio
@@ -406,7 +407,11 @@ async function loadProgress() {
   }
 }
 
-loadProgress();
+fetch('/api/config').then(r=>r.json()).then(cfg=>{
+    SB_URL = cfg.supabaseUrl || '';
+    SB_KEY = cfg.supabaseKey || '';
+    loadProgress();
+}).catch(()=>{ loadProgress(); });
 </script>
 </body>
 </html>

@@ -254,8 +254,22 @@ const SlideEngine = (function () {
          Encuéntralos en: Supabase Dashboard → Settings → API
        =========================================================================== */
 
-    const SUPABASE_URL      = 'https://kuvyvyzmpfbndpkzbosb.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1dnl2eXptcGZibmRwa3pib3NiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0NDEwMzksImV4cCI6MjA4OTAxNzAzOX0.E9ftrQR0DojGLRUkMj4w2LUBWFnumK6lRr5M1WXiRNc';
+    // Credenciales leídas desde /api/config — no hardcodeadas en el JS.
+    // El servidor lee SUPABASE_URL y SUPABASE_KEY desde .env y los expone.
+    // La anon key es pública por diseño de Supabase (no es la service_role key).
+    let SUPABASE_URL      = '';
+    let SUPABASE_ANON_KEY = '';
+
+    fetch('/api/config')
+        .then(r => r.json())
+        .then(cfg => {
+            SUPABASE_URL      = cfg.supabaseUrl || '';
+            SUPABASE_ANON_KEY = cfg.supabaseKey || '';
+            window._SE_SB_URL = SUPABASE_URL;
+            window._SE_SB_KEY = SUPABASE_ANON_KEY;
+            console.log('🔑 Supabase config loaded');
+        })
+        .catch(e => console.error('❌ /api/config failed:', e));
 
     // ── Resolución de student_id ─────────────────────────────────────────────────
     // Busca el UUID del estudiante en la tabla students usando su email.
@@ -1125,6 +1139,11 @@ SlideTypes.ESSAY = {
                         <span style="font-size:0.82rem; color:#666; font-weight:600;">Integrity:</span>
                         <span id="se-integrity-score"
                               style="font-size:0.9rem; font-weight:700; color:#27ae60;">100%</span>
+                        <span id="se-req-badge"
+                              style="display:none; margin-left:10px; padding:2px 8px; border-radius:12px;
+                                     font-size:0.78rem; font-weight:600; cursor:pointer;
+                                     background:#f0f0f0; color:#6c757d;"
+                              title="Requirements — click to expand">Req: —</span>
                         <div style="position:relative; display:inline-block;">
                             <span id="se-info-btn"
                                   style="display:inline-flex; align-items:center; justify-content:center;
@@ -1237,8 +1256,8 @@ SlideTypes.ESSAY = {
         }
 
         async function _loadRequirements() {
-            const SURL = typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '';
-            const SKEY = typeof SUPABASE_ANON_KEY !== 'undefined' ? SUPABASE_ANON_KEY : '';
+            const SURL = window._SE_SB_URL || '';
+            const SKEY = window._SE_SB_KEY  || '';
             if (!SURL || !SKEY) return;
             try {
                 const key = lessonName.replace(/ /g, '-');
@@ -1371,6 +1390,17 @@ SlideTypes.ESSAY = {
                 }
             }
 
+            // Actualizar badge en la barra
+            const badge = document.getElementById('se-req-badge');
+            if (badge) {
+                const pct   = total > 0 ? Math.round((met/total)*100) : 100;
+                const color = pct >= 80 ? '#27ae60' : pct >= 50 ? '#e67e22' : '#e74c3c';
+                const bg    = pct >= 80 ? '#d4edda' : pct >= 50 ? '#fff3cd' : '#f8d7da';
+                badge.style.display    = 'inline-block';
+                badge.style.background = bg;
+                badge.style.color      = color;
+                badge.textContent      = 'Req: ' + met + '/' + total;
+            }
             // Actualizar resumen en el header del panel
             const summaryEl = document.getElementById('se-req-summary');
             if (summaryEl) {
@@ -1418,13 +1448,18 @@ SlideTypes.ESSAY = {
         const reqToggle = workspace.querySelector('#se-req-toggle');
         const reqBody   = workspace.querySelector('#se-req-body');
         const reqArrow  = workspace.querySelector('#se-req-arrow');
-        if (reqToggle && reqBody) {
-            reqToggle.addEventListener('click', () => {
-                const open = reqBody.style.display === 'block';
-                reqBody.style.display  = open ? 'none' : 'block';
-                reqArrow.style.transform = open ? '' : 'rotate(180deg)';
-            });
+        function _toggleReqPanel() {
+            if (!reqBody) return;
+            const open = reqBody.style.display === 'block';
+            reqBody.style.display = open ? 'none' : 'block';
+            if (reqArrow) reqArrow.style.transform = open ? '' : 'rotate(180deg)';
         }
+        if (reqToggle) reqToggle.addEventListener('click', _toggleReqPanel);
+        // Badge en la barra tambien abre/cierra el panel
+        setTimeout(() => {
+            const b = document.getElementById('se-req-badge');
+            if (b) b.addEventListener('click', _toggleReqPanel);
+        }, 600);
 
         // Tooltip integrity hover
         const infoBtn  = workspace.querySelector('#se-info-btn');
