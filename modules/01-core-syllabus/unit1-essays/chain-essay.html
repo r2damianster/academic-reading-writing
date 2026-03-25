@@ -1,24 +1,283 @@
-<link rel="stylesheet" href="../../../css/readingsidebar.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chain Essay | Academic Workspace</title>
 
-<div class="slide" data-type="READING" data-se-pdf="ruta/tu-archivo.pdf">
-    <div class="reading-container">
-        <div class="pdf-main-view">
-            <h2 id="pdf-title">Estructura del Ensayo</h2>
-            <div id="pdf-render-0"></div> </div>
+    <!-- Supabase config (reading-engine.js lo lee desde aquí) -->
+    <meta name="supabase-url" content="https://kuvyvyzmpfbndpkzbosb.supabase.co">
+    <meta name="supabase-key" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1dnl2eXptcGZibmRwa3pib3NiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0NDEwMzksImV4cCI6MjA4OTAxNzAzOX0.E9ftrQR0DojGLRUkMj4w2LUBWFnumK6lRr5M1WXiRNc">
 
-        <div class="reading-sidebar" id="sidebar-interaction">
-            <h3>Retos de Lectura</h3>
-            <div id="ai-challenge-container">
-                <div class="challenge-card">
-                    <b>🎯 Reto Actual:</b>
-                    <p>Busca la tesis en la introducción y subrayala para continuar.</p>
-                </div>
-            </div>
-            
-            <div id="interaction-form" style="margin-top: auto;">
-                <textarea placeholder="Escribe tu análisis aquí..." style="width:100%; height:80px;"></textarea>
-                <button class="btn-next" style="display:none; width:100%;">Siguiente Paso</button>
-            </div>
-        </div>
+    <!-- Estilos del proyecto existente -->
+    <link rel="stylesheet" href="../../../css/modules.css">
+    <!-- Estilos específicos de lectura -->
+    <link rel="stylesheet" href="../../../css/readingsidebar.css">
+
+    <!-- PDF.js desde CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <!-- Motor de lectura (NO toca slide-engine.js) -->
+    <script src="../../../js/reading-engine.js" defer></script>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     CONTENEDOR PRINCIPAL
+════════════════════════════════════════════════════════════════════════════ -->
+<div class="lesson-container">
+
+    <!-- Barra de progreso -->
+    <div class="progress-bar">
+        <div class="progress-fill" id="readingProgressBar"></div>
     </div>
-</div>
+    <div style="text-align:right; font-size:0.8rem; color:#6c757d; padding:4px 16px 0;"
+         id="readingSlideCounter">1 / 9</div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SLIDE 1 — VIDEO / PRESENTACIÓN (profesor proyecta en clase)
+         Tipo: VIDEO — solo necesita el iframe con data-re-src
+    ═══════════════════════════════════════════════════════════════════ -->
+    <div class="reading-slide active" data-type="VIDEO">
+        <h2>Chain Essay — What Is It?</h2>
+        <p style="color:#6c757d; margin-bottom:16px;">
+            Your instructor will walk you through the key concepts. Follow along with the presentation.
+        </p>
+        <iframe
+            data-re-src="https://docs.google.com/presentation/d/1lc2OT4PMBK6hcvg2jUaXgpuPLqmr_RrfydAFHyPx6UA/embed?start=false&loop=false&delayms=3000"
+            data-re-height="360"
+            style="border-radius:10px; border:none; display:block; width:100%;">
+        </iframe>
+        <p style="text-align:center; margin-top:10px; font-size:0.85rem; color:#888;">
+            When the presentation is complete, click the button below to start your independent work.
+        </p>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SLIDE 2 — CONTENT: Contexto antes de entrar al PDF
+         Tipo: CONTENT — texto puro, botón continuar inmediato
+    ═══════════════════════════════════════════════════════════════════ -->
+    <div class="reading-slide" data-type="CONTENT">
+        <h2>Your Mission for This Lesson</h2>
+        <p>
+            A <strong>chain essay</strong> (also called a <em>cause-effect chain</em>) is an
+            organizational pattern where each point leads logically to the next — like links in a chain.
+        </p>
+        <p>
+            Over the next steps, you will:
+        </p>
+        <ul style="line-height:2; padding-left:20px;">
+            <li>📖 Read the assigned article about chain essay structure</li>
+            <li>🖊 Highlight the key definition in the text</li>
+            <li>💬 Comment on the author's main argument</li>
+            <li>❓ Answer comprehension questions with the PDF open</li>
+            <li>🎯 Identify the structural elements in a drag & drop activity</li>
+            <li>✏️ Complete a summary using fill-in-the-blank</li>
+        </ul>
+        <p>
+            The article will stay visible throughout. Take your time — quality matters more than speed.
+        </p>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SLIDE 3 — READING_FOCUS: Leer la introducción
+         Tipo: READING_FOCUS — PDF + timer mínimo de permanencia
+         
+         PERSONALIZACIÓN:
+           data-re-pdf    → cambia la URL al PDF real del curso
+           data-re-page   → página del PDF donde comienza la lectura
+           data-re-min-time → segundos mínimos (default 15)
+    ═══════════════════════════════════════════════════════════════════ -->
+    <div class="reading-slide"
+         data-type="READING_FOCUS"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/chain_sFeaturesRethorical.pdf"
+         data-re-page="1"
+         data-re-min-time="20"
+         data-re-label="Introduction"
+         data-re-task="Read pages 1–2 carefully. Focus on the definition and purpose of the chain essay.">
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SLIDE 4 — READING_HIGHLIGHT: Subrayar la tesis
+         Tipo: READING_HIGHLIGHT — PDF + selección de texto en excerpt
+         
+         data-re-excerpt  → El párrafo que verá el estudiante para seleccionar.
+                            (Es un extracto del PDF, copiado aquí para que sea
+                             seleccionable. En v2 se puede hacer con PDF.js text layer.)
+         data-re-target-text → Fragmento que debe estar contenido en la selección.
+                               Si se deja vacío, cualquier selección >3 palabras funciona.
+    ═══════════════════════════════════════════════════════════════════ -->
+    <div class="reading-slide"
+         data-type="READING_HIGHLIGHT"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/chain_sFeaturesRethorical.pdf"
+         data-re-page="1"
+         data-re-label="Highlight the Thesis"
+         data-re-task="Select the sentence that best states the author's central argument."
+         data-re-excerpt="In a chain essay, the writer develops an argument by connecting
+            causes to effects in a sequential chain: the effect of one point becomes
+            the cause of the next. Each body paragraph must therefore begin by picking
+            up the outcome stated at the end of the previous paragraph, ensuring that
+            the logic flows without interruption from the introduction to the conclusion."
+         data-re-target-text="effect of one point becomes the cause">
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SLIDE 5 — READING_COMMENT: Análisis escrito
+         Tipo: READING_COMMENT — PDF + área de texto con conteo de palabras
+    ═══════════════════════════════════════════════════════════════════ -->
+    <div class="reading-slide"
+         data-type="READING_COMMENT"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/chain_sFeaturesRethorical.pdf"
+         data-re-page="2"
+         data-re-min-words="20"
+         data-re-label="Your Analysis"
+         data-re-task="In your own words: why is the chain pattern useful for cause-and-effect essays? Use evidence from the text.">
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SLIDE 6 — READING_QUIZ: Comprensión lectora
+         Tipo: READING_QUIZ — PDF visible + opción múltiple en sidebar
+         
+         Marcado igual que en slide-engine:
+           data-re-question  → el enunciado de la pregunta
+           data-re-option    → cada opción
+           data-re-correct   → marca la opción correcta
+    ═══════════════════════════════════════════════════════════════════ -->
+    <div class="reading-slide"
+         data-type="READING_QUIZ"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/chain_sFeaturesRethorical.pdf"
+         data-re-page="2"
+         data-re-label="Comprehension Check">
+
+        <p data-re-question>
+            According to the text, what is the PRIMARY advantage of the chain essay structure?
+        </p>
+        <div data-re-option>A. It allows the writer to present unrelated ideas freely.</div>
+        <div data-re-option data-re-correct>B. It creates a clear logical progression where each point leads to the next.</div>
+        <div data-re-option>C. It reduces the total number of body paragraphs needed.</div>
+        <div data-re-option>D. It is the only valid structure for academic essays.</div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SLIDE 7 — READING_QUIZ (segunda pregunta)
+    ═══════════════════════════════════════════════════════════════════ -->
+    <div class="reading-slide"
+         data-type="READING_QUIZ"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/chain_sFeaturesRethorical.pdf"
+         data-re-page="2"
+         data-re-label="Comprehension Check">
+
+        <p data-re-question>
+            Which type of topic is MOST suitable for a chain essay, based on the text?
+        </p>
+        <div data-re-option>A. Comparing two cities by category (climate, culture, economy).</div>
+        <div data-re-option>B. Describing a character's personality traits.</div>
+        <div data-re-option data-re-correct>C. Explaining how one event triggers a sequence of consequences.</div>
+        <div data-re-option>D. Listing the advantages of a technology product.</div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SLIDE 8 — READING_DRAGDROP: Organizar las partes de la cadena
+         Tipo: READING_DRAGDROP — PDF visible + drag & drop en sidebar
+         
+         data-re-drag      → elemento arrastrable
+         data-re-drag-type → identificador del tipo (debe coincidir con accepts)
+         data-re-drop      → zona de destino
+         data-re-drop-accepts → qué tipo acepta
+         data-re-label     → etiqueta de la zona
+    ═══════════════════════════════════════════════════════════════════ -->
+    <div class="reading-slide"
+         data-type="READING_DRAGDROP"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/chain_sFeaturesRethorical.pdf"
+         data-re-page="1"
+         data-re-label="Structure Builder"
+         data-re-task="Drag each function to its correct position in the chain essay structure.">
+
+        <!-- Elementos arrastrables -->
+        <div data-re-drag data-re-drag-type="intro">📌 Introduction — states the initial cause</div>
+        <div data-re-drag data-re-drag-type="body1">🔗 Body 1 — first effect / next cause</div>
+        <div data-re-drag data-re-drag-type="body2">🔗 Body 2 — second effect / next cause</div>
+        <div data-re-drag data-re-drag-type="conclusion">🏁 Conclusion — final effect + so what?</div>
+
+        <!-- Zonas de destino -->
+        <div data-re-drop data-re-drop-accepts="intro"       data-re-label="Paragraph 1"></div>
+        <div data-re-drop data-re-drop-accepts="body1"       data-re-label="Paragraph 2"></div>
+        <div data-re-drop data-re-drop-accepts="body2"       data-re-label="Paragraph 3"></div>
+        <div data-re-drop data-re-drop-accepts="conclusion"  data-re-label="Paragraph 4"></div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SLIDE 9 — READING_FILL: Completar el resumen
+         Tipo: READING_FILL — PDF visible + fill in the blank en sidebar
+    ═══════════════════════════════════════════════════════════════════ -->
+    <div class="reading-slide"
+         data-type="READING_FILL"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/chain_sFeaturesRethorical.pdf"
+         data-re-page="1"
+         data-re-label="Summary"
+         data-re-task="Complete the summary using the key terms from the article.">
+
+        <p data-re-question>Complete the definition using the terms from your reading:</p>
+
+        <p data-re-sentence>
+            A chain essay is organized so that each
+            <span data-re-blank data-re-answer="paragraph">___</span>
+            builds upon the previous one, forming a continuous logical
+            <span data-re-blank data-re-answer="progression">___</span>.
+        </p>
+
+        <p data-re-sentence>
+            This pattern is best suited for
+            <span data-re-blank data-re-answer="cause-and-effect">___</span>
+            topics where the writer must demonstrate an unbroken
+            <span data-re-blank data-re-answer="causal chain">___</span>.
+        </p>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         PANTALLA DE FINALIZACIÓN
+         Se muestra cuando el engine llama _finishLesson()
+         (cuando el estudiante completa la última slide)
+    ═══════════════════════════════════════════════════════════════════ -->
+    <div id="readingDoneScreen" style="display:none; text-align:center; padding:40px 20px;">
+        <div style="font-size:3rem; margin-bottom:16px;">🎉</div>
+        <h2 style="color:#27ae60; margin-bottom:8px;">Lesson Complete!</h2>
+        <p style="color:#6c757d; max-width:420px; margin:0 auto 24px;">
+            Your work has been saved. You have completed all reading activities for this lesson.
+        </p>
+        <a href="chain-essay.html"
+           style="display:inline-block; padding:12px 28px; background:#2c7be5; color:#fff;
+                  border-radius:10px; text-decoration:none; font-weight:700; font-size:1rem;
+                  margin-right:12px;">
+            ↩ Review Lesson
+        </a>
+        <a href="unit1-essays-hub.html"
+           style="display:inline-block; padding:12px 28px; background:#e9ecef; color:#2c3e50;
+                  border-radius:10px; text-decoration:none; font-weight:700; font-size:1rem;">
+            Back to Unit 1 →
+        </a>
+    </div>
+
+</div><!-- /.lesson-container -->
+
+<script>
+    // PDF.js worker (requerido)
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    window.onload = () => {
+        ReadingEngine.init('chain-essay');
+    };
+</script>
+
+</body>
+</html>

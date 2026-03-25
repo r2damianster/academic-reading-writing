@@ -1,0 +1,551 @@
+/* =============================================================================
+   readingsidebar.css — Layout de Lectura Interactiva — ULEAM
+   Mobile-first. Complementa modules.css sin sobreescribir sus reglas base.
+   ============================================================================= */
+
+/* ── Variables ──────────────────────────────────────────────────────────────── */
+:root {
+    --re-accent:        #2c7be5;
+    --re-accent-dk:     #1a5cba;
+    --re-success:       #27ae60;
+    --re-success-bg:    #d4edda;
+    --re-error-bg:      #f8d7da;
+    --re-border:        #dee2e6;
+    --re-surface:       #f8f9fa;
+    --re-text:          #2c3e50;
+    --re-muted:         #6c757d;
+    --re-sidebar-hd:    #1e3a5f;
+    --re-sidebar-w:     300px;   /* desktop */
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   OVERRIDE: ampliar lesson-container para slides de lectura
+   modules.css limita a 700px — las slides con PDF+sidebar necesitan más espacio
+   en desktop. En mobile todo es full-width de todas formas.
+══════════════════════════════════════════════════════════════════════════════ */
+.lesson-container:has(.reading-slide.active .reading-layout) {
+    max-width: 1060px;
+    padding: 20px;
+}
+
+/* Fallback para browsers sin :has() — se aplica siempre si hay reading-layout */
+.reading-layout ~ * { box-sizing: border-box; }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   SLIDES DE LECTURA — visibilidad (espejo de .slide en modules.css)
+   El engine inyecta esto vía JS también; aquí es el respaldo CSS puro.
+══════════════════════════════════════════════════════════════════════════════ */
+.reading-slide {
+    display: none !important;
+}
+.reading-slide.active {
+    display: block !important;
+    animation: re-fadeIn 0.4s ease both;
+}
+@keyframes re-fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   LAYOUT PDF + SIDEBAR
+   Mobile-first: columna única. Desktop (≥769px): fila lado a lado.
+══════════════════════════════════════════════════════════════════════════════ */
+.reading-layout {
+    display: flex;
+    flex-direction: column;   /* default: mobile columna */
+    width: 100%;
+    border: 1px solid var(--re-border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    background: #fff;
+    /* Mobile: altura total controlada — suma pdf+sidebar = ~100dvh - chrome UI */
+    height: calc(100dvh - 120px);
+    max-height: 700px;
+    min-height: 480px;
+}
+
+/* ── Panel izquierdo: visor PDF ─────────────────────────────────────────────── */
+.pdf-main-view {
+    display: flex;
+    flex-direction: column;
+    background: #e9ecef;
+    /* Mobile: exactamente 50% del contenedor */
+    flex: 0 0 50%;
+    height: 50%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Zona de render (scroll interno) */
+.pdf-render-zone {
+    flex: 1 1 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    -webkit-overflow-scrolling: touch;
+}
+
+.pdf-render-zone canvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 3px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+/* Mensaje de carga / error dentro del render zone */
+.pdf-render-zone p {
+    padding: 20px;
+    text-align: center;
+    color: var(--re-muted);
+    font-size: 0.9rem;
+}
+
+/* Controles de paginación */
+.pdf-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 6px 12px;
+    background: #fff;
+    border-top: 1px solid var(--re-border);
+    font-size: 0.82rem;
+    color: var(--re-muted);
+    flex-shrink: 0;
+    min-height: 42px;
+}
+
+.pdf-controls button {
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
+    border: 1px solid var(--re-border);
+    background: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    transition: background 0.15s, border-color 0.15s;
+    flex-shrink: 0;
+}
+.pdf-controls button:hover:not(:disabled) {
+    background: var(--re-accent);
+    border-color: var(--re-accent);
+    color: #fff;
+}
+.pdf-controls button:disabled { opacity: 0.3; cursor: default; }
+
+/* ── Panel derecho: sidebar de actividad ─────────────────────────────────────── */
+.reading-sidebar {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-top: 2px solid var(--re-border);  /* Mobile: separador arriba */
+    /* Mobile: exactamente 50% del contenedor */
+    flex: 0 0 50%;
+    height: 50%;
+    overflow: hidden;
+}
+
+.sidebar-header {
+    background: var(--re-sidebar-hd);
+    color: #fff;
+    padding: 12px 16px 10px;
+    flex-shrink: 0;
+}
+.sidebar-header h3 {
+    margin: 0 0 2px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+.sidebar-header p {
+    margin: 0;
+    font-size: 0.78rem;
+    opacity: 0.72;
+    line-height: 1.4;
+}
+
+/* Cuerpo scrollable */
+.sidebar-body {
+    flex: 1 1 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 12px 14px;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ── Botón "Siguiente slide" — fijo en la base del sidebar ──────────────────── */
+.btn-next-slide {
+    display: none;               /* ReadingEngine lo muestra al completar tarea */
+    flex-shrink: 0;
+    margin: 0;
+    padding: 13px 16px;
+    background: var(--re-success);
+    color: #fff;
+    border: none;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background 0.2s;
+    text-align: center;
+    width: 100%;
+    animation: re-pulseIn 0.45s ease both;
+}
+.btn-next-slide:hover { background: #219a52; }
+@keyframes re-pulseIn {
+    0%   { transform: scale(0.97); opacity: 0.6; }
+    65%  { transform: scale(1.02); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   DESKTOP / TABLET LANDSCAPE (≥ 1024px)
+   Siempre horizontal: PDF izquierda, sidebar derecha.
+   Se activa cuando el viewport tiene al menos 1024px —
+   así funciona tanto en pantalla completa como ventana reducida a la mitad
+   en monitores grandes, sin romper el layout.
+══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Clases utilitarias del sidebar (reemplazan inline styles del engine) ───── */
+.re-section-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--re-muted);
+    margin-bottom: 6px;
+}
+.re-word-count {
+    font-size: 0.78rem;
+    color: var(--re-muted);
+    text-align: right;
+    margin-bottom: 6px;
+}
+.re-selection-display {
+    font-size: 0.78rem;
+    color: var(--re-muted);
+    font-style: italic;
+    min-height: 18px;
+    margin-top: 8px;
+}
+
+/* ── Fill-in-the-blank input ─────────────────────────────────────────────────── */
+.re-fill-input {
+    display: inline-block;
+    padding: 2px 6px;
+    border: none;
+    border-bottom: 2px solid var(--re-accent);
+    background: #f0f7ff;
+    border-radius: 4px;
+    font-size: 0.88rem;
+    font-family: inherit;
+    font-weight: 600;
+    text-align: center;
+    outline: none;
+    margin: 0 3px;
+    transition: border-color 0.15s, background 0.15s;
+    vertical-align: baseline;
+}
+.re-fill-input:focus {
+    border-bottom-color: var(--re-accent-dk);
+    background: #e0eeff;
+}
+
+/* ── Drag item DENTRO de drop zone — mantener colores originales ─────────────── */
+/* Cuando un sd-drag-item está dentro de un sd-drop-zone.filled,
+   el fondo del zone es verde pero el item debe seguir siendo azul */
+.sd-drop-zone.filled .sd-drag-item {
+    background: #e8f4fd;
+    border-color: var(--re-accent);
+    color: var(--re-text);
+    cursor: default;
+    margin: 0;
+}
+
+@media (min-width: 1024px) {
+    /* Ampliar el contenedor para acomodar PDF + sidebar lado a lado */
+    .lesson-container {
+        max-width: 1100px;
+        padding: 28px 24px;
+    }
+
+    .reading-layout {
+        flex-direction: row;   /* ← clave: siempre horizontal en desktop */
+        height: 600px;
+        max-height: 640px;
+        min-height: 500px;
+    }
+
+    /* PDF: crece y llena la altura del layout */
+    .pdf-main-view {
+        flex: 1 1 0;
+        height: 100%;
+    }
+
+    /* Sidebar: ancho fijo 300px a la derecha */
+    .reading-sidebar {
+        flex: 0 0 var(--re-sidebar-w);
+        width: var(--re-sidebar-w);
+        height: 100%;
+        border-top: none;
+        border-left: 2px solid var(--re-border);
+    }
+}
+
+/* Tablet portrait (768–1023px): también horizontal pero sidebar más estrecho */
+@media (min-width: 768px) and (max-width: 1023px) {
+    :root { --re-sidebar-w: 260px; }
+
+    .lesson-container {
+        max-width: 100%;
+        padding: 16px;
+    }
+
+    .reading-layout {
+        flex-direction: row;
+        height: 520px;
+        max-height: 560px;
+        min-height: 420px;
+    }
+
+    .pdf-main-view {
+        flex: 1 1 0;
+        height: 100%;
+    }
+
+    .reading-sidebar {
+        flex: 0 0 var(--re-sidebar-w);
+        width: var(--re-sidebar-w);
+        height: 100%;
+        border-top: none;
+        border-left: 2px solid var(--re-border);
+    }
+}
+
+/* ── Mobile: reducir texto del sidebar ─────────────────────────────────────────
+   modules.css fija font-size:16px y line-height:1.7 en body.
+   En mobile el sidebar es pequeño — necesitamos texto más compacto.
+────────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+    .sidebar-body {
+        font-size: 13px;
+        line-height: 1.45;
+    }
+    .sidebar-body p,
+    .sidebar-body li,
+    .sidebar-body span {
+        font-size: 13px;
+        line-height: 1.45;
+    }
+    .challenge-card {
+        font-size: 13px;
+        line-height: 1.4;
+        padding: 9px 11px;
+    }
+    .challenge-card .card-label {
+        font-size: 0.7rem;
+    }
+    .sidebar-quiz-option {
+        font-size: 13px;
+        padding: 8px 11px;
+        line-height: 1.35;
+    }
+    .sidebar-textarea {
+        font-size: 14px !important;  /* 14 mínimo para no triggerear zoom iOS */
+        line-height: 1.4;
+        min-height: 65px;
+    }
+    .re-excerpt-box {
+        font-size: 13px;
+        line-height: 1.5;
+        padding: 9px 11px;
+    }
+    .sd-drag-item {
+        font-size: 12px;
+        padding: 7px 10px;
+    }
+    .sd-drop-zone {
+        font-size: 12px;
+        min-height: 36px;
+    }
+    .reading-feedback {
+        font-size: 12px;
+        padding: 7px 10px;
+    }
+    .sidebar-header h3 {
+        font-size: 0.75rem;
+    }
+    .sidebar-header p {
+        font-size: 0.72rem;
+    }
+    .btn-next-slide {
+        font-size: 0.88rem;
+        padding: 11px 14px;
+    }
+    /* Utilities */
+    .re-section-label { font-size: 0.7rem; margin-bottom: 4px; }
+    .re-word-count    { font-size: 0.7rem; }
+    .re-selection-display { font-size: 0.7rem; }
+    /* Fill inputs — 14px mínimo para no triggerear zoom iOS */
+    .re-fill-input {
+        font-size: 14px !important;
+        padding: 1px 5px;
+        margin: 0 2px;
+    }
+    /* Fill sentences */
+    #re-fill-body p,
+    .re-fill-sentence {
+        font-size: 13px;
+        line-height: 1.5;
+        margin-bottom: 8px;
+    }
+}
+
+/* ── Mobile: texto compacto en slides CONTENT y VIDEO (sin sidebar) ────────── */
+@media (max-width: 767px) {
+    .reading-slide p,
+    .reading-slide li,
+    .reading-slide h2 {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    .reading-slide h2 {
+        font-size: 1.1rem;
+        line-height: 1.35;
+    }
+    .reading-slide ul {
+        line-height: 1.5 !important;  /* override inline style="line-height:2" */
+        padding-left: 16px;
+    }
+    .reading-slide li {
+        margin-bottom: 4px;
+    }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   FULLSCREEN PDF OVERLAY
+   El botón ⛶ en los controles del PDF abre el overlay.
+   ESC o el botón × lo cierra. El PDF se re-renderiza al tamaño completo.
+══════════════════════════════════════════════════════════════════════════════ */
+.pdf-fs-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
+    border: 1px solid var(--re-border);
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, border-color 0.15s;
+    flex-shrink: 0;
+    margin-left: 6px;
+}
+.pdf-fs-btn:hover {
+    background: var(--re-accent);
+    border-color: var(--re-accent);
+    color: #fff;
+}
+
+/* Overlay fullscreen */
+.pdf-fs-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.92);
+    flex-direction: column;
+    align-items: stretch;
+}
+.pdf-fs-overlay.open {
+    display: flex;
+}
+
+/* Barra superior del overlay */
+.pdf-fs-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: #1e3a5f;
+    color: #fff;
+    flex-shrink: 0;
+    gap: 12px;
+}
+.pdf-fs-topbar span {
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+.pdf-fs-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #fff;
+}
+.pdf-fs-nav button {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.15s;
+}
+.pdf-fs-nav button:hover:not(:disabled) {
+    background: rgba(255,255,255,0.25);
+}
+.pdf-fs-nav button:disabled { opacity: 0.3; cursor: default; }
+
+.pdf-fs-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+.pdf-fs-close:hover { background: rgba(255,0,0,0.4); }
+
+/* Canvas zone del overlay — scroll vertical */
+.pdf-fs-canvas-zone {
+    flex: 1 1 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 16px;
+    -webkit-overflow-scrolling: touch;
+}
+.pdf-fs-canvas-zone canvas {
+    display: block;
+    max-width: min(900px, 100%);
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.5);
+}
