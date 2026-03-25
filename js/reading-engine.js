@@ -49,26 +49,22 @@ const ReadingEngine = (function () {
     /* ──────────────────────────────────────────────────────────────────────────
        ESTADO INTERNO
     ────────────────────────────────────────────────────────────────────────── */
-    let _slides       = [];
-    let _current      = 0;
-    let _lessonName   = '';
-    let _pdfCache     = {};      // url → pdfDoc  (PDF.js cargado)
-    let _currentPdfUrl = null;   // última URL activa
-    let _sessionId    = null;    // UUID de reading_sessions (Supabase)
-    let _studentName  = null;
+    let _slides        = [];
+    let _current       = 0;
+    let _lessonName    = '';
+    let _pdfCache      = {};     // url → pdfDoc
+    let _currentPdfUrl = null;
+    let _studentId     = null;   // UUID real de la tabla students
+    let _studentName   = null;   // nombre para mostrar
+    let _startTime     = null;   // timestamp de inicio de lección
     let _totalMistakes = 0;
+    let _slideResults  = [];     // snapshot ligero de cada slide completado
 
+    // Leer credenciales desde <meta> tags en el HTML
     const SUPABASE_URL = (() => {
-        // Reutilizar la constante del slide-engine si ya existe en el scope global
-        // Esto evita duplicar la key en dos archivos.
-        if (typeof SlideEngine !== 'undefined') {
-            // Acceso indirecto: slide-engine expone la URL en window si existe
-        }
-        // Fallback: leer del meta tag <meta name="supabase-url" content="...">
         const meta = document.querySelector('meta[name="supabase-url"]');
         return meta ? meta.content : '';
     })();
-
     const SUPABASE_KEY = (() => {
         const meta = document.querySelector('meta[name="supabase-key"]');
         return meta ? meta.content : '';
@@ -86,15 +82,21 @@ const ReadingEngine = (function () {
             return;
         }
 
-        // Nombre de estudiante: pedir si no está en localStorage
-        _studentName = localStorage.getItem('readingStudentName');
+        // Identidad del estudiante — igual que slide-engine.js
+        // Prioridad: studentId cacheado → resolución por email → fallback nombre
+        _studentId   = localStorage.getItem('studentId')   || null;
+        _studentName = localStorage.getItem('studentName') || localStorage.getItem('readingStudentName') || null;
+
         if (!_studentName) {
-            _studentName = prompt('Enter your name to begin the lesson:') || 'Anonymous';
-            localStorage.setItem('readingStudentName', _studentName.trim());
+            // Último recurso: pedir nombre (solo si no hay sesión de slide-engine)
+            const email = localStorage.getItem('studentEmail');
+            if (email) {
+                // Hay email → resolver UUID en background
+                _resolveStudentId(email);
+            }
         }
 
-        // Crear sesión en Supabase (no bloqueante)
-        _initSession();
+        _startTime = Date.now();
 
         // Montar cada slide
         _slides.forEach((slide, i) => {
@@ -108,6 +110,8 @@ const ReadingEngine = (function () {
                 case 'READING_QUIZ':      ReadingTypes.READING_QUIZ.mount(slide, i);     break;
                 case 'READING_DRAGDROP':  ReadingTypes.READING_DRAGDROP.mount(slide, i); break;
                 case 'READING_FILL':      ReadingTypes.READING_FILL.mount(slide, i);     break;
+                case 'READING_TFNG':      ReadingTypes.READING_TFNG.mount(slide, i);     break;
+                case 'READING_MATCH':     ReadingTypes.READING_MATCH.mount(slide, i);    break;
             }
         });
 
@@ -262,70 +266,154 @@ const ReadingEngine = (function () {
     }
 
     /* ──────────────────────────────────────────────────────────────────────────
-       SUPABASE — Guardar progreso
+       SUPABASE — Identidad y guardado
     ────────────────────────────────────────────────────────────────────────── */
-    async function _initSession() {
-        if (!SUPABASE_URL) return;
+
+    // Resuelve el UUID del estudiante desde su email (igual que slide-engine)
+    async function _resolveStudentId(email) {
+        if (_studentId) return _studentId;
+        if (!email || !SUPABASE_URL) return null;
         try {
-            const res = await fetch(`${SUPABASE_URL}/rest/v1/reading_sessions`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'apikey': SUPABASE_KEY,
-                    'Authorization': `Bearer ${SUPABASE_KEY}`,
-                    'Prefer': 'return=representation'
-                },
-                body: JSON.stringify({
-                    lesson_url:  window.location.pathname,
-                    is_live:     false
-                })
-            });
-            if (res.ok) {
-                const rows = await res.json();
-                _sessionId = rows[0]?.id || null;
-                console.log('📡 Reading session creada:', _sessionId);
+            const res = await fetch(
+                `${SUPABASE_URL}/rest/v1/students?email=eq.${encodeURIComponent(email)}&select=id,name&limit=1`,
+                { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+            );
+            const rows = await res.json();
+            if (rows && rows.length > 0) {
+                _studentId   = rows[0].id;
+                _studentName = rows[0].name || _studentName;
+                localStorage.setItem('studentId',   _studentId);
+                localStorage.setItem('studentName', _studentName);
+                console.log('ReadingEngine: student_id resuelto →', _studentId);
+                return _studentId;
             }
         } catch(e) {
-            console.warn('ReadingEngine: no se pudo crear sesión Supabase (offline?)');
+            console.warn('ReadingEngine: _resolveStudentId falló:', e);
         }
+        return null;
     }
 
-    async function _saveProgress(slideIndex, actionType, data) {
-        if (!SUPABASE_URL || !_sessionId) return;
+    // Guarda un snapshot ligero de la acción del slide actual (en memoria)
+    // Solo se persiste en DB al finalizar la lección — evita N inserts por slide.
+    function _saveProgress(slideIndex, actionType, data) {
+        // Registrar en memoria (snapshot de la lección)
+        _slideResults.push({
+            slide:  slideIndex,
+            type:   actionType,
+            ...(data || {}),
+            ts:     new Date().toISOString()
+        });
+        // Log local para debug
+        console.log(`📝 [slide ${slideIndex}] ${actionType}`, data || '');
+    }
+
+    // Inserta UNA fila en activity_logs al terminar la lección (igual que slide-engine)
+    async function _persistLessonResult(score) {
+        if (!SUPABASE_URL) return;
+
+        // Asegurar student_id antes de insertar
+        const email = localStorage.getItem('studentEmail');
+        if (!_studentId && email) {
+            await _resolveStudentId(email);
+        }
+
+        const durationSec = _startTime ? Math.round((Date.now() - _startTime) / 1000) : null;
+        const errors      = _totalMistakes;
+        const result      = `Score: ${score}% (Errors: ${errors})`;
+
+        // 1. Insertar en activity_logs (vincula la lección al estudiante)
+        const logRecord = {
+            student_id: _studentId || null,
+            activity:   _lessonName,
+            result:     result
+        };
+
+        try {
+            const r = await fetch(`${SUPABASE_URL}/rest/v1/activity_logs`, {
+                method:  'POST',
+                headers: {
+                    'Content-Type':  'application/json',
+                    'apikey':         SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Prefer':        'return=minimal'
+                },
+                body:        JSON.stringify(logRecord),
+                credentials: 'omit'
+            });
+            if (r.ok) {
+                console.log(`📡 activity_logs ← "${_lessonName}" ${result}`);
+            } else {
+                const t = await r.text();
+                console.error('activity_logs error:', r.status, t);
+            }
+        } catch(e) {
+            console.error('activity_logs fetch falló:', e);
+        }
+
+        // 2. Guardar snapshot compacto en reading_progress (UNA sola fila)
+        // Contiene el resumen completo: score, errores, duración y acciones por slide
         try {
             await fetch(`${SUPABASE_URL}/rest/v1/reading_progress`, {
-                method: 'POST',
+                method:  'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'apikey': SUPABASE_KEY,
+                    'Content-Type':  'application/json',
+                    'apikey':         SUPABASE_KEY,
                     'Authorization': `Bearer ${SUPABASE_KEY}`,
-                    'Prefer': 'return=minimal'
+                    'Prefer':        'return=minimal'
                 },
                 body: JSON.stringify({
-                    session_id:   _sessionId,
-                    student_name: _studentName,
-                    slide_id:     slideIndex,
-                    action_data:  { type: actionType, ...(data || {}) }
-                })
+                    student_name: _studentName || 'Unknown',
+                    slide_id:     -1,   // -1 = fila de resumen (no un slide individual)
+                    action_data:  {
+                        type:          'lesson_summary',
+                        lesson:        _lessonName,
+                        student_id:    _studentId,
+                        score,
+                        errors,
+                        duration_sec:  durationSec,
+                        slides_total:  _slides.length,
+                        slide_results: _slideResults
+                    }
+                }),
+                credentials: 'omit'
             });
+            console.log(`📡 reading_progress ← resumen de "${_lessonName}"`);
         } catch(e) {
-            console.warn('ReadingEngine: saveProgress falló (offline?)');
+            console.warn('reading_progress snapshot falló (no crítico):', e);
         }
+
+        // 3. Guardar en localStorage (para my-progress.html)
+        const entry = {
+            module:    _lessonName,
+            result,
+            timestamp: new Date().toLocaleString()
+        };
+        const progress = JSON.parse(localStorage.getItem('course_progress') || '[]');
+        const idx      = progress.findIndex(p => p.module === _lessonName);
+        if (idx !== -1) progress[idx] = entry;
+        else            progress.push(entry);
+        localStorage.setItem('course_progress', JSON.stringify(progress));
+    }
+
+    function _calcScore() {
+        // Score basado en errores, igual que slide-engine: -5% por error, mín 0
+        return Math.max(0, 100 - (_totalMistakes * 5));
     }
 
     function _finishLesson() {
-        _saveProgress(_current, 'lesson_complete', {
-            total_mistakes: _totalMistakes,
-            student: _studentName
-        });
+        const score = _calcScore();
+        _persistLessonResult(score);
 
         // Mostrar pantalla de finalización
         const done = document.getElementById('readingDoneScreen');
         if (done) {
+            // Inyectar score en la pantalla de finalización si tiene el placeholder
+            const scoreEl = done.querySelector('#readingFinalScore');
+            if (scoreEl) scoreEl.textContent = `${score}%`;
             _slides.forEach(s => s.classList.remove('active'));
             done.style.display = 'block';
         } else {
-            alert(`🎉 Lesson complete! Great work, ${_studentName}.`);
+            alert(`🎉 Lesson complete! Score: ${score}%`);
         }
     }
 
@@ -1030,5 +1118,242 @@ ReadingTypes.READING_FILL = {
 
             btn?.addEventListener('click', () => ReadingEngine.next());
         }, 100);
+    }
+};
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TIPO: READING_TFNG — True / False / Not Given
+   Cada ítem tiene tres botones. El estudiante elige uno.
+   Todos los ítems deben responderse para desbloquear el botón next.
+
+   USO EN HTML:
+   <div class="reading-slide" data-type="READING_TFNG" data-re-pdf="..." data-re-page="3"
+        data-re-label="True / False / Not Given">
+     <div data-re-tfng-item data-re-answer="true"
+          data-re-explain="The text states this directly in paragraph 2.">
+       The chain essay is used for cause-and-effect arguments.
+     </div>
+     <div data-re-tfng-item data-re-answer="false"
+          data-re-explain="The text says it requires three, not two, body paragraphs.">
+       A chain essay only needs two body paragraphs.
+     </div>
+     <div data-re-tfng-item data-re-answer="not given"
+          data-re-explain="The text never mentions the author's nationality.">
+       The author is from China.
+     </div>
+   </div>
+───────────────────────────────────────────────────────────────────────────── */
+ReadingTypes.READING_TFNG = {
+    mount(slide, index) {
+        slide.dataset.reIndex = index;
+        const url     = slide.dataset.rePdf   || '';
+        const page    = parseInt(slide.dataset.rePage) || 1;
+        const label   = slide.dataset.reLabel || 'True / False / Not Given';
+        const items   = Array.from(slide.querySelectorAll('[data-re-tfng-item]'));
+
+        const itemsHtml = items.map((el, i) => {
+            const answer  = (el.dataset.reAnswer  || 'true').toLowerCase().trim();
+            const explain = el.dataset.reExplain  || '';
+            const text    = el.innerHTML.trim();
+            const id      = `tfng-${index}-${i}`;
+            return `
+                <div class="re-tfng-item" id="${id}" data-answer="${answer}">
+                    <p class="re-tfng-statement">${text}</p>
+                    <div class="re-tfng-btns" data-answer="${answer}" data-explain="${explain.replace(/"/g,'&quot;')}">
+                        <button class="re-tfng-btn" data-val="true">True</button>
+                        <button class="re-tfng-btn" data-val="false">False</button>
+                        <button class="re-tfng-btn" data-val="not given">Not Given</button>
+                    </div>
+                    <div class="re-tfng-explain" id="${id}-fb"></div>
+                </div>`;
+        }).join('');
+
+        const renderId = _buildReadingLayout(slide, {
+            label,
+            task: 'Decide if each statement is True, False, or Not Given in the text.',
+            nextLabel: 'Continue →',
+            sidebarHtml: `
+                <div class="challenge-card">
+                    <div class="card-label">📋 TFNG Task</div>
+                    <p>Based on the article, decide if each statement is <strong>True</strong>, <strong>False</strong>, or <strong>Not Given</strong>.</p>
+                </div>
+                <div id="re-tfng-body-${index}">${itemsHtml}</div>
+                <div class="reading-feedback" id="re-tfng-fb-${index}"></div>`
+        });
+
+        if (url) ReadingEngine._renderWithControls(slide, renderId, null, url, page);
+
+        slide.dataset.reTfngTotal = items.length;
+        slide.dataset.reTfngDone  = '0';
+
+        setTimeout(() => ReadingTypes.READING_TFNG._attachListeners(slide, index), 100);
+        slide.querySelector('.btn-next-slide')?.addEventListener('click', () => ReadingEngine.next());
+    },
+
+    _attachListeners(slide, index) {
+        slide.querySelectorAll('.re-tfng-item').forEach(item => {
+            const btnsEl  = item.querySelector('.re-tfng-btns');
+            const correct = btnsEl ? btnsEl.dataset.answer : '';
+            const explain = btnsEl ? (btnsEl.dataset.explain || '') : '';
+            const fbEl    = item.querySelector('.re-tfng-explain');
+
+            item.querySelectorAll('.re-tfng-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (item.dataset.done === 'true') return;
+                    item.dataset.done = 'true';
+
+                    const chosen    = btn.dataset.val;
+                    const isCorrect = chosen === correct;
+
+                    item.querySelectorAll('.re-tfng-btn').forEach(b => b.disabled = true);
+                    btn.classList.add(isCorrect ? 're-tfng-correct' : 're-tfng-incorrect');
+
+                    if (!isCorrect) {
+                        item.querySelectorAll('.re-tfng-btn').forEach(b => {
+                            if (b.dataset.val === correct) b.classList.add('re-tfng-correct');
+                        });
+                        ReadingEngine.addMistake();
+                    }
+
+                    if (fbEl) {
+                        fbEl.textContent   = explain;
+                        fbEl.className     = 're-tfng-explain ' + (isCorrect ? 'success' : 'error');
+                        fbEl.style.display = 'block';
+                    }
+
+                    const done  = parseInt(slide.dataset.reTfngDone || '0') + 1;
+                    slide.dataset.reTfngDone = done;
+                    const total = parseInt(slide.dataset.reTfngTotal || '0');
+
+                    if (done >= total) {
+                        ReadingEngine._saveProgress(index, 'tfng', {});
+                        const nextBtn = slide.querySelector('.btn-next-slide');
+                        if (nextBtn) nextBtn.style.display = 'block';
+                    }
+                });
+            });
+        });
+    }
+};
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TIPO: READING_MATCH — Emparejar términos con definiciones
+   El estudiante hace clic en un término (izquierda) y luego en su definición
+   (derecha). Todos los pares deben completarse para avanzar.
+
+   USO EN HTML:
+   <div class="reading-slide" data-type="READING_MATCH" data-re-pdf="..." data-re-page="1"
+        data-re-label="Match the Concepts">
+     <div data-re-term data-re-id="a">Chain essay</div>
+     <div data-re-term data-re-id="b">Causal chain</div>
+     <div data-re-term data-re-id="c">Body paragraph</div>
+
+     <div data-re-def data-re-match="a">An essay where each paragraph builds on the previous one</div>
+     <div data-re-def data-re-match="b">A sequence where one effect becomes the next cause</div>
+     <div data-re-def data-re-match="c">Picks up the outcome from the preceding paragraph</div>
+   </div>
+───────────────────────────────────────────────────────────────────────────── */
+ReadingTypes.READING_MATCH = {
+    mount(slide, index) {
+        slide.dataset.reIndex = index;
+        const url     = slide.dataset.rePdf   || '';
+        const page    = parseInt(slide.dataset.rePage) || 1;
+        const label   = slide.dataset.reLabel || 'Match the Concepts';
+        const task    = slide.dataset.reTask  || 'Click a term, then click its matching definition.';
+
+        const terms = Array.from(slide.querySelectorAll('[data-re-term]'));
+        const defs  = Array.from(slide.querySelectorAll('[data-re-def]'));
+
+        // Shuffle definitions (Fisher-Yates)
+        for (let i = defs.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [defs[i], defs[j]] = [defs[j], defs[i]];
+        }
+
+        const termsHtml = terms.map(el =>
+            `<div class="re-match-term" data-id="${el.dataset.reId}">${el.innerHTML.trim()}</div>`
+        ).join('');
+        const defsHtml = defs.map(el =>
+            `<div class="re-match-def" data-match="${el.dataset.reMatch}">${el.innerHTML.trim()}</div>`
+        ).join('');
+
+        const renderId = _buildReadingLayout(slide, {
+            label, task,
+            nextLabel: 'Continue →',
+            sidebarHtml: `
+                <div class="challenge-card"><div class="card-label">🔗 Match</div><p>${task}</p></div>
+                <div class="re-match-grid">
+                    <div class="re-match-col" id="re-match-terms-${index}">${termsHtml}</div>
+                    <div class="re-match-col" id="re-match-defs-${index}">${defsHtml}</div>
+                </div>
+                <div class="reading-feedback" id="re-match-fb-${index}"></div>`
+        });
+
+        if (url) ReadingEngine._renderWithControls(slide, renderId, null, url, page);
+
+        const btn = slide.querySelector('.btn-next-slide');
+        const fb  = slide.querySelector(`#re-match-fb-${index}`);
+        let selected    = null;
+        let matchedCount = 0;
+        const total     = terms.length;
+
+        // Attach listeners after DOM is ready
+        setTimeout(() => {
+            slide.querySelectorAll('.re-match-term').forEach(term => {
+                term.addEventListener('click', () => {
+                    if (term.classList.contains('matched')) return;
+                    slide.querySelectorAll('.re-match-term').forEach(t => t.classList.remove('selected'));
+                    selected = term;
+                    term.classList.add('selected');
+                });
+            });
+
+            slide.querySelectorAll('.re-match-def').forEach(def => {
+                def.addEventListener('click', () => {
+                    if (!selected || def.classList.contains('matched')) return;
+                    const isCorrect = selected.dataset.id === def.dataset.match;
+
+                    if (isCorrect) {
+                        selected.classList.remove('selected');
+                        selected.classList.add('matched');
+                        def.classList.add('matched');
+                        matchedCount++;
+
+                        if (fb) {
+                            fb.className = 'reading-feedback success';
+                            fb.innerHTML = matchedCount === total
+                                ? '✅ All matched correctly! Excellent.'
+                                : `✅ Correct! (${matchedCount}/${total} matched)`;
+                            fb.style.display = 'block';
+                        }
+                        selected = null;
+
+                        if (matchedCount === total) {
+                            ReadingEngine._saveProgress(ReadingEngine.currentIndex, 'match', { completed: true });
+                            if (btn) btn.style.display = 'block';
+                        }
+                    } else {
+                        selected.classList.add('wrong');
+                        def.classList.add('wrong');
+                        if (fb) {
+                            fb.className = 'reading-feedback error';
+                            fb.innerHTML = "❌ That doesn't match — try another definition.";
+                            fb.style.display = 'block';
+                        }
+                        ReadingEngine.addMistake();
+                        const prevSel = selected;
+                        selected = null;
+                        setTimeout(() => {
+                            prevSel.classList.remove('wrong', 'selected');
+                            def.classList.remove('wrong');
+                        }, 700);
+                    }
+                });
+            });
+        }, 100);
+
+        btn?.addEventListener('click', () => ReadingEngine.next());
     }
 };
