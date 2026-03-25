@@ -1157,6 +1157,22 @@ SlideTypes.ESSAY = {
                     </button>
                 </div>
             </div>
+            <div id="se-req-panel" style="margin-top:10px; border:1px solid #dee2e6; border-radius:8px; overflow:hidden; display:none;">
+                <button id="se-req-toggle"
+                        style="width:100%; display:flex; justify-content:space-between; align-items:center;
+                               padding:8px 12px; background:#f8f9fa; border:none; cursor:pointer;
+                               font-size:0.82rem; font-weight:600; color:#495057;">
+                    <span>&#x1F4CB; Assignment Requirements</span>
+                    <span id="se-req-summary" style="font-size:0.78rem; font-weight:400; color:#6c757d;"></span>
+                    <span id="se-req-arrow" style="font-size:0.7rem; color:#adb5bd;">&#x25BC;</span>
+                </button>
+                <div id="se-req-body" style="display:none; padding:10px 12px; background:#fff; font-size:0.8rem; line-height:1.9;">
+                    <div id="se-req-words"></div>
+                    <div id="se-req-keywords"></div>
+                    <div id="se-req-markers"></div>
+                    <div id="se-req-forbidden"></div>
+                </div>
+            </div>
             <button class="btn-next" id="finalBtn" style="display:block; margin-top:20px; width:100%;"
                     onclick="if(window.EssayHandler) EssayHandler.submit();
                              else finishLessonWithEssay('${lessonName}',
@@ -1171,16 +1187,11 @@ SlideTypes.ESSAY = {
         const counter  = workspace.querySelector('#wordCountDisplay');
 
         // ── Integrity score calculation ───────────────────────────────────────
-        // Returns 0–100. Starts at 100 and deducts weighted penalties.
-        // Each signal is relative (not binary) so occasional deletions don't
-        // collapse the score — only genuine anomaly patterns do.
         function _calcIntegrity(s, words) {
             let score = 100;
             const lines = [];
-
-            // 1. PASTE: severity depends on how much was actually pasted
             if (s.pastes > 0 && s.totalChars > 30) {
-                const ratio     = Math.round((s.keystrokes / s.totalChars) * 100);
+                const ratio = Math.round((s.keystrokes / s.totalChars) * 100);
                 const pastedPct = Math.max(0, 100 - ratio);
                 let pen = 0;
                 if      (pastedPct >= 60) pen = 50;
@@ -1193,8 +1204,6 @@ SlideTypes.ESSAY = {
                 score -= 20;
                 lines.push(`📋 Paste detected (short text) (-20pts)`);
             }
-
-            // 2. TAB SWITCHES
             if (s.tabSwitches >= 5) {
                 const pen = Math.min(s.tabSwitches * 4, 25);
                 score -= pen;
@@ -1204,32 +1213,171 @@ SlideTypes.ESSAY = {
                 score -= pen;
                 lines.push(`🔀 Tab switches: ${s.tabSwitches} (-${pen}pts)`);
             }
-
-            // 3. EXCESSIVE DELETIONS
             if (words > 10 && s.deletions > 0) {
                 const delRatio = s.deletions / Math.max(s.keystrokes, 1);
-                if (delRatio > 0.6) {
-                    const pen = 10;
-                    score -= pen;
-                    lines.push(`⌫ High deletion rate: ${Math.round(delRatio*100)}% (-${pen}pts)`);
+                if (delRatio > 0.6) { score -= 10; lines.push(`⌫ High deletion rate: ${Math.round(delRatio*100)}% (-10pts)`); }
+            }
+            if (s.pastes === 0 && words > 30 && s.writingDuration > 0 && s.writingDuration < 30) {
+                score -= 15; lines.push(`⏱ Very fast completion: ${s.writingDuration}s (-15pts)`);
+            }
+            score = Math.max(0, score);
+            if (lines.length === 0) lines.push('✅ No integrity flags detected.');
+            return { score, lines };
+        }
+
+        // ── Live requirements panel ───────────────────────────────────────────
+        // Carga requirements desde Supabase y actualiza el panel en cada keystroke.
+        let _reqData = null;
+
+        function _toMap(val) {
+            if (!val) return {};
+            if (Array.isArray(val)) return Object.fromEntries(val.map(w => [w, '']));
+            if (typeof val === 'object') return val;
+            return {};
+        }
+
+        async function _loadRequirements() {
+            const SURL = typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '';
+            const SKEY = typeof SUPABASE_ANON_KEY !== 'undefined' ? SUPABASE_ANON_KEY : '';
+            if (!SURL || !SKEY) return;
+            try {
+                const key = lessonName.replace(/ /g, '-');
+                const res = await fetch(
+                    `${SURL}/rest/v1/essay_requirements?activity_key=eq.${encodeURIComponent(key)}&select=min_words,max_words,target_keywords,forbidden_words,required_markers,min_keyword_matches,min_integrity_score_required&limit=1`,
+                    { headers: { 'apikey': SKEY, 'Authorization': `Bearer ${SKEY}` }, credentials: 'omit' }
+                );
+                if (!res.ok) return;
+                const rows = await res.json();
+                if (rows && rows.length) {
+                    _reqData = rows[0];
+                    const panel = document.getElementById('se-req-panel');
+                    if (panel) panel.style.display = 'block';
+                    _refreshRequirements();
+                }
+            } catch(e) { /* sin requirements, panel queda oculto */ }
+        }
+
+        function _refreshRequirements() {
+            if (!_reqData) return;
+            const req     = _reqData;
+            const text    = textarea.value.toLowerCase();
+            const rawText = textarea.value;
+            const words   = textarea.value.trim().split(/\s+/).filter(w => w.length > 0).length;
+
+            let met = 0, total = 0;
+
+            // 1. Palabras
+            const minW = req.min_words || 0;
+            const maxW = req.max_words;
+            const wordOk = words >= minW && (maxW == null || words <= maxW);
+            total++;
+            if (wordOk) met++;
+            const wordEl = document.getElementById('se-req-words');
+            if (wordEl) {
+                const bar = Math.min(100, Math.round((words / (minW || 1)) * 100));
+                const barColor = wordOk ? '#27ae60' : words > 0 ? '#e67e22' : '#dee2e6';
+                wordEl.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                        <span style="color:${wordOk ? '#27ae60' : '#e67e22'}; font-weight:600;">
+                            ${wordOk ? '✓' : '○'} Words
+                        </span>
+                        <span style="color:#666;">${words} / ${minW}–${maxW ?? '∞'}</span>
+                    </div>
+                    <div style="background:#f0f0f0; border-radius:4px; height:5px; margin-bottom:8px;">
+                        <div style="background:${barColor}; width:${bar}%; height:100%; border-radius:4px; transition:width 0.3s;"></div>
+                    </div>`;
+            }
+
+            // 2. Keywords
+            const kwMap  = _toMap(req.target_keywords);
+            const kwList = Object.keys(kwMap);
+            const minKw  = req.min_keyword_matches || 0;
+            if (kwList.length > 0 && minKw > 0) {
+                total++;
+                const found   = kwList.filter(k => text.includes(k.toLowerCase()));
+                const kwOk    = found.length >= minKw;
+                if (kwOk) met++;
+                const kwEl = document.getElementById('se-req-keywords');
+                if (kwEl) {
+                    const pills = kwList.map(k => {
+                        const ok = text.includes(k.toLowerCase());
+                        return `<span style="display:inline-block; margin:2px 3px 2px 0; padding:1px 7px;
+                                border-radius:12px; font-size:0.74rem;
+                                background:${ok ? '#d4edda' : '#f8f9fa'};
+                                color:${ok ? '#155724' : '#6c757d'};
+                                border:1px solid ${ok ? '#c3e6cb' : '#dee2e6'};">
+                                ${ok ? '✓' : '○'} ${k}
+                               </span>`;
+                    }).join('');
+                    kwEl.innerHTML = `
+                        <div style="color:${kwOk ? '#27ae60' : '#6c757d'}; font-weight:600; margin-bottom:4px;">
+                            ${kwOk ? '✓' : '○'} Keywords (${found.length}/${minKw} required)
+                        </div>
+                        <div style="margin-bottom:8px;">${pills}</div>`;
                 }
             }
 
-            // 4. FAST COMPLETION — only when no paste explains the speed
-            if (s.pastes === 0 && words > 30 && s.writingDuration > 0 && s.writingDuration < 30) {
-                const pen = 15;
-                score -= pen;
-                lines.push(`⏱ Very fast completion: ${s.writingDuration}s (-${pen}pts)`);
+            // 3. Required markers
+            const markers = req.required_markers || [];
+            if (markers.length > 0) {
+                total++;
+                const missing  = markers.filter(m => !rawText.includes(m));
+                const markerOk = missing.length === 0;
+                if (markerOk) met++;
+                const mEl = document.getElementById('se-req-markers');
+                if (mEl) {
+                    const pills = markers.map(m => {
+                        const ok = rawText.includes(m);
+                        return `<span style="display:inline-block; margin:2px 3px 2px 0; padding:1px 7px;
+                                border-radius:12px; font-size:0.74rem; font-family:monospace;
+                                background:${ok ? '#d4edda' : '#fff3cd'};
+                                color:${ok ? '#155724' : '#856404'};
+                                border:1px solid ${ok ? '#c3e6cb' : '#ffc107'};">
+                                ${ok ? '✓' : '○'} ${m}
+                               </span>`;
+                    }).join('');
+                    mEl.innerHTML = `
+                        <div style="color:${markerOk ? '#27ae60' : '#856404'}; font-weight:600; margin-bottom:4px;">
+                            ${markerOk ? '✓' : '○'} Required markers
+                        </div>
+                        <div style="margin-bottom:8px;">${pills}</div>`;
+                }
             }
 
-            score = Math.max(0, score);
-
-            // If all good, show positive note
-            if (lines.length === 0) {
-                lines.push('✅ No integrity flags detected.');
+            // 4. Forbidden words
+            const forbMap  = _toMap(req.forbidden_words);
+            const forbList = Object.keys(forbMap);
+            if (forbList.length > 0) {
+                total++;
+                const found    = forbList.filter(w => text.includes(w.toLowerCase()));
+                const forbidOk = found.length === 0;
+                if (forbidOk) met++;
+                const fEl = document.getElementById('se-req-forbidden');
+                if (fEl) {
+                    if (forbidOk) {
+                        fEl.innerHTML = `<div style="color:#27ae60; font-weight:600; margin-bottom:8px;">✓ No forbidden words detected</div>`;
+                    } else {
+                        const pills = found.map(w =>
+                            `<span style="display:inline-block; margin:2px 3px 2px 0; padding:1px 7px;
+                             border-radius:12px; font-size:0.74rem;
+                             background:#f8d7da; color:#721c24; border:1px solid #f5c6cb;">
+                             ✗ "${w}" — ${forbMap[w] || 'avoid'}
+                            </span>`
+                        ).join('');
+                        fEl.innerHTML = `
+                            <div style="color:#e74c3c; font-weight:600; margin-bottom:4px;">✗ Forbidden words found</div>
+                            <div style="margin-bottom:8px;">${pills}</div>`;
+                    }
+                }
             }
 
-            return { score, lines };
+            // Actualizar resumen en el header del panel
+            const summaryEl = document.getElementById('se-req-summary');
+            if (summaryEl) {
+                const pct = total > 0 ? Math.round((met/total)*100) : 100;
+                const color = pct >= 80 ? '#27ae60' : pct >= 50 ? '#e67e22' : '#e74c3c';
+                summaryEl.innerHTML = `<span style="color:${color}; font-weight:600;">${met}/${total} met</span>`;
+            }
         }
 
         function _refreshStats() {
@@ -1242,31 +1390,43 @@ SlideTypes.ESSAY = {
 
             const { score, lines } = _calcIntegrity(s, words);
 
-            // Update score badge
             const scoreEl = document.getElementById('se-integrity-score');
             const iconEl  = document.getElementById('se-integrity-icon');
             if (scoreEl) {
                 scoreEl.textContent = score + '%';
                 if (score >= 85) {
                     scoreEl.style.color = '#27ae60';
-                    if (iconEl) iconEl.textContent = '\u2705'; // ✅
+                    if (iconEl) iconEl.textContent = '\u2705';
                 } else if (score >= 60) {
                     scoreEl.style.color = '#e67e22';
-                    if (iconEl) iconEl.textContent = '\u26A0\uFE0F'; // ⚠️
+                    if (iconEl) iconEl.textContent = '\u26A0\uFE0F';
                 } else {
                     scoreEl.style.color = '#e74c3c';
-                    if (iconEl) iconEl.textContent = '\u274C'; // ❌
+                    if (iconEl) iconEl.textContent = '\u274C';
                 }
             }
 
-            // Update tooltip lines
             ['paste','ratio','tabs','del','dur'].forEach((k, i) => {
                 const el = document.getElementById('se-tip-' + k);
                 if (el) el.textContent = lines[i] || '';
             });
+
+            _refreshRequirements();
         }
 
-        // Tooltip show/hide on hover
+        // Toggle del panel de requirements
+        const reqToggle = workspace.querySelector('#se-req-toggle');
+        const reqBody   = workspace.querySelector('#se-req-body');
+        const reqArrow  = workspace.querySelector('#se-req-arrow');
+        if (reqToggle && reqBody) {
+            reqToggle.addEventListener('click', () => {
+                const open = reqBody.style.display === 'block';
+                reqBody.style.display  = open ? 'none' : 'block';
+                reqArrow.style.transform = open ? '' : 'rotate(180deg)';
+            });
+        }
+
+        // Tooltip integrity hover
         const infoBtn  = workspace.querySelector('#se-info-btn');
         const tooltip  = workspace.querySelector('#se-integrity-tooltip');
         if (infoBtn && tooltip) {
@@ -1278,6 +1438,9 @@ SlideTypes.ESSAY = {
         textarea.addEventListener('keydown', _refreshStats);
         textarea.addEventListener('paste',   () => setTimeout(_refreshStats, 50));
         setInterval(_refreshStats, 2000);
+
+        // Cargar requirements al montar (async, no bloquea el render)
+        _loadRequirements();
     }
 };
 
