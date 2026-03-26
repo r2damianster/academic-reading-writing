@@ -172,6 +172,7 @@ const SlideEngine = (function () {
 
     // ── Cierre de lección (con quiz) ─────────────────────────────────────────────
     function finishLesson(lessonName) {
+        lessonName = lessonName.toLowerCase().replace(/-/g, ' ').replace(/  +/g, ' ').trim();
         let score = Math.max(0, 100 - (_mistakes * 5));
         const entry = {
             module:    lessonName,
