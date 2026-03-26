@@ -172,3 +172,24 @@ h2 {
         font-size: 16px !important; /* Evita el zoom automático en iOS al escribir */
     }
 }
+
+/* ---------------------------------------------------
+   CLUES & HINTS PARA EJERCICIOS DE LECTURA (FILL)
+   --------------------------------------------------- */
+.clue-text {
+    color: #2c7be5; /* Azul institucional */
+    font-style: italic;
+    font-weight: 500;
+    font-size: 0.9em;
+    margin-right: 4px;
+    display: inline-block;
+}
+
+/* Opcional: si quieres que las pistas tengan un pequeño 
+   efecto visual para que no se confundan con el texto */
+.clue-text::before {
+    content: "(";
+}
+.clue-text::after {
+    content: ")";
+}
