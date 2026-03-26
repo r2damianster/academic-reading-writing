@@ -1,3 +1,35 @@
+// --- DENTRO DE reading-engine.js ---
+
+let SUPABASE_URL = '';
+let SUPABASE_KEY = '';
+
+// Nueva función interna para cargar la configuración
+async function _loadConfig() {
+    try {
+        const r = await fetch('/api/config');
+        const cfg = await r.json();
+        SUPABASE_URL = cfg.supabaseUrl || '';
+        SUPABASE_KEY = cfg.supabaseKey || '';
+        console.log('✅ ReadingEngine: Configuración cargada desde el servidor');
+        return true;
+    } catch (e) {
+        console.error('❌ ReadingEngine: Error al cargar /api/config', e);
+        return false;
+    }
+}
+
+// Modificamos el inicio del método init
+const init = async (lessonName) => { // Agregamos async aquí
+    const configLoaded = await _loadConfig();
+    if (!configLoaded) return;
+
+    _lessonName = lessonName;
+    // ... resto del código original de tu función init ...
+    console.log(`🚀 Iniciando lección: ${_lessonName}`);
+    
+    // El resto de tus fetch (activity_logs, etc) ya usan SUPABASE_URL y SUPABASE_KEY,
+    // así que funcionarán automáticamente una vez que estas variables tengan valor.
+};
 /* =============================================================================
    reading-engine.js — Motor de Lectura Interactiva para ULEAM
    
