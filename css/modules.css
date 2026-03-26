@@ -104,8 +104,16 @@ h2 {
     width: 100%;
     margin-bottom: 20px;
     border-radius: 8px;
-    overflow: hidden;
+    overflow: hidden; /* Asegura que nada se salga del contenedor */
     background: #000;
+}
+
+/* Asegura que el iframe dentro del contenedor se comporte bien */
+.video-container iframe {
+    width: 100%;
+    /* La altura se define en el JS, pero podemos asegurar la visualización aquí */
+    border: none;
+    display: block;
 }
 
 /* --- Drag & Drop --- */
