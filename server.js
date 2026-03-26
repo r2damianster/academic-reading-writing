@@ -21,36 +21,40 @@ const MIME = {
 const server = http.createServer(async (req, res) => {
     console.log(`${req.method} ${req.url}`);
 
-    // ─── 1. RUTA DE CONFIGURACIÓN (Para el Frontend) ───
+    // ─── 1. CONFIG PÚBLICA — credenciales seguras para el browser ───────────────
+    // Solo expone la anon key (diseñada para ser pública).
+    // La service_role key NUNCA se expone aquí.
     if (req.method === 'GET' && req.url === '/api/config') {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'public, max-age=3600'
+        });
         return res.end(JSON.stringify({
-            supabaseUrl: process.env.SUPABASE_URL,
-            supabaseKey: process.env.SUPABASE_KEY 
+            supabaseUrl: process.env.SUPABASE_URL  || '',
+            supabaseKey: process.env.SUPABASE_KEY  || ''
         }));
     }
 
-    // ─── 2. RUTA DE LA API (Validación de Estudiante) ───
+    // ─── 2. RUTA DE LA API ───────────────────────────────────────────────────────
     if (req.method === 'POST' && req.url === '/api/validate-student') {
         let body = '';
         req.on('data', chunk => { body += chunk.toString(); });
         req.on('end', async () => {
             try {
                 const { email } = JSON.parse(body);
-                
+
                 if (!email) {
                     res.writeHead(400, { 'Content-Type': 'application/json' });
                     return res.end(JSON.stringify({ message: 'Email is required' }));
                 }
 
-                // Tu normalización original
                 const cleanEmail = email.toLowerCase().trim().replace('live.', '');
                 console.log(`🔍 Buscando en DB: [${cleanEmail}]`);
 
                 const { data, error } = await supabase
                     .from('students')
                     .select('*')
-                    .ilike('email', cleanEmail) 
+                    .ilike('email', cleanEmail)
                     .limit(1);
 
                 if (error || !data || data.length === 0) {
@@ -61,7 +65,6 @@ const server = http.createServer(async (req, res) => {
 
                 const student = data[0];
                 console.log(`✅ Validado: ${student.name}`);
-
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 return res.end(JSON.stringify(student));
 
@@ -71,10 +74,10 @@ const server = http.createServer(async (req, res) => {
                 return res.end(JSON.stringify({ message: 'Internal Server Error' }));
             }
         });
-        return; 
+        return;
     }
 
-    // ─── 3. SERVIDOR DE ARCHIVOS ESTÁTICOS ───
+    // ─── 3. SERVIDOR DE ARCHIVOS ESTÁTICOS ──────────────────────────────────────
     let urlPath = req.url === '/' ? '/index.html' : req.url;
     urlPath = urlPath.split('?')[0];
 

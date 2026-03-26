@@ -110,7 +110,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
                 </button>
                 <!-- Download report -->
-                <button class="sf-btn sf-btn--accent" onclick="closeFlyout(); generateReport()" title="Download Report">
+                <button class="sf-btn sf-btn--accent" onclick="closeFlyout(); generateReport()" title="Download & Send Progress">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 </button>
                 <!-- Logout -->
@@ -145,6 +145,18 @@
         }
     </script>
 
+    <script>
+        // Cargar credenciales desde el servidor antes que cualquier JS que las necesite
+        (async function() {
+            try {
+                const res = await fetch('/api/config');
+                window.ENV = await res.json();
+            } catch(e) {
+                console.error('❌ /api/config failed:', e);
+                window.ENV = {};
+            }
+        })();
+    </script>
     <script src="js/nav.js?v=1.0"></script>
     <script src="js/auth.js?v=1.4"></script>
     <script src="js/essay-handler.js?v=1.2"></script>
