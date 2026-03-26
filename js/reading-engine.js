@@ -1,35 +1,3 @@
-// --- DENTRO DE reading-engine.js ---
-
-let SUPABASE_URL = '';
-let SUPABASE_KEY = '';
-
-// Nueva función interna para cargar la configuración
-async function _loadConfig() {
-    try {
-        const r = await fetch('/api/config');
-        const cfg = await r.json();
-        SUPABASE_URL = cfg.supabaseUrl || '';
-        SUPABASE_KEY = cfg.supabaseKey || '';
-        console.log('✅ ReadingEngine: Configuración cargada desde el servidor');
-        return true;
-    } catch (e) {
-        console.error('❌ ReadingEngine: Error al cargar /api/config', e);
-        return false;
-    }
-}
-
-// Modificamos el inicio del método init
-const init = async (lessonName) => { // Agregamos async aquí
-    const configLoaded = await _loadConfig();
-    if (!configLoaded) return;
-
-    _lessonName = lessonName;
-    // ... resto del código original de tu función init ...
-    console.log(`🚀 Iniciando lección: ${_lessonName}`);
-    
-    // El resto de tus fetch (activity_logs, etc) ya usan SUPABASE_URL y SUPABASE_KEY,
-    // así que funcionarán automáticamente una vez que estas variables tengan valor.
-};
 /* =============================================================================
    reading-engine.js — Motor de Lectura Interactiva para ULEAM
    
@@ -92,15 +60,22 @@ const ReadingEngine = (function () {
     let _totalMistakes = 0;
     let _slideResults  = [];     // snapshot ligero de cada slide completado
 
-    // Leer credenciales desde <meta> tags en el HTML
-    const SUPABASE_URL = (() => {
-        const meta = document.querySelector('meta[name="supabase-url"]');
-        return meta ? meta.content : '';
-    })();
-    const SUPABASE_KEY = (() => {
-        const meta = document.querySelector('meta[name="supabase-key"]');
-        return meta ? meta.content : '';
-    })();
+    // Credenciales leídas desde /api/config — mismo patrón que slide-engine.js
+    // Nunca hardcodeadas en el JS ni en meta tags del HTML.
+    let SUPABASE_URL = '';
+    let SUPABASE_KEY = '';
+
+    // Carga las credenciales en cuanto el engine arranca.
+    // Como es async, las funciones que las usan (_resolveStudentId, _persistLessonResult)
+    // se llaman DESPUÉS de init() → las credenciales ya están listas.
+    fetch('/api/config')
+        .then(r => r.json())
+        .then(cfg => {
+            SUPABASE_URL = cfg.supabaseUrl || '';
+            SUPABASE_KEY = cfg.supabaseKey || '';
+            console.log('🔑 ReadingEngine: Supabase config cargada');
+        })
+        .catch(e => console.error('❌ ReadingEngine: /api/config falló:', e));
 
     /* ──────────────────────────────────────────────────────────────────────────
        INICIALIZACIÓN
@@ -119,13 +94,12 @@ const ReadingEngine = (function () {
         _studentId   = localStorage.getItem('studentId')   || null;
         _studentName = localStorage.getItem('studentName') || localStorage.getItem('readingStudentName') || null;
 
-        if (!_studentName) {
-            // Último recurso: pedir nombre (solo si no hay sesión de slide-engine)
-            const email = localStorage.getItem('studentEmail');
-            if (email) {
-                // Hay email → resolver UUID en background
-                _resolveStudentId(email);
-            }
+        // Resolver student_id siempre que haya email disponible
+        // Si ya está cacheado en localStorage, _resolveStudentId lo retorna inmediato
+        const email = localStorage.getItem('studentEmail');
+        if (email && !_studentId) {
+            // await para garantizar que _studentId esté listo antes de cualquier insert
+            await _resolveStudentId(email);
         }
 
         _startTime = Date.now();
@@ -185,23 +159,35 @@ const ReadingEngine = (function () {
         if (counter) counter.textContent = `${_current + 1} / ${_slides.length}`;
     }
 
-    /* ──────────────────────────────────────────────────────────────────────────
-       BOTÓN "SIGUIENTE" — helpers
+/* ──────────────────────────────────────────────────────────────────────────
+        BOTÓN "SIGUIENTE" — helpers (CONEXIÓN CON ACTIVITY TRACKER)
     ────────────────────────────────────────────────────────────────────────── */
+
     // Busca el btn-next-slide dentro de una slide y lo muestra
     function _unlockNext(slide) {
         const btn = slide.querySelector('.btn-next-slide');
-        if (btn) btn.style.display = 'block';
+        if (btn) {
+            btn.style.display = 'block';
+            // Opcional: podrías trackear aquí si quieres saber cuántas veces 
+            // llegaron al final de una slide antes de hacer clic
+        }
     }
 
-    // Crea y appends el botón next al final de la slide (o del sidebar si existe)
+    // Crea y appends el botón next al final de la slide
     function _appendNextBtn(slide, label) {
         const btn = document.createElement('button');
         btn.className   = 'btn-next-slide';
         btn.textContent = label || 'Continue →';
-        btn.addEventListener('click', () => next());
+        
+        // INTEGRACIÓN: Al hacer clic, notificamos al ActivityTracker
+        btn.addEventListener('click', () => {
+            if (typeof ActivityTracker !== 'undefined') {
+                ActivityTracker.trackSlide(); 
+                console.log("🚀 Slide tracked via ActivityTracker");
+            }
+            next(); // Tu función original para cambiar de slide
+        });
 
-        // Si hay sidebar, ponerlo al final del sidebar; si no, al final del slide
         const sidebar = slide.querySelector('.reading-sidebar');
         if (sidebar) sidebar.appendChild(btn);
         else         slide.appendChild(btn);
@@ -394,16 +380,18 @@ const ReadingEngine = (function () {
                     'Prefer':        'return=minimal'
                 },
                 body: JSON.stringify({
+                    // Columnas directas (post-migración) — permiten JOINs limpios
+                    student_id:   _studentId   || null,
                     student_name: _studentName || 'Unknown',
-                    slide_id:     -1,   // -1 = fila de resumen (no un slide individual)
+                    lesson_name:  _lessonName,
+                    slide_id:     -1,           // -1 = fila resumen, no un slide individual
+                    score:        score,
+                    total_errors: errors,
+                    duration_sec: durationSec,
+                    slides_total: _slides.length,
+                    // JSON detallado por slide (para análisis pedagógico)
                     action_data:  {
                         type:          'lesson_summary',
-                        lesson:        _lessonName,
-                        student_id:    _studentId,
-                        score,
-                        errors,
-                        duration_sec:  durationSec,
-                        slides_total:  _slides.length,
                         slide_results: _slideResults
                     }
                 }),

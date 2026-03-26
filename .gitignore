@@ -10,3 +10,5 @@ Thumbs.db
 
 # Local data (opcional, si guardas backups locales)
 *.log
+
+.tree.txt

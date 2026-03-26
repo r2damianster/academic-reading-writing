@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="../../../css/readingsidebar.css">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <script src="../../../js/activity-tracker.js"></script>
     <script src="../../../js/reading-engine.js" defer></script>
 </head>
 <body>
@@ -180,6 +182,7 @@
          data-re-page="1"
          data-re-min-words="20"
          data-re-label="Critical Thinking"
+         data-se-lesson="essay-structure"
          data-re-task="The author suggests that instruction should focus on 'well-written rhetorical coherence' (page 50). Based on your reading of the Keyhole Model, why is this link between the thesis and body paragraphs so critical for an effective argument?">
     </div>
 
@@ -210,7 +213,7 @@
         <div style="font-size:3rem; margin-bottom:16px;">🎓</div>
         <h2 style="color:#27ae60; margin-bottom:8px;">Analysis Complete!</h2>
         <p style="color:#6c757d; max-width:420px; margin:0 auto 24px;">
-            Your responses have been saved. You have completed the rhetorical organization analysis.
+            Your responses have been saved. You have completed the essay structure and rhetorical organization analysis.
         </p>
         <a href="unit1-essays-hub.html" style="display:inline-block; padding:12px 28px; background:#2c7be5; color:#fff; border-radius:10px; text-decoration:none; font-weight:700;">
             Back to Course Hub
@@ -220,11 +223,21 @@
 </div>
 
 <script>
+    // Configuración obligatoria para PDF.js
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
     window.onload = () => {
+        // ID Unificado para Reporte, Tracker y Engine
+        const LESSON_ID = 'essay-structure';
+
+        // 1. Inicializar ActivityTracker (Tiempo, Tab Switches, etc.)
+        if (typeof ActivityTracker !== 'undefined') {
+            ActivityTracker.init(LESSON_ID);
+        }
+
+        // 2. Inicializar ReadingEngine (PDF, TFNG, Match, etc.)
         if (typeof ReadingEngine !== 'undefined') {
-            ReadingEngine.init('rhetorical-analysis-01');
+            ReadingEngine.init(LESSON_ID);
         }
     };
 </script>
