@@ -4,246 +4,471 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Progress</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── Reset & Base ────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    font-family: 'Georgia', serif;
-    background: #f4f6f9;
-    color: #2c3e50;
-    padding: 28px 24px 48px;
-  }
+:root {
+  --navy:    #0f1f38;
+  --ink:     #1e2d42;
+  --steel:   #4a6080;
+  --mist:    #8da0b4;
+  --cloud:   #e8edf3;
+  --snow:    #f6f8fb;
+  --white:   #ffffff;
+  --teal:    #0891b2;
+  --teal-lt: #e0f2f8;
+  --green:   #059669;
+  --green-lt:#d1fae5;
+  --amber:   #d97706;
+  --amber-lt:#fef3c7;
+  --red:     #dc2626;
+  --red-lt:  #fee2e2;
+  --reading: #7c3aed;
+  --reading-lt: #ede9fe;
+  --r: 14px;
+  --shadow: 0 1px 3px rgba(15,31,56,.07), 0 4px 16px rgba(15,31,56,.05);
+  --shadow-md: 0 4px 12px rgba(15,31,56,.12), 0 12px 32px rgba(15,31,56,.08);
+}
 
-  /* ── Header ── */
-  .header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 28px;
-    flex-wrap: wrap;
-  }
-  .header-left h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1a2535;
-    letter-spacing: -0.02em;
-  }
-  .header-left p {
-    font-size: 0.83rem;
-    color: #7f8c8d;
-    margin-top: 4px;
-    font-family: 'Arial', sans-serif;
-  }
-  .btn-refresh {
-    padding: 8px 18px;
-    background: #2c3e50;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.82rem;
-    cursor: pointer;
-    white-space: nowrap;
-    font-family: 'Arial', sans-serif;
-  }
-  .btn-refresh:hover { background: #1a252f; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--snow);
+  color: var(--ink);
+  min-height: 100vh;
+}
 
-  /* ── Summary cards ── */
-  .summary-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 12px;
-    margin-bottom: 28px;
-  }
-  .card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 16px 14px;
-    text-align: center;
-    border: 1px solid #e8ecf0;
-  }
-  .card-value {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #2c3e50;
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-  .card-value.green  { color: #27ae60; }
-  .card-value.amber  { color: #e67e22; }
-  .card-value.blue   { color: #2980b9; }
-  .card-value.red    { color: #e74c3c; }
-  .card-label {
-    font-size: 0.72rem;
-    color: #95a5a6;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    font-family: 'Arial', sans-serif;
-  }
+/* ── Header ─────────────────────────────────────────────────────── */
+.page-header {
+  background: var(--navy);
+  padding: 28px 32px 0;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 90% -20%, rgba(8,145,178,.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  position: relative;
+}
+.header-top h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.75rem;
+  color: var(--white);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.student-meta {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,.55);
+  margin-top: 5px;
+  letter-spacing: .02em;
+}
+.btn-refresh {
+  padding: 8px 18px;
+  background: rgba(255,255,255,.12);
+  color: rgba(255,255,255,.85);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s;
+}
+.btn-refresh:hover { background: rgba(255,255,255,.2); }
 
-  /* ── Progress bar global ── */
-  .global-progress {
-    background: #fff;
-    border-radius: 12px;
-    padding: 18px 20px;
-    margin-bottom: 28px;
-    border: 1px solid #e8ecf0;
-  }
-  .gp-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    font-family: 'Arial', sans-serif;
-    font-size: 0.82rem;
-    color: #555;
-  }
-  .gp-row strong { color: #2c3e50; font-size: 0.9rem; }
-  .bar-track {
-    background: #eaeef2;
-    border-radius: 99px;
-    height: 10px;
-    overflow: hidden;
-    margin-bottom: 6px;
-  }
-  .bar-fill {
-    height: 100%;
-    border-radius: 99px;
-    transition: width .6s ease;
-  }
-  .bar-fill.quiz    { background: linear-gradient(90deg, #2980b9, #3498db); }
-  .bar-fill.essay   { background: linear-gradient(90deg, #27ae60, #2ecc71); }
-  .bar-fill.integrity { background: linear-gradient(90deg, #e67e22, #f39c12); }
+/* ── Tabs ────────────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: 2px;
+  position: relative;
+}
+.tab-btn {
+  padding: 10px 20px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: rgba(255,255,255,.5);
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+  letter-spacing: .02em;
+}
+.tab-btn:hover { color: rgba(255,255,255,.8); }
+.tab-btn.active {
+  color: #fff;
+  border-bottom-color: var(--teal);
+}
 
-  /* ── Section title ── */
-  .section-title {
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    color: #95a5a6;
-    margin-bottom: 10px;
-    font-family: 'Arial', sans-serif;
-  }
+/* ── Content ─────────────────────────────────────────────────────── */
+.page-content { padding: 28px 32px 48px; }
 
-  /* ── Lesson table ── */
-  .lesson-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid #e8ecf0;
-    font-family: 'Arial', sans-serif;
-    font-size: 0.8rem;
-    margin-bottom: 32px;
-  }
-  .lesson-table thead tr {
-    background: #2c3e50;
-    color: #fff;
-  }
-  .lesson-table th {
-    padding: 10px 14px;
-    text-align: left;
-    font-weight: 600;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-  }
-  .lesson-table td {
-    padding: 9px 14px;
-    border-bottom: 1px solid #f0f3f6;
-    vertical-align: middle;
-  }
-  .lesson-table tr:last-child td { border-bottom: none; }
-  .lesson-table tr:hover td { background: #f8fafc; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fadeUp .3s ease both; }
 
-  .badge {
-    display: inline-block;
-    padding: 2px 9px;
-    border-radius: 20px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    white-space: nowrap;
-  }
-  .badge-done     { background: #d4efdf; color: #1e8449; }
-  .badge-quiz     { background: #d6eaf8; color: #1a5276; }
-  .badge-essay    { background: #fdebd0; color: #935116; }
-  .badge-pending  { background: #f0f3f6; color: #7f8c8d; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-  .score-pill {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-weight: 700;
-    font-size: 0.75rem;
-  }
-  .score-good    { background: #d4efdf; color: #1e8449; }
-  .score-mid     { background: #fef9e7; color: #b7950b; }
-  .score-low     { background: #fdecea; color: #c0392b; }
-  .score-none    { color: #bdc3c7; }
+/* ── Summary cards ───────────────────────────────────────────────── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.card {
+  background: var(--white);
+  border-radius: var(--r);
+  padding: 18px 16px;
+  border: 1px solid var(--cloud);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: var(--r) var(--r) 0 0;
+}
+.card.c-blue::after   { background: var(--teal); }
+.card.c-green::after  { background: var(--green); }
+.card.c-amber::after  { background: var(--amber); }
+.card.c-red::after    { background: var(--red); }
+.card.c-purple::after { background: var(--reading); }
+.card.c-navy::after   { background: var(--navy); }
 
-  /* ── Loading / error ── */
-  .state-msg {
-    text-align: center;
-    padding: 40px 20px;
-    color: #95a5a6;
-    font-family: 'Arial', sans-serif;
-    font-size: 0.9rem;
-  }
-  .state-msg.error { color: #e74c3c; }
+.card-value {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+.card-value.c-blue   { color: var(--teal); }
+.card-value.c-green  { color: var(--green); }
+.card-value.c-amber  { color: var(--amber); }
+.card-value.c-red    { color: var(--red); }
+.card-value.c-purple { color: var(--reading); }
+.card-label {
+  font-size: 0.68rem;
+  color: var(--mist);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-weight: 600;
+}
+
+/* ── Section headings ────────────────────────────────────────────── */
+.section-head {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--mist);
+  margin: 24px 0 10px;
+}
+
+/* ── Progress block (bars) ───────────────────────────────────────── */
+.progress-block {
+  background: var(--white);
+  border-radius: var(--r);
+  padding: 20px 22px;
+  border: 1px solid var(--cloud);
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+}
+.pb-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--steel);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.pb-row:not(:first-child) { margin-top: 14px; }
+.pb-val { font-weight: 700; color: var(--ink); }
+.bar-track {
+  background: var(--cloud);
+  border-radius: 99px;
+  height: 8px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width .7s cubic-bezier(.22,1,.36,1);
+}
+.bf-teal   { background: linear-gradient(90deg, #0891b2, #22d3ee); }
+.bf-green  { background: linear-gradient(90deg, #059669, #34d399); }
+.bf-amber  { background: linear-gradient(90deg, #d97706, #fbbf24); }
+.bf-purple { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+.bf-navy   { background: linear-gradient(90deg, #0f1f38, #4a6080); }
+
+/* ── Tables ──────────────────────────────────────────────────────── */
+.table-wrap {
+  background: var(--white);
+  border-radius: var(--r);
+  border: 1px solid var(--cloud);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.79rem;
+}
+thead tr { background: var(--navy); }
+th {
+  padding: 11px 14px;
+  text-align: left;
+  font-size: 0.67rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: rgba(255,255,255,.65);
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--cloud);
+  color: var(--steel);
+  vertical-align: middle;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--snow); }
+td.lesson-name { font-weight: 600; color: var(--ink); }
+
+/* ── Badges ──────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.b-done    { background: var(--green-lt); color: var(--green); }
+.b-quiz    { background: var(--teal-lt);  color: var(--teal); }
+.b-reading { background: var(--reading-lt); color: var(--reading); }
+.b-essay   { background: var(--amber-lt); color: var(--amber); }
+.b-pending { background: var(--cloud);    color: var(--mist); }
+
+/* ── Score pills ─────────────────────────────────────────────────── */
+.pill {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 7px;
+  font-weight: 700;
+  font-size: 0.73rem;
+}
+.p-good { background: var(--green-lt); color: var(--green); }
+.p-mid  { background: var(--amber-lt); color: var(--amber); }
+.p-low  { background: var(--red-lt);   color: var(--red); }
+.p-none { color: var(--cloud); }
+
+/* ── Inline bar (per-lesson score) ──────────────────────────────── */
+.inline-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 100px;
+}
+.ib-track {
+  flex: 1;
+  height: 5px;
+  background: var(--cloud);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.ib-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width .6s ease;
+}
+
+/* ── Integrity breakdown row (writing tab) ───────────────────────── */
+.integrity-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.int-chip {
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.66rem;
+  font-weight: 600;
+}
+
+/* ── State messages ──────────────────────────────────────────────── */
+.state-msg {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--mist);
+  font-size: 0.88rem;
+}
+.state-msg.err { color: var(--red); }
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .page-header { padding: 20px 16px 0; }
+  .page-content { padding: 20px 16px 40px; }
+  .header-top h1 { font-size: 1.4rem; }
+  th, td { padding: 9px 10px; }
+  .cards-grid { grid-template-columns: repeat(2, 1fr); }
+  .tab-btn { padding: 9px 12px; font-size: 0.76rem; }
+}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-left">
-    <h1>My Progress</h1>
-    <p id="studentMeta">Loading…</p>
+<!-- ── Header ─────────────────────────────────────────────────────── -->
+<div class="page-header">
+  <div class="header-top">
+    <div>
+      <h1>My Academic Progress</h1>
+      <p class="student-meta" id="studentMeta">Loading…</p>
+    </div>
+    <button class="btn-refresh" onclick="loadAll()">↻ Refresh</button>
   </div>
-  <button class="btn-refresh" onclick="loadProgress()">↻ Refresh</button>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('overview',this)">📊 Overview</button>
+    <button class="tab-btn" onclick="switchTab('writing',this)">✍️ Writing</button>
+    <button class="tab-btn" onclick="switchTab('reading',this)">📖 Reading</button>
+  </div>
 </div>
 
-<!-- Summary cards -->
-<div class="summary-grid" id="summaryGrid">
-  <div class="card"><div class="card-value" id="cardDone">—</div><div class="card-label">Activities done</div></div>
-  <div class="card"><div class="card-value blue" id="cardCoverage">—</div><div class="card-label">Course coverage</div></div>
-  <div class="card"><div class="card-value green" id="cardScore">—</div><div class="card-label">Avg quiz score</div></div>
-  <div class="card"><div class="card-value amber" id="cardIntegrity">—</div><div class="card-label">Avg integrity</div></div>
-  <div class="card"><div class="card-value" id="cardWords">—</div><div class="card-label">Words written</div></div>
-  <div class="card"><div class="card-value red" id="cardPastes">—</div><div class="card-label">Total pastes</div></div>
-</div>
+<!-- ── Page content ───────────────────────────────────────────────── -->
+<div class="page-content">
 
-<!-- Global progress bars -->
-<div class="global-progress">
-  <div class="gp-row"><strong>Quiz coverage</strong><span id="pctQuiz">0%</span></div>
-  <div class="bar-track"><div class="bar-fill quiz" id="barQuiz" style="width:0%"></div></div>
-  <div class="gp-row" style="margin-top:10px"><strong>Essay coverage</strong><span id="pctEssay">0%</span></div>
-  <div class="bar-track"><div class="bar-fill essay" id="barEssay" style="width:0%"></div></div>
-  <div class="gp-row" style="margin-top:10px"><strong>Avg integrity (completed essays)</strong><span id="pctIntegrity">—</span></div>
-  <div class="bar-track"><div class="bar-fill integrity" id="barIntegrity" style="width:0%"></div></div>
-</div>
+  <!-- ════════════════════════════════════════════════════════════
+       TAB 1 — OVERVIEW
+  ════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel active" id="panel-overview">
 
-<!-- Lesson detail table -->
-<div class="section-title">Lesson by lesson</div>
-<div id="tableContainer"><div class="state-msg">Loading your progress…</div></div>
+    <!-- Summary cards -->
+    <div class="cards-grid" id="ov-cards">
+      <div class="card c-navy"><div class="card-value" id="ov-done">—</div><div class="card-label">Activities done</div></div>
+      <div class="card c-blue"><div class="card-value c-blue" id="ov-cov">—</div><div class="card-label">Course coverage</div></div>
+      <div class="card c-green"><div class="card-value c-green" id="ov-score">—</div><div class="card-label">Avg quiz score</div></div>
+      <div class="card c-amber"><div class="card-value c-amber" id="ov-int">—</div><div class="card-label">Avg integrity</div></div>
+      <div class="card c-purple"><div class="card-value c-purple" id="ov-reading">—</div><div class="card-label">Readings done</div></div>
+      <div class="card c-red"><div class="card-value c-red" id="ov-errors">—</div><div class="card-label">Total errors</div></div>
+    </div>
+
+    <!-- Coverage bars -->
+    <div class="progress-block">
+      <div class="pb-row"><span>Writing coverage</span><span class="pb-val" id="ov-wb">0%</span></div>
+      <div class="bar-track"><div class="bar-fill bf-teal" id="ov-wbar" style="width:0%"></div></div>
+      <div class="pb-row"><span>Essay coverage</span><span class="pb-val" id="ov-eb">0%</span></div>
+      <div class="bar-track"><div class="bar-fill bf-green" id="ov-ebar" style="width:0%"></div></div>
+      <div class="pb-row"><span>Reading coverage</span><span class="pb-val" id="ov-rb">0%</span></div>
+      <div class="bar-track"><div class="bar-fill bf-purple" id="ov-rbar" style="width:0%"></div></div>
+    </div>
+
+    <!-- All-lessons table -->
+    <div class="section-head">All lessons</div>
+    <div id="ov-table"><div class="state-msg">Loading…</div></div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════════════════════
+       TAB 2 — WRITING
+  ════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="panel-writing">
+
+    <!-- Writing cards -->
+    <div class="cards-grid" id="wr-cards">
+      <div class="card c-blue"><div class="card-value c-blue" id="wr-done">—</div><div class="card-label">Lessons done</div></div>
+      <div class="card c-green"><div class="card-value c-green" id="wr-score">—</div><div class="card-label">Avg quiz score</div></div>
+      <div class="card c-amber"><div class="card-value c-amber" id="wr-int">—</div><div class="card-label">Avg integrity</div></div>
+      <div class="card c-navy"><div class="card-value" id="wr-words">—</div><div class="card-label">Words written</div></div>
+      <div class="card c-red"><div class="card-value c-red" id="wr-pastes">—</div><div class="card-label">Pastes detected</div></div>
+      <div class="card c-blue"><div class="card-value c-blue" id="wr-comp">—</div><div class="card-label">Avg compliance</div></div>
+    </div>
+
+    <!-- Integrity bar -->
+    <div class="progress-block">
+      <div class="pb-row"><span>Average integrity score</span><span class="pb-val" id="wr-int-pct">—</span></div>
+      <div class="bar-track"><div class="bar-fill bf-amber" id="wr-int-bar" style="width:0%"></div></div>
+      <div class="pb-row"><span>Average compliance</span><span class="pb-val" id="wr-comp-pct">—</span></div>
+      <div class="bar-track"><div class="bar-fill bf-green" id="wr-comp-bar" style="width:0%"></div></div>
+    </div>
+
+    <!-- Writing detail table -->
+    <div class="section-head">Writing lessons — detail</div>
+    <div id="wr-table"><div class="state-msg">Loading…</div></div>
+
+    <!-- Integrity transparency section -->
+    <div class="section-head" style="margin-top:28px;">Integrity signals — full transparency</div>
+    <div id="wr-integrity-table"><div class="state-msg">Loading…</div></div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════════════════════
+       TAB 3 — READING
+  ════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="panel-reading">
+
+    <!-- Reading cards -->
+    <div class="cards-grid" id="re-cards">
+      <div class="card c-purple"><div class="card-value c-purple" id="re-done">—</div><div class="card-label">Readings done</div></div>
+      <div class="card c-green"><div class="card-value c-green" id="re-score">—</div><div class="card-label">Avg score</div></div>
+      <div class="card c-amber"><div class="card-value c-amber" id="re-errors">—</div><div class="card-label">Avg errors</div></div>
+      <div class="card c-blue"><div class="card-value c-blue" id="re-time">—</div><div class="card-label">Avg time (min)</div></div>
+    </div>
+
+    <!-- Reading coverage bar -->
+    <div class="progress-block">
+      <div class="pb-row"><span>Reading coverage</span><span class="pb-val" id="re-cov-pct">—</span></div>
+      <div class="bar-track"><div class="bar-fill bf-purple" id="re-cov-bar" style="width:0%"></div></div>
+      <div class="pb-row"><span>Average reading score</span><span class="pb-val" id="re-score-pct">—</span></div>
+      <div class="bar-track"><div class="bar-fill bf-green" id="re-score-bar" style="width:0%"></div></div>
+    </div>
+
+    <!-- Reading detail table -->
+    <div class="section-head">Reading lessons — detail</div>
+    <div id="re-table"><div class="state-msg">Loading…</div></div>
+  </div>
+
+</div><!-- /.page-content -->
 
 <script>
-// Credenciales cargadas desde /api/config
+/* ════════════════════════════════════════════════════════════════════
+   CONFIGURATION
+════════════════════════════════════════════════════════════════════ */
 let SB_URL = '';
 let SB_KEY = '';
-const TOTAL  = 59; // total de lecciones del curso
+const TOTAL_WRITING = 59;   // total lecciones de escritura en el curso
+const TOTAL_READING = 4;    // total lecciones de lectura registradas en essay_requirements
 
-// Leer email: primero window.parent.localStorage, luego URL, luego localStorage propio
-function getEmailFromURL() {
-  try {
-    const e = window.parent.localStorage.getItem('studentEmail');
-    if (e) return e;
-  } catch(_) {}
-  try {
-    const e = new URLSearchParams(window.location.search).get('email');
-    if (e) return e;
-  } catch(_) {}
+/* ════════════════════════════════════════════════════════════════════
+   UTILITIES
+════════════════════════════════════════════════════════════════════ */
+function getEmail() {
+  try { const e = window.parent.localStorage.getItem('studentEmail'); if (e) return e; } catch(_) {}
+  try { const e = new URLSearchParams(window.location.search).get('email'); if (e) return e; } catch(_) {}
   return localStorage.getItem('studentEmail') || '';
 }
 
@@ -252,166 +477,388 @@ async function sbGet(path) {
     headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` },
     credentials: 'omit'
   });
-  if (!r.ok) throw new Error(`${r.status}`);
+  if (!r.ok) throw new Error(`Supabase ${r.status}`);
   return r.json();
 }
 
-function scorePill(val) {
-  if (val == null) return '<span class="score-none">—</span>';
+function pill(val, suffix = '%') {
+  if (val == null) return '<span class="p-none">—</span>';
   const v = Number(val);
-  const cls = v >= 85 ? 'score-good' : v >= 60 ? 'score-mid' : 'score-low';
-  return `<span class="score-pill ${cls}">${v}%</span>`;
+  const cls = v >= 85 ? 'p-good' : v >= 60 ? 'p-mid' : 'p-low';
+  return `<span class="pill ${cls}">${v}${suffix}</span>`;
 }
 
-function statusBadge(hasQuiz, hasEssay) {
-  if (hasQuiz && hasEssay) return '<span class="badge badge-done">Complete</span>';
-  if (hasQuiz)             return '<span class="badge badge-quiz">Quiz only</span>';
-  if (hasEssay)            return '<span class="badge badge-essay">Essay only</span>';
-  return                          '<span class="badge badge-pending">Pending</span>';
+function inlineBar(val, colorClass) {
+  if (val == null) return '<span class="p-none">—</span>';
+  const v = Math.min(100, Number(val));
+  const cls = v >= 85 ? 'bf-green' : v >= 60 ? 'bf-amber' : 'bf-teal';
+  return `<div class="inline-bar">
+    <div class="ib-track"><div class="ib-fill ${colorClass || cls}" style="width:${v}%"></div></div>
+    <span style="font-size:.72rem;font-weight:700;color:var(--ink);min-width:30px">${Math.round(v)}%</span>
+  </div>`;
 }
 
-async function loadProgress() {
-  const email = getEmailFromURL();
+function setBar(idFill, idLabel, val) {
+  const v = Math.min(100, Math.max(0, Number(val) || 0));
+  const el = document.getElementById(idFill);
+  const lb = document.getElementById(idLabel);
+  if (el) el.style.width = v + '%';
+  if (lb) lb.textContent = v + '%';
+}
+
+function fmt(val, suffix = '') {
+  if (val == null || val === '') return '—';
+  return val + suffix;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   TAB SWITCHING
+════════════════════════════════════════════════════════════════════ */
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   MAIN LOAD
+════════════════════════════════════════════════════════════════════ */
+async function loadAll() {
+  const email = getEmail();
   if (!email) {
-    document.getElementById('tableContainer').innerHTML =
-      '<div class="state-msg error">No session found. Please log in first.</div>';
+    ['ov-table','wr-table','re-table','wr-integrity-table'].forEach(id => {
+      document.getElementById(id).innerHTML = '<div class="state-msg err">No session. Please log in.</div>';
+    });
     return;
   }
 
-  document.getElementById('tableContainer').innerHTML = '<div class="state-msg">Loading…</div>';
-
-  // DEBUG — quitar después
-  console.log('📧 Email usado:', email);
+  // Show loading
+  ['ov-table','wr-table','re-table','wr-integrity-table'].forEach(id => {
+    document.getElementById(id).innerHTML = '<div class="state-msg">Loading…</div>';
+  });
 
   try {
-    // 1. Student profile
+    // ── 1. Student profile ─────────────────────────────────────────
     const students = await sbGet(`students?email=eq.${encodeURIComponent(email)}&select=id,name,email,course,major,period&limit=1`);
     if (!students.length) throw new Error('Student not found');
     const st = students[0];
-
     document.getElementById('studentMeta').textContent =
-      `${st.name}  ·  ${st.course}  ·  Period ${st.period || '—'}`;
+      `${st.name}  ·  ${st.course || ''}  ·  Period ${st.period || '—'}`;
 
-    // 2. Activity logs (quizzes)
-    const [logs, essays, compRows] = await Promise.all([
+    // ── 2. Fetch all data in parallel ──────────────────────────────
+    const [logs, essays, compRows, readingRows] = await Promise.all([
       sbGet(`activity_logs?student_id=eq.${st.id}&select=activity,result,created_at&order=created_at.asc`),
-      sbGet(`essay_submissions?student_id=eq.${st.id}&select=activity,words,pastes,tab_switches,integrity_score,chars_typed_ratio,writing_duration,created_at&order=created_at.asc`),
-      sbGet(`essay_compliance_results?student_id=eq.${st.id}&select=activity,compliance_pct,criteria_met,criteria_total&order=created_at.asc`)
+      sbGet(`essay_submissions?student_id=eq.${st.id}&select=activity,words,pastes,tab_switches,keystrokes,deletions,integrity_score,chars_typed_ratio,writing_duration,time_to_first_key,created_at&order=created_at.asc`),
+      sbGet(`essay_compliance_results?student_id=eq.${st.id}&select=activity,compliance_pct,criteria_met,criteria_total,words_ok,integrity_ok,pastes_ok,keywords_ok&order=created_at.asc`),
+      sbGet(`reading_progress?student_id=eq.${st.id}&slide_id=eq.-1&select=lesson_name,score,total_errors,duration_sec,slides_total,completed_at&order=completed_at.desc`)
     ]);
 
-    // 4. Build per-activity map (latest essay per activity)
-    const essayMap = {};
-    essays.forEach(e => { essayMap[e.activity] = e; });
-    const compMap = {};
-    compRows.forEach(c => { compMap[c.activity] = c; });
-
-    // Group quiz attempts: avg score per activity
+    // ── 3. Build maps ──────────────────────────────────────────────
+    // Quiz map: latest result + all scores per activity
     const quizMap = {};
     logs.forEach(l => {
       const m = l.result.match(/Score:\s*(\d+)%/);
       const score = m ? Number(m[1]) : null;
-      if (!quizMap[l.activity]) quizMap[l.activity] = { scores: [], result: l.result, date: l.created_at };
-      if (score !== null) quizMap[l.activity].scores.push(score);
+      if (!quizMap[l.activity]) quizMap[l.activity] = { scores: [], date: l.created_at };
+      if (score != null) quizMap[l.activity].scores.push(score);
+      quizMap[l.activity].date = l.created_at;
     });
 
-    const allActivities = [...new Set([
-      ...Object.keys(quizMap),
+    // Latest essay per activity
+    const essayMap = {};
+    essays.forEach(e => { essayMap[e.activity] = e; });
+
+    // Latest compliance per activity
+    const compMap = {};
+    compRows.forEach(c => { compMap[c.activity] = c; });
+
+    // Reading: latest attempt per lesson
+    const readingMap = {};
+    readingRows.forEach(r => {
+      if (!readingMap[r.lesson_name]) readingMap[r.lesson_name] = r;
+    });
+
+    // All writing activity names
+    const writingActivities = [...new Set([
+      ...Object.keys(quizMap).filter(a => !readingRows.some(r => r.lesson_name === a)),
       ...Object.keys(essayMap)
     ])].sort();
 
-    // 5. Summary stats
-    const quizDone   = Object.keys(quizMap).length;
-    const essayDone  = Object.keys(essayMap).length;
-    const totalDone  = new Set([...Object.keys(quizMap), ...Object.keys(essayMap)]).size;
+    // ── 4. OVERVIEW TAB ───────────────────────────────────────────
+    renderOverview(st, quizMap, essayMap, writingActivities, readingMap);
 
-    const quizScores = Object.values(quizMap).flatMap(q => q.scores).filter(s => s != null);
-    const avgScore   = quizScores.length ? Math.round(quizScores.reduce((a,b)=>a+b,0) / quizScores.length) : null;
+    // ── 5. WRITING TAB ────────────────────────────────────────────
+    renderWriting(quizMap, essayMap, compMap, writingActivities);
 
-    const intScores  = essays.map(e => e.integrity_score).filter(s => s != null);
-    const avgInt     = intScores.length ? Math.round(intScores.reduce((a,b)=>a+b,0) / intScores.length) : null;
-
-    const totalWords  = essays.reduce((s,e) => s + (e.words||0), 0);
-    const totalPastes = essays.reduce((s,e) => s + (e.pastes||0), 0);
-
-    const quizCov  = Math.min(100, Math.round(quizDone  / TOTAL * 100));
-    const essayCov = Math.min(100, Math.round(essayDone / TOTAL * 100));
-
-    // 6. Update cards
-    document.getElementById('cardDone').textContent      = `${totalDone}/${TOTAL}`;
-    document.getElementById('cardCoverage').textContent  = `${Math.round(totalDone/TOTAL*100)}%`;
-    document.getElementById('cardScore').textContent     = avgScore != null ? `${avgScore}%` : '—';
-    document.getElementById('cardIntegrity').textContent = avgInt   != null ? `${avgInt}%`   : '—';
-    document.getElementById('cardWords').textContent     = totalWords.toLocaleString();
-    document.getElementById('cardPastes').textContent    = totalPastes;
-
-    // Color cards dynamically
-    if (avgScore != null) {
-      const el = document.getElementById('cardScore');
-      el.className = 'card-value ' + (avgScore >= 85 ? 'green' : avgScore >= 60 ? 'amber' : 'red');
-    }
-    if (avgInt != null) {
-      const el = document.getElementById('cardIntegrity');
-      el.className = 'card-value ' + (avgInt >= 85 ? 'green' : avgInt >= 60 ? 'amber' : 'red');
-    }
-
-    // 7. Progress bars
-    document.getElementById('pctQuiz').textContent     = `${quizCov}%`;
-    document.getElementById('barQuiz').style.width     = `${quizCov}%`;
-    document.getElementById('pctEssay').textContent    = `${essayCov}%`;
-    document.getElementById('barEssay').style.width    = `${essayCov}%`;
-    document.getElementById('pctIntegrity').textContent = avgInt != null ? `${avgInt}%` : '—';
-    document.getElementById('barIntegrity').style.width = avgInt != null ? `${avgInt}%` : '0%';
-
-    // 8. Lesson table
-    if (!allActivities.length) {
-      document.getElementById('tableContainer').innerHTML =
-        '<div class="state-msg">No activities completed yet. Start a lesson to see your progress here.</div>';
-      return;
-    }
-
-    const rows = allActivities.map(activity => {
-      const q = quizMap[activity];
-      const e = essayMap[activity];
-      const avgQ = q && q.scores.length ? Math.round(q.scores.reduce((a,b)=>a+b,0)/q.scores.length) : null;
-      const attempts = q ? q.scores.length : 0;
-      const date = (q?.date || e?.created_at || '').slice(0,10);
-
-      const comp = compMap[activity] || null;
-      const compPill = comp
-        ? `<span class="score-pill ${comp.compliance_pct >= 80 ? 'score-good' : comp.compliance_pct >= 50 ? 'score-mid' : 'score-low'}">${comp.compliance_pct}%</span>`
-        : '<span class="score-none">—</span>';
-      return `<tr>
-        <td style="font-weight:600;color:#2c3e50;">${activity}</td>
-        <td>${statusBadge(!!q, !!e)}</td>
-        <td>${avgQ != null ? scorePill(avgQ) : '<span class="score-none">—</span>'}${attempts > 1 ? ` <span style="font-size:.68rem;color:#aaa">(${attempts}x)</span>` : ''}</td>
-        <td>${e ? scorePill(e.integrity_score) : '<span class="score-none">—</span>'}</td>
-        <td>${compPill}</td>
-        <td style="color:#555;">${e ? (e.words||0) : '—'}</td>
-        <td style="color:#555;">${date || '—'}</td>
-      </tr>`;
-    }).join('');
-
-    document.getElementById('tableContainer').innerHTML = `
-      <table class="lesson-table">
-        <thead><tr>
-          <th>Lesson</th><th>Status</th><th>Quiz score</th>
-          <th>Integrity</th><th>Compliance</th><th>Words</th><th>Date</th>
-        </tr></thead>
-        <tbody>${rows}</tbody>
-      </table>`;
+    // ── 6. READING TAB ────────────────────────────────────────────
+    renderReading(readingMap);
 
   } catch(err) {
     console.error(err);
-    document.getElementById('tableContainer').innerHTML =
-      `<div class="state-msg error">Could not load progress. Please check your connection.<br><small>${err.message}</small></div>`;
+    const msg = `<div class="state-msg err">Could not load data.<br><small>${err.message}</small></div>`;
+    ['ov-table','wr-table','re-table'].forEach(id => {
+      document.getElementById(id).innerHTML = msg;
+    });
   }
 }
 
-fetch('/api/config').then(r=>r.json()).then(cfg=>{
+/* ════════════════════════════════════════════════════════════════════
+   OVERVIEW RENDERER
+════════════════════════════════════════════════════════════════════ */
+function renderOverview(st, quizMap, essayMap, writingActs, readingMap) {
+  const writingDone = new Set([...Object.keys(quizMap), ...Object.keys(essayMap)]).size;
+  const readingDone = Object.keys(readingMap).length;
+  const totalDone   = writingDone + readingDone;
+
+  const allScores = Object.values(quizMap).flatMap(q => q.scores);
+  const avgScore  = allScores.length ? Math.round(allScores.reduce((a,b)=>a+b,0)/allScores.length) : null;
+  const allInt    = Object.values(essayMap).map(e=>e.integrity_score).filter(s=>s!=null);
+  const avgInt    = allInt.length ? Math.round(allInt.reduce((a,b)=>a+b,0)/allInt.length) : null;
+  const totalErrors = Object.values(quizMap).reduce((s,q)=>{
+    const best = q.scores.length ? Math.max(...q.scores) : 0;
+    return s + Math.round((100 - best) / 5);
+  }, 0);
+
+  document.getElementById('ov-done').textContent    = `${totalDone}`;
+  document.getElementById('ov-cov').textContent     = `${Math.round(totalDone/(TOTAL_WRITING+TOTAL_READING)*100)}%`;
+  document.getElementById('ov-score').textContent   = avgScore != null ? `${avgScore}%` : '—';
+  document.getElementById('ov-int').textContent     = avgInt   != null ? `${avgInt}%`   : '—';
+  document.getElementById('ov-reading').textContent = `${readingDone}`;
+  document.getElementById('ov-errors').textContent  = totalErrors;
+
+  const wCov = Math.round(writingDone / TOTAL_WRITING * 100);
+  const eCov = Math.round(Object.keys(essayMap).length / TOTAL_WRITING * 100);
+  const rCov = Math.round(readingDone / TOTAL_READING * 100);
+  setBar('ov-wbar','ov-wb', wCov);
+  setBar('ov-ebar','ov-eb', eCov);
+  setBar('ov-rbar','ov-rb', rCov);
+
+  // All-lessons table
+  const allActs = [...new Set([
+    ...writingActs,
+    ...Object.keys(readingMap)
+  ])].sort();
+
+  if (!allActs.length) {
+    document.getElementById('ov-table').innerHTML =
+      '<div class="state-msg">No activities yet. Start a lesson!</div>';
+    return;
+  }
+
+  const rows = allActs.map(a => {
+    const isReading = !!readingMap[a];
+    const q = quizMap[a];
+    const e = essayMap[a];
+    const r = readingMap[a];
+
+    let badge, scoreTd, dateTd;
+
+    if (isReading) {
+      badge = '<span class="badge b-reading">📖 Reading</span>';
+      scoreTd = r.score != null ? pill(r.score) : '<span class="p-none">—</span>';
+      dateTd  = (r.completed_at||'').slice(0,10);
+    } else {
+      const hasQ = !!q, hasE = !!e;
+      badge = hasQ && hasE ? '<span class="badge b-done">✓ Complete</span>'
+            : hasQ        ? '<span class="badge b-quiz">Quiz</span>'
+            : hasE        ? '<span class="badge b-essay">Essay</span>'
+            : '<span class="badge b-pending">Pending</span>';
+      const avgQ = q && q.scores.length ? Math.round(q.scores.reduce((a,b)=>a+b,0)/q.scores.length) : null;
+      scoreTd = avgQ != null ? pill(avgQ) : '<span class="p-none">—</span>';
+      dateTd  = (q?.date || e?.created_at || '').slice(0,10);
+    }
+
+    return `<tr>
+      <td class="lesson-name">${a}</td>
+      <td>${badge}</td>
+      <td>${scoreTd}</td>
+      <td>${dateTd || '—'}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('ov-table').innerHTML = `
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Lesson</th><th>Status</th><th>Score</th><th>Date</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   WRITING RENDERER
+════════════════════════════════════════════════════════════════════ */
+function renderWriting(quizMap, essayMap, compMap, writingActs) {
+  if (!writingActs.length) {
+    document.getElementById('wr-table').innerHTML =
+      '<div class="state-msg">No writing lessons completed yet.</div>';
+    document.getElementById('wr-integrity-table').innerHTML = '';
+    return;
+  }
+
+  const allScores = Object.values(quizMap).flatMap(q => q.scores);
+  const avgScore  = allScores.length ? Math.round(allScores.reduce((a,b)=>a+b,0)/allScores.length) : null;
+  const essays    = Object.values(essayMap);
+  const intScores = essays.map(e=>e.integrity_score).filter(s=>s!=null);
+  const avgInt    = intScores.length ? Math.round(intScores.reduce((a,b)=>a+b,0)/intScores.length) : null;
+  const totalWords  = essays.reduce((s,e)=>s+(e.words||0),0);
+  const totalPastes = essays.reduce((s,e)=>s+(e.pastes||0),0);
+  const compScores  = Object.values(compMap).map(c=>c.compliance_pct).filter(s=>s!=null);
+  const avgComp     = compScores.length ? Math.round(compScores.reduce((a,b)=>a+b,0)/compScores.length) : null;
+
+  document.getElementById('wr-done').textContent   = writingActs.length;
+  document.getElementById('wr-score').textContent  = avgScore != null ? `${avgScore}%` : '—';
+  document.getElementById('wr-int').textContent    = avgInt   != null ? `${avgInt}%`   : '—';
+  document.getElementById('wr-words').textContent  = totalWords.toLocaleString();
+  document.getElementById('wr-pastes').textContent = totalPastes;
+  document.getElementById('wr-comp').textContent   = avgComp  != null ? `${avgComp}%`  : '—';
+
+  setBar('wr-int-bar','wr-int-pct', avgInt||0);
+  setBar('wr-comp-bar','wr-comp-pct', avgComp||0);
+
+  // ── Writing detail table ──────────────────────────────────────────
+  const detailRows = writingActs.map(a => {
+    const q  = quizMap[a];
+    const e  = essayMap[a];
+    const c  = compMap[a];
+    const avgQ = q && q.scores.length ? Math.round(q.scores.reduce((a,b)=>a+b,0)/q.scores.length) : null;
+    const attempts = q ? q.scores.length : 0;
+    const date = (q?.date || e?.created_at||'').slice(0,10);
+
+    return `<tr>
+      <td class="lesson-name">${a}</td>
+      <td>${inlineBar(avgQ, avgQ>=85?'bf-green':avgQ>=60?'bf-amber':'bf-teal')}${attempts>1?` <span style="font-size:.65rem;color:var(--mist)">${attempts}x</span>`:''}</td>
+      <td>${e ? inlineBar(e.integrity_score, 'bf-amber') : '<span class="p-none">—</span>'}</td>
+      <td>${c ? pill(c.compliance_pct) : '<span class="p-none">—</span>'}</td>
+      <td style="color:var(--steel)">${e ? (e.words||0) : '—'}</td>
+      <td style="color:var(--mist);font-size:.72rem">${date||'—'}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('wr-table').innerHTML = `
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Lesson</th><th>Quiz score</th><th>Integrity</th>
+          <th>Compliance</th><th>Words</th><th>Date</th>
+        </tr></thead>
+        <tbody>${detailRows}</tbody>
+      </table>
+    </div>`;
+
+  // ── Integrity transparency table ───────────────────────────────────
+  const intRows = writingActs.filter(a => essayMap[a]).map(a => {
+    const e = essayMap[a];
+    const c = compMap[a];
+    const dur  = e.writing_duration != null ? `${e.writing_duration}s` : '—';
+    const ratio = e.chars_typed_ratio != null ? `${e.chars_typed_ratio}%` : '—';
+    const flags = [];
+    if (e.pastes > 0)       flags.push(`<span class="int-chip" style="background:var(--red-lt);color:var(--red)">${e.pastes} paste${e.pastes>1?'s':''}</span>`);
+    if (e.tab_switches > 2) flags.push(`<span class="int-chip" style="background:var(--amber-lt);color:var(--amber)">${e.tab_switches} tab switches</span>`);
+    if (e.integrity_score != null && e.integrity_score < 70)
+      flags.push(`<span class="int-chip" style="background:var(--red-lt);color:var(--red)">Low integrity</span>`);
+    if (!flags.length)
+      flags.push(`<span class="int-chip" style="background:var(--green-lt);color:var(--green)">Clean</span>`);
+
+    // Compliance breakdown
+    const compBreak = c ? [
+      c.words_ok     != null ? `<span class="int-chip" style="background:${c.words_ok?'var(--green-lt)':'var(--red-lt)'};color:${c.words_ok?'var(--green)':'var(--red)'}">Words ${c.words_ok?'✓':'✗'}</span>` : '',
+      c.integrity_ok != null ? `<span class="int-chip" style="background:${c.integrity_ok?'var(--green-lt)':'var(--red-lt)'};color:${c.integrity_ok?'var(--green)':'var(--red)'}">Integrity ${c.integrity_ok?'✓':'✗'}</span>` : '',
+      c.pastes_ok    != null ? `<span class="int-chip" style="background:${c.pastes_ok?'var(--green-lt)':'var(--red-lt)'};color:${c.pastes_ok?'var(--green)':'var(--red)'}">Pastes ${c.pastes_ok?'✓':'✗'}</span>` : '',
+      c.keywords_ok  != null ? `<span class="int-chip" style="background:${c.keywords_ok?'var(--green-lt)':'var(--red-lt)'};color:${c.keywords_ok?'var(--green)':'var(--red)'}">Keywords ${c.keywords_ok?'✓':'✗'}</span>` : '',
+    ].filter(Boolean).join('') : '<span style="color:var(--mist);font-size:.72rem">No compliance data</span>';
+
+    return `<tr>
+      <td class="lesson-name">${a}</td>
+      <td>${pill(e.integrity_score)}</td>
+      <td style="color:var(--steel)">${e.keystrokes||'—'}</td>
+      <td style="color:var(--steel)">${ratio}</td>
+      <td style="color:var(--steel)">${dur}</td>
+      <td><div class="integrity-row">${flags.join('')}</div></td>
+      <td><div class="integrity-row">${compBreak}</div></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('wr-integrity-table').innerHTML = intRows ? `
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Lesson</th><th>Integrity</th><th>Keystrokes</th>
+          <th>Typed ratio</th><th>Duration</th><th>Signals</th><th>Compliance checks</th>
+        </tr></thead>
+        <tbody>${intRows}</tbody>
+      </table>
+    </div>` : '<div class="state-msg">No essay submissions yet.</div>';
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   READING RENDERER
+════════════════════════════════════════════════════════════════════ */
+function renderReading(readingMap) {
+  const lessons = Object.values(readingMap);
+
+  if (!lessons.length) {
+    document.getElementById('re-table').innerHTML =
+      '<div class="state-msg">No reading lessons completed yet.</div>';
+    document.getElementById('re-done').textContent    = '0';
+    document.getElementById('re-score').textContent   = '—';
+    document.getElementById('re-errors').textContent  = '—';
+    document.getElementById('re-time').textContent    = '—';
+    return;
+  }
+
+  const avgScore  = Math.round(lessons.reduce((s,r)=>s+(r.score||0),0)/lessons.length);
+  const avgErrors = Math.round(lessons.reduce((s,r)=>s+(r.total_errors||0),0)/lessons.length);
+  const avgMin    = Math.round(lessons.reduce((s,r)=>s+((r.duration_sec||0)/60),0)/lessons.length);
+
+  document.getElementById('re-done').textContent   = lessons.length;
+  document.getElementById('re-score').textContent  = `${avgScore}%`;
+  document.getElementById('re-errors').textContent = avgErrors;
+  document.getElementById('re-time').textContent   = `${avgMin}m`;
+
+  const rCov = Math.round(lessons.length / TOTAL_READING * 100);
+  setBar('re-cov-bar','re-cov-pct', rCov);
+  setBar('re-score-bar','re-score-pct', avgScore);
+
+  const rows = lessons.map(r => {
+    const mins = r.duration_sec ? Math.round(r.duration_sec/60) : null;
+    const scoreColor = (r.score||0) >= 85 ? 'bf-green' : (r.score||0) >= 60 ? 'bf-amber' : 'bf-teal';
+    return `<tr>
+      <td class="lesson-name">${r.lesson_name || '—'}</td>
+      <td>${inlineBar(r.score, scoreColor)}</td>
+      <td style="color:var(--steel)">${r.total_errors != null ? r.total_errors : '—'}</td>
+      <td style="color:var(--steel)">${mins != null ? `${mins} min` : '—'}</td>
+      <td style="color:var(--steel)">${r.slides_total != null ? r.slides_total : '—'}</td>
+      <td style="color:var(--mist);font-size:.72rem">${(r.completed_at||'').slice(0,10)||'—'}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('re-table').innerHTML = `
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Lesson</th><th>Score</th><th>Errors</th>
+          <th>Time</th><th>Slides</th><th>Date</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════════════════════════ */
+fetch('/api/config')
+  .then(r => r.json())
+  .then(cfg => {
     SB_URL = cfg.supabaseUrl || '';
     SB_KEY = cfg.supabaseKey || '';
-    loadProgress();
-}).catch(()=>{ loadProgress(); });
+    loadAll();
+  })
+  .catch(() => loadAll());
 </script>
 </body>
 </html>
