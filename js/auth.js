@@ -2,8 +2,12 @@
  * Versión 1.7: Corregido mapeo de columnas y lógica de limpieza
  */
 
-document.addEventListener('DOMContentLoaded', () => checkStudentStatus());
-
+// Borra la primera línea y pega esto al FINAL de tu js/auth.js
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkStudentStatus);
+} else {
+    checkStudentStatus();
+}
 async function checkStudentStatus() {
     const email = localStorage.getItem('studentEmail');
     const modal = document.getElementById('welcomeModal');
@@ -23,6 +27,12 @@ async function checkStudentStatus() {
         return;
     }
 
+    // --- VÍA RÁPIDA: Si el login fue hace menos de 2 minutos, cerramos el modal ya ---
+    if (email && loginTimestamp && (new Date().getTime() - loginTimestamp < 120000)) {
+        if (modal) modal.style.display = 'none';
+        if (display) display.innerText = "Active: " + (localStorage.getItem('studentName') || "Student");
+    }
+
     try {
         const response = await fetch('/api/validate-student', {
             method: 'POST',
@@ -30,9 +40,7 @@ async function checkStudentStatus() {
             body: JSON.stringify({ email: email })
         });
 
-        // Verificamos si la respuesta es exitosa antes de parsear
         if (!response.ok) {
-            // Si el servidor responde 404 o 500, limpiamos para evitar bucles
             console.warn("Usuario no válido en la base de datos, limpiando sesión...");
             localStorage.clear(); 
             if (modal) modal.style.display = 'flex';
@@ -41,28 +49,27 @@ async function checkStudentStatus() {
 
         const serverResult = await response.json();
 
-        // 2️⃣ Guardar/actualizar datos (USANDO name y major)
-        localStorage.setItem('studentName',        serverResult.name || "Authorized User");
-        localStorage.setItem('studentEmail',       serverResult.email);
-        localStorage.setItem('studentCourse',      serverResult.course || "N/A");
-        localStorage.setItem('studentMajor',       serverResult.major || "Student");
+        // Actualizar datos con lo más reciente del servidor
+        localStorage.setItem('studentName', serverResult.name || "Authorized User");
+        localStorage.setItem('studentEmail', serverResult.email);
+        localStorage.setItem('studentCourse', serverResult.course || "N/A");
+        localStorage.setItem('studentMajor', serverResult.major || "Student");
         localStorage.setItem('studentInstitution', "ULEAM");
         localStorage.setItem('lastLoginTimestamp', new Date().getTime());
 
-        // 3️⃣ UI Update
+        // UI Update final
         if (modal) modal.style.display = 'none';
         if (display) display.innerText = "Active: " + (serverResult.name || "Student");
 
-        // Solo cargar si estamos en el index y el frame está vacío
         const frame = document.getElementById('contentFrame');
         if (frame && frame.src.includes('welcome-content.html')) {
-            // Ya está cargado o se cargará por defecto
+            // Ya cargado
         }
 
     } catch (err) {
         console.error("Connection Error:", err);
-        // No reseteamos aquí por si es un fallo temporal del WiFi
-        if (modal) modal.style.display = 'none'; // Opcional: permitir ver contenido offline
+        // Si hay error de red pero ya teníamos sesión, dejamos que use la app offline
+        if (email && modal) modal.style.display = 'none';
     }
 }
 
@@ -99,21 +106,21 @@ async function saveAndStart() {
             return;
         }
 
-        // 3. AUTO-CARGA DE DATOS
-        localStorage.setItem('studentName',        serverResult.name || "Authorized User");
-        localStorage.setItem('studentEmail',       serverResult.email);
-        localStorage.setItem('studentCourse',      serverResult.course || "N/A");
-        localStorage.setItem('studentMajor',       serverResult.major || "Student");
+        // 3. GUARDAR DATOS EN STORAGE
+        localStorage.setItem('studentName', serverResult.name || "Authorized User");
+        localStorage.setItem('studentEmail', serverResult.email);
+        localStorage.setItem('studentCourse', serverResult.course || "N/A");
+        localStorage.setItem('studentMajor', serverResult.major || "Student");
         localStorage.setItem('studentInstitution', "ULEAM");
         
-        // Datos específicos de la sesión
         localStorage.setItem('studentPracticeType', practiceType);
         localStorage.setItem('studentAcademicConsent', 'Yes');
         localStorage.setItem('studentResearchConsent', researchConsent ? 'Yes' : 'No');
         localStorage.setItem('lastLoginTimestamp', new Date().getTime());
 
-        // 4. Entrar
-        location.reload();
+        // 4. CAMBIO CLAVE: Ejecutamos el check inmediatamente en lugar de recargar
+        // Esto cerrará el modal y actualizará el texto "Active: User" automáticamente
+        await checkStudentStatus();
 
     } catch (err) {
         console.error("Connection Error:", err);
