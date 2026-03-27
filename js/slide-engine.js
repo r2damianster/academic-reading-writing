@@ -1257,9 +1257,15 @@ SlideTypes.ESSAY = {
         }
 
         async function _loadRequirements() {
+            // Esperar hasta 3s a que /api/config cargue las credenciales
+            let attempts = 0;
+            while ((!window._SE_SB_URL || !window._SE_SB_KEY) && attempts < 30) {
+                await new Promise(r => setTimeout(r, 100));
+                attempts++;
+            }
             const SURL = window._SE_SB_URL || '';
             const SKEY = window._SE_SB_KEY  || '';
-            if (!SURL || !SKEY) return;
+            if (!SURL || !SKEY) { console.warn('⚠️ No Supabase credentials for requirements panel'); return; }
             try {
                 const key = lessonName.replace(/ /g, '-');
                 const res = await fetch(
