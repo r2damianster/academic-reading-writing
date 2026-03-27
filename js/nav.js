@@ -21,10 +21,11 @@ const MENU = [
       { label: '6. Paragraph Review',           path: 'modules/00-fundamentals/paragraph-review.html' },
       { label: '7. Organizational Patterns',    path: 'modules/00-fundamentals/organizational-patterns.html' },
       { label: '8. Body Paragraphs',            path: 'modules/00-fundamentals/body-paragraphs.html' },
-      { label: '9. Conclusion Paragraphs',      path: 'modules/00-fundamentals/conclusion-paragraphs.html' },
-      { label: '10. From Paragraphs to Essay',  path: 'modules/00-fundamentals/paragraphs-to-essay.html' },
-      { label: '11. Introduction Strategies',   path: 'modules/00-fundamentals/introduction-strategies.html' },
-      { label: '12. Integrating Visuals',       path: 'modules/00-fundamentals/integrating-visuals.html' }
+      { label: '9. Rebutall Blocks',            path: 'modules/00-fundamentals/rebuttal-block.html' },
+      { label: '10. Conclusion Paragraphs',      path: 'modules/00-fundamentals/conclusion-paragraphs.html' },
+      { label: '11. From Paragraphs to Essay',  path: 'modules/00-fundamentals/paragraphs-to-essay.html' },
+      { label: '12. Introduction Strategies',   path: 'modules/00-fundamentals/introduction-strategies.html' },
+      { label: '13. Integrating Visuals',       path: 'modules/00-fundamentals/integrating-visuals.html' }
     ]
   },
   {
@@ -37,8 +38,7 @@ const MENU = [
         path: 'modules/01-core-syllabus/unit1-essays/unit1-essays-hub.html',
         children: [
           { label: 'Essay Structure',             path: 'modules/01-core-syllabus/unit1-essays/essay-structure.html' },
-          { label: 'Block Pattern',               path: 'modules/01-core-syllabus/unit1-essays/block-pattern.html' },
-          { label: 'Point-by-Point Pattern',      path: 'modules/01-core-syllabus/unit1-essays/point-by-point.html' },
+          { label: 'Essay Patterns and Semantic Waves ',               path: 'modules/01-core-syllabus/unit1-essays/essay-patterns-semantic-waves.html' },
           { label: 'Types of Essays',             path: 'modules/01-core-syllabus/unit1-essays/types-essay.html' },
           { label: 'Argumentative Essay',         path: 'modules/01-core-syllabus/unit1-essays/argumentative-essay.html' },
           { label: 'Chain Essay',                 path: 'modules/01-core-syllabus/unit1-essays/chain-essay.html' },
