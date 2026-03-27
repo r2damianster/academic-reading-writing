@@ -460,11 +460,9 @@ td.lesson-name { font-weight: 600; color: var(--ink); }
    ════════════════════════════════════════════════════════════════════ */
 let SB_URL = '';
 let SB_KEY = '';
-// Totales dinámicos — cargados desde vw_course_lesson_totals
-// basado en el course_id del estudiante. Fallback a 59/4 si aún no hay curso asignado.
-let TOTAL_WRITING = 59;
-let TOTAL_READING = 4;
-let TOTAL_ALL     = 63;
+let TOTAL_WRITING = 0;
+let TOTAL_READING = 0;
+let TOTAL_ALL     = 0;
 
 /**
  * Función de ARRANQUE: 
@@ -577,27 +575,25 @@ async function loadAll() {
     });
 
     try {
-        // ── 1. Student profile (incluye course_id para totales dinámicos) ────
-        const students = await sbGet(`students?email=eq.${encodeURIComponent(email)}&select=id,name,email,course,major,period,course_id&limit=1`);
+        // ── 1. Student profile ─────────────────────────────────────────
+        const students = await sbGet(`students?email=eq.${encodeURIComponent(email)}&select=id,name,email,course,major,period&limit=1`);
         if (!students.length) throw new Error('Student not found');
         const st = students[0];
         document.getElementById('studentMeta').textContent =
             `${st.name}  ·  ${st.course || ''}  ·  Period ${st.period || '—'}`;
 
-        // ── 2. Totales dinámicos del curso ─────────────────────────────
-        // Si el estudiante tiene course_id, calcula los totales reales
-        // desde vw_course_lesson_totals. Si no, usa el fallback 59/4.
-        if (st.course_id) {
-            try {
-                const totals = await sbGet(`vw_course_lesson_totals?course_id=eq.${st.course_id}&select=active_lessons,essay_lessons,reading_lessons&limit=1`);
-                if (totals.length) {
-                    TOTAL_WRITING = totals[0].essay_lessons   || TOTAL_WRITING;
-                    TOTAL_READING = totals[0].reading_lessons || TOTAL_READING;
-                    TOTAL_ALL     = totals[0].active_lessons  || TOTAL_ALL;
-                }
-            } catch(e) {
-                console.warn('No se pudo cargar totales del curso — usando fallback:', e.message);
-            }
+        // ── 2. Totales dinámicos desde essay_requirements ─────────────
+        // Fuente de verdad: todas las lecciones registradas en el catálogo.
+        // Cuando actives course_lessons, reemplaza esto por vw_course_lesson_totals.
+        try {
+            const allReqs = await sbGet(`essay_requirements?select=activity_key,lesson_type`);
+            TOTAL_WRITING = allReqs.filter(r => (r.lesson_type || 'essay') === 'essay').length;
+            TOTAL_READING = allReqs.filter(r => r.lesson_type === 'reading').length;
+            TOTAL_ALL     = allReqs.length;
+            console.log(`📚 Totales: ${TOTAL_ALL} (${TOTAL_WRITING} writing, ${TOTAL_READING} reading)`);
+        } catch(e) {
+            TOTAL_WRITING = 34; TOTAL_READING = 2; TOTAL_ALL = 36;
+            console.warn('Totales fallback:', e.message);
         }
 
         // ── 3. Fetch all activity data in parallel ─────────────────────
@@ -869,7 +865,7 @@ function renderReading(readingMap) {
   document.getElementById('re-errors').textContent = avgErrors;
   document.getElementById('re-time').textContent   = `${avgMin}m`;
 
-  const rCov = Math.round(lessons.length / TOTAL_READING * 100);
+  const rCov = TOTAL_READING > 0 ? Math.round(lessons.length / TOTAL_READING * 100) : 0;
   setBar('re-cov-bar','re-cov-pct', rCov);
   setBar('re-score-bar','re-score-pct', avgScore);
 
@@ -898,8 +894,17 @@ function renderReading(readingMap) {
     </div>`;
 }
 
-// Startup is handled by the async init() function above (window.onload = init)
-// which loads /api/config and then calls loadAll().
+/* ════════════════════════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════════════════════════ */
+fetch('/api/config')
+  .then(r => r.json())
+  .then(cfg => {
+    SB_URL = cfg.supabaseUrl || '';
+    SB_KEY = cfg.supabaseKey || '';
+    loadAll();
+  })
+  .catch(() => loadAll());
 </script>
 </body>
 </html>
