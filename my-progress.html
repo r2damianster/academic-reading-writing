@@ -460,8 +460,11 @@ td.lesson-name { font-weight: 600; color: var(--ink); }
    ════════════════════════════════════════════════════════════════════ */
 let SB_URL = '';
 let SB_KEY = '';
-const TOTAL_WRITING = 59; 
-const TOTAL_READING = 4;
+// Totales dinámicos — cargados desde vw_course_lesson_totals
+// basado en el course_id del estudiante. Fallback a 59/4 si aún no hay curso asignado.
+let TOTAL_WRITING = 59;
+let TOTAL_READING = 4;
+let TOTAL_ALL     = 63;
 
 /**
  * Función de ARRANQUE: 
@@ -574,14 +577,30 @@ async function loadAll() {
     });
 
     try {
-        // ── 1. Student profile ─────────────────────────────────────────
-        const students = await sbGet(`students?email=eq.${encodeURIComponent(email)}&select=id,name,email,course,major,period&limit=1`);
+        // ── 1. Student profile (incluye course_id para totales dinámicos) ────
+        const students = await sbGet(`students?email=eq.${encodeURIComponent(email)}&select=id,name,email,course,major,period,course_id&limit=1`);
         if (!students.length) throw new Error('Student not found');
         const st = students[0];
         document.getElementById('studentMeta').textContent =
             `${st.name}  ·  ${st.course || ''}  ·  Period ${st.period || '—'}`;
 
-        // ── 2. Fetch all data in parallel ──────────────────────────────
+        // ── 2. Totales dinámicos del curso ─────────────────────────────
+        // Si el estudiante tiene course_id, calcula los totales reales
+        // desde vw_course_lesson_totals. Si no, usa el fallback 59/4.
+        if (st.course_id) {
+            try {
+                const totals = await sbGet(`vw_course_lesson_totals?course_id=eq.${st.course_id}&select=active_lessons,essay_lessons,reading_lessons&limit=1`);
+                if (totals.length) {
+                    TOTAL_WRITING = totals[0].essay_lessons   || TOTAL_WRITING;
+                    TOTAL_READING = totals[0].reading_lessons || TOTAL_READING;
+                    TOTAL_ALL     = totals[0].active_lessons  || TOTAL_ALL;
+                }
+            } catch(e) {
+                console.warn('No se pudo cargar totales del curso — usando fallback:', e.message);
+            }
+        }
+
+        // ── 3. Fetch all activity data in parallel ─────────────────────
         const [logs, essays, compRows, readingRows] = await Promise.all([
             sbGet(`activity_logs?student_id=eq.${st.id}&select=activity,result,created_at&order=created_at.asc`),
             sbGet(`essay_submissions?student_id=eq.${st.id}&select=activity,words,pastes,tab_switches,keystrokes,deletions,integrity_score,chars_typed_ratio,writing_duration,time_to_first_key,created_at&order=created_at.asc`),
@@ -651,16 +670,16 @@ function renderOverview(st, quizMap, essayMap, writingActs, readingMap) {
     return s + Math.round((100 - best) / 5);
   }, 0);
 
-  document.getElementById('ov-done').textContent    = `${totalDone}`;
-  document.getElementById('ov-cov').textContent     = `${Math.round(totalDone/(TOTAL_WRITING+TOTAL_READING)*100)}%`;
+  document.getElementById('ov-done').textContent    = `${totalDone}/${TOTAL_ALL}`;
+  document.getElementById('ov-cov').textContent     = `${TOTAL_ALL > 0 ? Math.round(totalDone/TOTAL_ALL*100) : 0}%`;
   document.getElementById('ov-score').textContent   = avgScore != null ? `${avgScore}%` : '—';
   document.getElementById('ov-int').textContent     = avgInt   != null ? `${avgInt}%`   : '—';
   document.getElementById('ov-reading').textContent = `${readingDone}`;
   document.getElementById('ov-errors').textContent  = totalErrors;
 
-  const wCov = Math.round(writingDone / TOTAL_WRITING * 100);
-  const eCov = Math.round(Object.keys(essayMap).length / TOTAL_WRITING * 100);
-  const rCov = Math.round(readingDone / TOTAL_READING * 100);
+  const wCov = TOTAL_WRITING > 0 ? Math.round(writingDone / TOTAL_WRITING * 100) : 0;
+  const eCov = TOTAL_WRITING > 0 ? Math.round(Object.keys(essayMap).length / TOTAL_WRITING * 100) : 0;
+  const rCov = TOTAL_READING > 0 ? Math.round(readingDone / TOTAL_READING * 100) : 0;
   setBar('ov-wbar','ov-wb', wCov);
   setBar('ov-ebar','ov-eb', eCov);
   setBar('ov-rbar','ov-rb', rCov);
@@ -879,17 +898,8 @@ function renderReading(readingMap) {
     </div>`;
 }
 
-/* ════════════════════════════════════════════════════════════════════
-   INIT
-════════════════════════════════════════════════════════════════════ */
-fetch('/api/config')
-  .then(r => r.json())
-  .then(cfg => {
-    SB_URL = cfg.supabaseUrl || '';
-    SB_KEY = cfg.supabaseKey || '';
-    loadAll();
-  })
-  .catch(() => loadAll());
+// Startup is handled by the async init() function above (window.onload = init)
+// which loads /api/config and then calls loadAll().
 </script>
 </body>
 </html>
