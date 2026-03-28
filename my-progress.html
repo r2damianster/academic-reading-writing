@@ -576,24 +576,32 @@ async function loadAll() {
 
     try {
         // ── 1. Student profile ─────────────────────────────────────────
-        const students = await sbGet(`students?email=eq.${encodeURIComponent(email)}&select=id,name,email,course,major,period&limit=1`);
+        const students = await sbGet(`students?email=eq.${encodeURIComponent(email)}&select=id,name,email,course,major,period,course_id&limit=1`);
         if (!students.length) throw new Error('Student not found');
         const st = students[0];
         document.getElementById('studentMeta').textContent =
             `${st.name}  ·  ${st.course || ''}  ·  Period ${st.period || '—'}`;
 
-        // ── 2. Totales dinámicos desde essay_requirements ─────────────
-        // Fuente de verdad: todas las lecciones registradas en el catálogo.
-        // Cuando actives course_lessons, reemplaza esto por vw_course_lesson_totals.
-        try {
-            const allReqs = await sbGet(`essay_requirements?select=activity_key,lesson_type`);
-            TOTAL_WRITING = allReqs.filter(r => (r.lesson_type || 'essay') === 'essay').length;
-            TOTAL_READING = allReqs.filter(r => r.lesson_type === 'reading').length;
-            TOTAL_ALL     = allReqs.length;
-            console.log(`📚 Totales: ${TOTAL_ALL} (${TOTAL_WRITING} writing, ${TOTAL_READING} reading)`);
-        } catch(e) {
-            TOTAL_WRITING = 34; TOTAL_READING = 2; TOTAL_ALL = 36;
-            console.warn('Totales fallback:', e.message);
+        // ── 2. Totales dinámicos desde vw_course_lesson_totals ────────
+        // Usa el course_id del estudiante para calcular exactamente cuántas
+        // lecciones activas tiene su curso. Sin hardcoding.
+        if (st.course_id) {
+            try {
+                const totRow = await sbGet(`vw_course_lesson_totals?course_id=eq.${st.course_id}&select=active_lessons,essay_lessons,reading_lessons&limit=1`);
+                if (totRow.length) {
+                    TOTAL_WRITING = totRow[0].essay_lessons   || 0;
+                    TOTAL_READING = totRow[0].reading_lessons || 0;
+                    TOTAL_ALL     = totRow[0].active_lessons  || 0;
+                    console.log(`📚 Totales del curso: ${TOTAL_ALL} (${TOTAL_WRITING} writing, ${TOTAL_READING} reading)`);
+                }
+            } catch(e) {
+                console.warn('vw_course_lesson_totals falló:', e.message);
+            }
+        }
+        // Fallback si el estudiante no tiene course_id asignado aún
+        if (!TOTAL_ALL) {
+            TOTAL_WRITING = 32; TOTAL_READING = 2; TOTAL_ALL = 34;
+            console.warn('⚠️ Sin course_id — usando fallback. Ejecuta migration_courses.sql.');
         }
 
         // ── 3. Fetch all activity data in parallel ─────────────────────
