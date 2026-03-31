@@ -1,6 +1,259 @@
-<!-- CREAR PROXIMAMENTE -->
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>Coming Soon</title></head>
-<body><p>🚧 This lesson is coming soon.</p></body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Semantic Waves | Academic Workspace</title>
+
+    <link rel="stylesheet" href="../../../css/modules.css">
+    <link rel="stylesheet" href="../../../css/readingsidebar.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <script src="../../../js/activity-tracker.js"></script>
+    <script src="../../../js/reading-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="readingProgressBar"></div>
+    </div>
+    <div style="text-align:right; font-size:0.8rem; color:#6c757d; padding:4px 16px 0;" id="readingSlideCounter">1 / 11</div>
+
+    <!-- SLIDE 1: VIDEO — Presentation -->
+    <div class="reading-slide active" data-type="VIDEO">
+        <h2>Semantic Waves</h2>
+        <p style="color:#6c757d; margin-bottom:16px;">
+            Pay attention to your instructor's explanation of semantic gravity, semantic density, and the concept of semantic waves. We will use these frameworks to analyze the academic article by Karl Maton (2020).
+        </p>
+        <iframe
+            data-re-src="https://docs.google.com/presentation/d/1Xi7BH2qFoyP1yz4wwhThNTHei2zfPhCejs9kyQsTVRI/embed?start=false&loop=false&delayms=3000&rm=minimal"
+            data-re-height="360"
+            style="border-radius:10px; border:none; display:block; width:100%;">
+        </iframe>
+    </div>
+
+    <!-- SLIDE 2: READING_FOCUS — Introduction: segmentalism and knowledge-blindness -->
+    <div class="reading-slide"
+         data-type="READING_FOCUS"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.3.SemanticwavesAAD.pdf"
+         data-re-page="1"
+         data-re-min-time="60"
+         data-re-label="The Problem: Segmentalism"
+         data-re-task="Read the Introduction (pp. 59–61). Identify the two key obstacles to cumulative knowledge-building that Maton describes: 'knowledge-blindness' and 'segmentalism'. Ask yourself: how does the way we think about knowledge prevent us from building on it over time?">
+    </div>
+
+    <!-- SLIDE 3: READING_QUIZ — Semantic gravity -->
+    <div class="reading-slide"
+         data-type="READING_QUIZ"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.3.SemanticwavesAAD.pdf"
+         data-re-page="5"
+         data-re-label="Semantic Gravity"
+         data-re-task="Read the definitions of semantic gravity and semantic density (pp. 63–64). Then answer the question below.">
+
+        <p data-re-question>
+            According to Maton (2020, p. 63), which of the following examples has the <strong>strongest semantic gravity (SG+)</strong>?
+        </p>
+        <div data-re-option data-re-correct>A. The name of a specific plant species in a Biology field report.</div>
+        <div data-re-option>B. The process of photosynthesis as a general biological phenomenon.</div>
+        <div data-re-option>C. A theory of historical causation applied across multiple periods.</div>
+        <div data-re-option>D. The concept of 'cumulative knowledge-building' in education research.</div>
+    </div>
+
+    <!-- SLIDE 4: READING_MATCH — The four semantic codes -->
+    <div class="reading-slide"
+         data-type="READING_MATCH"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.3.SemanticwavesAAD.pdf"
+         data-re-page="6"
+         data-re-label="The Four Semantic Codes"
+         data-re-task="Study Figure 3.1 — the semantic plane (p. 64). Match each semantic code with its correct definition from the article.">
+
+        <div data-re-term data-re-id="rhizo">Rhizomatic codes (SG−, SD+)</div>
+        <div data-re-term data-re-id="prosaic">Prosaic codes (SG+, SD−)</div>
+        <div data-re-term data-re-id="rarefied">Rarefied codes (SG−, SD−)</div>
+        <div data-re-term data-re-id="worldly">Worldly codes (SG+, SD+)</div>
+
+        <div data-re-def data-re-match="rhizo">Context-independent and complex — the basis of achievement relies on abstract, highly condensed stances.</div>
+        <div data-re-def data-re-match="prosaic">Context-dependent and simpler — legitimacy accrues to meanings tied to specific, local situations.</div>
+        <div data-re-def data-re-match="rarefied">Context-independent but condensing few meanings — characteristic of jargon without conceptual depth.</div>
+        <div data-re-def data-re-match="worldly">Context-dependent but complex — characteristic of professional and vocational knowledge.</div>
+    </div>
+
+    <!-- SLIDE 5: READING_TFNG — Semantic profiles and semantic range -->
+    <div class="reading-slide"
+         data-type="READING_TFNG"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.3.SemanticwavesAAD.pdf"
+         data-re-page="9"
+         data-re-label="Semantic Profiles (TFNG)">
+
+        <div data-re-tfng-item data-re-answer="true"
+             data-re-explain="True. Maton (p. 67) describes Figure 3.2 as showing three profiles: a high flatline (A), a low flatline (B), and a semantic wave (C). The flatlines A and B have much lower semantic ranges than the wave C.">
+            According to Figure 3.2 (p. 67), a semantic wave (profile C) has a greater semantic range than either of the two flatline profiles (A and B).
+        </div>
+        <div data-re-tfng-item data-re-answer="false"
+             data-re-explain="False. Maton explicitly states that the two strengths — semantic gravity and semantic density — 'may change independently and do not always move together' (p. 67). Tracing them as a single line is a simplification used for introductory purposes only.">
+            The article states that semantic gravity and semantic density always move together inversely in all forms of semantic profiling (p. 67).
+        </div>
+        <div data-re-tfng-item data-re-answer="not given"
+             data-re-explain="Not Given. The article discusses how profiling can be done at many levels (individual exchange, lesson, curriculum, career), but does not specify a minimum number of levels required for a valid semantic profile.">
+            Maton specifies that a valid semantic profile must be traced across at least three levels of analysis simultaneously (pp. 67–68).
+        </div>
+    </div>
+
+    <!-- SLIDE 6: READING_FILL — High vs. low achieving essays -->
+    <div class="reading-slide"
+         data-type="READING_FILL"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.3.SemanticwavesAAD.pdf"
+         data-re-page="10"
+         data-re-label="Achievement and Semantic Waves"
+         data-re-task="Read the analysis of the two student essays in school English (pp. 68–70). Complete the summary below using the article's exact terminology.">
+
+        <p data-re-question>Complete the following statements about semantic profiles and student achievement:</p>
+
+        <p data-re-sentence>
+            The high-achieving essay is characterized by a series of
+            <span data-re-blank data-re-answer="semantic waves">___</span>
+            that weave together different forms of knowledge, while the low-achieving essay traces a relatively low
+            <span data-re-blank data-re-answer="semantic flatline">___</span>
+            (p. 69).
+        </p>
+        <p data-re-sentence>
+            When a teacher translates a technical term into simpler, everyday language, this process is called
+            <span class="clue-text">(un__)</span>
+            <span data-re-blank data-re-answer="unpacking">___</span>,
+            which weakens semantic density and strengthens semantic gravity (p. 73).
+        </p>
+        <p data-re-sentence>
+            The reverse movement — bringing meanings back together into more complex, technical knowledge — is called
+            <span class="clue-text">(re__)</span>
+            <span data-re-blank data-re-answer="repacking">___</span>,
+            which achieves the upshift necessary for a complete semantic wave (p. 74).
+        </p>
+    </div>
+
+    <!-- SLIDE 7: READING_QUIZ — Biology example (cilia) -->
+    <div class="reading-slide"
+         data-type="READING_QUIZ"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.3.SemanticwavesAAD.pdf"
+         data-re-page="14"
+         data-re-label="Semantic Wave in Biology"
+         data-re-task="Read the Biology classroom example about 'cilia' (pp. 72–74). Focus on Figure 3.6 and the teacher's moves.">
+
+        <p data-re-question>
+            In the Biology classroom example (pp. 72–74), when the teacher describes 'cilia' as 'the little hairs' and connects them to the effects of smoking, what semantic movement does this represent?
+        </p>
+        <div data-re-option>A. An upshift — the knowledge moves toward greater abstraction and complexity.</div>
+        <div data-re-option data-re-correct>B. A downshift — the knowledge moves toward more context-dependent and simpler meanings (SG+, SD−).</div>
+        <div data-re-option>C. A flatline — the semantic gravity and density remain constant throughout.</div>
+        <div data-re-option>D. A repacking move — the teacher is condensing multiple meanings into a single technical term.</div>
+    </div>
+
+    <!-- SLIDE 8: READING_MATCH — History example key terms -->
+    <div class="reading-slide"
+         data-type="READING_MATCH"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.3.SemanticwavesAAD.pdf"
+         data-re-page="16"
+         data-re-label="Semantic Wave in History"
+         data-re-task="Read the History classroom example (pp. 74–77). Match each term or concept with its correct description as used in the article.">
+
+        <div data-re-term data-re-id="down">Down escalator</div>
+        <div data-re-term data-re-id="unpack">Unpacking</div>
+        <div data-re-term data-re-id="repack">Repacking</div>
+        <div data-re-term data-re-id="aesthetic">Aesthetic trade</div>
+
+        <div data-re-def data-re-match="down">A teaching pattern where the knowledge is repeatedly shifted to simpler, context-dependent meanings without ever moving back up the semantic scale.</div>
+        <div data-re-def data-re-match="unpack">The teacher's move of breaking down abstract historical terms (e.g. 'influence of Greek and Egyptian cultures') into concrete examples like objects and building techniques.</div>
+        <div data-re-def data-re-match="repack">The teacher's move of collecting specific examples into the technical concept — completing the upward shift of the semantic wave.</div>
+        <div data-re-def data-re-match="aesthetic">The technical term introduced by the History teacher to condense the idea of 'trade in ideas' between cultures — a repacking move that strengthens semantic density.</div>
+    </div>
+
+    <!-- SLIDE 9: READING_TFNG — Variety of semantic waves -->
+    <div class="reading-slide"
+         data-type="READING_TFNG"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.3.SemanticwavesAAD.pdf"
+         data-re-page="20"
+         data-re-label="Forms of Semantic Waves (TFNG)">
+
+        <div data-re-tfng-item data-re-answer="true"
+             data-re-explain="True. Maton describes the 'Icarus effect' (p. 80): students in undergraduate Physics sometimes reach too high up the semantic scale, using concepts or equations that are overly generalizing or condense more meanings than appropriate for their assignment.">
+            Research into undergraduate Physics revealed that students can reach too high on the semantic scale in assessed work — a phenomenon Maton calls the 'Icarus effect' (p. 80).
+        </div>
+        <div data-re-tfng-item data-re-answer="false"
+             data-re-explain="False. Maton (p. 80) states that practically-oriented subjects often begin AND end with concrete examples, creating 'bell-shaped waves' — not a simple downshift flatline.">
+            In practically-oriented subjects such as vocational education, semantic waves always follow a 'down escalator' pattern, beginning with abstract concepts and ending with concrete applications (p. 80).
+        </div>
+        <div data-re-tfng-item data-re-answer="not given"
+             data-re-explain="Not Given. While Maton mentions the semantic threshold concept and gives the cilia example as a case where simplified definitions are acceptable, he does not specify the exact number of curriculum stages after which thresholds are typically raised.">
+            The article specifies that semantic thresholds are typically raised after the third stage of curriculum in secondary schooling (p. 81).
+        </div>
+    </div>
+
+    <!-- SLIDE 10: READING_FILL — Conclusion key concepts -->
+    <div class="reading-slide"
+         data-type="READING_FILL"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.3.SemanticwavesAAD.pdf"
+         data-re-page="22"
+         data-re-label="Conclusion: The Power of Semantic Waves"
+         data-re-task="Read the Conclusion (pp. 81–82). Complete the key statements using Maton's exact wording.">
+
+        <p data-re-sentence>
+            According to Maton (p. 81), what may be most powerful is not one form of knowledge but rather how different forms are
+            <span data-re-blank data-re-answer="related">___</span>
+            and
+            <span data-re-blank data-re-answer="changed">___</span>.
+            In short, power resides in semantic waves that
+            <span data-re-blank data-re-answer="weave together">___</span>
+            and transform knowledges.
+        </p>
+        <p data-re-sentence>
+            The concept of
+            <span class="clue-text">(se__ th__)</span>
+            <span data-re-blank data-re-answer="semantic threshold">___</span>
+            reminds us that semantic waves may be a necessary but not sufficient condition for success — 'getting it right' epistemologically or axiologically may also be crucial (p. 81).
+        </p>
+    </div>
+
+    <!-- SLIDE 11: READING_COMMENT — Critical writing task -->
+    <div class="reading-slide"
+         data-type="READING_COMMENT"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.3.SemanticwavesAAD.pdf"
+         data-re-page="1"
+         data-re-min-words="80"
+         data-re-label="Critical Analysis: Identifying a Semantic Wave"
+         data-se-lesson="semantic-waves"
+         data-re-task="Maton (2020) argues that 'power resides in semantic waves that weave together and transform knowledges' (p. 81). Think of a learning experience — from a class, a textbook, or your own writing — where knowledge moved between abstract concepts and concrete examples. Identify at least one moment of 'unpacking' (moving toward SG+, SD−) and one moment of 'repacking' (moving toward SG−, SD+). Explain how these movements contributed — or failed to contribute — to cumulative knowledge-building. Use the concepts of semantic gravity and semantic density in your response.">
+    </div>
+
+    <div id="readingDoneScreen" style="display:none; text-align:center; padding:40px 20px;">
+        <div style="font-size:3rem; margin-bottom:16px;">🎓</div>
+        <h2 style="color:#27ae60; margin-bottom:8px;">Analysis Complete!</h2>
+        <p style="color:#6c757d; max-width:420px; margin:0 auto 24px;">
+            Your responses have been saved. You have completed the Semantic Waves analysis.
+        </p>
+        <a href="unit1-essays-hub.html" style="display:inline-block; padding:12px 28px; background:#2c7be5; color:#fff; border-radius:10px; text-decoration:none; font-weight:700;">
+            Back to Course Hub
+        </a>
+    </div>
+
+</div>
+
+<script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    window.onload = () => {
+        const LESSON_ID = 'semantic-waves';
+
+        if (typeof ActivityTracker !== 'undefined') {
+            ActivityTracker.init(LESSON_ID);
+        }
+
+        if (typeof ReadingEngine !== 'undefined') {
+            ReadingEngine.init(LESSON_ID);
+        }
+    };
+</script>
+
+</body>
 </html>
