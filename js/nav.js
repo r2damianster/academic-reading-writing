@@ -38,7 +38,8 @@ const MENU = [
         path: 'modules/01-core-syllabus/unit1-essays/unit1-essays-hub.html',
         children: [
           { label: 'Essay Structure',             path: 'modules/01-core-syllabus/unit1-essays/essay-structure.html' },
-          { label: 'Essay Patterns and Semantic Waves ',               path: 'modules/01-core-syllabus/unit1-essays/essay-patterns-semantic-waves.html' },
+          { label: 'Essay Patterns',               path: 'modules/01-core-syllabus/unit1-essays/essay-patterns.html' },
+          { label: 'Semantic Waves ',               path: 'modules/01-core-syllabus/unit1-essays/semantic-waves.html' },
           { label: 'Types of Essays',             path: 'modules/01-core-syllabus/unit1-essays/types-essay.html' },
           { label: 'Argumentative Essay',         path: 'modules/01-core-syllabus/unit1-essays/argumentative-essay.html' },
           { label: 'Chain Essay',                 path: 'modules/01-core-syllabus/unit1-essays/chain-essay.html' },
