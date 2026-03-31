@@ -1,1 +1,23 @@
 rebuttal-block.html #Fundamnetlas
+
+
+toolbox:
+
+    <!-- SLIDE 8: MATCH — Linking word categories -->
+    <div class="reading-slide"
+         data-type="READING_MATCH"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.2.Essay_Form_AW.pdf"
+         data-re-page="8"
+         data-re-label="Linking Word Categories">
+
+        <div data-re-term data-re-id="list">Listing linkers</div>
+        <div data-re-term data-re-id="result">Result / consequence linkers</div>
+        <div data-re-term data-re-id="contrast">Expressing-an-alternative linkers</div>
+        <div data-re-term data-re-id="reinforce">Reinforcement linkers</div>
+
+        <div data-re-def data-re-match="list">Used for counting and organizing logical sequence: firstly, secondly, finally, in addition.</div>
+        <div data-re-def data-re-match="result">Express causation and consequence: therefore, as a result, consequently.</div>
+        <div data-re-def data-re-match="contrast">Used to express alternative opinions or contrast: on the other hand, in contrast, alternatively.</div>
+        <div data-re-def data-re-match="reinforce">Used to strengthen a point: furthermore, moreover, what is more, besides.</div>
+    </div>
+
