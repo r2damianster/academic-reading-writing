@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Essay Patterns | Academic Workspace</title>
+    <title>Essay Patterns & Semantic Waves | Academic Workspace</title>
 
     <link rel="stylesheet" href="../../../css/modules.css">
     <link rel="stylesheet" href="../../../css/readingsidebar.css">
@@ -20,11 +20,11 @@
     <div class="progress-bar">
         <div class="progress-fill" id="readingProgressBar"></div>
     </div>
-    <div style="text-align:right; font-size:0.8rem; color:#6c757d; padding:4px 16px 0;" id="readingSlideCounter">1 / 11</div>
+    <div style="text-align:right; font-size:0.8rem; color:#6c757d; padding:4px 16px 0;" id="readingSlideCounter">1 / 12</div>
 
     <!-- SLIDE 1: VIDEO — Presentation -->
     <div class="reading-slide active" data-type="VIDEO">
-        <h2>Essay Patterns</h2>
+        <h2>Essay Patterns & Semantic Waves</h2>
         <p style="color:#6c757d; margin-bottom:16px;">
             Pay attention to your instructor's explanation of the Block and Alternating essay patterns. We will use these frameworks to analyze the academic article.
         </p>
@@ -35,16 +35,43 @@
         </iframe>
     </div>
 
-    <!-- SLIDE 2: QUIZ — Compare-and-contrast essay structure (article p.4, mirrors Block/Alternating from slides) -->
+    <!-- SLIDE 2: READING_FOCUS + QUIZ — Essay & Transactional Analysis (article p. 1) -->
+    <div class="reading-slide"
+         data-type="READING_FOCUS"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.2.Essay_Form_AW.pdf"
+         data-re-page="1"
+         data-re-min-time="45"
+         data-re-label="Essay & Communication"
+         data-re-task="Read the editorial introduction on page 1. Focus on two key ideas: (1) what the word 'essay' means and where it comes from, and (2) how writing an essay is compared to the communication process in Transactional Analysis. Ask yourself: why is adjusting your language to your reader similar to effective communication in TA?">
+    </div>
+
+    <!-- SLIDE 2b: READING_QUIZ — Essay/TA connection, light comprehension check -->
     <div class="reading-slide"
          data-type="READING_QUIZ"
          data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.2.Essay_Form_AW.pdf"
-         data-re-page="3-4"
+         data-re-page="1"
+         data-re-label="Essay as Communication"
+         data-re-task="Based on what you just read on page 1, answer the question below.">
+
+        <p data-re-question>
+            According to the editorial introduction (p. 1), what does the word <strong>'essay'</strong> originally mean, and what does this suggest about the student's role when writing one?
+        </p>
+        <div data-re-option>A. 'To argue' — the student must defend a position against opposing views.</div>
+        <div data-re-option>B. 'To explain' — the student must present information as clearly as possible.</div>
+        <div data-re-option data-re-correct>C. 'To try' — the student attempts to describe a topic in the way expected by their reader.</div>
+        <div data-re-option>D. 'To organize' — the student must structure their thoughts into a formal framework.</div>
+    </div>
+
+    <!-- SLIDE 3: QUIZ — Compare-and-contrast essay structure (article p.4, mirrors Block/Alternating from slides) -->
+    <div class="reading-slide"
+         data-type="READING_QUIZ"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.2.Essay_Form_AW.pdf"
+         data-re-page="4"
          data-re-label="Compare & Contrast Structure"
          data-re-task="Read the section on compare-and-contrast essays (p. 4). Notice how the two versions of thought presentation described here connect directly to the Block and Alternating patterns from the slides.">
 
         <p data-re-question>
-            According to the article (p. 3-4), which of the following best describes the <strong>first version</strong> of thought presentation in a compare-and-contrast essay?
+            According to the article (p. 4), which of the following best describes the <strong>first version</strong> of thought presentation in a compare-and-contrast essay?
         </p>
         <div data-re-option data-re-correct>A. Thesis statement → full analysis of Subject A → full analysis of Subject B → conclusion.</div>
         <div data-re-option>B. Thesis statement → parallel coverage of similar or distinctive features of both subjects → conclusion.</div>
@@ -78,7 +105,7 @@
          data-re-page="4"
          data-re-min-time="60"
          data-re-label="Essay Types"
-         data-re-task="Read pages 218–221. Identify the different types of academic essay described by the authors. Pay attention to the structural features of the compare-and-contrast essay and the cause-and-effect essay, as these connect directly to the Block and Alternating patterns.">
+         data-re-task="Read pages 3–5. Identify the different types of academic essay described by the authors. Pay attention to the structural features of the compare-and-contrast essay and the cause-and-effect essay, as these connect directly to the Block and Alternating patterns.">
     </div>
 
     <!-- SLIDE 5: TFNG — Essay structure claims -->
@@ -94,7 +121,7 @@
         </div>
         <div data-re-tfng-item data-re-answer="false"
              data-re-explain="False. The article states that a compare-and-contrast essay requires specifying the criteria of comparison in the introduction, not the conclusion.">
-            In a compare-and-contrast essay, the author is required to specify the criteria of comparison in the conclusion (p. 217-218).
+            In a compare-and-contrast essay, the author is required to specify the criteria of comparison in the conclusion (p. 4).
         </div>
         <div data-re-tfng-item data-re-answer="not given"
              data-re-explain="Not Given. The article describes dialectical essays as important for scientific and technical problems, but does not specify that they are the most difficult type.">
@@ -167,20 +194,20 @@
     <div class="reading-slide"
          data-type="READING_TFNG"
          data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.2.Essay_Form_AW.pdf"
-         data-re-page="7"
+         data-re-page="9"
          data-re-label="Writing Process (TFNG)">
 
         <div data-re-tfng-item data-re-answer="true"
              data-re-explain="True. The authors list brainstorming as the first stage of the essay writing process, where the student develops a 'vein' of thought and works out ideas.">
-            The first stage of the essay writing process described in the article is brainstorming (p. 221-223).
+            The first stage of the essay writing process described in the article is brainstorming (p. 9).
         </div>
         <div data-re-tfng-item data-re-answer="false"
              data-re-explain="False. The article states essays should have 250–300 words according to the task checklist, not 500 words.">
-            According to the Task Checklist described in the article, a complete academic essay should contain at least 500 words (p. 221-223).
+            According to the Task Checklist described in the article, a complete academic essay should contain at least 500 words (p. 8).
         </div>
         <div data-re-tfng-item data-re-answer="not given"
              data-re-explain="Not Given. The article classifies linking words into functional categories but does not rank them by frequency of use in student writing.">
-            The article states that 'result/consequence linkers' are the most frequently used category of linking words in student essays (p. 221-223).
+            The article states that 'result/consequence linkers' are the most frequently used category of linking words in student essays (p. 8–9).
         </div>
     </div>
 
@@ -223,7 +250,7 @@
         <div style="font-size:3rem; margin-bottom:16px;">🎓</div>
         <h2 style="color:#27ae60; margin-bottom:8px;">Analysis Complete!</h2>
         <p style="color:#6c757d; max-width:420px; margin:0 auto 24px;">
-            Your responses have been saved. You have completed the Essay Patterns analysis.
+            Your responses have been saved. You have completed the Essay Patterns &amp; Semantic Waves analysis.
         </p>
         <a href="unit1-essays-hub.html" style="display:inline-block; padding:12px 28px; background:#2c7be5; color:#fff; border-radius:10px; text-decoration:none; font-weight:700;">
             Back to Course Hub
