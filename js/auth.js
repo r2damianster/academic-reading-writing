@@ -1,24 +1,30 @@
-/* js/auth.js 
- * Versión 1.7: Corregido mapeo de columnas y lógica de limpieza
+/* js/auth.js
+ * Versión 1.8: Sesión de 24h, re-login solo pide email (no repite consents)
  */
 
-// Borra la primera línea y pega esto al FINAL de tu js/auth.js
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', checkStudentStatus);
 } else {
     checkStudentStatus();
 }
+
 async function checkStudentStatus() {
-    const email = localStorage.getItem('studentEmail');
-    const modal = document.getElementById('welcomeModal');
-    const display = document.getElementById('studentDisplay');
+    const email          = localStorage.getItem('studentEmail');
+    const modal          = document.getElementById('welcomeModal');
+    const display        = document.getElementById('studentDisplay');
     const loginTimestamp = localStorage.getItem('lastLoginTimestamp');
 
-    // Sesión de 4 horas
-    const expirationTime = 4 * 60 * 60 * 1000;
+    // Sesión de 24 horas
+    const expirationTime = 24 * 60 * 60 * 1000;
     if (loginTimestamp && (new Date().getTime() - loginTimestamp > expirationTime)) {
-        console.log("Sesión expirada");
-        resetApp();
+        // Solo borrar el timestamp — conservar email y datos del estudiante
+        // para que el modal muestre el email pre-llenado y salte step 2
+        localStorage.removeItem('lastLoginTimestamp');
+        if (!email) {
+            localStorage.clear();
+        }
+        if (modal) modal.style.display = 'flex';
+        _prefillReturningUser();
         return;
     }
 
@@ -27,10 +33,18 @@ async function checkStudentStatus() {
         return;
     }
 
-    // --- VÍA RÁPIDA: Si el login fue hace menos de 2 minutos, cerramos el modal ya ---
-    if (email && loginTimestamp && (new Date().getTime() - loginTimestamp < 120000)) {
+    // Vía rápida: login reciente (< 2 min), cerrar modal sin llamada al servidor
+    if (loginTimestamp && (new Date().getTime() - loginTimestamp < 120000)) {
         if (modal) modal.style.display = 'none';
         if (display) display.innerText = "Active: " + (localStorage.getItem('studentName') || "Student");
+        return;
+    }
+
+    // Admin autenticado con contraseña — no re-validar (el endpoint exige contraseña)
+    if (localStorage.getItem('isAdmin') === 'true') {
+        if (modal) modal.style.display = 'none';
+        if (display) display.innerText = "Active: " + (localStorage.getItem('studentName') || "Admin");
+        return;
     }
 
     try {
@@ -42,14 +56,13 @@ async function checkStudentStatus() {
 
         if (!response.ok) {
             console.warn("Usuario no válido en la base de datos, limpiando sesión...");
-            localStorage.clear(); 
+            localStorage.clear();
             if (modal) modal.style.display = 'flex';
             return;
         }
 
         const serverResult = await response.json();
 
-        // Actualizar datos con lo más reciente del servidor
         localStorage.setItem('studentName', serverResult.name || "Authorized User");
         localStorage.setItem('studentEmail', serverResult.email);
         localStorage.setItem('studentCourse', serverResult.course || "N/A");
@@ -57,28 +70,46 @@ async function checkStudentStatus() {
         localStorage.setItem('studentInstitution', "ULEAM");
         localStorage.setItem('lastLoginTimestamp', new Date().getTime());
 
-        // UI Update final
         if (modal) modal.style.display = 'none';
         if (display) display.innerText = "Active: " + (serverResult.name || "Student");
 
-        const frame = document.getElementById('contentFrame');
-        if (frame && frame.src.includes('welcome-content.html')) {
-            // Ya cargado
-        }
-
     } catch (err) {
         console.error("Connection Error:", err);
-        // Si hay error de red pero ya teníamos sesión, dejamos que use la app offline
+        // Error de red pero hay sesión activa — dejar usar la app offline
         if (email && modal) modal.style.display = 'none';
+    }
+}
+
+// Pre-llena el email en el modal cuando el estudiante regresa tras expiración
+// y salta automáticamente al step 2 si ya tiene consents guardados
+function _prefillReturningUser() {
+    var storedEmail = localStorage.getItem('studentEmail');
+    var hasConsent  = localStorage.getItem('studentAcademicConsent');
+    if (!storedEmail) return;
+
+    var emailInput = document.getElementById('inputEmail');
+    if (emailInput) emailInput.value = storedEmail;
+
+    // Si ya tiene consents guardados, saltar directo al step 2
+    if (hasConsent) {
+        var s1 = document.getElementById('step1');
+        var s2 = document.getElementById('step2');
+        if (s1) s1.style.display = 'none';
+        if (s2) s2.style.display = 'block';
     }
 }
 
 async function saveAndStart() {
     const emailInput = document.getElementById('inputEmail');
     const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
-    const practiceType = document.getElementById('inputPracticeType').value;
-    const academicConsent = document.getElementById('inputConsent').checked;
-    const researchConsent = document.getElementById('inputResearchConsent').checked;
+
+    // Leer consents del DOM; si no están visibles, usar los valores guardados
+    const consentEl   = document.getElementById('inputConsent');
+    const researchEl  = document.getElementById('inputResearchConsent');
+    const practiceEl  = document.getElementById('inputPracticeType');
+    const academicConsent = consentEl   ? consentEl.checked   : (localStorage.getItem('studentAcademicConsent') === 'Yes');
+    const researchConsent = researchEl  ? researchEl.checked  : (localStorage.getItem('studentResearchConsent')  === 'Yes');
+    const practiceType    = practiceEl  ? practiceEl.value    : (localStorage.getItem('studentPracticeType') || 'In-class practice');
 
     if (!email) {
         showModalError("Email is required.", "step1Error");
