@@ -35,7 +35,28 @@ const server = http.createServer(async (req, res) => {
         }));
     }
 
-    // ─── 2. RUTA DE LA API ───────────────────────────────────────────────────────
+    // ─── 2. ORQUESTADOR DE AGENTES ──────────────────────────────────────────────
+    if (req.method === 'POST' && req.url === '/api/orchestrator') {
+        const orchestrator = require('./api/orchestrator');
+        orchestrator(req, res);
+        return;
+    }
+
+    // ─── 2b. SYNC READING PROGRESS ──────────────────────────────────────────────
+    if (req.method === 'POST' && req.url === '/api/sync-reading') {
+        const syncReading = require('./api/sync-reading');
+        syncReading(req, res);
+        return;
+    }
+
+    // ─── 2c. CRON: COMPRESIÓN DE PERFILES (Memory Agent) ────────────────────────
+    if ((req.method === 'GET' || req.method === 'POST') && req.url === '/api/cron/compress-profiles') {
+        const compressProfiles = require('./api/cron/compress-profiles');
+        compressProfiles(req, res);
+        return;
+    }
+
+    // ─── 3. RUTA DE LA API ───────────────────────────────────────────────────────
     if (req.method === 'POST' && req.url === '/api/validate-student') {
         let body = '';
         req.on('data', chunk => { body += chunk.toString(); });
@@ -77,7 +98,7 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    // ─── 3. SERVIDOR DE ARCHIVOS ESTÁTICOS ──────────────────────────────────────
+    // ─── 4. SERVIDOR DE ARCHIVOS ESTÁTICOS ──────────────────────────────────────
     let urlPath = req.url === '/' ? '/index.html' : req.url;
     urlPath = urlPath.split('?')[0];
 
