@@ -24,15 +24,15 @@
 
 require('dotenv').config();
 
-const { groqChat } = require('./groq-client');
-const PROMPTS      = require('./agents/_prompts');
-const Memory      = require('./agents/memory');
+const { groqChat } = require('../lib/groq-client');
+const PROMPTS      = require('../lib/agents/_prompts');
+const Memory       = require('../lib/agents/memory');
 
 // Módulos de agentes con transformaciones específicas de payload
 // Si el módulo no existe, el orquestador usa el payload tal como llega
 const AGENT_MODULES = {};
 ['writing', 'integrity', 'reading', 'content-gen', 'github', 'frontend', 'peer-review'].forEach(name => {
-    try { AGENT_MODULES[name] = require(`./agents/${name}`); } catch (e) {}
+    try { AGENT_MODULES[name] = require(`../lib/agents/${name}`); } catch (e) {}
 });
 
 // ── Token Optimizer: calcula score de complejidad (0-100) ────────────────────

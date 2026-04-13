@@ -23,7 +23,7 @@
 
 require('dotenv').config();
 
-const Memory = require('../agents/memory');
+const Memory = require('../../lib/agents/memory');
 
 module.exports = async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
