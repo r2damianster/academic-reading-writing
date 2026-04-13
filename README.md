@@ -1,47 +1,250 @@
-# ?? Academic Workspace: Research & Writing Monitor
+# Academic Reading & Writing Workspace
 
-Este entorno digital ha sido desarrollado por el **Dr. Arturo Rodr�guez Zambrano** para monitorear el progreso acad�mico de los estudiantes y mejorar los procesos de escritura acad�mica, enfocado en la estructura de ensayos (**Essay Structure**). 
-
-El sistema combina una interfaz de aprendizaje interactiva con un robusto sistema de auditor�a de integridad para una poblaci�n de 200 estudiantes en Manta.
-
-## ?? Funcionalidades Principales
-
-* **Entorno de Escritura Controlado:** Registro de m�tricas de escritura en tiempo real.
-* **Integrity Audit:** Monitoreo activo de comportamientos de escritura:
-    * Conteo de palabras y pulsaciones de teclas (**Keystrokes**).
-    * Registro de pegado de texto (**Pastes**) y borrados (**Deletions**).
-    * Detecci�n de cambios de pesta�a (**Tab Switches**).
-    * M�tricas de tiempo (Tiempo hasta la primera tecla y duraci�n total).
-* **Generaci�n de Reportes:** Creaci�n autom�tica de PDFs con el progreso del estudiante.
-* **Sincronizaci�n en la Nube:** Env�o de datos a Google Sheets mediante Google Apps Script.
-
-## ??? Tecnolog�as Utilizadas
-
-* **Frontend:** HTML5, CSS3 (Bootstrap), JavaScript (Vanilla).
-* **PDF Generation:** jsPDF.
-* **Backend:** Google Apps Script (Web App).
-* **Validaci�n:** Panel de expertos afiliados a la Universidad del Pa�s Vasco y universidades ecuatorianas.
-
-
+Sistema de aprendizaje y auditoría académica desarrollado por el **Dr. Arturo Rodríguez Zambrano** (ULEAM, Manta, Ecuador) para ~200 estudiantes de Pedagogía de Idiomas. Combina un entorno de escritura guiada con 8 agentes de IA especializados y auditoría de integridad académica en tiempo real.
 
 ---
 
-## ?? Estado Actual y Pendientes (To-Do)
+## Stack tecnológico
 
-### ? Logros Recientes
-* Unificaci�n de la l�gica de guardado en js/module-logic.js.
-* Implementaci�n de "Fuerza Bruta" en js/report.js (conversi�n a String).
-* Estructuraci�n del flujo no experimental de la investigaci�n.
-
-### ?? Pendiente Cr�tico (Bug de Sincronizaci�n)
-Las columnas de auditor�a llegan vac�as a Google Sheets. El texto del ensayo s� se registra.
-
-**Pr�ximos pasos:**
-1.  **Revisi�n de Google Apps Script:** Verificar e.parameter en el archivo .gs.
-2.  **Debug de Payload:** Inspeccionar la consola de red para validar el env�o de datos num�ricos.
-3.  **Consistencia de Nombres:** Asegurar que 'Words', 'Keystrokes', etc., coincidan entre JS y el Script de Google.
+| Capa | Tecnología | Propósito |
+|------|-----------|-----------|
+| **Frontend** | HTML5, Bootstrap 5, Vanilla JS | 72 módulos de lección, slides interactivos |
+| **Backend (local)** | Node.js 24.x · `server.js` | Servidor HTTP + 5 endpoints API |
+| **Backend (producción)** | Vercel serverless | Deploy automático desde `main` |
+| **Base de datos** | Supabase (PostgreSQL) | Perfiles, ensayos, auditoría, agentes |
+| **IA — LLM primario** | Groq API (Llama 3.1/3.3) | Todos los agentes (gratuito) |
+| **IA — alternativa** | Qwen (DashScope / Groq) | Ver [QWEN.md](QWEN.md) |
+| **IA — Claude Code** | Anthropic Claude | Desarrollo y mantenimiento del proyecto |
+| **PDF** | jsPDF | Reportes de progreso estudiantil |
 
 ---
 
-## ????? Autor
-**Dr. Arturo Rodr�guez Zambrano** Docente de Pedagog�a de los Idiomas Nacionales y Extranjeros.
+## Arquitectura de agentes
+
+El sistema usa un **orquestador central** (`/api/orchestrator`) que recibe todas las peticiones de IA y las enruta al agente correcto. Cada llamada pasa por el **Token Optimizer** para seleccionar el modelo según la complejidad.
+
+```
+Frontend (AgentClient.call) 
+    → POST /api/orchestrator
+        → Token Optimizer (score 0-100)
+        → Memory Agent (Segmento B: perfil del estudiante)
+        → Agente específico (Segmento C: payload transformado)
+        → Groq API (llama-3.1-8b o llama-3.3-70b)
+        → _logInteraction (Supabase agent_interactions)
+```
+
+### Agentes disponibles
+
+| Agente | Archivo | Cuándo se activa |
+|--------|---------|-----------------|
+| **Writing** | `lib/agents/writing.js` | Al enviar un ensayo (slide tipo ESSAY) |
+| **Reading** | `lib/agents/reading.js` | Panel "🤖 Reading Coach" en PDFs |
+| **Integrity** | `lib/agents/integrity.js` | Fire & forget al enviar ensayo (solo instructor) |
+| **Progress** | *(prompt en _prompts.js)* | Tab "🤖 AI Insights" en `my-progress.html` |
+| **Peer Review** | `lib/agents/peer-review.js` | Formulario de peer review (Modo A y B) |
+| **Content Gen** | `lib/agents/content-gen.js` | Admin: "Generate Lesson Slides" |
+| **DB Admin** | *(prompt en _prompts.js)* | Admin: consola de base de datos con IA |
+| **Frontend** | `lib/agents/frontend.js` | Diagnóstico de componentes UI |
+| **GitHub** | `lib/agents/github.js` | Hook PostToolUse en Claude Code |
+| **Memory** | `lib/agents/memory.js` | Interno — comprime perfiles nocturnamente |
+
+### Diseño de prompts (3 segmentos)
+
+```
+Segmento A (system prompt)  — _prompts.js, estático, ~500-1000 tokens
+Segmento B (contexto)       — Memory Agent, perfil comprimido, ~200-300 tokens
+Segmento C (tarea actual)   — agente específico, payload dinámico, 50-500 tokens
+```
+
+### Token Optimizer
+
+El score de complejidad (0-100) determina el modelo:
+
+| Score | Modelo | Max tokens |
+|-------|--------|-----------|
+| 0-30 | `llama-3.1-8b-instant` | 300 |
+| 31-65 | `llama-3.3-70b-versatile` | 800 |
+| 66-100 | `llama-3.3-70b-versatile` | 2000 |
+
+---
+
+## Estructura de archivos
+
+```
+Academic_reading_and_writing/
+├── api/                          # 5 endpoints Vercel (bajo el límite de 12)
+│   ├── config.js                 # GET  /api/config         — credenciales Supabase al browser
+│   ├── orchestrator.js           # POST /api/orchestrator   — router de todos los agentes
+│   ├── validate-student.js       # POST /api/validate-student — auth (admin + estudiantes)
+│   ├── sync-reading.js           # POST /api/sync-reading   — progreso de lectura → Supabase
+│   └── cron/
+│       └── compress-profiles.js  # Cron diario 03:00 UTC    — compresión de perfiles
+│
+├── lib/                          # Módulos de soporte (no cuentan como funciones Vercel)
+│   ├── groq-client.js            # Cliente Groq (fetch nativo, sin SDK extra)
+│   └── agents/
+│       ├── _prompts.js           # 8 system prompts cacheados
+│       ├── memory.js             # Memory Agent (getProfile, buildContextString, saveSessionCache)
+│       ├── writing.js            # Writing Agent
+│       ├── reading.js            # Reading Agent
+│       ├── integrity.js          # Integrity Agent
+│       ├── peer-review.js        # Peer Review Agent (2 modos)
+│       ├── content-gen.js        # Content Generator Agent
+│       ├── frontend.js           # Frontend Diagnostic Agent
+│       └── github.js             # GitHub Agent (hook en Claude Code)
+│
+├── js/                           # Scripts del cliente
+│   ├── config-loader.js          # Singleton window.configReady (BUG-001 fix)
+│   ├── agent-client.js           # AgentClient.call() — wrapper para el orquestador
+│   ├── auth.js                   # Login, localStorage, sesión 24h
+│   ├── slide-engine.js           # Motor de slides (2482 líneas, 12 tipos de slide)
+│   ├── reading-engine.js         # Lector PDF + panel AI
+│   ├── essay-handler.js          # Envío de ensayos + métricas de integridad
+│   ├── report.js                 # Generación de PDF de progreso
+│   └── activity-tracker.js      # Auditoría de keystrokes, pastes, tab switches
+│
+├── modules/                      # 72 lecciones en 5 tracks
+│   ├── 00-fundamentals/          # 14 lecciones (párrafos, introducción, conclusión…)
+│   ├── 01-core-syllabus/         # Essays + Research Papers (APA, integridad)
+│   ├── 02-toolbox/               # Gramática, vocabulario, conectores
+│   ├── 03-peer-review/           # Formulario de peer review y self-assessment
+│   └── 04-tests/                 # Evaluaciones y quizzes
+│
+├── index.html                    # Hub del estudiante (login + módulos)
+├── admin.html                    # Panel del instructor (35 KB)
+├── my-progress.html              # Progreso del estudiante + AI Insights (52 KB)
+├── server.js                     # Servidor Node.js para desarrollo local
+├── vercel.json                   # Config de deploy + cron diario
+├── supabase-agents-schema.sql    # Schema SQL para tablas de agentes
+├── CLAUDE.md                     # Instrucciones para Claude Code
+├── QWEN.md                       # Guía para usar Qwen como alternativa a Llama
+├── CHANGELOG.md                  # Historial de versiones
+└── DEUDA_TECNICA.md              # Bugs, deuda técnica e infraestructura pendiente
+```
+
+---
+
+## Variables de entorno
+
+Crea un archivo `.env` basado en `.env.example`:
+
+```bash
+# IA — Proveedor principal
+GROQ_TOKEN=gsk_...           # Groq API key (https://console.groq.com)
+
+# IA — Alternativa Qwen (opcional)
+QWEN_API_KEY=sk-...          # DashScope API key (https://dashscope.aliyuncs.com)
+
+# Supabase
+SUPABASE_URL=https://xxx.supabase.co
+SUPABASE_KEY=eyJ...          # anon key (expuesta al browser en /api/config)
+SUPABASE_SERVICE_KEY=eyJ...  # service_role key (solo servidor, NUNCA al browser)
+
+# Auth
+ADMIN_PASSWORD=...           # Contraseña para arturo.rodriguez@uleam.edu.ec
+
+# Seguridad
+CRON_SECRET=...              # Protege /api/cron/compress-profiles
+PORT=3000                    # Solo desarrollo local
+```
+
+---
+
+## Base de datos Supabase
+
+### Tablas principales (pre-existentes)
+
+| Tabla | Descripción |
+|-------|------------|
+| `students` | Datos del estudiante (nombre, email, grupo) |
+| `essay_submissions` | Ensayos enviados + métricas de auditoría |
+| `reading_progress` | Sesiones de lectura completadas |
+| `essay_compliance_results` | Resultados de compliance por lección |
+| `activity_logs` | Eventos de keystrokes, pastes, tab switches |
+
+### Tablas de agentes (nuevas)
+
+| Tabla | Descripción |
+|-------|------------|
+| `student_profiles` | Perfil comprimido por el Memory Agent (RLS activo) |
+| `agent_interactions` | Audit trail de todas las llamadas de IA + token counts |
+| `session_cache` | Segmento B cacheado (TTL 4h) para reducir tokens |
+| `essay_requirements` | 34 filas de criterios de compliance por lección |
+
+Para crear las tablas nuevas, ejecuta `supabase-agents-schema.sql` en el Dashboard de Supabase.
+
+---
+
+## Cómo ejecutar localmente
+
+```bash
+# Instalar dependencias
+npm install
+
+# Crear variables de entorno
+cp .env.example .env
+# Editar .env con tus credenciales
+
+# Iniciar servidor de desarrollo
+npm start
+# → http://localhost:3000
+```
+
+---
+
+## Deploy en Vercel
+
+El proyecto se despliega automáticamente al hacer push a `main`.
+
+**Requisitos en Vercel Settings → Environment Variables:**
+- `GROQ_TOKEN`
+- `SUPABASE_URL`, `SUPABASE_KEY`, `SUPABASE_SERVICE_KEY`
+- `ADMIN_PASSWORD`, `CRON_SECRET`
+
+**Límite de funciones:** Vercel Hobby plan = 12 serverless functions. El proyecto usa 5 (`api/`). Los módulos de agentes están en `lib/` (no cuentan).
+
+**Cron:** `/api/cron/compress-profiles` se ejecuta cada día a las 03:00 UTC (22:00 Ecuador).
+
+---
+
+## Flujo del estudiante
+
+1. Login en `index.html` con email universitario
+2. Selección de módulo → slide engine carga la lección
+3. Slides de tipo `READING` → PDF + panel "🤖 Reading Coach"
+4. Slides de tipo `ESSAY` → editor de texto + feedback de Writing Agent
+5. Al enviar: Integrity Agent analiza las métricas (solo visible al instructor)
+6. Progreso guardado en Supabase → visible en `my-progress.html`
+
+---
+
+## Flujo del instructor
+
+1. Login en `index.html` con `arturo.rodriguez@uleam.edu.ec` + contraseña
+2. Acceso a `admin.html`:
+   - Overview de estudiantes y sus métricas
+   - Flags de integridad (análisis del Integrity Agent)
+   - Consola DB Admin con IA (consultas en lenguaje natural)
+   - Generador de lecciones (Content Gen Agent)
+3. `my-progress.html` con vista del instructor muestra datos de todos los estudiantes
+
+---
+
+## Alternativas de IA
+
+Este proyecto está diseñado para ser **agnóstico al proveedor de LLM**. El cliente en `lib/groq-client.js` usa la API de Groq (compatible con OpenAI), lo que facilita cambiar de proveedor:
+
+- **Groq + Llama 3** — Activo por defecto (gratuito)
+- **Groq + Qwen** — Ver [QWEN.md](QWEN.md) (1 variable de entorno)
+- **DashScope + Qwen** — Ver [QWEN.md](QWEN.md) (máximo contexto, mayor capacidad)
+- **Ollama local** — Para desarrollo offline, ver [QWEN.md](QWEN.md)
+- **Anthropic Claude** — `@anthropic-ai/sdk` ya instalado, ver [CLAUDE.md](CLAUDE.md)
+
+---
+
+## Autor
+
+**Dr. Arturo Rodríguez Zambrano**  
+Docente de Pedagogía de los Idiomas Nacionales y Extranjeros  
+Universidad Laica Eloy Alfaro de Manabí (ULEAM) — Manta, Ecuador  
+`arturo.rodriguez@uleam.edu.ec`

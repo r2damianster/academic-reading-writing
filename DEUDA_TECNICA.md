@@ -1,7 +1,7 @@
 # Deuda Técnica — Academic Reading & Writing Workspace
 > Mantenido por: **Agente GitHub** (detección automática en PRs y commits)  
 > Actualización manual: Dr. Arturo Rodríguez Zambrano  
-> Última revisión: 2026-04-12
+> Última revisión: 2026-04-13
 
 ---
 
@@ -59,13 +59,12 @@
 
 ---
 
-### BUG-005 🔵 README desactualizado
+### BUG-005 ✅ RESUELTO README desactualizado
 - **Archivo:** `README.md`
-- **Descripción:** El README menciona Google Sheets y Google Apps Script como backend. El proyecto ya migró completamente a Supabase. También hay referencias a Bootstrap que no se usa.
-- **Impacto:** Confusión para cualquier colaborador nuevo.
-- **Fix propuesto:** Reescribir el README con el stack actual: Node.js + Supabase + Vercel.
-- **Detectado:** Análisis de código — 2026-04-12
-- **Asignado a:** pendiente
+- **Descripción:** El README mencionaba Google Sheets y Google Apps Script como backend. El proyecto ya migró completamente a Supabase. También había referencias a Bootstrap que no se usa.
+- **Fix aplicado:** README completamente reescrito con el stack actual: Node.js + Supabase + Vercel + Groq. Incluye arquitectura de agentes, estructura de archivos, variables de entorno, tablas Supabase, flujo del estudiante y del instructor, y referencia a QWEN.md y CLAUDE.md.
+- **Archivos nuevos creados:** `CLAUDE.md` (instrucciones para Claude Code), `QWEN.md` (guía de integración Qwen), `CHANGELOG.md` (historial de versiones).
+- **Resuelto:** 2026-04-13 — documentación completa del proyecto
 
 ---
 
@@ -282,6 +281,7 @@
 | 2026-04-12 | v2.0 | DT-001 resuelto — creado js/config-loader.js (singleton window.configReady). |
 | 2026-04-12 | v2.1 | AUTH-001 resuelto — admin auth con contraseña para arturo.rodriguez@uleam.edu.ec. SESSION-001 resuelto — sesión 24h, re-login sin repetir consents. |
 | 2026-04-12 | v2.2 | INFRA-001 resuelto — módulos movidos a lib/ (5 endpoints en api/, bajo límite Vercel Hobby). DT-005 actualizado con avance parcial. Secciones 6 y 7 completas. |
+| 2026-04-13 | v2.3 | BUG-005 resuelto — README reescrito con stack actual. Creados CLAUDE.md, QWEN.md, CHANGELOG.md. Documentación multi-proveedor IA (Groq, Qwen, Ollama, Claude). |
 
 ---
 
