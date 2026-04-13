@@ -75,7 +75,7 @@ async function checkStudentStatus() {
 
 async function saveAndStart() {
     const emailInput = document.getElementById('inputEmail');
-    const email = emailInput ? emailInput.value.trim() : "";
+    const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
     const practiceType = document.getElementById('inputPracticeType').value;
     const academicConsent = document.getElementById('inputConsent').checked;
     const researchConsent = document.getElementById('inputResearchConsent').checked;
@@ -90,13 +90,20 @@ async function saveAndStart() {
         return;
     }
 
+    // Si es la cuenta de administrador, incluir la contraseña en la petición
+    const adminPwdField = document.getElementById('inputAdminPassword');
+    const adminPassword = adminPwdField ? adminPwdField.value : '';
+
     try {
         showModalError("Verifying credentials...", "step2Error");
+
+        const body = { email };
+        if (adminPassword) body.password = adminPassword;
 
         const response = await fetch('/api/validate-student', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: email })
+            body: JSON.stringify(body)
         });
 
         const serverResult = await response.json();
@@ -112,7 +119,9 @@ async function saveAndStart() {
         localStorage.setItem('studentCourse', serverResult.course || "N/A");
         localStorage.setItem('studentMajor', serverResult.major || "Student");
         localStorage.setItem('studentInstitution', "ULEAM");
-        
+        localStorage.setItem('studentRole', serverResult.role || 'student');
+        localStorage.setItem('isAdmin', serverResult.role === 'admin' ? 'true' : 'false');
+
         localStorage.setItem('studentPracticeType', practiceType);
         localStorage.setItem('studentAcademicConsent', 'Yes');
         localStorage.setItem('studentResearchConsent', researchConsent ? 'Yes' : 'No');

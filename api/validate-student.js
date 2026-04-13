@@ -11,8 +11,11 @@ module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed' });
 
+  const ADMIN_EMAIL    = 'arturo.rodriguez@uleam.edu.ec';
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
+
   try {
-    const { email } = req.body;
+    const { email, password } = req.body;
     if (!email) {
       return res.status(400).json({ message: 'Email is required' });
     }
@@ -21,6 +24,27 @@ module.exports = async (req, res) => {
     const cleanEmail = email.toLowerCase().trim();
     console.log(`🔍 Buscando: [${cleanEmail}]`);
 
+    // ── Cuenta de administrador: requiere contraseña ─────────────────────────
+    if (cleanEmail === ADMIN_EMAIL) {
+      if (!password) {
+        return res.status(401).json({ message: 'Administrator password is required.' });
+      }
+      if (!ADMIN_PASSWORD || password !== ADMIN_PASSWORD) {
+        console.log(`⛔ Admin login failed: wrong password`);
+        return res.status(401).json({ message: 'Invalid administrator credentials.' });
+      }
+      // Contraseña correcta — no necesita estar en la tabla students
+      console.log(`✅ Admin autenticado: ${cleanEmail}`);
+      return res.status(200).json({
+        email:  cleanEmail,
+        name:   'Dr. Arturo Rodríguez',
+        course: 'N/A',
+        major:  'Instructor',
+        role:   'admin'
+      });
+    }
+
+    // ── Estudiante normal ────────────────────────────────────────────────────
     const { data, error } = await supabase
       .from('students')
       .select('*')
@@ -33,7 +57,7 @@ module.exports = async (req, res) => {
     }
 
     console.log(`✅ Validado: ${data[0].name}`);
-    return res.status(200).json(data[0]);
+    return res.status(200).json({ ...data[0], role: 'student' });
 
   } catch (e) {
     console.error('🔥 Error:', e);

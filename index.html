@@ -56,7 +56,12 @@
                 <h2>Institutional Access</h2>
                 <p style="font-size:0.9rem;color:#666;margin-bottom:20px;">Enter your institutional email to access your personalized workspace.</p>
                 <input type="email" id="inputEmail" placeholder="user@uleam.edu.ec  OR  user@live.uleam.edu.ec"
-                       style="width:100%;padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:8px;">
+                       style="width:100%;padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:8px;"
+                       oninput="onEmailInput(this.value)">
+                <div id="adminPasswordField" style="display:none;margin-bottom:10px;">
+                    <input type="password" id="inputAdminPassword" placeholder="Administrator password"
+                           style="width:100%;padding:12px;border:2px solid #e67e22;border-radius:8px;box-sizing:border-box;">
+                </div>
                 <p id="step1Error" style="color:#e74c3c;font-size:0.82rem;margin-top:8px;min-height:18px;text-align:center;"></p>
                 <button onclick="goToStep2()" class="btn-primary" style="width:100%;">Next →</button>
             </div>
@@ -127,10 +132,21 @@
     </div>
 
     <script>
+        var ADMIN_EMAIL = 'arturo.rodriguez@uleam.edu.ec';
+
+        function onEmailInput(value) {
+            var isAdmin = value.trim().toLowerCase() === ADMIN_EMAIL;
+            document.getElementById('adminPasswordField').style.display = isAdmin ? 'block' : 'none';
+        }
+
         function goToStep2() {
-            const email = document.getElementById('inputEmail').value.trim();
-            const err = document.getElementById('step1Error');
+            var email = document.getElementById('inputEmail').value.trim().toLowerCase();
+            var err   = document.getElementById('step1Error');
             if (!email) { err.textContent = 'Email is required.'; return; }
+            if (email === ADMIN_EMAIL) {
+                var pwd = document.getElementById('inputAdminPassword').value;
+                if (!pwd) { err.textContent = 'Administrator password is required.'; return; }
+            }
             err.textContent = '';
             document.getElementById('step1').style.display = 'none';
             document.getElementById('step2').style.display = 'block';
