@@ -214,9 +214,7 @@ const SlideEngine = (function () {
             _sendLessonToSheet(lessonName, progress[progress.length - 1], audit, essay);
         }
 
-        alert('Academic progress and Integrity Audit saved!');
-
-        // Redirección automática por ruta
+        // Calcular destino de redirección
         let dest = redirectUrl || 'index.html';
         if (!redirectUrl) {
             const path = window.location.pathname;
@@ -226,7 +224,8 @@ const SlideEngine = (function () {
             if (path.includes('/apa-integrity/'))   dest = 'apa-integrity-hub.html';
         }
 
-        setTimeout(() => { window.location.href = dest; }, 1500);
+        // Mostrar panel de feedback IA (reemplaza el alert + redirect automático)
+        _showFeedbackPanel(lessonName, essay, audit, dest);
     }
 
     // ── Skip essay ───────────────────────────────────────────────────────────────
@@ -258,10 +257,15 @@ const SlideEngine = (function () {
     // Credenciales leídas desde /api/config — no hardcodeadas en el JS.
     // El servidor lee SUPABASE_URL y SUPABASE_KEY desde .env y los expone.
     // La anon key es pública por diseño de Supabase (no es la service_role key).
+    //
+    // FIX BUG-001: _configReady es una promesa singleton. Cualquier método que
+    // necesite SUPABASE_URL / SUPABASE_ANON_KEY debe hacer `await _configReady`
+    // antes de usarlos. Esto elimina la race condition donde _sendEssayToSheet
+    // se ejecutaba antes de que la promesa de fetch('/api/config') resolviera.
     let SUPABASE_URL      = '';
     let SUPABASE_ANON_KEY = '';
 
-    fetch('/api/config')
+    const _configReady = fetch('/api/config')
         .then(r => r.json())
         .then(cfg => {
             SUPABASE_URL      = cfg.supabaseUrl || '';
@@ -276,6 +280,7 @@ const SlideEngine = (function () {
     // Busca el UUID del estudiante en la tabla students usando su email.
     // El resultado se cachea en localStorage para no repetir la consulta.
     async function _resolveStudentId() {
+        await _configReady; // BUG-001: garantizar que las credenciales estén listas
         const cached = localStorage.getItem('studentId');
         if (cached) return cached;
 
@@ -303,6 +308,7 @@ const SlideEngine = (function () {
     // Las métricas de escritura van exclusivamente en essay_submissions.
     // Si la lección tiene quiz + essay, se generan dos filas en tablas separadas.
     async function _sendLessonToSheet(lessonName, lessonEntry, audit, essay) {
+        await _configReady; // BUG-001
         const studentId = await _resolveStudentId();
 
         const record = {
@@ -322,6 +328,7 @@ const SlideEngine = (function () {
     // ── Registro de ensayo ───────────────────────────────────────────────────────
     // Escribe en la tabla: essay_submissions — solo student_id, sin datos de perfil.
     async function _sendEssayToSheet(lessonName, essay, audit, studentId) {
+        await _configReady; // BUG-001: credenciales garantizadas antes de cualquier fetch
         const a  = audit || {};
         const id = studentId || await _resolveStudentId();
 
@@ -338,7 +345,7 @@ const SlideEngine = (function () {
             writing_duration:  a.writingDuration != null ? Number(a.writingDuration) : null,
             chars_typed_ratio: a.charsTypedRatio != null ? Number(a.charsTypedRatio) : null,
             integrity_score:   a.integrityScore  != null ? Number(a.integrityScore)  : null,
-            is_update:         false
+            is_update:         false   // columna verificada: existe en el schema con DEFAULT false
         };
 
         // INSERT en essay_submissions con Prefer: return=representation para obtener el UUID
@@ -381,6 +388,9 @@ const SlideEngine = (function () {
     async function _saveComplianceResult(submissionId, studentId, lessonName, essayText, audit) {
         try {
             // Buscar requirements para esta lección
+            // La tabla usa activity_key (PK con guiones, ej: "formal-language").
+            // _lessonName normaliza con espacios, por eso re-convertimos a guiones aquí.
+            await _configReady; // BUG-001: garantizar credenciales
             const reqRes = await fetch(
                 `${SUPABASE_URL}/rest/v1/essay_requirements?activity_key=eq.${encodeURIComponent(lessonName.replace(/ /g, '-'))}&select=*&limit=1`,
                 {
@@ -580,6 +590,112 @@ const SlideEngine = (function () {
 
         localStorage.setItem(key, JSON.stringify(remaining));
         if (remaining.length === 0) console.log('✅ Cola de reintentos vacía.');
+    }
+
+    // ── AGENTES DE IA ────────────────────────────────────────────────────────
+
+    // Llama al orquestador desde dentro del slide-engine (sin depender de agent-client.js)
+    async function _callOrchestrator(agent, task, payload, outputFormat) {
+        const studentId = localStorage.getItem('studentId') || null;
+        const res = await fetch('/api/orchestrator', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({
+                agent, studentId, task, payload,
+                outputFormat:      outputFormat || 'short_answer',
+                needsHistoryDepth: agent === 'integrity' ? 3 : 2,
+                requiresTools:     false
+            })
+        });
+        if (!res.ok) throw new Error(`Orchestrator ${res.status}`);
+        return res.json();
+    }
+
+    // Convierte el texto markdown del agente a HTML seguro para mostrar en el panel
+    function _formatFeedbackText(text) {
+        if (!text) return '<p style="color:#666;">No feedback available.</p>';
+        return text
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.+?)\*/g, '<em>$1</em>')
+            .replace(/^#{1,2} (.+)$/gm, '<h4 style="margin:12px 0 4px;color:#2c3e50;font-size:0.9rem;">$1</h4>')
+            .replace(/^- (.+)$/gm, '<li style="margin:3px 0;">$1</li>')
+            .replace(/(<li[^>]*>.*?<\/li>\n?)+/g, m => `<ul style="margin:6px 0 10px 16px;">${m}</ul>`)
+            .replace(/\n{2,}/g, '</p><p style="margin:8px 0;">')
+            .replace(/\n/g, '<br>');
+    }
+
+    // Activa el botón "Continue →" en el panel de feedback
+    function _activateContinueButton(dest) {
+        const footer = document.getElementById('se-feedback-footer');
+        const btn    = document.getElementById('se-feedback-continue');
+        if (footer) footer.style.display = 'block';
+        if (btn) {
+            btn.addEventListener('click', () => { window.location.href = dest; }, { once: true });
+        }
+    }
+
+    // Muestra el panel de feedback IA y llama a los agentes de escritura e integridad
+    async function _showFeedbackPanel(lessonName, essay, audit, redirectDest) {
+        const panel = document.getElementById('se-feedback-panel');
+
+        // Si el panel no está en el DOM (lecciones sin slot de feedback), fallback clásico
+        if (!panel) {
+            alert('Essay saved! Your progress has been recorded.');
+            setTimeout(() => { window.location.href = redirectDest; }, 1500);
+            return;
+        }
+
+        // Mostrar panel y marcar el botón de submit como enviado
+        panel.style.display = 'block';
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        const finalBtn = document.getElementById('finalBtn');
+        if (finalBtn) {
+            finalBtn.textContent = '✓ Essay Submitted';
+            finalBtn.disabled    = true;
+            finalBtn.style.background = '#27ae60';
+            finalBtn.style.cursor     = 'default';
+        }
+
+        // Essay saltado — sin feedback
+        if (audit && audit.skipped) {
+            const loading = document.getElementById('se-feedback-loading');
+            const content = document.getElementById('se-feedback-content');
+            if (loading) loading.style.display = 'none';
+            if (content) { content.style.display = 'block'; content.innerHTML = '<p style="color:#999;font-style:italic;">Writing exercise was skipped.</p>'; }
+            _activateContinueButton(redirectDest);
+            return;
+        }
+
+        // Llamar al agente de integridad en background (no bloquea, resultado va a Supabase)
+        _callOrchestrator('integrity', '', { lesson: lessonName, ...audit }, 'narrative_report')
+            .catch(() => {});
+
+        // Llamar al agente de escritura y mostrar resultado
+        try {
+            const result = await _callOrchestrator(
+                'writing', '',
+                { lesson: lessonName, essay: (essay || '').slice(0, 2000), audit },
+                'full_feedback'
+            );
+            const loading = document.getElementById('se-feedback-loading');
+            const content = document.getElementById('se-feedback-content');
+            if (loading) loading.style.display = 'none';
+            if (content) {
+                content.style.display = 'block';
+                content.innerHTML = _formatFeedbackText(result?.response || '');
+            }
+        } catch (e) {
+            const loading = document.getElementById('se-feedback-loading');
+            const content = document.getElementById('se-feedback-content');
+            if (loading) loading.style.display = 'none';
+            if (content) {
+                content.style.display = 'block';
+                content.innerHTML = '<p style="color:#e74c3c;font-size:0.85rem;">AI feedback unavailable right now. Your essay was saved. ✓</p>';
+            }
+        }
+
+        _activateContinueButton(redirectDest);
     }
 
     // API pública del engine
@@ -1198,7 +1314,49 @@ SlideTypes.ESSAY = {
                              else finishLessonWithEssay('${lessonName}',
                                   document.getElementById('essayInput').value, {});">
                 Submit &amp; Save Final Progress
-            </button>`;
+            </button>
+
+            <!-- Panel de feedback IA — se activa tras el submit -->
+            <div id="se-feedback-panel" style="display:none; margin-top:16px; border-radius:10px;
+                 overflow:hidden; border:1px solid #dee2e6;">
+                <div style="background:#2c3e50; color:white; padding:11px 16px;
+                            display:flex; align-items:center; gap:10px;">
+                    <span style="font-size:1rem;">&#x1F916;</span>
+                    <span style="font-size:0.88rem; font-weight:600; letter-spacing:0.02em;">
+                        AI Writing Feedback
+                    </span>
+                    <span style="margin-left:auto; font-size:0.75rem; opacity:0.65;">
+                        Powered by Claude
+                    </span>
+                </div>
+                <div id="se-feedback-body" style="padding:16px; background:#fff; min-height:70px;">
+                    <div id="se-feedback-loading"
+                         style="display:flex; align-items:center; gap:10px; color:#666; font-size:0.87rem;">
+                        <span style="display:inline-block; animation:se-ai-spin 1s linear infinite;
+                                     font-size:1rem;">&#x21BB;</span>
+                        Analyzing your essay...
+                    </div>
+                    <div id="se-feedback-content"
+                         style="display:none; font-size:0.87rem; line-height:1.75; color:#333;">
+                    </div>
+                </div>
+                <div id="se-feedback-footer"
+                     style="display:none; padding:12px 16px; background:#f8f9fa;
+                            border-top:1px solid #dee2e6;">
+                    <button id="se-feedback-continue"
+                            style="width:100%; padding:10px 20px; background:#27ae60; color:white;
+                                   border:none; border-radius:8px; cursor:pointer;
+                                   font-size:0.93rem; font-weight:600;">
+                        Continue to next lesson &#x2192;
+                    </button>
+                </div>
+            </div>
+            <style>
+                @keyframes se-ai-spin {
+                    from { transform: rotate(0deg); }
+                    to   { transform: rotate(360deg); }
+                }
+            </style>`;
 
         slide.appendChild(workspace);
 

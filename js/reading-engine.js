@@ -65,10 +65,9 @@ const ReadingEngine = (function () {
     let SUPABASE_URL = '';
     let SUPABASE_KEY = '';
 
-    // Carga las credenciales en cuanto el engine arranca.
-    // Como es async, las funciones que las usan (_resolveStudentId, _persistLessonResult)
-    // se llaman DESPUÉS de init() → las credenciales ya están listas.
-    fetch('/api/config')
+    // FIX BUG-001: promesa singleton — cualquier método que use SUPABASE_URL / SUPABASE_KEY
+    // debe hacer `await _configReady` antes de ejecutar fetch a Supabase.
+    const _configReady = fetch('/api/config')
         .then(r => r.json())
         .then(cfg => {
             SUPABASE_URL = cfg.supabaseUrl || '';
@@ -123,6 +122,7 @@ const ReadingEngine = (function () {
 
         _showSlide(0);
         _updateProgress();
+        _mountReadingAIPanel();
         console.log(`✅ ReadingEngine iniciado: "${lessonName}" — ${_slides.length} slides`);
     }
 
@@ -289,6 +289,7 @@ const ReadingEngine = (function () {
 
     // Resuelve el UUID del estudiante desde su email (igual que slide-engine)
     async function _resolveStudentId(email) {
+        await _configReady; // BUG-001: credenciales garantizadas
         if (_studentId) return _studentId;
         if (!email || !SUPABASE_URL) return null;
         try {
@@ -327,6 +328,7 @@ const ReadingEngine = (function () {
 
     // Inserta UNA fila en activity_logs al terminar la lección (igual que slide-engine)
     async function _persistLessonResult(score) {
+        await _configReady; // BUG-001: garantizar credenciales antes de cualquier INSERT
         if (!SUPABASE_URL) return;
 
         // Asegurar student_id antes de insertar
@@ -435,6 +437,256 @@ const ReadingEngine = (function () {
         } else {
             alert(`🎉 Lesson complete! Score: ${score}%`);
         }
+    }
+
+    /* ──────────────────────────────────────────────────────────────────────────
+       PANEL DE AYUDA AI — Reading Coach
+       Botón flotante persistente. Se inyecta una vez en init() y permanece
+       visible durante toda la sesión de lectura sin afectar el layout de slides.
+    ────────────────────────────────────────────────────────────────────────── */
+
+    function _formatReadingText(text) {
+        if (!text) return '';
+        return text
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.+?)\*/g,     '<em>$1</em>')
+            .replace(/^#{1,3}\s+(.+)$/gm, '<strong>$1</strong>')
+            .replace(/\n{2,}/g, '</p><p>')
+            .replace(/\n/g, '<br>')
+            .replace(/^(.+)$/, '<p>$1</p>');
+    }
+
+    function _mountReadingAIPanel() {
+        // Evitar duplicados si init() se llama más de una vez
+        if (document.getElementById('re-ai-panel')) return;
+
+        // ── CSS del panel ───────────────────────────────────────────────────────
+        const style = document.createElement('style');
+        style.textContent = `
+            #re-ai-toggle {
+                position: fixed;
+                bottom: 24px;
+                right: 24px;
+                z-index: 9000;
+                background: #2563eb;
+                color: #fff;
+                border: none;
+                border-radius: 50px;
+                padding: 10px 18px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                box-shadow: 0 4px 16px rgba(37,99,235,0.35);
+                transition: background 0.2s, transform 0.15s;
+            }
+            #re-ai-toggle:hover { background: #1d4ed8; transform: translateY(-2px); }
+
+            #re-ai-panel {
+                position: fixed;
+                bottom: 76px;
+                right: 24px;
+                z-index: 9000;
+                width: 340px;
+                max-width: calc(100vw - 48px);
+                background: #fff;
+                border-radius: 14px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+                display: none;
+                flex-direction: column;
+                overflow: hidden;
+                font-family: inherit;
+            }
+            #re-ai-panel.open { display: flex; }
+
+            .re-ai-head {
+                background: #2563eb;
+                color: #fff;
+                padding: 12px 16px;
+                font-size: 14px;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .re-ai-head span { flex: 1; }
+            .re-ai-close {
+                background: none;
+                border: none;
+                color: #fff;
+                font-size: 18px;
+                cursor: pointer;
+                line-height: 1;
+                padding: 0 4px;
+            }
+
+            .re-ai-msgs {
+                padding: 12px 14px;
+                max-height: 240px;
+                overflow-y: auto;
+                font-size: 13px;
+                color: #374151;
+                line-height: 1.55;
+                background: #f8fafc;
+            }
+            .re-ai-msgs p { margin: 0 0 8px; }
+            .re-ai-hint {
+                font-size: 12px;
+                color: #6b7280;
+                font-style: italic;
+                margin-bottom: 4px;
+            }
+            .re-ai-loading {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: #6b7280;
+                font-size: 13px;
+            }
+            @keyframes re-ai-spin {
+                to { transform: rotate(360deg); }
+            }
+            .re-ai-spinner {
+                width: 14px; height: 14px;
+                border: 2px solid #d1d5db;
+                border-top-color: #2563eb;
+                border-radius: 50%;
+                animation: re-ai-spin 0.7s linear infinite;
+                flex-shrink: 0;
+            }
+
+            .re-ai-foot {
+                display: flex;
+                gap: 8px;
+                padding: 10px 12px;
+                border-top: 1px solid #e5e7eb;
+                background: #fff;
+            }
+            .re-ai-foot input {
+                flex: 1;
+                border: 1px solid #d1d5db;
+                border-radius: 8px;
+                padding: 7px 10px;
+                font-size: 13px;
+                outline: none;
+                transition: border-color 0.2s;
+            }
+            .re-ai-foot input:focus { border-color: #2563eb; }
+            .re-ai-foot button {
+                background: #2563eb;
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                padding: 7px 14px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                white-space: nowrap;
+            }
+            .re-ai-foot button:disabled { opacity: 0.5; cursor: not-allowed; }
+        `;
+        document.head.appendChild(style);
+
+        // ── HTML del panel ──────────────────────────────────────────────────────
+        const toggle = document.createElement('button');
+        toggle.id          = 're-ai-toggle';
+        toggle.textContent = '🤖 Reading Coach';
+
+        const panel = document.createElement('div');
+        panel.id        = 're-ai-panel';
+        panel.innerHTML = `
+            <div class="re-ai-head">
+                <span>🤖 Reading Coach</span>
+                <button class="re-ai-close" id="re-ai-close" title="Cerrar">✕</button>
+            </div>
+            <div class="re-ai-msgs" id="re-ai-msgs">
+                <p class="re-ai-hint">Haz una pregunta sobre el texto o selecciona palabras del PDF para pedir ayuda.</p>
+            </div>
+            <div class="re-ai-foot">
+                <input type="text" id="re-ai-input" placeholder="Escribe tu pregunta..." maxlength="400" />
+                <button id="re-ai-send">Enviar</button>
+            </div>
+        `;
+
+        document.body.appendChild(toggle);
+        document.body.appendChild(panel);
+
+        // ── Eventos ─────────────────────────────────────────────────────────────
+        toggle.addEventListener('click', () => panel.classList.toggle('open'));
+        document.getElementById('re-ai-close').addEventListener('click', () => panel.classList.remove('open'));
+
+        const input   = document.getElementById('re-ai-input');
+        const sendBtn = document.getElementById('re-ai-send');
+        const msgs    = document.getElementById('re-ai-msgs');
+
+        function _appendMsg(html, isUser) {
+            const div = document.createElement('div');
+            div.style.cssText = isUser
+                ? 'background:#eff6ff;border-radius:8px;padding:8px 10px;margin-bottom:8px;font-size:13px;'
+                : 'margin-bottom:8px;';
+            div.innerHTML = html;
+            msgs.appendChild(div);
+            msgs.scrollTop = msgs.scrollHeight;
+            return div;
+        }
+
+        async function _sendQuestion() {
+            const question = input.value.trim();
+            if (!question) return;
+
+            sendBtn.disabled = true;
+            input.value      = '';
+
+            _appendMsg(`<strong>Tú:</strong> ${question}`, true);
+
+            const loadingDiv = _appendMsg(
+                `<div class="re-ai-loading"><div class="re-ai-spinner"></div> Analizando...</div>`,
+                false
+            );
+
+            try {
+                const studentId = localStorage.getItem('studentId') || null;
+
+                const res = await fetch('/api/orchestrator', {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        agent:    'reading',
+                        studentId,
+                        task:     '',   // buildTask lo genera en el módulo
+                        payload: {
+                            lesson:      _lessonName,
+                            currentPage: 1,   // el engine no expone la página actual globalmente
+                            question,
+                            slideType:   (_slides[_current] && _slides[_current].dataset.type) || null
+                        },
+                        outputFormat:      'short_answer',
+                        needsHistoryDepth: 1
+                    })
+                });
+
+                const data = await res.json();
+                loadingDiv.remove();
+
+                if (data.response) {
+                    _appendMsg(
+                        `<strong>Reading Coach:</strong><br>${_formatReadingText(data.response)}`,
+                        false
+                    );
+                } else {
+                    _appendMsg('<em style="color:#c0392b;">Error al conectar con el agente. Intenta de nuevo.</em>', false);
+                }
+            } catch (e) {
+                loadingDiv.remove();
+                _appendMsg('<em style="color:#c0392b;">Sin conexión con el servidor.</em>', false);
+                console.error('ReadingEngine: AI panel error:', e);
+            } finally {
+                sendBtn.disabled = false;
+                input.focus();
+            }
+        }
+
+        sendBtn.addEventListener('click', _sendQuestion);
+        input.addEventListener('keydown', e => { if (e.key === 'Enter') _sendQuestion(); });
     }
 
     /* ──────────────────────────────────────────────────────────────────────────

@@ -174,6 +174,32 @@
         .word-count.ok   { color: #16a34a; }
         .word-count.warn { color: #d97706; }
 
+        /* ── AI Guide panel ───────────────────────────────────────── */
+        .ai-guide-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            margin-top: 6px; padding: 6px 14px;
+            background: #eff6ff; color: #1e40af;
+            border: 1px solid #bfdbfe; border-radius: 20px;
+            font-size: 0.78rem; font-weight: 600; cursor: pointer;
+            transition: background .15s;
+        }
+        .ai-guide-btn:hover { background: #dbeafe; }
+        .ai-guide-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .ai-guide-response {
+            margin-top: 8px; padding: 12px 14px;
+            background: #f0f9ff; border: 1px solid #bae6fd;
+            border-radius: 8px; font-size: 0.83rem; line-height: 1.65;
+            color: #0c4a6e; display: none;
+        }
+        .ai-guide-response.visible { display: block; }
+        .ai-guide-loading { display: flex; align-items: center; gap: 6px; color: #64748b; }
+        @keyframes pr-spin { to { transform: rotate(360deg); } }
+        .pr-spinner {
+            width: 12px; height: 12px;
+            border: 2px solid #cbd5e1; border-top-color: #3b82f6;
+            border-radius: 50%; animation: pr-spin .7s linear infinite;
+        }
+
         /* ── Calibration quiz ─────────────────────────────────────── */
         .calib-option {
             display: block;
@@ -410,18 +436,30 @@
             <textarea class="pr-field" id="fb-strengths" oninput="countWords(this, 'wc-strengths', 20, 80)"
                 placeholder="e.g. The thesis statement in the introduction clearly states the argument and establishes a clear roadmap for the essay..."></textarea>
             <div class="word-count" id="wc-strengths">0 words</div>
+            <button class="ai-guide-btn" onclick="askAIGuide('strengths')" id="ai-btn-strengths">
+                🤖 Get AI guidance
+            </button>
+            <div class="ai-guide-response" id="ai-resp-strengths"></div>
 
             <label class="field-label" style="margin-top:16px;">What needs development? (areas for improvement)</label>
             <p class="field-hint">Be specific: which paragraph, which sentence? What exactly should change and why?</p>
             <textarea class="pr-field" id="fb-improve" oninput="countWords(this, 'wc-improve', 30, 150)"
                 placeholder="e.g. In paragraph 2, the evidence from the WHO report is included but not analysed — adding a sentence explaining what the statistic means for the central argument would strengthen this section significantly..."></textarea>
             <div class="word-count" id="wc-improve">0 words</div>
+            <button class="ai-guide-btn" onclick="askAIGuide('improve')" id="ai-btn-improve">
+                🤖 Get AI guidance
+            </button>
+            <div class="ai-guide-response" id="ai-resp-improve"></div>
 
             <label class="field-label" style="margin-top:16px;">One priority suggestion</label>
             <p class="field-hint">If the writer could only change one thing before resubmitting, what should it be?</p>
             <textarea class="pr-field" id="fb-priority" style="min-height:70px;" oninput="countWords(this, 'wc-priority', 10, 60)"
                 placeholder="e.g. Strengthen the analysis of evidence in paragraph 3 by connecting the statistics directly to the thesis..."></textarea>
             <div class="word-count" id="wc-priority">0 words</div>
+            <button class="ai-guide-btn" onclick="askAIGuide('priority')" id="ai-btn-priority">
+                🤖 Get AI guidance
+            </button>
+            <div class="ai-guide-response" id="ai-resp-priority"></div>
         </div>
 
         <div style="text-align:right; margin-top:10px;">
@@ -549,6 +587,63 @@ function submitReview() {
             improve   : document.getElementById('fb-improve').value,
             priority  : document.getElementById('fb-priority').value,
         });
+    }
+}
+
+// ── AI Reviewer Guide ─────────────────────────────────────────────
+// Llama al Peer Review Agent para guiar al revisor en cada sección.
+// Mode A: reviewer_guide — evalúa el borrador del feedback y hace
+// preguntas socráticas para que el revisor lo mejore.
+
+function _formatAIText(text) {
+    return text
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g,     '<em>$1</em>')
+        .replace(/\n{2,}/g, '<br><br>')
+        .replace(/\n/g, '<br>');
+}
+
+async function askAIGuide(field) {
+    const draftEl  = document.getElementById(`fb-${field}`);
+    const respEl   = document.getElementById(`ai-resp-${field}`);
+    const btnEl    = document.getElementById(`ai-btn-${field}`);
+
+    btnEl.disabled = true;
+    respEl.classList.add('visible');
+    respEl.innerHTML = '<div class="ai-guide-loading"><div class="pr-spinner"></div> Consulting AI guide…</div>';
+
+    try {
+        const res = await fetch('/api/orchestrator', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                agent:    'peerReview',
+                studentId: localStorage.getItem('studentId') || null,
+                task:     '',
+                payload: {
+                    mode:          'reviewer_guide',
+                    peerEssay:     document.getElementById('peer-text').value.slice(0, 1000),
+                    reviewerDraft: draftEl.value.trim().slice(0, 400),
+                    scores,
+                    focusField:    field,
+                    lessonTitle:   document.getElementById('essay-title').value.trim()
+                },
+                outputFormat:      'short_answer',
+                needsHistoryDepth: 0
+            })
+        });
+
+        const data = await res.json();
+        if (data.response) {
+            respEl.innerHTML = `<strong>AI Guide:</strong><br>${_formatAIText(data.response)}`;
+        } else {
+            respEl.innerHTML = '<em style="color:#dc2626">Could not reach the AI guide. Check server connection.</em>';
+        }
+    } catch (e) {
+        respEl.innerHTML = '<em style="color:#dc2626">No connection to the AI guide.</em>';
+        console.error('Peer Review AI Guide error:', e);
+    } finally {
+        btnEl.disabled = false;
     }
 }
 

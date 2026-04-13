@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instructor Panel — Academic Writing</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:    #0f1f38;
+  --ink:     #1e2d42;
+  --steel:   #4a6080;
+  --mist:    #8da0b4;
+  --cloud:   #e8edf3;
+  --snow:    #f6f8fb;
+  --white:   #ffffff;
+  --teal:    #0891b2;
+  --green:   #059669;
+  --green-lt:#d1fae5;
+  --amber:   #d97706;
+  --amber-lt:#fef3c7;
+  --red:     #dc2626;
+  --red-lt:  #fee2e2;
+  --r: 12px;
+  --shadow: 0 1px 3px rgba(15,31,56,.07), 0 4px 16px rgba(15,31,56,.05);
+}
+body { font-family:'DM Sans',sans-serif; background:var(--snow); color:var(--ink); min-height:100vh; }
+
+/* ── Header ─────────────────────────────────────────────── */
+.header {
+  background: var(--navy);
+  padding: 24px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: relative; overflow: hidden;
+}
+.header::before {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(ellipse 50% 100% at 95% 50%, rgba(220,38,38,.2) 0%, transparent 70%);
+  pointer-events:none;
+}
+.header h1 { font-family:'DM Serif Display',serif; font-size:1.5rem; color:#fff; }
+.header-sub { font-size:0.75rem; color:rgba(255,255,255,.5); margin-top:3px; }
+.badge-instructor {
+  background: rgba(220,38,38,.25);
+  border: 1px solid rgba(220,38,38,.4);
+  color: #fca5a5;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: .04em;
+}
+
+/* ── Gate (access control) ──────────────────────────────── */
+.access-gate {
+  max-width: 400px; margin: 80px auto; padding: 0 16px; text-align: center;
+}
+.gate-card {
+  background: var(--white); border-radius: var(--r);
+  border: 1px solid var(--cloud); box-shadow: var(--shadow);
+  padding: 36px 32px;
+}
+.gate-card h2 { font-size: 1.2rem; color: var(--navy); margin-bottom: 8px; }
+.gate-card p  { font-size: 0.85rem; color: var(--steel); margin-bottom: 24px; }
+.gate-input {
+  width:100%; padding:10px 14px; border:1px solid var(--cloud); border-radius:8px;
+  font-size:0.9rem; font-family:inherit; margin-bottom:12px;
+  transition: border-color .2s;
+}
+.gate-input:focus { outline:none; border-color:var(--teal); }
+.gate-btn {
+  width:100%; padding:11px; background:var(--navy); color:#fff;
+  border:none; border-radius:8px; font-size:0.9rem; font-weight:600;
+  cursor:pointer; font-family:inherit; transition:background .2s;
+}
+.gate-btn:hover { background:#1a2f50; }
+.gate-err { color:var(--red); font-size:0.82rem; margin-top:8px; }
+
+/* ── Main layout ────────────────────────────────────────── */
+.main { padding: 28px 32px 60px; display: none; }
+.section-title {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: .08em;
+  color: var(--mist); text-transform: uppercase; margin-bottom: 14px;
+}
+
+/* ── Cards grid ─────────────────────────────────────────── */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 12px; margin-bottom: 28px; }
+.card {
+  background: var(--white); border-radius: var(--r);
+  border: 1px solid var(--cloud); box-shadow: var(--shadow);
+  padding: 16px 18px;
+}
+.card-val { font-size: 1.8rem; font-weight: 700; color: var(--navy); }
+.card-lbl { font-size: 0.73rem; color: var(--mist); margin-top: 2px; }
+
+/* ── AI Query Console ───────────────────────────────────── */
+.console-card {
+  background: var(--white); border-radius: var(--r);
+  border: 1px solid var(--cloud); box-shadow: var(--shadow);
+  overflow: hidden; margin-bottom: 28px;
+}
+.console-head {
+  background: var(--navy); color: #fff;
+  padding: 13px 18px; font-size: 0.82rem; font-weight: 600;
+  display: flex; align-items: center; gap: 8px; letter-spacing:.02em;
+}
+.console-body { padding: 16px; }
+.console-input-row { display: flex; gap: 10px; margin-bottom: 12px; }
+.console-input {
+  flex:1; padding:10px 14px; border:1px solid var(--cloud); border-radius:8px;
+  font-size:0.88rem; font-family:inherit;
+  transition: border-color .2s;
+}
+.console-input:focus { outline:none; border-color:var(--teal); }
+.console-btn {
+  padding:10px 20px; background:var(--teal); color:#fff;
+  border:none; border-radius:8px; font-size:0.88rem; font-weight:600;
+  cursor:pointer; font-family:inherit; white-space:nowrap;
+  transition: background .2s;
+}
+.console-btn:hover { background:#0770a0; }
+.console-btn:disabled { background:var(--mist); cursor:default; }
+.console-hint {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;
+}
+.hint-chip {
+  padding: 4px 10px; background: var(--cloud); color: var(--steel);
+  border-radius: 20px; font-size: 0.75rem; cursor: pointer;
+  transition: background .2s;
+}
+.hint-chip:hover { background: var(--teal); color: #fff; }
+.console-response {
+  background: var(--snow); border-radius: 8px; border: 1px solid var(--cloud);
+  padding: 14px 16px; min-height: 60px;
+  font-size: 0.86rem; line-height: 1.75; color: var(--ink);
+  display: none;
+}
+.console-response.visible { display: block; }
+.console-meta {
+  font-size: 0.71rem; color: var(--mist); margin-top: 8px; text-align: right;
+}
+.console-loading {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--steel); font-size: 0.85rem;
+}
+.spin { display:inline-block; animation:admin-spin 1s linear infinite; font-size:1rem; }
+@keyframes admin-spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+/* ── Integrity flags table ──────────────────────────────── */
+.table-card {
+  background: var(--white); border-radius: var(--r);
+  border: 1px solid var(--cloud); box-shadow: var(--shadow);
+  overflow: hidden; margin-bottom: 28px;
+}
+.table-head {
+  background: var(--navy); color: #fff;
+  padding: 13px 18px; font-size: 0.82rem; font-weight: 600;
+  display: flex; align-items: center; gap: 8px; letter-spacing:.02em;
+}
+.table-wrap { overflow-x: auto; }
+table { width:100%; border-collapse:collapse; font-size:0.83rem; }
+th { background:var(--snow); padding:10px 14px; text-align:left;
+     font-size:0.71rem; font-weight:700; color:var(--steel);
+     letter-spacing:.05em; text-transform:uppercase;
+     border-bottom:1px solid var(--cloud); }
+td { padding:10px 14px; border-bottom:1px solid var(--cloud); color:var(--ink); }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:var(--snow); }
+.risk-pill {
+  padding: 3px 8px; border-radius: 12px;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: .03em;
+}
+.risk-low      { background:var(--green-lt); color:#065f46; }
+.risk-moderate { background:var(--amber-lt); color:#92400e; }
+.risk-high     { background:var(--red-lt);   color:#991b1b; }
+.risk-critical { background:#1a0000; color:#fca5a5; }
+.state-msg { padding:20px; color:var(--mist); font-size:0.85rem; text-align:center; }
+.state-err { color:var(--red); }
+
+/* ── Content Generator ──────────────────��───────────────── */
+.gen-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+.gen-label { font-size:0.77rem; font-weight:600; color:var(--steel); margin-bottom:4px; }
+.gen-input, .gen-select, .gen-textarea {
+  width:100%; padding:9px 12px; border:1px solid var(--cloud); border-radius:8px;
+  font-size:0.85rem; font-family:inherit; background:var(--white);
+  transition:border-color .2s;
+}
+.gen-input:focus, .gen-select:focus, .gen-textarea:focus {
+  outline:none; border-color:var(--teal);
+}
+.gen-textarea { resize:vertical; min-height:60px; }
+.gen-types { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+.gen-type-chip {
+  padding:4px 10px; background:var(--cloud); color:var(--steel);
+  border-radius:20px; font-size:0.74rem; cursor:pointer; user-select:none;
+  border:2px solid transparent; transition:all .15s;
+}
+.gen-type-chip.selected { background:#dbeafe; color:#1e40af; border-color:#93c5fd; }
+.gen-result {
+  background:var(--snow); border:1px solid var(--cloud); border-radius:8px;
+  padding:14px 16px; font-size:0.82rem; line-height:1.7; color:var(--ink);
+  display:none; white-space:pre-wrap; font-family:'DM Mono',monospace, monospace;
+  max-height:480px; overflow-y:auto;
+}
+.gen-result.visible { display:block; }
+.gen-actions { display:flex; gap:8px; margin-top:10px; }
+.gen-copy-btn {
+  padding:8px 16px; background:var(--green); color:#fff;
+  border:none; border-radius:8px; font-size:0.82rem; font-weight:600;
+  cursor:pointer; font-family:inherit; transition:background .2s;
+}
+.gen-copy-btn:hover { background:#047857; }
+.gen-copy-btn:disabled { background:var(--mist); cursor:default; }
+
+@media (max-width:600px) {
+  .header, .main { padding-left:16px; padding-right:16px; }
+  .cards { grid-template-columns: repeat(2,1fr); }
+  .gen-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────────── -->
+<div class="header">
+  <div>
+    <h1>Instructor Panel</h1>
+    <div class="header-sub">Academic Reading & Writing — ULEAM</div>
+  </div>
+  <span class="badge-instructor">INSTRUCTOR ACCESS</span>
+</div>
+
+<!-- ── Access Gate ─────────────────────────────────────────────── -->
+<div class="access-gate" id="accessGate">
+  <div class="gate-card">
+    <h2>🔐 Instructor Access</h2>
+    <p>Enter the instructor code to access the admin panel.<br>
+       <small style="color:#8da0b4">Contact the system admin if you don't have a code.</small>
+    </p>
+    <input type="password" class="gate-input" id="gateInput"
+           placeholder="Instructor code"
+           onkeydown="if(event.key==='Enter') checkAccess()">
+    <button class="gate-btn" onclick="checkAccess()">Access Panel →</button>
+    <div class="gate-err" id="gateErr" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- ── Main content (hidden until unlocked) ────────────────────── -->
+<div class="main" id="adminMain">
+
+  <!-- Class overview cards -->
+  <div class="section-title">Class Overview</div>
+  <div class="cards" id="overviewCards">
+    <div class="card"><div class="card-val" id="ov-students">—</div><div class="card-lbl">Students enrolled</div></div>
+    <div class="card"><div class="card-val" id="ov-essays">—</div><div class="card-lbl">Essays submitted</div></div>
+    <div class="card"><div class="card-val" id="ov-avg-int">—</div><div class="card-lbl">Avg integrity score</div></div>
+    <div class="card"><div class="card-val" id="ov-flags">—</div><div class="card-lbl">Integrity flags (≤60%)</div></div>
+    <div class="card"><div class="card-val" id="ov-tokens">—</div><div class="card-lbl">Agent calls (7d)</div></div>
+  </div>
+
+  <!-- DB Admin Agent — AI Query Console -->
+  <div class="section-title">DB Admin Agent — AI Console</div>
+  <div class="console-card">
+    <div class="console-head">
+      <span>🤖</span> Ask the DB Admin Agent
+    </div>
+    <div class="console-body">
+      <div class="console-hint" id="queryHints">
+        <span class="hint-chip" onclick="useHint(this)">Students with integrity below 60%</span>
+        <span class="hint-chip" onclick="useHint(this)">Show token usage by agent this week</span>
+        <span class="hint-chip" onclick="useHint(this)">Which students haven't logged in for 7 days?</span>
+        <span class="hint-chip" onclick="useHint(this)">Average essay word count per lesson</span>
+        <span class="hint-chip" onclick="useHint(this)">Students with more than 3 paste events</span>
+      </div>
+      <div class="console-input-row">
+        <input type="text" class="console-input" id="queryInput"
+               placeholder="Ask anything about your class data in plain language…"
+               onkeydown="if(event.key==='Enter') runQuery()">
+        <button class="console-btn" id="queryBtn" onclick="runQuery()">Ask →</button>
+      </div>
+      <div class="console-response" id="queryResponse">
+        <div class="console-loading" id="queryLoading" style="display:none;">
+          <span class="spin">⟳</span> Consulting the agent…
+        </div>
+        <div id="queryContent"></div>
+        <div class="console-meta" id="queryMeta"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Integrity Flags -->
+  <div class="section-title">Integrity Flags — High & Critical Risk</div>
+  <div class="table-card">
+    <div class="table-head">
+      <span>🚨</span> Submissions requiring review
+    </div>
+    <div class="table-wrap">
+      <div id="flagsTable"><div class="state-msg">Loading…</div></div>
+    </div>
+  </div>
+
+  <!-- Recent Agent Interactions -->
+  <div class="section-title">Recent Agent Activity (last 50)</div>
+  <div class="table-card">
+    <div class="table-head">
+      <span>📡</span> Agent interactions log
+    </div>
+    <div class="table-wrap">
+      <div id="agentLog"><div class="state-msg">Loading…</div></div>
+    </div>
+  </div>
+
+  <!-- Content Generator Agent -->
+  <div class="section-title">Content Generator Agent — New Lesson</div>
+  <div class="console-card">
+    <div class="console-head">
+      <span>✏️</span> Generate Lesson Slides
+    </div>
+    <div class="console-body">
+
+      <div class="gen-grid">
+        <div>
+          <div class="gen-label">Lesson title *</div>
+          <input type="text" class="gen-input" id="genTitle"
+                 placeholder="e.g. Argumentative Essay Structure" maxlength="100">
+        </div>
+        <div>
+          <div class="gen-label">Module / folder</div>
+          <select class="gen-select" id="genModule">
+            <option value="00-fundamentals">00 — Fundamentals</option>
+            <option value="01/unit1-essays">01 — Unit 1: Essays</option>
+            <option value="01/unit2-papers">01 — Unit 2: Papers</option>
+            <option value="02-academic-tools">02 — Academic Tools</option>
+            <option value="03-peer-review">03 — Peer Review</option>
+            <option value="04-tests">04 — Tests</option>
+          </select>
+        </div>
+        <div>
+          <div class="gen-label">CEFR level</div>
+          <select class="gen-select" id="genDifficulty">
+            <option value="B1" selected>B1 (undergraduate)</option>
+            <option value="B2">B2 (advanced)</option>
+            <option value="A2">A2 (introductory)</option>
+          </select>
+        </div>
+        <div>
+          <div class="gen-label">Number of slides (4–14)</div>
+          <input type="number" class="gen-input" id="genCount"
+                 value="10" min="4" max="14">
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <div class="gen-label">Learning objective</div>
+        <input type="text" class="gen-input" id="genObjective"
+               placeholder="Students will be able to…" maxlength="300">
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <div class="gen-label">Key vocabulary (comma-separated)</div>
+        <input type="text" class="gen-input" id="genVocab"
+               placeholder="thesis statement, counterargument, hedging language…">
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <div class="gen-label">Slide types to include</div>
+        <div class="gen-types" id="genTypeChips">
+          <span class="gen-type-chip selected" data-type="CONTENT">CONTENT</span>
+          <span class="gen-type-chip selected" data-type="QUIZ">QUIZ</span>
+          <span class="gen-type-chip" data-type="CONTRAST">CONTRAST</span>
+          <span class="gen-type-chip" data-type="FILL_BLANK">FILL_BLANK</span>
+          <span class="gen-type-chip" data-type="DRAG_DROP">DRAG_DROP</span>
+          <span class="gen-type-chip" data-type="MATCH">MATCH</span>
+          <span class="gen-type-chip" data-type="SORT_PARAGRAPH">SORT_PARAGRAPH</span>
+          <span class="gen-type-chip" data-type="WORD_BANK">WORD_BANK</span>
+          <span class="gen-type-chip selected" data-type="ESSAY">ESSAY</span>
+        </div>
+      </div>
+
+      <div class="console-input-row">
+        <button class="console-btn" id="genBtn" onclick="generateLesson()" style="width:100%;">
+          ✏️ Generate Lesson →
+        </button>
+      </div>
+
+      <div class="console-response" id="genResponse">
+        <div class="console-loading" id="genLoading" style="display:none;">
+          <span class="spin">⟳</span> Generating lesson slides… this may take 20-30 seconds
+        </div>
+        <div class="gen-result" id="genResult"></div>
+        <div class="gen-actions" id="genActions" style="display:none;">
+          <button class="gen-copy-btn" onclick="copyGenResult()">📋 Copy HTML</button>
+          <span style="font-size:0.75rem; color:var(--mist); align-self:center;">
+            Paste into a new <code>.html</code> lesson file
+          </span>
+        </div>
+        <div class="console-meta" id="genMeta"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /.main -->
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   CONFIGURATION
+════════════════════════════════════════════════════════════════ */
+let SB_URL = '';
+let SB_KEY = '';
+
+// Código de acceso — en producción esto debe validarse server-side
+// DT-005: reemplazar con role-based auth real
+const ADMIN_CODE = 'instructor2025';
+
+async function init() {
+    try {
+        const cfg = await fetch('/api/config').then(r=>r.json());
+        SB_URL = cfg.supabaseUrl || '';
+        SB_KEY = cfg.supabaseKey || '';
+    } catch(e) {
+        console.warn('Config load failed:', e.message);
+    }
+
+    // Verificar si ya hay sesión de admin guardada
+    if (sessionStorage.getItem('adminUnlocked') === 'true') {
+        showPanel();
+    }
+}
+
+window.onload = init;
+
+/* ════════════════════════════════════════════════════════════════
+   ACCESS GATE
+════════════════════════════════════════════════════════════════ */
+function checkAccess() {
+    const input = document.getElementById('gateInput').value.trim();
+    const errEl = document.getElementById('gateErr');
+
+    if (input === ADMIN_CODE) {
+        sessionStorage.setItem('adminUnlocked', 'true');
+        showPanel();
+    } else {
+        errEl.style.display = 'block';
+        errEl.textContent   = 'Incorrect code. Try again.';
+        document.getElementById('gateInput').value = '';
+        document.getElementById('gateInput').focus();
+    }
+}
+
+function showPanel() {
+    document.getElementById('accessGate').style.display = 'none';
+    document.getElementById('adminMain').style.display  = 'block';
+    loadOverview();
+    loadFlags();
+    loadAgentLog();
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SUPABASE HELPERS
+════════════════════════════════════════════════════════════════ */
+async function sbGet(path) {
+    const r = await fetch(`${SB_URL}/rest/v1/${path}`, {
+        headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` },
+        credentials: 'omit'
+    });
+    if (!r.ok) throw new Error(`Supabase ${r.status}`);
+    return r.json();
+}
+
+function riskClass(score) {
+    if (score >= 85) return 'risk-low';
+    if (score >= 60) return 'risk-moderate';
+    if (score >= 30) return 'risk-high';
+    return 'risk-critical';
+}
+
+function riskLabel(score) {
+    if (score >= 85) return 'LOW';
+    if (score >= 60) return 'MODERATE';
+    if (score >= 30) return 'HIGH';
+    return 'CRITICAL';
+}
+
+/* ════════════════════════════════════════════════════════════════
+   OVERVIEW CARDS
+════════════════════════════════════════════════════════════════ */
+async function loadOverview() {
+    try {
+        const [students, essays, flags, agentCalls] = await Promise.all([
+            sbGet('students?select=id&limit=1000'),
+            sbGet('essay_submissions?select=integrity_score&limit=5000'),
+            sbGet('essay_submissions?select=id&integrity_score=lte.60&limit=5000'),
+            sbGet(`agent_interactions?select=id&created_at=gte.${sevenDaysAgo()}&limit=5000`)
+        ]);
+
+        const scores = essays.map(e=>e.integrity_score).filter(s=>s!=null);
+        const avgInt = scores.length
+            ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length)
+            : null;
+
+        document.getElementById('ov-students').textContent = students.length;
+        document.getElementById('ov-essays').textContent   = essays.length;
+        document.getElementById('ov-avg-int').textContent  = avgInt != null ? avgInt + '%' : '—';
+        document.getElementById('ov-flags').textContent    = flags.length;
+        document.getElementById('ov-tokens').textContent   = agentCalls.length;
+    } catch(e) {
+        console.error('loadOverview failed:', e.message);
+    }
+}
+
+function sevenDaysAgo() {
+    return new Date(Date.now() - 7*24*60*60*1000).toISOString();
+}
+
+/* ════════════════════════════════════════════════════════════════
+   INTEGRITY FLAGS TABLE
+════════════════════════════════════════════════════════════════ */
+async function loadFlags() {
+    const container = document.getElementById('flagsTable');
+    try {
+        const rows = await sbGet(
+            'essay_submissions?select=id,activity,integrity_score,words,pastes,tab_switches,chars_typed_ratio,created_at,students(name,email)&integrity_score=lte.60&order=integrity_score.asc&limit=50'
+        );
+
+        if (!rows.length) {
+            container.innerHTML = '<div class="state-msg">No integrity flags found. All submissions look good.</div>';
+            return;
+        }
+
+        container.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Lesson</th>
+              <th>Risk</th>
+              <th>Score</th>
+              <th>Words</th>
+              <th>Pastes</th>
+              <th>Tabs</th>
+              <th>Typed %</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => `
+            <tr>
+              <td>
+                <div style="font-weight:600;">${r.students?.name || '—'}</div>
+                <div style="font-size:0.72rem; color:var(--mist);">${r.students?.email || ''}</div>
+              </td>
+              <td>${r.activity || '—'}</td>
+              <td><span class="risk-pill ${riskClass(r.integrity_score)}">${riskLabel(r.integrity_score)}</span></td>
+              <td style="font-weight:700; color:${r.integrity_score<30?'#dc2626':r.integrity_score<60?'#d97706':'#059669'}">
+                ${r.integrity_score}%
+              </td>
+              <td>${r.words || 0}</td>
+              <td style="color:${r.pastes>0?'#d97706':'inherit'}">${r.pastes || 0}</td>
+              <td style="color:${r.tab_switches>2?'#d97706':'inherit'}">${r.tab_switches || 0}</td>
+              <td>${r.chars_typed_ratio != null ? r.chars_typed_ratio + '%' : '—'}</td>
+              <td style="font-size:0.77rem; color:var(--mist);">${r.created_at?.slice(0,10) || '—'}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>`;
+    } catch(e) {
+        container.innerHTML = `<div class="state-msg state-err">Error loading flags: ${e.message}</div>`;
+    }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   AGENT INTERACTIONS LOG
+════════════════════════════════════════════════════════════════ */
+async function loadAgentLog() {
+    const container = document.getElementById('agentLog');
+    try {
+        const rows = await sbGet(
+            'agent_interactions?select=agent,model_used,tokens_in,tokens_out,tokens_cached,complexity_score,created_at&order=created_at.desc&limit=50'
+        );
+
+        if (!rows.length) {
+            container.innerHTML = '<div class="state-msg">No agent interactions yet.</div>';
+            return;
+        }
+
+        const totalIn     = rows.reduce((s,r)=>s+r.tokens_in,0);
+        const totalCached = rows.reduce((s,r)=>s+r.tokens_cached,0);
+        const cachePct    = totalIn > 0 ? Math.round(totalCached/totalIn*100) : 0;
+
+        container.innerHTML = `
+        <div style="padding:10px 14px; background:var(--snow); font-size:0.78rem; color:var(--steel);
+             border-bottom:1px solid var(--cloud);">
+          Last 50 calls  ·  ${totalIn.toLocaleString()} tokens in  ·  ${cachePct}% cached
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Agent</th>
+              <th>Model</th>
+              <th>Complexity</th>
+              <th>Tokens in</th>
+              <th>Tokens out</th>
+              <th>Cached</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => `
+            <tr>
+              <td style="font-weight:600;">${r.agent}</td>
+              <td style="font-size:0.78rem; color:var(--steel);">${r.model_used?.replace('claude-','')}</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <div style="height:5px; width:${r.complexity_score || 0}px; max-width:80px;
+                              background:${r.complexity_score>65?'#dc2626':r.complexity_score>30?'#d97706':'#059669'};
+                              border-radius:3px;"></div>
+                  <span style="font-size:0.78rem;">${r.complexity_score || 0}</span>
+                </div>
+              </td>
+              <td>${(r.tokens_in||0).toLocaleString()}</td>
+              <td>${(r.tokens_out||0).toLocaleString()}</td>
+              <td style="color:${r.tokens_cached>0?'#059669':'var(--mist)'}">
+                ${r.tokens_cached > 0 ? r.tokens_cached.toLocaleString() : '—'}
+              </td>
+              <td style="font-size:0.77rem; color:var(--mist);">${r.created_at?.slice(0,16).replace('T',' ') || '—'}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>`;
+    } catch(e) {
+        container.innerHTML = `<div class="state-msg state-err">Error loading agent log: ${e.message}</div>`;
+    }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   DB ADMIN AGENT — AI QUERY CONSOLE
+════════════════════════════════════════════════════════════════ */
+function useHint(chip) {
+    document.getElementById('queryInput').value = chip.textContent.trim();
+    document.getElementById('queryInput').focus();
+}
+
+function _formatResponse(text) {
+    if (!text) return '';
+    return text
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+        .replace(/`([^`]+)`/g,'<code style="background:#f1f5f9;padding:1px 5px;border-radius:4px;font-size:0.85em;">$1</code>')
+        .replace(/^- (.+)$/gm,'<li style="margin:3px 0;">$1</li>')
+        .replace(/(<li[^>]*>.*?<\/li>\n?)+/g, m=>`<ul style="margin:8px 0 10px 16px;">${m}</ul>`)
+        .replace(/\n{2,}/g,'</p><p style="margin:6px 0;">')
+        .replace(/\n/g,'<br>');
+}
+
+async function runQuery() {
+    const input   = document.getElementById('queryInput');
+    const btn     = document.getElementById('queryBtn');
+    const resp    = document.getElementById('queryResponse');
+    const loading = document.getElementById('queryLoading');
+    const content = document.getElementById('queryContent');
+    const meta    = document.getElementById('queryMeta');
+
+    const query = input.value.trim();
+    if (!query) return;
+
+    btn.disabled = true;
+    resp.classList.add('visible');
+    loading.style.display = 'flex';
+    content.innerHTML = '';
+    meta.textContent  = '';
+
+    const t0 = Date.now();
+
+    try {
+        const res = await fetch('/api/orchestrator', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({
+                agent:         'dbAdmin',
+                studentId:     null,
+                task:          query,
+                payload:       { query, context: 'instructor admin panel' },
+                outputFormat:  'narrative_report',
+                requiresTools: true
+            })
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const elapsed = ((Date.now() - t0)/1000).toFixed(1);
+
+        loading.style.display = 'none';
+        content.innerHTML = _formatResponse(data.response || 'No response from agent.');
+
+        const cached = data.usage?.cache_read_input_tokens || 0;
+        const total  = data.usage?.input_tokens || 0;
+        const pct    = total > 0 ? Math.round(cached/total*100) : 0;
+        meta.textContent = `Model: ${data.model || '—'}  ·  ${total} tokens (${pct}% cached)  ·  ${elapsed}s`;
+
+    } catch(e) {
+        loading.style.display = 'none';
+        content.innerHTML = `<span style="color:#dc2626;">Error: ${e.message}. Check that ANTHROPIC_API_KEY is configured.</span>`;
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   CONTENT GENERATOR AGENT
+════════════════════════════════════════════════════════════════ */
+
+// Toggle de slide type chips
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.gen-type-chip').forEach(chip => {
+        chip.addEventListener('click', () => chip.classList.toggle('selected'));
+    });
+});
+
+function _getSelectedTypes() {
+    return Array.from(document.querySelectorAll('.gen-type-chip.selected'))
+                .map(c => c.dataset.type);
+}
+
+function _parseVocab(str) {
+    return str.split(',').map(w => w.trim()).filter(Boolean);
+}
+
+async function generateLesson() {
+    const title  = document.getElementById('genTitle').value.trim();
+    if (!title) {
+        document.getElementById('genTitle').focus();
+        return;
+    }
+
+    const btn     = document.getElementById('genBtn');
+    const resp    = document.getElementById('genResponse');
+    const loading = document.getElementById('genLoading');
+    const result  = document.getElementById('genResult');
+    const actions = document.getElementById('genActions');
+    const meta    = document.getElementById('genMeta');
+
+    btn.disabled = true;
+    resp.classList.add('visible');
+    loading.style.display = 'flex';
+    result.classList.remove('visible');
+    result.textContent = '';
+    actions.style.display = 'none';
+    meta.textContent  = '';
+
+    const payload = {
+        lessonTitle:  title,
+        module:       document.getElementById('genModule').value,
+        difficulty:   document.getElementById('genDifficulty').value,
+        objective:    document.getElementById('genObjective').value.trim(),
+        slideCount:   parseInt(document.getElementById('genCount').value) || 10,
+        slideTypes:   _getSelectedTypes(),
+        keyVocabulary: _parseVocab(document.getElementById('genVocab').value)
+    };
+
+    const t0 = Date.now();
+
+    try {
+        const res = await fetch('/api/orchestrator', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({
+                agent:        'contentGen',
+                studentId:    null,
+                task:         '',         // buildTask lo genera en el módulo
+                payload,
+                outputFormat: 'generate_content',
+                requiresTools: false
+            })
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data    = await res.json();
+        const elapsed = ((Date.now() - t0)/1000).toFixed(1);
+
+        loading.style.display = 'none';
+
+        if (data.response) {
+            result.textContent = data.response;
+            result.classList.add('visible');
+            actions.style.display = 'flex';
+        } else {
+            result.textContent = 'No response from agent.';
+            result.classList.add('visible');
+        }
+
+        const cached = data.usage?.cache_read_input_tokens || 0;
+        const total  = data.usage?.input_tokens || 0;
+        const pct    = total > 0 ? Math.round(cached/total*100) : 0;
+        meta.textContent = `Model: ${data.model || '—'}  ·  ${total} tokens in / ${data.usage?.output_tokens || 0} out  ·  ${pct}% cached  ·  ${elapsed}s`;
+
+    } catch(e) {
+        loading.style.display = 'none';
+        result.textContent = `Error: ${e.message}. Check that ANTHROPIC_API_KEY is configured.`;
+        result.classList.add('visible');
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+function copyGenResult() {
+    const text = document.getElementById('genResult').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.gen-copy-btn');
+        const orig = btn.textContent;
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => { btn.textContent = orig; }, 2000);
+    });
+}
+</script>
+</body>
+</html>

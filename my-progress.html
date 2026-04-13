@@ -339,6 +339,86 @@ td.lesson-name { font-weight: 600; color: var(--ink); }
   .cards-grid { grid-template-columns: repeat(2, 1fr); }
   .tab-btn { padding: 9px 12px; font-size: 0.76rem; }
 }
+
+/* ── AI Insights panel ──────────────────────────────────────────── */
+.insights-wrapper {
+  max-width: 720px;
+}
+.insights-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.insights-icon {
+  width: 44px; height: 44px;
+  background: var(--navy);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; flex-shrink: 0;
+}
+.insights-card {
+  background: var(--white);
+  border-radius: var(--r);
+  border: 1px solid var(--cloud);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.insights-card-head {
+  background: var(--navy);
+  color: #fff;
+  padding: 13px 18px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.insights-body {
+  padding: 18px;
+  font-size: 0.88rem;
+  line-height: 1.75;
+  color: var(--ink);
+  min-height: 80px;
+}
+.insights-body p   { margin: 6px 0; }
+.insights-body ul  { margin: 8px 0 10px 18px; }
+.insights-body li  { margin: 3px 0; }
+.insights-body strong { color: var(--navy); }
+.insights-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--steel);
+  font-size: 0.87rem;
+}
+.insights-spin {
+  display: inline-block;
+  animation: ins-spin 1s linear infinite;
+  font-size: 1.1rem;
+}
+@keyframes ins-spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+.btn-insights-refresh {
+  padding: 7px 16px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.78rem;
+  cursor: pointer;
+  margin-left: auto;
+  transition: background .2s;
+}
+.btn-insights-refresh:hover { background: rgba(255,255,255,.2); }
+.insights-meta {
+  font-size: 0.72rem;
+  color: var(--mist);
+  text-align: right;
+  margin-top: 6px;
+  padding: 0 18px 12px;
+}
 </style>
 </head>
 <body>
@@ -356,6 +436,7 @@ td.lesson-name { font-weight: 600; color: var(--ink); }
     <button class="tab-btn active" onclick="switchTab('overview',this)">📊 Overview</button>
     <button class="tab-btn" onclick="switchTab('writing',this)">✍️ Writing</button>
     <button class="tab-btn" onclick="switchTab('reading',this)">📖 Reading</button>
+    <button class="tab-btn" onclick="switchTab('insights',this)">🤖 AI Insights</button>
   </div>
 </div>
 
@@ -452,6 +533,41 @@ td.lesson-name { font-weight: 600; color: var(--ink); }
     <div id="re-table"><div class="state-msg">Loading…</div></div>
   </div>
 
+  <!-- ════════════════════════════════════════════════════════════
+       TAB 4 — AI INSIGHTS (Progress Agent)
+  ════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="panel-insights">
+    <div class="insights-wrapper">
+
+      <div class="insights-header">
+        <div class="insights-icon">🤖</div>
+        <div>
+          <div style="font-weight:700; font-size:1rem; color:var(--navy);">AI Progress Coach</div>
+          <div style="font-size:0.78rem; color:var(--steel); margin-top:2px;">
+            Personalized analysis powered by Claude
+          </div>
+        </div>
+      </div>
+
+      <!-- Insight principal -->
+      <div class="insights-card">
+        <div class="insights-card-head">
+          <span>📊</span> Your Progress Analysis
+          <button class="btn-insights-refresh" onclick="reloadInsights()">↻ Refresh</button>
+        </div>
+        <div class="insights-body" id="insights-main-body">
+          <div class="insights-loading" id="insights-loading">
+            <span class="insights-spin">⟳</span>
+            Analyzing your learning journey…
+          </div>
+          <div id="insights-content" style="display:none;"></div>
+        </div>
+        <div class="insights-meta" id="insights-meta" style="display:none;"></div>
+      </div>
+
+    </div>
+  </div>
+
 </div><!-- /.page-content -->
 
 <script>
@@ -463,6 +579,10 @@ let SB_KEY = '';
 let TOTAL_WRITING = 0;
 let TOTAL_READING = 0;
 let TOTAL_ALL     = 0;
+
+// Resumen de progreso — lo pobla loadAll() y lo usa el Progress Agent
+let _progressSummary  = null;
+let _insightsLoaded   = false;
 
 /**
  * Función de ARRANQUE: 
@@ -555,6 +675,101 @@ function switchTab(name, btn) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('panel-' + name).classList.add('active');
     btn.classList.add('active');
+    if (name === 'insights') loadInsights();
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   PROGRESS AGENT — AI INSIGHTS
+════════════════════════════════════════════════════════════════════ */
+function getStudentId() {
+    try { const id = window.parent.localStorage.getItem('studentId'); if (id) return id; } catch(_) {}
+    return localStorage.getItem('studentId') || null;
+}
+
+function _formatInsightsText(text) {
+    if (!text) return '<p>No analysis available.</p>';
+    return text
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g,'<em>$1</em>')
+        .replace(/^## (.+)$/gm,'<h4 style="margin:14px 0 4px;color:#0f1f38;font-size:0.9rem;">$1</h4>')
+        .replace(/^- (.+)$/gm,'<li>$1</li>')
+        .replace(/(<li>.*?<\/li>\n?)+/g, m => `<ul>${m}</ul>`)
+        .replace(/\n{2,}/g,'</p><p>')
+        .replace(/\n/g,'<br>');
+}
+
+async function loadInsights() {
+    if (_insightsLoaded) return;
+
+    const loadingEl = document.getElementById('insights-loading');
+    const contentEl = document.getElementById('insights-content');
+    const metaEl    = document.getElementById('insights-meta');
+
+    if (!_progressSummary) {
+        if (loadingEl) { loadingEl.style.display='none'; }
+        if (contentEl) {
+            contentEl.style.display = 'block';
+            contentEl.innerHTML = '<p style="color:#8da0b4;">Complete at least one lesson to get your first AI analysis.</p>';
+        }
+        return;
+    }
+
+    const studentId = getStudentId();
+    const t0 = Date.now();
+
+    try {
+        const res = await fetch('/api/orchestrator', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({
+                agent:             'progress',
+                studentId,
+                task:              'Resume el progreso académico del estudiante y recomienda la siguiente acción concreta',
+                payload:           _progressSummary,
+                outputFormat:      'short_answer',
+                needsHistoryDepth: 5,
+                requiresTools:     false
+            })
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
+
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (contentEl) {
+            contentEl.style.display = 'block';
+            contentEl.innerHTML = _formatInsightsText(data.response || '');
+        }
+        if (metaEl) {
+            const cached = data.usage?.cache_read_input_tokens || 0;
+            const total  = data.usage?.input_tokens || 0;
+            const pct    = total > 0 ? Math.round(cached/total*100) : 0;
+            metaEl.style.display = 'block';
+            metaEl.textContent   = `Model: ${data.model || '—'}  ·  ${total} tokens (${pct}% cached)  ·  ${elapsed}s`;
+        }
+
+        _insightsLoaded = true;
+
+    } catch (e) {
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (contentEl) {
+            contentEl.style.display = 'block';
+            contentEl.innerHTML = '<p style="color:#dc2626; font-size:0.85rem;">AI analysis temporarily unavailable. Check that ANTHROPIC_API_KEY is configured.</p>';
+        }
+    }
+}
+
+function reloadInsights() {
+    _insightsLoaded = false;
+    const loadingEl = document.getElementById('insights-loading');
+    const contentEl = document.getElementById('insights-content');
+    const metaEl    = document.getElementById('insights-meta');
+    if (loadingEl) { loadingEl.style.display='flex'; }
+    if (contentEl) { contentEl.style.display='none'; contentEl.innerHTML=''; }
+    if (metaEl)    { metaEl.style.display='none'; }
+    loadInsights();
 }
 
 /* ════════════════════════════════════════════════════════════════════
@@ -642,6 +857,31 @@ async function loadAll() {
         renderOverview(st, quizMap, essayMap, writingActivities, readingMap);
         renderWriting(quizMap, essayMap, compMap, writingActivities);
         renderReading(readingMap);
+
+        // Construir resumen para el Progress Agent
+        const allScoresForSummary = Object.values(quizMap).flatMap(q => q.scores);
+        const avgScoreForSummary  = allScoresForSummary.length
+            ? Math.round(allScoresForSummary.reduce((a,b)=>a+b,0)/allScoresForSummary.length) : null;
+        const allIntForSummary    = Object.values(essayMap).map(e=>e.integrity_score).filter(s=>s!=null);
+        const avgIntForSummary    = allIntForSummary.length
+            ? Math.round(allIntForSummary.reduce((a,b)=>a+b,0)/allIntForSummary.length) : null;
+        const writingDoneCount    = new Set([...Object.keys(quizMap), ...Object.keys(essayMap)]).size;
+        const readingDoneCount    = Object.keys(readingMap).length;
+        const recentLessons = [...Object.entries(quizMap)]
+            .sort((a,b) => new Date(b[1].date) - new Date(a[1].date))
+            .slice(0, 5)
+            .map(([name, q]) => ({ name, score: q.scores.length ? Math.max(...q.scores) : null }));
+        _progressSummary = {
+            activitiesDone:    writingDoneCount + readingDoneCount,
+            totalActivities:   TOTAL_ALL,
+            coveragePct:       TOTAL_ALL > 0 ? Math.round((writingDoneCount + readingDoneCount) / TOTAL_ALL * 100) : 0,
+            avgQuizScore:      avgScoreForSummary,
+            avgIntegrityScore: avgIntForSummary,
+            writingDone:       writingDoneCount,
+            readingDone:       readingDoneCount,
+            recentLessons,
+            essayCount:        Object.keys(essayMap).length
+        };
 
     } catch(err) {
         console.error(err);
