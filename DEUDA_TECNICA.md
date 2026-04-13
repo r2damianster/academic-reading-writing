@@ -98,9 +98,10 @@
 
 ---
 
-### DT-005 🔵 No hay validación de rol instructor en el frontend
-- **Descripción:** No existe separación de acceso entre estudiantes e instructores. Cualquier estudiante que conozca la URL de un panel de admin podría acceder.
-- **Mejora propuesta:** Al hacer login, el servidor debe devolver un campo `role` desde la tabla `students`. El frontend guarda `localStorage.setItem('studentRole', role)`. El admin panel verifica este campo + una validación adicional en el servidor.
+### DT-005 🟡 No hay validación de rol instructor en el frontend
+- **Descripción:** Acceso a admin.html protegido solo por password gate en el HTML. Cualquier estudiante con la URL podría intentar acceder.
+- **Avance 2026-04-12:** `validate-student.js` ahora devuelve `role: 'admin'` para `arturo.rodriguez@uleam.edu.ec` (requiere contraseña). `auth.js` guarda `localStorage.setItem('isAdmin', 'true')`. Falta: que `admin.html` verifique `isAdmin` desde localStorage además de su propio password gate.
+- **Pendiente:** Agregar check `if (localStorage.getItem('isAdmin') !== 'true') { window.location.href = '/'; }` al inicio de admin.html.
 
 ---
 
@@ -207,9 +208,45 @@
 
 | Variable | Propósito | Dónde agregar | Estado |
 |----------|-----------|--------------|--------|
-| `GROQ_TOKEN` | Llamadas a la API de Groq (todos los agentes) | `.env` + Vercel Settings | ✅ Configurado — migración de Anthropic completada 2026-04-12 |
-| `SUPABASE_SERVICE_KEY` | Escritura server-side (agentes, cron) | `.env` + Vercel Settings | ✅ Configurado en `.env` — agregar en Vercel Settings |
-| `CRON_SECRET` | Protege endpoint `/api/cron/compress-profiles` | `.env` + Vercel Settings | ✅ Generado — agregar en Vercel Settings |
+| `GROQ_TOKEN` | Llamadas a la API de Groq (todos los agentes) | `.env` + Vercel Settings | ✅ Configurado |
+| `SUPABASE_URL` | URL del proyecto Supabase | `.env` + Vercel Settings | ✅ Configurado |
+| `SUPABASE_KEY` | Anon key (frontend + validate-student) | `.env` + Vercel Settings | ✅ Configurado |
+| `SUPABASE_SERVICE_KEY` | Service role key (agentes, cron — solo server) | `.env` + Vercel Settings | ✅ Configurado |
+| `CRON_SECRET` | Protege `/api/cron/compress-profiles` | `.env` + Vercel Settings | ✅ Generado |
+| `ADMIN_PASSWORD` | Contraseña cuenta administrador arturo.rodriguez@ | `.env` + Vercel Settings | ✅ Configurado |
+
+---
+
+## SECCIÓN 7 — INFRAESTRUCTURA / DEPLOY
+
+### INFRA-001 ✅ RESUELTO Límite de 12 serverless functions en Vercel Hobby
+- **Descripción:** Vercel cuenta todos los archivos en `api/` como serverless functions. Con 15 archivos (agents + groq-client) se superaba el límite de 12 del plan Hobby.
+- **Fix:** Movidos los módulos de soporte a `lib/` (no escaneado por Vercel). Solo quedan 5 endpoints reales en `api/`.
+- **Estructura final:**
+  - `api/` (5 endpoints): config.js, orchestrator.js, sync-reading.js, validate-student.js, cron/compress-profiles.js
+  - `lib/` (no contado): groq-client.js, agents/*.js
+- **Resuelto:** 2026-04-12
+
+---
+
+### AUTH-001 ✅ RESUELTO Autenticación de administrador
+- **Descripción:** La cuenta `arturo.rodriguez@uleam.edu.ec` requiere contraseña para acceder. Los estudiantes solo necesitan email.
+- **Implementación:**
+  - `validate-student.js`: si el email es admin, exige `password` en el body y lo valida contra `ADMIN_PASSWORD` env var. Devuelve `role: 'admin'`.
+  - `index.html`: campo de contraseña aparece automáticamente al escribir el email admin.
+  - `auth.js`: guarda `isAdmin: 'true'` y `studentRole: 'admin'` en localStorage. Salta re-validación del servidor en recargas.
+- **Resuelto:** 2026-04-12
+
+---
+
+### SESSION-001 ✅ RESUELTO Sesión muy corta — estudiantes debían re-llenar todo el formulario
+- **Descripción:** Sesión de 4 horas llamaba `resetApp()` (borraba todo localStorage) al expirar. El estudiante tenía que re-escribir email, practice type y consents.
+- **Fix:**
+  - Sesión extendida a 24 horas.
+  - Al expirar: solo borra el timestamp, conserva email y consents.
+  - `_prefillReturningUser()`: pre-llena email en modal, salta al Step 2 directamente si ya hay consents guardados.
+  - `saveAndStart()`: lee consents de localStorage como fallback si Step 2 no está visible.
+- **Resuelto:** 2026-04-12
 
 ---
 
@@ -243,6 +280,8 @@
 | 2026-04-12 | v1.8 | Verificación contra DB real: tablas creadas en Supabase, BUG-002/003 corregidos (diagnósticos erróneos revertidos), compliance verificado (20 resultados reales). |
 | 2026-04-12 | v1.9 | Migración Anthropic → Groq completada: orchestrator.js, memory.js, compress-profiles.js usan groqChat(). Sección 6 actualizada. |
 | 2026-04-12 | v2.0 | DT-001 resuelto — creado js/config-loader.js (singleton window.configReady). |
+| 2026-04-12 | v2.1 | AUTH-001 resuelto — admin auth con contraseña para arturo.rodriguez@uleam.edu.ec. SESSION-001 resuelto — sesión 24h, re-login sin repetir consents. |
+| 2026-04-12 | v2.2 | INFRA-001 resuelto — módulos movidos a lib/ (5 endpoints en api/, bajo límite Vercel Hobby). DT-005 actualizado con avance parcial. Secciones 6 y 7 completas. |
 
 ---
 
