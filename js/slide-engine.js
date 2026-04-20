@@ -58,6 +58,7 @@ const SlideEngine = (function () {
         console.log('🛡️ SlideEngine: Instructor mode check:', _isAdmin);
 
         if (_isAdmin) {
+            alert('Admin Mode Active (SlideEngine): Buttons should appear top-center.');
             _mountInstructorUI();
         }
 
@@ -730,6 +731,108 @@ const SlideEngine = (function () {
         }
 
         _activateContinueButton(redirectDest);
+    }
+
+    /* ──────────────────────────────────────────────────────────────────────────
+       SECCIÓN 1.1 — HELPERS PARA INSTRUCTOR (SlideEngine)
+    ────────────────────────────────────────────────────────────────────────── */
+    function _mountInstructorUI() {
+        if (document.getElementById('instructor-controls-bar')) return;
+
+        const style = document.createElement('style');
+        style.textContent = `
+            .instructor-controls {
+                position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+                background: #0f1f38; padding: 10px 24px; border-radius: 40px;
+                display: flex !important; gap: 15px; z-index: 999999; align-items: center;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 2px solid #fca5a5;
+                color: white; font-family: sans-serif; font-size: 14px;
+                animation: se-slideDown 0.5s ease;
+            }
+            @keyframes se-slideDown { from { top: -60px; } to { top: 10px; } }
+            .inst-btn {
+                background: #0891b2; color: white; border: none; padding: 8px 18px;
+                border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: 700;
+                transition: all 0.2s;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+            .inst-btn:hover { background: #0e7490; transform: translateY(-1px); }
+            .inst-btn.back { background: #4a6080; }
+            .btn-next.inst-unlocked { display: block !important; opacity: 1 !important; visibility: visible !important; }
+        `;
+        document.head.appendChild(style);
+
+        const div = document.createElement('div');
+        div.className = 'instructor-controls';
+        div.id = 'instructor-controls-bar';
+        div.innerHTML = `
+            <span style="font-weight:800; color:#fca5a5; margin-right:5px;">ADMIN MODE</span>
+            <button class="inst-btn back" id="inst-prev">← BACK</button>
+            <button class="inst-btn" id="inst-next">NEXT →</button>
+            <button class="inst-btn" id="inst-helper" style="background:#059669;">TEACHER HELPER</button>
+        `;
+        document.body.appendChild(div);
+
+        document.getElementById('inst-prev').onclick = () => SlideEngine.prev();
+        document.getElementById('inst-next').onclick = () => SlideEngine.goTo(null);
+        document.getElementById('inst-helper').onclick = _openHelper;
+    }
+
+    function _openHelper() {
+        const w = 420, h = 600;
+        const left = (screen.width/2)-(w/2);
+        const top = (screen.height/2)-(h/2);
+        const helperUrl = window.location.origin + '/teacher-helper.html';
+        window._seHelperWindow = window.open(helperUrl, 'TeacherHelper', `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes,status=no,menubar=no,toolbar=no`);
+        setTimeout(() => _notifyHelper(), 800);
+    }
+
+    function _notifyHelper() {
+        if (!window._seHelperWindow || window._seHelperWindow.closed) return;
+        const slides = Array.from(document.querySelectorAll('.slide'));
+        const current = slides[_currentIndex];
+        if (!current) return;
+        const payload = {
+            index: _currentIndex, total: _slides.length, slideType: current.dataset.type || 'CONTENT',
+            title: current.querySelector('h2')?.textContent || '',
+            answers: _collectAnswers(current)
+        };
+        window._seHelperWindow.postMessage({ type: 'UPDATE_HELPER', payload }, '*');
+    }
+
+    function _collectAnswers(slide) {
+        const answers = [];
+        const type = (slide.dataset.type || '').toUpperCase();
+        if (type === 'QUIZ') {
+            slide.querySelectorAll('[data-se-option]').forEach(opt => {
+                if (opt.hasAttribute('data-se-correct')) answers.push({ label: 'Correct Option', answer: opt.textContent.trim() });
+            });
+        }
+        if (type === 'DRAG_DROP') {
+            const drops = Array.from(slide.querySelectorAll('[data-se-drop]'));
+            drops.forEach(drop => {
+                const accepts = drop.dataset.seDropAccepts;
+                const label = drop.dataset.seLabel || 'Zone';
+                const drag = slide.querySelector(`[data-se-drag][data-se-drag-type="${accepts}"]`);
+                if (drag) answers.push({ label: `Drop ${label}`, answer: drag.textContent.trim() });
+            });
+        }
+        if (type === 'FILL_BLANK') {
+            slide.querySelectorAll('[data-se-blank]').forEach((blank, idx) => {
+                answers.push({ label: `Blank ${idx+1}`, answer: blank.dataset.reAnswer });
+            });
+        }
+        if (type === 'MATCH') {
+            const terms = Array.from(slide.querySelectorAll('[data-se-term]'));
+            const defs = Array.from(slide.querySelectorAll('[data-se-def]'));
+            terms.forEach(term => {
+                const matchId = term.dataset.seId;
+                const def = defs.find(d => d.dataset.seMatch === matchId);
+                if (def) answers.push({ label: term.textContent.trim(), answer: def.textContent.trim() });
+            });
+        }
+        return answers;
     }
 
     // API pública del engine

@@ -441,6 +441,7 @@ function checkAccess() {
     if (input === ADMIN_CODE) {
         sessionStorage.setItem('adminUnlocked', 'true');
         localStorage.setItem('adminUnlocked', 'true');
+        alert('Instructor Mode Unlocked! You can now view lesson keys.');
         showPanel();
     } else {
         errEl.style.display = 'block';
