@@ -37,11 +37,17 @@ async function _loadReportData(opts = {}) {
         _sbGet(`essay_compliance_results?student_id=eq.${student.id}&select=submission_id,activity,criteria_met,criteria_total,compliance_pct,snapshot&order=created_at.desc`)
     ]);
 
-    // Filtrar por hoy si es necesario
+    // Filtrar por hoy si es necesario (Considerando zona horaria local)
     if (opts.todayOnly) {
         const today = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD local
-        logs = logs.filter(l => (l.created_at || '').slice(0, 10) === today);
-        essays = essays.filter(e => (e.created_at || '').slice(0, 10) === today);
+        logs = logs.filter(l => {
+            const localDate = new Date(l.created_at).toLocaleDateString('en-CA');
+            return localDate === today;
+        });
+        essays = essays.filter(e => {
+            const localDate = new Date(e.created_at).toLocaleDateString('en-CA');
+            return localDate === today;
+        });
     }
 
     // Mapear compliance
