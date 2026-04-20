@@ -1,7 +1,7 @@
 ---
 type: index
 domain: agents
-last_updated: 2026-04-19
+last_updated: 2026-04-20
 owner: Arturo Rodríguez Zambrano
 ---
 
@@ -23,6 +23,7 @@ Todos los agentes pasan por `POST /api/orchestrator`. Ninguno tiene endpoint pro
 | `github` | [github.md](github.md) | llama-3.3-70b | Arturo | ✅ Hook PostToolUse |
 | `dbAdmin` | [db-admin.md](db-admin.md) | llama-3.3-70b | Arturo | ✅ Activo |
 | `frontend` | [frontend.md](frontend.md) | llama-3.1-8b | Arturo | ✅ Activo |
+| `reportAnalyst` | — | llama-3.3-70b | Arturo | ✅ Activo (Nuevo) |
 
 ## Selección de modelo (Token Optimizer)
 

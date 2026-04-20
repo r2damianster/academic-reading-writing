@@ -19,7 +19,16 @@ Plataforma de aprendizaje de escritura académica en inglés para ~200 estudiant
 | Funciones Vercel | 5 / 12 máximo | `api/` — no superar límite |
 | Proveedor IA | Groq (gratuito) | llama-3.1-8b + llama-3.3-70b |
 | Base de datos | Supabase PostgreSQL | RLS activo |
-| Auth | Email lookup + admin password | No usa Supabase Auth |
+| Auth | Email lookup + admin password | ✅ Robustness fix applied (auto-fill safe) |
+23: 
+24: ---
+25: 
+26: ## Novedades Recientes (Abril 2026)
+27: 1. **Reportes Avanzados**: Descarga de PDF con estructura resumida + apéndice de ensayos (todos los intentos).
+28: 2. **Modos de Reporte**: Opción "Diario" (solo hoy) vs "General" (todo el curso).
+29: 3. **Consolidación UI**: Navegación de reportes movida íntegramente a `my-progress.html`.
+30: 
+31: ---
 
 ---
 

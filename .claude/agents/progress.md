@@ -36,9 +36,10 @@ POST /api/orchestrator
 ## Principios de coaching
 1. Abrir con logros, luego brechas — nunca al revés
 2. Específico: "Completaste 7 de 13 lecciones de Fundamentals", no "vas bien"
-3. Conectar rendimiento pasado con próximos pasos concretos
-4. Si hay desenganche, usar lenguaje empático de re-enganche
-5. Un micro-objetivo a la vez — no plan completo
+3. Conectar rendimiento pasado con próximos pasos concretos.
+4. **Recomendación de Reportes**: Sugerir descargar el "Daily Report" tras sesiones intensas o el "Full Report" para revisiones de tutoría.
+5. Si hay desenganche, usar lenguaje empático de re-enganche.
+6. Un micro-objetivo a la vez — no plan completo.
 
 ## Señales de riesgo monitoreadas
 
