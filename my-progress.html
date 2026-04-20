@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Progress</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 /* ── Reset & Base ────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -89,6 +90,36 @@ body {
   transition: background .15s;
 }
 .btn-refresh:hover { background: rgba(255,255,255,.2); }
+
+/* -- Report buttons -- */
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.btn-report {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.btn-report-daily {
+  background: var(--teal);
+  color: #fff;
+}
+.btn-report-daily:hover { background: #0e7490; }
+.btn-report-full {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.btn-report-full:hover { background: rgba(255,255,255,0.25); }
 
 /* ── Tabs ────────────────────────────────────────────────────────── */
 .tabs {
@@ -430,7 +461,15 @@ td.lesson-name { font-weight: 600; color: var(--ink); }
       <h1>My Academic Progress</h1>
       <p class="student-meta" id="studentMeta">Loading…</p>
     </div>
-    <button class="btn-refresh" onclick="loadAll()">↻ Refresh</button>
+    <div class="header-actions">
+      <button class="btn-report btn-report-daily" onclick="generateReport({ todayOnly: true })">
+        <span>📅</span> Daily Report
+      </button>
+      <button class="btn-report btn-report-full" onclick="generateReport({ includeAllAttempts: true })">
+        <span>📄</span> Full Report
+      </button>
+      <button class="btn-refresh" onclick="loadAll()">↻ Refresh</button>
+    </div>
   </div>
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('overview',this)">📊 Overview</button>
