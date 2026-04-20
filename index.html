@@ -215,6 +215,7 @@
             }
         })();
     </script>
+    <script src="js/lesson-access.js?v=1.0"></script>
     <script src="js/nav.js?v=1.0"></script>
     <script src="js/auth.js?v=1.4"></script>
     <script src="js/essay-handler.js?v=1.2"></script>
@@ -278,7 +279,7 @@
         }
 
         /* ---- Open flyout with section data ---- */
-        function openFlyout(item, btn) {
+        async function openFlyout(item, btn) {
             setActive(btn);
             document.getElementById('flyoutTitle').textContent = item.label;
 
@@ -320,13 +321,21 @@
             } else {
                 // Flat list — no right panel needed, hide it
                 document.getElementById('flyoutR').style.display = 'none';
-                item.children.forEach(child => {
+                for (const child of item.children) {
+                    const status = await LessonAccess.check(child.label);
                     const leafBtn = document.createElement('button');
                     leafBtn.className = 'fl-leaf';
-                    leafBtn.textContent = child.label;
-                    leafBtn.onclick = () => { loadPage(child.path); closeFlyout(); };
+                    if (!status.allowed) {
+                        leafBtn.classList.add('locked');
+                        leafBtn.title = status.message;
+                        leafBtn.innerHTML = `🔒 <span style="opacity:0.6">${child.label}</span>`;
+                        leafBtn.onclick = () => alert(status.message);
+                    } else {
+                        leafBtn.textContent = child.label;
+                        leafBtn.onclick = () => { loadPage(child.path); closeFlyout(); };
+                    }
                     lScroll.appendChild(leafBtn);
-                });
+                }
             }
 
             document.getElementById('flyoutPanel').classList.add('open');
@@ -334,7 +343,7 @@
         }
 
         /* ---- Select a group → populate right panel ---- */
-        function selectGroup(section, group, btn) {
+        async function selectGroup(section, group, btn) {
             // Highlight active group
             document.querySelectorAll('.fl-group').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -345,27 +354,43 @@
 
             rPanel.style.display = 'flex';
             rHeader.textContent = group.label;
-            rScroll.innerHTML = '';
+            rScroll.innerHTML = '<div style="padding:20px; color:rgba(255,255,255,0.3); font-size:12px;">Checking access...</div>';
 
-            // Sub-hub link if group has its own path
+            const itemsHtml = [];
+            const leaves = group.children || [];
+            
+            // Sub-hub link
+            let hubHtml = '';
             if (group.path) {
-                const subHub = document.createElement('button');
-                subHub.className = 'fr-hub';
-                subHub.textContent = 'Hub →';
-                subHub.onclick = () => { loadPage(group.path); closeFlyout(); };
-                rScroll.appendChild(subHub);
+                hubHtml = `<button class="fr-hub" onclick="loadPage('${group.path}'); closeFlyout();">Hub →</button>`;
             }
 
-            // Leaves
-            const leaves = group.children || [];
-            leaves.forEach(leaf => {
+            // We do this in loop to respect order while awaiting
+            const results = [];
+            for (const leaf of leaves) {
+                results.push({ leaf, status: await LessonAccess.check(leaf.label) });
+            }
+
+            rScroll.innerHTML = hubHtml;
+            results.forEach(res => {
+                const { leaf, status } = res;
                 const leafBtn = document.createElement('button');
                 leafBtn.className = 'fr-leaf';
-                leafBtn.textContent = leaf.label;
-                leafBtn.onclick = () => { loadPage(leaf.path); closeFlyout(); };
+                if (!status.allowed) {
+                    leafBtn.classList.add('locked');
+                    leafBtn.style.opacity = '0.4';
+                    leafBtn.style.cursor = 'not-allowed';
+                    leafBtn.title = status.message;
+                    leafBtn.innerHTML = `<span>🔒 ${leaf.label}</span>`;
+                    leafBtn.onclick = () => alert(status.message);
+                } else {
+                    leafBtn.textContent = leaf.label;
+                    leafBtn.onclick = () => { loadPage(leaf.path); closeFlyout(); };
+                }
                 rScroll.appendChild(leafBtn);
             });
         }
+
 
         /* ---- Close ---- */
         window.closeFlyout = function () {
@@ -473,11 +498,21 @@
             }
         };
 
-        window.searchGo = function (path) {
+        window.searchGo = async function (path) {
+            // Find lesson label from INDEX
+            const item = INDEX.find(i => i.path === path);
+            if (item) {
+                const status = await LessonAccess.check(item.label);
+                if (!status.allowed) {
+                    alert(status.message);
+                    return;
+                }
+            }
             loadPage(path);
             _closeSearch();
             if (typeof closeFlyout === 'function') closeFlyout();
         };
+
 
     })();
     </script>

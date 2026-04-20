@@ -105,13 +105,39 @@ const ReadingEngine = (function () {
 
         _startTime = Date.now();
 
+        // 1. CHEQUEO DE DISPONIBILIDAD (Runtime Security)
+        const isInstructor = (sessionStorage.getItem('adminUnlocked') === 'true') || (localStorage.getItem('adminUnlocked') === 'true');
+        
+        // Si no es instructor, verificar con el servidor
+        if (!isInstructor) {
+            // Asegurar que LessonAccess esté cargado
+            if (!window.LessonAccess) {
+                await new Promise(r => {
+                    const s = document.createElement('script');
+                    s.src = '/js/lesson-access.js'; // Ruta absoluta desde root
+                    s.onload = r;
+                    s.onerror = r;
+                    document.head.appendChild(s);
+                });
+            }
+
+            if (window.LessonAccess) {
+                const access = await LessonAccess.check(_lessonName);
+                if (!access.allowed) {
+                    _showLockedOverlay(access);
+                    return; // Detener ejecución del engine
+                }
+            }
+        }
+
         // Modo Instructor (soporta multi-tab con localStorage)
-        _isAdmin = (sessionStorage.getItem('adminUnlocked') === 'true') || (localStorage.getItem('adminUnlocked') === 'true');
-        console.log('🛡️ ReadingEngine: Instructor mode check:', _isAdmin);
+        _isAdmin = isInstructor;
+        console.log('shield ReadingEngine: Instructor mode check:', _isAdmin);
         
         if (_isAdmin) {
             _mountInstructorUI();
         }
+
 
         // Montar cada slide
         _slides.forEach((slide, i) => {
@@ -793,6 +819,42 @@ const ReadingEngine = (function () {
             answers: _collectAnswers(current)
         };
         window._reHelperWindow.postMessage({ type: 'UPDATE_HELPER', payload }, '*');
+    }
+
+    function _showLockedOverlay(status) {
+        // Detener tracker de actividad si existe
+        if (window.ActivityTracker && ActivityTracker.stop) ActivityTracker.stop();
+
+        // Crear overlay elegante
+        const overlay = document.createElement('div');
+        overlay.style = `
+            position: fixed; inset: 0; background: #0f172a; color: white;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 30px; font-family: sans-serif; z-index: 999999;
+        `;
+        
+        const dateStr = status.availableDate ? status.availableDate.toLocaleString() : 
+                        (status.deadlineDate ? status.deadlineDate.toLocaleString() : '');
+
+        overlay.innerHTML = `
+            <div style="font-size: 80px; margin-bottom: 20px;">🔒</div>
+            <h1 style="font-size: 24px; color: #fca5a5; margin-bottom: 10px;">Reading Locked</h1>
+            <p style="font-size: 16px; color: #94a3b8; max-width: 400px; line-height: 1.5; margin-bottom: 25px;">
+                ${status.message}
+            </p>
+            ${dateStr ? `<div style="background: #1e293b; padding: 12px 20px; border-radius: 8px; font-size: 14px; border: 1px solid #334155;">
+                ${status.reason === 'not_yet_available' ? 'Available on:' : 'Deadline was:'} <br>
+                <strong style="color: #38bdf8;">${dateStr}</strong>
+            </div>` : ''}
+            <button onclick="window.parent.closeFlyout ? window.parent.closeFlyout() : window.history.back()" 
+                    style="margin-top: 30px; background: #334155; border: none; color: white; padding: 10px 20px; 
+                           border-radius: 6px; cursor: pointer; font-weight: 600;">
+                Go Back
+            </button>
+        `;
+        document.body.innerHTML = '';
+        document.body.appendChild(overlay);
+        document.body.style.background = '#0f172a';
     }
 
     function _collectAnswers(slide) {

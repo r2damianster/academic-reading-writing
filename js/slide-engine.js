@@ -46,20 +46,47 @@ const SlideEngine = (function () {
     // ── Inicialización ──────────────────────────────────────────────────────────
     // Llama esto en window.onload de cada lección.
     // Activa todos los tipos de slide que encuentre en el DOM.
-    function init(lessonName) {
+    async function init(lessonName) {
         // Normalizar: guiones → espacios, minúsculas, sin espacios extra
-        // Garantiza que "formal-language" y "formal language" sean la misma actividad
         _lessonName        = lessonName.toLowerCase().replace(/-/g, ' ').replace(/\s+/g, ' ').trim();
+        
+        // 1. CHEQUEO DE DISPONIBILIDAD (Runtime Security)
+        const isInstructor = (sessionStorage.getItem('adminUnlocked') === 'true') || (localStorage.getItem('adminUnlocked') === 'true');
+        
+        // Si no es instructor, verificar con el servidor
+        if (!isInstructor) {
+            // Asegurar que LessonAccess esté cargado
+            if (!window.LessonAccess) {
+                await new Promise(r => {
+                    const s = document.createElement('script');
+                    s.src = '/js/lesson-access.js'; // Ruta absoluta desde root
+                    s.onload = r;
+                    s.onerror = r;
+                    document.head.appendChild(s);
+                });
+            }
+
+            if (window.LessonAccess) {
+                const access = await LessonAccess.check(_lessonName);
+                if (!access.allowed) {
+                    _showLockedOverlay(access);
+                    return; // Detener ejecución del engine
+                }
+            }
+        }
+
         _slides            = Array.from(document.querySelectorAll('.slide'));
+
         _mistakes          = 0;
         _scoreAlreadySaved = false;
         
-        _isAdmin = (sessionStorage.getItem('adminUnlocked') === 'true') || (localStorage.getItem('adminUnlocked') === 'true');
-        console.log('🛡️ SlideEngine: Instructor mode check:', _isAdmin);
+        _isAdmin = isInstructor;
+        console.log('shield SlideEngine: Instructor mode check:', _isAdmin);
 
         if (_isAdmin) {
             _mountInstructorUI();
         }
+
 
         // Exponer globales para compatibilidad con essay-handler.js y activity-tracker.js
         window.mistakes    = _mistakes;
