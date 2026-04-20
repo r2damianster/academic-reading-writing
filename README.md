@@ -220,13 +220,16 @@ El proyecto se despliega automáticamente al hacer push a `main`.
 
 ## Flujo del instructor
 
-1. Login en `index.html` con `arturo.rodriguez@uleam.edu.ec` + contraseña
-2. Acceso a `admin.html`:
-   - Overview de estudiantes y sus métricas
-   - Flags de integridad (análisis del Integrity Agent)
-   - Consola DB Admin con IA (consultas en lenguaje natural)
-   - Generador de lecciones (Content Gen Agent)
-3. `my-progress.html` con vista del instructor muestra datos de todos los estudiantes
+1. Login en `index.html` con `arturo.rodriguez@uleam.edu.ec` + contraseña.
+2. Selección de lección: Por defecto, la lección carga en **"Modo Estudiante"** (con bloqueos y sin respuestas).
+3. **Modo Instructor**:
+   - En la sidebar izquierda inferior, verás un botón de **toggle** (Modo Instructor).
+   - Al activarlo, la lección actual mostrará instantáneamente la barra de administración y el acceso al **Teacher Helper**.
+4. Acceso a `admin.html`:
+   - Disponible vía botón en la sidebar o URL directa para:
+   - Overview de estudiantes y métricas de integridad.
+   - Consola DB Admin con IA.
+   - Generador de lecciones (Content Gen Agent).
 
 ---
 

@@ -204,9 +204,21 @@ Ver `DEUDA_TECNICA.md` para el estado completo. Items pendientes de mayor impact
 |----|-----------|------------|
 | DT-002 | 🟡 MEDIO | `slide-engine.js` (2482 líneas) mezcla UI + sync Supabase |
 | DT-003 | 🟡 MEDIO | `_calcIntegrityFallback` duplicada en `report.js` y `essay-handler.js` |
-| DT-005 | 🟡 MEDIO | `admin.html` no verifica `isAdmin` desde localStorage |
+| DT-005 | ✅ DONE | `index.html` implements `isAdmin` check and manual toggle |
 | L-001 | 🔴 CRÍTICO | Argumentative Essay (HTML vacío, coming soon) |
 | L-002 | 🔴 CRÍTICO | Chain Essay (HTML vacío, coming soon) |
+| L-003 | 🟢 NUEVO | Instructor Mode: Manual Toggle implemented (real-time sync) |
+
+---
+
+## Instructor Mode (Manual Toggle)
+
+El sistema permite a los profesores alternar entre la vista de estudiante y la vista de instructor en tiempo real.
+
+- **Login**: Al entrar como `arturo.rodriguez@uleam.edu.ec`, el sistema habilita el botón de Modo Instructor en la sidebar.
+- **Default**: Siempre inicia en modo estudiante (bloqueos activos).
+- **Activación**: El botón de la sidebar envía un `postMessage` al iframe de la lección.
+- **Motores**: `slide-engine.js` y `reading-engine.js` escuchan el mensaje `TOGGLE_INSTRUCTOR` para mostrar/ocultar el panel de respuestas instantáneamente.
 
 ---
 
