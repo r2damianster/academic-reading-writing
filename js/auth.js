@@ -47,6 +47,13 @@ async function checkStudentStatus() {
         return;
     }
 
+    // Si es la cuenta admin pero NO está marcada como isAdmin=true, 
+    // forzar login manual para evitar 401 en el fondo.
+    if (email === 'arturo.rodriguez@uleam.edu.ec') {
+        if (modal) modal.style.display = 'flex';
+        return;
+    }
+
     try {
         const response = await fetch('/api/validate-student', {
             method: 'POST',

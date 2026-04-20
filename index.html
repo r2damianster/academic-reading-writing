@@ -57,7 +57,7 @@
                 <p style="font-size:0.9rem;color:#666;margin-bottom:20px;">Enter your institutional email to access your personalized workspace.</p>
                 <input type="email" id="inputEmail" placeholder="user@uleam.edu.ec  OR  user@live.uleam.edu.ec"
                        style="width:100%;padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:8px;"
-                       oninput="onEmailInput(this.value)">
+                       oninput="onEmailInput(this.value)" onchange="onEmailInput(this.value)" onblur="onEmailInput(this.value)">
                 <div id="adminPasswordField" style="display:none;margin-bottom:10px;">
                     <input type="password" id="inputAdminPassword" placeholder="Administrator password"
                            style="width:100%;padding:12px;border:2px solid #e67e22;border-radius:8px;box-sizing:border-box;">
@@ -142,6 +142,10 @@
         function goToStep2() {
             var email = document.getElementById('inputEmail').value.trim().toLowerCase();
             var err   = document.getElementById('step1Error');
+            
+            // Forzar detección de admin por si falló el oninput (ej: auto-fill)
+            onEmailInput(email);
+
             if (!email) { err.textContent = 'Email is required.'; return; }
             if (email === ADMIN_EMAIL) {
                 var pwd = document.getElementById('inputAdminPassword').value;
