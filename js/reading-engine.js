@@ -110,7 +110,6 @@ const ReadingEngine = (function () {
         console.log('🛡️ ReadingEngine: Instructor mode check:', _isAdmin);
         
         if (_isAdmin) {
-            alert('Admin Mode Active: Buttons should appear top-center.');
             _mountInstructorUI();
         }
 
@@ -734,6 +733,7 @@ const ReadingEngine = (function () {
     ────────────────────────────────────────────────────────────────────────── */
     function _mountInstructorUI() {
         if (document.getElementById('instructor-controls-bar')) return;
+        _isAdmin = true;
 
         const style = document.createElement('style');
         style.textContent = `
@@ -824,6 +824,25 @@ const ReadingEngine = (function () {
         }
         return answers;
     }
+
+    function _unmountInstructorUI() {
+        _isAdmin = false;
+        const bar = document.getElementById('instructor-controls-bar');
+        if (bar) bar.remove();
+        // Redibujar página actual para reactivar bloqueos si es necesario
+        _renderPage(_slides[_current]);
+    }
+
+    // Listener para comunicación con la ventana principal (index.html)
+    window.addEventListener('message', (event) => {
+        if (event.data.type === 'TOGGLE_INSTRUCTOR') {
+            if (event.data.unlocked) {
+                _mountInstructorUI();
+            } else {
+                _unmountInstructorUI();
+            }
+        }
+    });
 
     /* ──────────────────────────────────────────────────────────────────────────
        API PÚBLICA

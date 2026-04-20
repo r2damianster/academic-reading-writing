@@ -114,6 +114,10 @@
                 <button class="sf-btn" onclick="closeFlyout(); loadPage('my-progress.html?email=' + encodeURIComponent(localStorage.getItem('studentEmail') || ''))" title="My Progress">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
                 </button>
+                <!-- Instructor Mode Toggle (Solo para admins) -->
+                <button id="instructorToggleBtn" class="sf-btn" style="display:none; color:#fca5a5; border:1px solid #fca5a577;" onclick="toggleInstructorMode()" title="Toggle Instructor Mode">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </button>
                 <!-- Logout -->
                 <button onclick="closeFlyout(); resetApp()" class="sf-btn sf-btn--ghost" title="Not you? Logout">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -159,6 +163,44 @@
             document.querySelector('.sidebar').classList.toggle('active');
             document.getElementById('sidebarOverlay').classList.toggle('active');
         }
+
+        function toggleInstructorMode() {
+            const current = localStorage.getItem('adminUnlocked') === 'true';
+            const newState = !current;
+            localStorage.setItem('adminUnlocked', newState ? 'true' : 'false');
+            sessionStorage.setItem('adminUnlocked', newState ? 'true' : 'false');
+            
+            const btn = document.getElementById('instructorToggleBtn');
+            if (newState) {
+                btn.style.background = '#fca5a522';
+                btn.classList.add('active-instructor');
+                alert('Modo Instructor: ACTIVADO (Las lecciones mostrarán respuestas)');
+            } else {
+                btn.style.background = 'transparent';
+                btn.classList.remove('active-instructor');
+                alert('Modo Instructor: DESACTIVADO (Vista de estudiante)');
+            }
+
+            // Notificar al iframe de la lección abierta
+            const frame = document.getElementById('contentFrame');
+            if (frame && frame.contentWindow) {
+                frame.contentWindow.postMessage({ 
+                    type: 'TOGGLE_INSTRUCTOR', 
+                    unlocked: newState 
+                }, '*');
+            }
+        }
+
+        // Mostrar u ocultar el botón según el rol
+        function checkAdminUI() {
+            const isAdmin = localStorage.getItem('isAdmin') === 'true';
+            const btn = document.getElementById('instructorToggleBtn');
+            if (btn) btn.style.display = isAdmin ? 'flex' : 'none';
+        }
+        
+        // Ejecutar check al cargar y suscribirse a cambios de storage
+        window.addEventListener('load', checkAdminUI);
+        window.addEventListener('storage', checkAdminUI);
     </script>
 
     <script>

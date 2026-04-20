@@ -58,7 +58,6 @@ const SlideEngine = (function () {
         console.log('🛡️ SlideEngine: Instructor mode check:', _isAdmin);
 
         if (_isAdmin) {
-            alert('Admin Mode Active (SlideEngine): Buttons should appear top-center.');
             _mountInstructorUI();
         }
 
@@ -738,6 +737,7 @@ const SlideEngine = (function () {
     ────────────────────────────────────────────────────────────────────────── */
     function _mountInstructorUI() {
         if (document.getElementById('instructor-controls-bar')) return;
+        _isAdmin = true;
 
         const style = document.createElement('style');
         style.textContent = `
@@ -834,6 +834,25 @@ const SlideEngine = (function () {
         }
         return answers;
     }
+
+    function _unmountInstructorUI() {
+        _isAdmin = false;
+        const bar = document.getElementById('instructor-controls-bar');
+        if (bar) bar.remove();
+        // Recargar el slide actual para reactivar bloqueos si es necesario
+        goTo(_currentIndex);
+    }
+
+    // Listener para comunicación con la ventana principal (index.html)
+    window.addEventListener('message', (event) => {
+        if (event.data.type === 'TOGGLE_INSTRUCTOR') {
+            if (event.data.unlocked) {
+                _mountInstructorUI();
+            } else {
+                _unmountInstructorUI();
+            }
+        }
+    });
 
     // API pública del engine
     return { 

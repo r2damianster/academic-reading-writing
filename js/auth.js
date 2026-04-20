@@ -13,6 +13,15 @@ async function checkStudentStatus() {
     const modal          = document.getElementById('welcomeModal');
     const display        = document.getElementById('studentDisplay');
     const loginTimestamp = localStorage.getItem('lastLoginTimestamp');
+    const role           = localStorage.getItem('studentRole');
+
+    // Al iniciar sesión o refrescar, el modo instructor debe estar DESACTIVADO por defecto
+    // Solo se activa manualmente desde el botón de la sidebar si eres admin.
+    if (!sessionStorage.getItem('adminUnlockedSet')) {
+        sessionStorage.setItem('adminUnlocked', 'false');
+        localStorage.setItem('adminUnlocked', 'false');
+        sessionStorage.setItem('adminUnlockedSet', 'true');
+    }
 
     // Sesión de 24 horas
     const expirationTime = 24 * 60 * 60 * 1000;
@@ -159,6 +168,10 @@ async function saveAndStart() {
         localStorage.setItem('studentInstitution', "ULEAM");
         localStorage.setItem('studentRole', serverResult.role || 'student');
         localStorage.setItem('isAdmin', serverResult.role === 'admin' ? 'true' : 'false');
+        
+        // Reset manual toggle on new fresh login
+        localStorage.setItem('adminUnlocked', 'false');
+        sessionStorage.setItem('adminUnlocked', 'false');
 
         localStorage.setItem('studentPracticeType', practiceType);
         localStorage.setItem('studentAcademicConsent', 'Yes');
