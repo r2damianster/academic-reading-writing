@@ -423,8 +423,8 @@ async function init() {
         console.warn('Config load failed:', e.message);
     }
 
-    // Verificar si ya hay sesión de admin guardada
-    if (sessionStorage.getItem('adminUnlocked') === 'true') {
+    // Verificar si ya hay sesión de admin guardada (soporta sessionStorage y localStorage)
+    if (sessionStorage.getItem('adminUnlocked') === 'true' || localStorage.getItem('adminUnlocked') === 'true') {
         showPanel();
     }
 }
@@ -440,6 +440,7 @@ function checkAccess() {
 
     if (input === ADMIN_CODE) {
         sessionStorage.setItem('adminUnlocked', 'true');
+        localStorage.setItem('adminUnlocked', 'true');
         showPanel();
     } else {
         errEl.style.display = 'block';

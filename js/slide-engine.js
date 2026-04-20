@@ -54,7 +54,9 @@ const SlideEngine = (function () {
         _mistakes          = 0;
         _scoreAlreadySaved = false;
         
-        _isAdmin = sessionStorage.getItem('adminUnlocked') === 'true';
+        _isAdmin = (sessionStorage.getItem('adminUnlocked') === 'true') || (localStorage.getItem('adminUnlocked') === 'true');
+        console.log('🛡️ SlideEngine: Instructor mode check:', _isAdmin);
+
         if (_isAdmin) {
             _mountInstructorUI();
         }

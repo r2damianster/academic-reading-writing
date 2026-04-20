@@ -105,8 +105,10 @@ const ReadingEngine = (function () {
 
         _startTime = Date.now();
 
-        // Modo Instructor
-        _isAdmin = sessionStorage.getItem('adminUnlocked') === 'true';
+        // Modo Instructor (soporta multi-tab con localStorage)
+        _isAdmin = (sessionStorage.getItem('adminUnlocked') === 'true') || (localStorage.getItem('adminUnlocked') === 'true');
+        console.log('🛡️ ReadingEngine: Instructor mode check:', _isAdmin);
+        
         if (_isAdmin) {
             _mountInstructorUI();
         }
@@ -729,6 +731,10 @@ const ReadingEngine = (function () {
     /* ──────────────────────────────────────────────────────────────────────────
        API PÚBLICA
     ────────────────────────────────────────────────────────────────────────── */
+    return { init, next, _unlockNext, _appendNextBtn, _renderPage, _renderWithControls, _saveProgress,
+             _getPdfDoc: _getPdf,
+             get currentIndex() { return _current; },
+             get studentName() { return _studentName; },
              addMistake() { _totalMistakes++; },
              get isAdmin() { return _isAdmin; },
              prev
