@@ -40,6 +40,8 @@ const SlideEngine = (function () {
     let _lessonName        = '';
     let _slides            = [];
     let _scoreAlreadySaved = false;
+    let _isAdmin           = false;
+    let _helperWindow      = null;
 
     // ── Inicialización ──────────────────────────────────────────────────────────
     // Llama esto en window.onload de cada lección.
@@ -51,6 +53,11 @@ const SlideEngine = (function () {
         _slides            = Array.from(document.querySelectorAll('.slide'));
         _mistakes          = 0;
         _scoreAlreadySaved = false;
+        
+        _isAdmin = sessionStorage.getItem('adminUnlocked') === 'true';
+        if (_isAdmin) {
+            _mountInstructorUI();
+        }
 
         // Exponer globales para compatibilidad con essay-handler.js y activity-tracker.js
         window.mistakes    = _mistakes;
@@ -123,19 +130,44 @@ const SlideEngine = (function () {
             // finishLesson() registra el score de quizzes en localStorage y Sheet.
             // Se ejecuta aquí y no en un botón, para que no dependa de ninguna
             // slide específica ni de que el autor recuerde llamarlo manualmente.
-            if (nextEl.id === 'preEssaySlide' && !_scoreAlreadySaved) {
+            if (nextEl.id === 'preEssaySlide' && !_scoreAlreadySaved && !_isAdmin) {
                 _scoreAlreadySaved = true;
                 finishLesson(_lessonName);
+            }
+
+            if (_isAdmin) {
+                _notifyHelper();
+                _forceUnlockNext(_currentIndex);
             }
         } else {
             console.error('SlideEngine: slide no encontrada →', target);
         }
     }
 
+    function prev() {
+        if (_currentIndex > 0) {
+            goTo(_currentIndex - 1);
+        }
+    }
+
     function _updateProgress() {
         const bar = document.getElementById('progressBar');
+        const container = bar ? bar.parentElement : null;
+
         if (bar && _slides.length > 1) {
             bar.style.width = `${(_currentIndex / (_slides.length - 1)) * 100}%`;
+        }
+
+        if (_isAdmin && container && !container.dataset.adminInited) {
+            container.dataset.adminInited = 'true';
+            container.style.cursor = 'pointer';
+            container.title = 'Click to jump to slide (Instructor Only)';
+            container.addEventListener('click', (e) => {
+                const rect = container.getBoundingClientRect();
+                const pct  = (e.clientX - rect.left) / rect.width;
+                const idx  = Math.round(pct * (_slides.length - 1));
+                goTo(idx);
+            });
         }
     }
 
@@ -699,9 +731,143 @@ const SlideEngine = (function () {
     }
 
     // API pública del engine
-    return { init, goTo };
+    return { 
+        init, 
+        goTo, 
+        prev,
+        get currentIndex() { return _currentIndex; },
+        get isAdmin() { return _isAdmin; }
+    };
 
 })();
+
+/* ──────────────────────────────────────────────────────────────────────────
+   SECCIÓN 1.1 — HELPERS PARA INSTRUCTOR (SlideEngine)
+────────────────────────────────────────────────────────────────────────── */
+function _mountInstructorUI() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .instructor-controls {
+            position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+            background: rgba(15, 31, 56, 0.9); padding: 8px 16px; border-radius: 30px;
+            display: flex; gap: 10px; z-index: 10001; align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
+            color: white; font-family: sans-serif; font-size: 13px;
+        }
+        .inst-btn {
+            background: #0891b2; color: white; border: none; padding: 5px 12px;
+            border-radius: 15px; cursor: pointer; font-size: 12px; font-weight: 700;
+            transition: background 0.2s;
+        }
+        .inst-btn:hover { background: #0e7490; }
+        .inst-btn.back { background: #4a6080; }
+        .btn-next.inst-unlocked { display: block !important; opacity: 1 !important; visibility: visible !important; }
+    `;
+    document.head.appendChild(style);
+
+    const div = document.createElement('div');
+    div.className = 'instructor-controls';
+    div.innerHTML = `
+        <span style="font-weight:700; color:#fca5a5;">INSTRUCTOR</span>
+        <button class="inst-btn back" id="inst-prev">← Back</button>
+        <button class="inst-btn" id="inst-next">Next →</button>
+        <button class="inst-btn" id="inst-helper" style="background:#059669;">Teacher Helper</button>
+    `;
+    document.body.appendChild(div);
+
+    document.getElementById('inst-prev').onclick = () => SlideEngine.prev();
+    document.getElementById('inst-next').onclick = () => SlideEngine.goTo(null);
+    document.getElementById('inst-helper').onclick = _openHelper;
+}
+
+function _openHelper() {
+    const w = 420, h = 600;
+    const left = (screen.width/2)-(w/2);
+    const top = (screen.height/2)-(h/2);
+
+    const helperUrl = window.location.origin + '/teacher-helper.html';
+
+    window._seHelperWindow = window.open(helperUrl, 'TeacherHelper', 
+        `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes,status=no,menubar=no,toolbar=no`);
+    
+    setTimeout(() => _notifyHelper(), 800);
+}
+
+function _notifyHelper() {
+    if (!window._seHelperWindow || window._seHelperWindow.closed) return;
+
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const current = slides[SlideEngine.currentIndex];
+    if (!current) return;
+
+    const payload = {
+        index: SlideEngine.currentIndex,
+        total: slides.length,
+        slideType: current.dataset.type || 'CONTENT',
+        title: current.querySelector('h2')?.textContent || '',
+        answers: _collectAnswers(current)
+    };
+
+    window._seHelperWindow.postMessage({ type: 'UPDATE_HELPER', payload }, '*');
+}
+
+function _forceUnlockNext(index) {
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const current = slides[index];
+    if (current) {
+        const btn = current.querySelector('.btn-next');
+        if (btn) btn.classList.add('inst-unlocked');
+    }
+}
+
+function _collectAnswers(slide) {
+    const answers = [];
+    const type = (slide.dataset.type || '').toUpperCase();
+
+    // QUIZ
+    if (type === 'QUIZ') {
+        slide.querySelectorAll('[data-se-option]').forEach(opt => {
+            if (opt.hasAttribute('data-se-correct')) {
+                answers.push({ label: 'Correct Option', answer: opt.textContent.trim() });
+            }
+        });
+    }
+
+    // DRAG_DROP
+    if (type === 'DRAG_DROP') {
+        const drops = Array.from(slide.querySelectorAll('[data-se-drop]'));
+        drops.forEach(drop => {
+            const accepts = drop.dataset.seDropAccepts;
+            const label = drop.dataset.seLabel || 'Zone';
+            const drag = slide.querySelector(`[data-se-drag][data-se-drag-type="${accepts}"]`);
+            if (drag) {
+                answers.push({ label: `Drop ${label}`, answer: drag.textContent.trim() });
+            }
+        });
+    }
+
+    // FILL_BLANK
+    if (type === 'FILL_BLANK') {
+        slide.querySelectorAll('[data-se-blank]').forEach((blank, idx) => {
+            answers.push({ label: `Blank ${idx+1}`, answer: blank.dataset.seAnswer });
+        });
+    }
+
+    // MATCH
+    if (type === 'MATCH') {
+        const terms = Array.from(slide.querySelectorAll('[data-se-term]'));
+        const defs = Array.from(slide.querySelectorAll('[data-se-def]'));
+        terms.forEach(term => {
+            const matchId = term.dataset.seId;
+            const def = defs.find(d => d.dataset.seMatch === matchId);
+            if (def) {
+                answers.push({ label: term.textContent.trim(), answer: def.textContent.trim() });
+            }
+        });
+    }
+
+    return answers;
+}
 
 
 /* =============================================================================
