@@ -44,6 +44,6 @@ Both the Sidebar (`index.html`) and the Engines (`slide-engine.js`, `reading-eng
 2. Show alerts with helpful date information.
 3. Trigger a full-screen "Locked" overlay if the student attempts direct URL access.
 
-## Best Practices
-- **Always await `_configReady`**: If adding new Supabase-dependent features to the engines, ensure the config is loaded.
-- **Unified Logic**: Always use `LessonAccess.check()` rather than querying the `lesson_availability` table directly from individual components to ensure consistency across the app.
+## Estado Actual
+- **RESUELTO**: La implementación del singleton promise `_configReady` ha sido verificada en producción.
+- **Lecciones aprendidas**: Nunca asumir disponibilidad de variables globales cargadas vía `fetch` en el arranque sin un `await` explícito.

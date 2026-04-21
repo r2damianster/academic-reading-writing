@@ -34,11 +34,13 @@ Stack: Vanilla JS + Bootstrap 5 en el lado del diseño visual. Sin frameworks JS
 | `css/readingsidebar.css` | 655 | PDF reader + paneles de tarea |
 | `css/welcome.css` | 152 | Welcome screen |
 
-## Documentación detallada
+## Documentación detallada e Instrucciones
 
 - [slide-engine.md](slide-engine.md) — contrato HTML y tipos de slide
 - [essay-handler.md](essay-handler.md) — telemetría y captura de datos
 - [auth.md](auth.md) — flujo de autenticación y sesión
+- [INSTRUCCIONES_TEACHER_HELPER.md](../../INSTRUCCIONES_TEACHER_HELPER.md) — (NUEVO) Cómo añadir notas para el docente
+- [GUIA_CREACION_LECCIONES.md](../../GUIA_CREACION_LECCIONES.md) — (NUEVO) Cómo crear nuevas lecciones HTML
 
 ## Reglas de modificación
 1. `slide-engine.js` — leer solo la sección necesaria (2482 líneas)
@@ -50,6 +52,6 @@ Stack: Vanilla JS + Bootstrap 5 en el lado del diseño visual. Sin frameworks JS
 
 | ID | Prioridad | Descripción |
 |---|---|---|
-| DT-002 | 🟡 MEDIO | `slide-engine.js` mezcla UI + sync Supabase |
+| DT-002 | 🟡 MEDIO | `slide-engine.js` mezcla UI + sync Supabase (Consolidadas funciones duplicadas 2026-04-21) |
 | DT-003 | 🟡 MEDIO | `_calcIntegrityFallback` duplicada en `report.js` y `essay-handler.js` |
 | DT-005 | 🟡 MEDIO | `admin.html` no verifica `isAdmin` desde localStorage |

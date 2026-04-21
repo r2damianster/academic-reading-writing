@@ -831,34 +831,91 @@ const SlideEngine = (function () {
     function _collectAnswers(slide) {
         const answers = [];
         const type = (slide.dataset.type || '').toUpperCase();
+
+        // Función auxiliar para extraer hint/explanation
+        const getHint = (el) => el.dataset.seHint || el.dataset.seExplanation || '';
+
+        // QUIZ
         if (type === 'QUIZ') {
             slide.querySelectorAll('[data-se-option]').forEach(opt => {
-                if (opt.hasAttribute('data-se-correct')) answers.push({ label: 'Correct Option', answer: opt.textContent.trim() });
+                if (opt.hasAttribute('data-se-correct')) {
+                    answers.push({ 
+                        label: 'Correct Option', 
+                        answer: opt.textContent.trim(),
+                        explanation: getHint(opt)
+                    });
+                }
             });
         }
+
+        // DRAG_DROP
         if (type === 'DRAG_DROP') {
             const drops = Array.from(slide.querySelectorAll('[data-se-drop]'));
             drops.forEach(drop => {
                 const accepts = drop.dataset.seDropAccepts;
                 const label = drop.dataset.seLabel || 'Zone';
                 const drag = slide.querySelector(`[data-se-drag][data-se-drag-type="${accepts}"]`);
-                if (drag) answers.push({ label: `Drop ${label}`, answer: drag.textContent.trim() });
+                if (drag) {
+                    answers.push({ 
+                        label: `Zone: ${label}`, 
+                        answer: drag.textContent.trim(),
+                        explanation: getHint(drop) || getHint(drag)
+                    });
+                }
             });
         }
+
+        // FILL_BLANK
         if (type === 'FILL_BLANK') {
             slide.querySelectorAll('[data-se-blank]').forEach((blank, idx) => {
-                answers.push({ label: `Blank ${idx+1}`, answer: blank.dataset.reAnswer });
+                answers.push({ 
+                    label: `Blank ${idx+1}`, 
+                    answer: blank.dataset.seAnswer,
+                    explanation: getHint(blank)
+                });
             });
         }
+
+        // MATCH
         if (type === 'MATCH') {
             const terms = Array.from(slide.querySelectorAll('[data-se-term]'));
             const defs = Array.from(slide.querySelectorAll('[data-se-def]'));
             terms.forEach(term => {
                 const matchId = term.dataset.seId;
                 const def = defs.find(d => d.dataset.seMatch === matchId);
-                if (def) answers.push({ label: term.textContent.trim(), answer: def.textContent.trim() });
+                if (def) {
+                    answers.push({ 
+                        label: term.textContent.trim(), 
+                        answer: def.textContent.trim(),
+                        explanation: getHint(term) || getHint(def)
+                    });
+                }
             });
         }
+
+        // CONTRAST (Nuevo soporte)
+        if (type === 'CONTRAST') {
+            slide.querySelectorAll('[data-se-correct]').forEach(el => {
+                answers.push({
+                    label: el.dataset.seLabel || 'Correct Implementation',
+                    answer: el.textContent.trim(),
+                    explanation: getHint(el)
+                });
+            });
+        }
+
+        // ESSAY (Nuevo soporte)
+        if (type === 'ESSAY') {
+            const prompt = slide.querySelector('[data-se-prompt]');
+            if (prompt) {
+                answers.push({
+                    label: 'Essay Prompt',
+                    answer: prompt.textContent.trim(),
+                    explanation: getHint(prompt) || 'Ensure student uses formal register.'
+                });
+            }
+        }
+
         return answers;
     }
 
@@ -892,133 +949,7 @@ const SlideEngine = (function () {
 
 })();
 
-/* ──────────────────────────────────────────────────────────────────────────
-   SECCIÓN 1.1 — HELPERS PARA INSTRUCTOR (SlideEngine)
-────────────────────────────────────────────────────────────────────────── */
-function _mountInstructorUI() {
-    const style = document.createElement('style');
-    style.textContent = `
-        .instructor-controls {
-            position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
-            background: rgba(15, 31, 56, 0.9); padding: 8px 16px; border-radius: 30px;
-            display: flex; gap: 10px; z-index: 10001; align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
-            color: white; font-family: sans-serif; font-size: 13px;
-        }
-        .inst-btn {
-            background: #0891b2; color: white; border: none; padding: 5px 12px;
-            border-radius: 15px; cursor: pointer; font-size: 12px; font-weight: 700;
-            transition: background 0.2s;
-        }
-        .inst-btn:hover { background: #0e7490; }
-        .inst-btn.back { background: #4a6080; }
-        .btn-next.inst-unlocked { display: block !important; opacity: 1 !important; visibility: visible !important; }
-    `;
-    document.head.appendChild(style);
-
-    const div = document.createElement('div');
-    div.className = 'instructor-controls';
-    div.innerHTML = `
-        <span style="font-weight:700; color:#fca5a5;">INSTRUCTOR</span>
-        <button class="inst-btn back" id="inst-prev">← Back</button>
-        <button class="inst-btn" id="inst-next">Next →</button>
-        <button class="inst-btn" id="inst-helper" style="background:#059669;">Teacher Helper</button>
-    `;
-    document.body.appendChild(div);
-
-    document.getElementById('inst-prev').onclick = () => SlideEngine.prev();
-    document.getElementById('inst-next').onclick = () => SlideEngine.goTo(null);
-    document.getElementById('inst-helper').onclick = _openHelper;
-}
-
-function _openHelper() {
-    const w = 420, h = 600;
-    const left = (screen.width/2)-(w/2);
-    const top = (screen.height/2)-(h/2);
-
-    const helperUrl = window.location.origin + '/teacher-helper.html';
-
-    window._seHelperWindow = window.open(helperUrl, 'TeacherHelper', 
-        `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes,status=no,menubar=no,toolbar=no`);
-    
-    setTimeout(() => _notifyHelper(), 800);
-}
-
-function _notifyHelper() {
-    if (!window._seHelperWindow || window._seHelperWindow.closed) return;
-
-    const slides = Array.from(document.querySelectorAll('.slide'));
-    const current = slides[SlideEngine.currentIndex];
-    if (!current) return;
-
-    const payload = {
-        index: SlideEngine.currentIndex,
-        total: slides.length,
-        slideType: current.dataset.type || 'CONTENT',
-        title: current.querySelector('h2')?.textContent || '',
-        answers: _collectAnswers(current)
-    };
-
-    window._seHelperWindow.postMessage({ type: 'UPDATE_HELPER', payload }, '*');
-}
-
-function _forceUnlockNext(index) {
-    const slides = Array.from(document.querySelectorAll('.slide'));
-    const current = slides[index];
-    if (current) {
-        const btn = current.querySelector('.btn-next');
-        if (btn) btn.classList.add('inst-unlocked');
-    }
-}
-
-function _collectAnswers(slide) {
-    const answers = [];
-    const type = (slide.dataset.type || '').toUpperCase();
-
-    // QUIZ
-    if (type === 'QUIZ') {
-        slide.querySelectorAll('[data-se-option]').forEach(opt => {
-            if (opt.hasAttribute('data-se-correct')) {
-                answers.push({ label: 'Correct Option', answer: opt.textContent.trim() });
-            }
-        });
-    }
-
-    // DRAG_DROP
-    if (type === 'DRAG_DROP') {
-        const drops = Array.from(slide.querySelectorAll('[data-se-drop]'));
-        drops.forEach(drop => {
-            const accepts = drop.dataset.seDropAccepts;
-            const label = drop.dataset.seLabel || 'Zone';
-            const drag = slide.querySelector(`[data-se-drag][data-se-drag-type="${accepts}"]`);
-            if (drag) {
-                answers.push({ label: `Drop ${label}`, answer: drag.textContent.trim() });
-            }
-        });
-    }
-
-    // FILL_BLANK
-    if (type === 'FILL_BLANK') {
-        slide.querySelectorAll('[data-se-blank]').forEach((blank, idx) => {
-            answers.push({ label: `Blank ${idx+1}`, answer: blank.dataset.seAnswer });
-        });
-    }
-
-    // MATCH
-    if (type === 'MATCH') {
-        const terms = Array.from(slide.querySelectorAll('[data-se-term]'));
-        const defs = Array.from(slide.querySelectorAll('[data-se-def]'));
-        terms.forEach(term => {
-            const matchId = term.dataset.seId;
-            const def = defs.find(d => d.dataset.seMatch === matchId);
-            if (def) {
-                answers.push({ label: term.textContent.trim(), answer: def.textContent.trim() });
-            }
-        });
-    }
-
-    return answers;
-}
+/* Fin de SlideEngine */
 
 
 /* =============================================================================

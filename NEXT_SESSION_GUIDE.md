@@ -1,32 +1,24 @@
-# Guía de Verificación Manual (Próxima Sesión)
+# Plan de Trabajo y Verificación
+ 
+Este documento detalla el estado de las funcionalidades y los próximos pasos estratégicos.
 
-Este documento detalla las pruebas manuales que debes realizar para confirmar que el nuevo **Modo Instructor Manual** funciona correctamente en producción.
+## ✅ Hitos Completados (Verificados)
+1. **Modo Instructor Manual**: Activación y desactivación instantánea verificada.
+2. **Teacher Helper Core**: Apertura de ventana y comunicación vía postMessage.
+3. **Race Condition Supabase**: Singleton promise `_configReady` garantiza estabilidad.
 
-## Pasos de Verificación
+## 🚀 Próxima Misión: Seguimiento Administrador/Instructor
+El objetivo principal es permitir que el docente tenga una visión global y detallada del progreso de sus estudiantes.
 
-### 1. Inicio de Sesión Limpio
-- Abre la web en una ventana de **Incógnito**.
-- Logueate con tu cuenta: `arturo.rodriguez@uleam.edu.ec`.
-- **Verificación**: Confirma que aparece el botón de **Modo Instructor** (icono de capas) en la parte inferior de la barra lateral izquierda.
+### 1. Dashboard de Progreso (Admin View)
+- Implementar una vista (puede ser `/admin/students.html`) que liste a todos los estudiantes registrados.
+- Mostrar indicadores rápidos: última lección completada, promedio de integridad, y alertas de plagio.
 
-### 2. Comportamiento por Defecto (Student View)
-- Abre cualquier lección (ej: *Why Write?*).
-- **Verificación**: Asegúrate de que **NO** aparece la barra de admin en la parte superior. La lección debe pedirte que respondas preguntas para continuar, igual que a un alumno.
-
-### 3. Activación Manual (Instante)
-- Con la lección abierta, pulsa el botón **Modo Instructor** en la sidebar de la izquierda.
-- Pulsa "Aceptar" en el aviso de confirmación.
-- **Verificación**: La barra oscura de administración (`ADMIN MODE | BACK | NEXT | TEACHER HELPER`) debe aparecer **de inmediato** en la parte superior de la lección, sin recargar la página.
-
-### 4. Desactivación (Instante)
-- Pulsa de nuevo el botón **Modo Instructor** en la sidebar.
-- **Verificación**: La barra de administración debe desaparecer al instante y la lección volver a su estado de estudiante.
-
-### 5. Acceso al Dashboard
-- Pulsa el mismo botón o navega a `/admin.html`.
-- **Verificación**: Confirma que puedes acceder al generador de lecciones y a la consola de IA sin que te pida el código `instructor2025` de nuevo (ya que estás logueado como admin).
+### 2. Vista de Detalle por Estudiante
+- Al pulsar sobre un estudiante, ver su historial completo de `activity_logs` y `essay_submissions`.
+- Permitir la descarga de reportes consolidados por alumno.
 
 ---
 
 > [!IMPORTANT]
-> Si algo no funciona como se describe, por favor realiza un **Ctrl + F5** dentro de la lección para limpiar la caché de los motores JavaScript (`slide-engine.js` / `reading-engine.js`).
+> Los motores `slide-engine.js` y `reading-engine.js` ya están preparados para enviar telemetría detallada. El siguiente paso es puramente de visualización y gestión en el dashboard administrativo.
