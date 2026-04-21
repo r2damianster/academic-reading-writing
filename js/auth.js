@@ -46,7 +46,7 @@ async function checkStudentStatus() {
     if (loginTimestamp && (new Date().getTime() - loginTimestamp < 120000)) {
         if (modal) modal.style.display = 'none';
         if (display) display.innerText = "Active: " + (localStorage.getItem('studentName') || "Student");
-        if (typeof checkAdminUI === 'function') checkAdminUI();
+        _syncAdminUI();
         return;
     }
 
@@ -54,7 +54,7 @@ async function checkStudentStatus() {
     if (localStorage.getItem('isAdmin') === 'true') {
         if (modal) modal.style.display = 'none';
         if (display) display.innerText = "Active: " + (localStorage.getItem('studentName') || "Admin");
-        if (typeof checkAdminUI === 'function') checkAdminUI();
+        _syncAdminUI();
         return;
     }
 
@@ -90,7 +90,7 @@ async function checkStudentStatus() {
 
         if (modal) modal.style.display = 'none';
         if (display) display.innerText = "Active: " + (serverResult.name || "Student");
-        if (typeof checkAdminUI === 'function') checkAdminUI();
+        _syncAdminUI();
 
     } catch (err) {
         console.error("Connection Error:", err);
@@ -202,4 +202,16 @@ function showModalError(msg, targetId) {
 function resetApp() {
     localStorage.clear();
     location.reload();
+}
+
+// Muestra u oculta el menú de admin en la sidebar.
+// No depende de checkAdminUI (definida en index.html) para evitar errores de orden de carga.
+function _syncAdminUI() {
+    const wrapper = document.getElementById('adminMenuWrapper');
+    if (!wrapper) return;
+    const isAdmin = localStorage.getItem('isAdmin') === 'true';
+    wrapper.style.display = isAdmin ? 'block' : 'none';
+    if (isAdmin && typeof updateInstructorModeState === 'function') {
+        updateInstructorModeState(localStorage.getItem('adminUnlocked') === 'true');
+    }
 }
