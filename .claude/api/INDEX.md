@@ -8,7 +8,7 @@ owner: Arturo Rodríguez Zambrano
 # Índice de API Endpoints
 
 Todos los endpoints son funciones serverless de Vercel (CommonJS).
-**Límite: 12 funciones. Actualmente: 5 activas.**
+**Límite: 12 funciones. Actualmente: 7 activas.**
 
 ## Tabla de endpoints
 
@@ -19,6 +19,8 @@ Todos los endpoints son funciones serverless de Vercel (CommonJS).
 | `POST /api/validate-student` | POST | Auth de estudiantes y admin | [validate-student.md](validate-student.md) |
 | `POST /api/sync-reading` | POST | Sincroniza progreso de lectura | [sync-reading.md](sync-reading.md) |
 | `GET /api/cron/compress-profiles` | GET (cron) | Comprime perfiles nocturnamente | — |
+| `GET /api/admin-students` | GET | Lista todos los estudiantes con stats agregados (usa SERVICE_KEY) | — |
+| `GET /api/admin-student-detail` | GET | Historial completo de un estudiante `?studentId=<uuid>` (usa SERVICE_KEY) | — |
 
 ## Módulos de soporte en lib/ (no cuentan como funciones)
 

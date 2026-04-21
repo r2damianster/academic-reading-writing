@@ -30,8 +30,21 @@ Gestión de login, sesión y roles en el browser. No usa Supabase Auth — valid
 | `student` | Lecciones, agentes, progreso personal |
 | `admin` | Todo lo anterior + `admin.html` |
 
+## Función _syncAdminUI (auth.js v1.7)
+
+`_syncAdminUI()` es la función que muestra/oculta `#adminMenuBtn` en la sidebar. Está definida en `auth.js` (no en `index.html`) para evitar dependencias de orden de carga. Se llama desde todos los caminos de `checkStudentStatus()` y `saveAndStart()`.
+
+```js
+function _syncAdminUI() {
+    const btn = document.getElementById('adminMenuBtn');
+    if (!btn) return;
+    btn.style.display = localStorage.getItem('isAdmin') === 'true' ? 'flex' : 'none';
+}
+```
+
 ## Deuda técnica
-`DT-005`: `admin.html` actualmente no verifica `isAdmin` desde localStorage correctamente. Pendiente corrección.
+- `DT-005`: `admin.html` no verifica `isAdmin` desde localStorage — pendiente.
+- `DT-006`: `#adminMenuBtn` no aparece en producción pese a lógica correcta — ver NEXT_SESSION_GUIDE para diagnóstico completo.
 
 ## localStorage keys usados
 

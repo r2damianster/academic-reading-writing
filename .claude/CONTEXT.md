@@ -27,8 +27,11 @@ Plataforma de aprendizaje de escritura académica en inglés para ~200 estudiant
 27: 1. **Reportes Avanzados**: Descarga de PDF con estructura resumida + apéndice de ensayos (todos los intentos).
 28: 2. **Modos de Reporte**: Opción "Diario" (solo hoy) vs "General" (todo el curso).
 29: 3. **Consolidación UI**: Navegación de reportes movida íntegramente a `my-progress.html`.
-30: 
-31: ---
+30: 4. **Student Progress Dashboard** (`admin-students.html`): tabla de estudiantes con integridad, alertas, última actividad, modal de detalle, CSV export.
+31: 5. **Endpoints admin** (`api/admin-students.js`, `api/admin-student-detail.js`): usan SERVICE_KEY. Funciones Vercel: 7/12.
+32: 6. **Admin dropdown en sidebar**: `#adminMenuBtn` como hijo directo de sidebar-footer + `#adminMenu` en body con position:fixed. **BUG ACTIVO**: botón no aparece en producción — ver NEXT_SESSION_GUIDE.
+33: 
+34: ---
 
 ---
 

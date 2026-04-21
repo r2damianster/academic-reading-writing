@@ -48,10 +48,18 @@ Stack: Vanilla JS + Bootstrap 5 en el lado del diseño visual. Sin frameworks JS
 3. No agregar frameworks ni dependencias externas
 4. No modificar motores críticos para cambios solo visuales
 
+## Nuevas páginas admin (2026-04-21)
+
+| Archivo | Descripción |
+|---|---|
+| `admin-students.html` | Dashboard de progreso de estudiantes — tabla, badges integridad, CSV export |
+| `admin.html` | Instructor Panel existente — se agregó enlace a admin-students.html |
+
 ## Deuda técnica activa (frontend)
 
 | ID | Prioridad | Descripción |
 |---|---|---|
-| DT-002 | 🟡 MEDIO | `slide-engine.js` mezcla UI + sync Supabase (Consolidadas funciones duplicadas 2026-04-21) |
+| DT-002 | 🟡 MEDIO | `slide-engine.js` mezcla UI + sync Supabase |
 | DT-003 | 🟡 MEDIO | `_calcIntegrityFallback` duplicada en `report.js` y `essay-handler.js` |
 | DT-005 | 🟡 MEDIO | `admin.html` no verifica `isAdmin` desde localStorage |
+| DT-006 | 🔴 CRÍTICO | Botón admin en sidebar (`#adminMenuBtn`) no aparece en producción — ver NEXT_SESSION_GUIDE |
