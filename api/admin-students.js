@@ -85,6 +85,6 @@ module.exports = async (req, res) => {
 
     } catch (e) {
         console.error('🔥 admin-students error:', e.message);
-        return res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ error: e.message, sb_url_set: !!SB_URL, sb_key_set: !!SB_KEY });
     }
 };
