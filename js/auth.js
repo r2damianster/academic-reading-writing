@@ -207,10 +207,10 @@ function resetApp() {
 // Muestra u oculta el menú de admin en la sidebar.
 // No depende de checkAdminUI (definida en index.html) para evitar errores de orden de carga.
 function _syncAdminUI() {
-    const wrapper = document.getElementById('adminMenuWrapper');
-    if (!wrapper) return;
+    const btn = document.getElementById('adminMenuBtn');
+    if (!btn) return;
     const isAdmin = localStorage.getItem('isAdmin') === 'true';
-    wrapper.style.display = isAdmin ? 'block' : 'none';
+    btn.style.display = isAdmin ? 'flex' : 'none';
     if (isAdmin && typeof updateInstructorModeState === 'function') {
         updateInstructorModeState(localStorage.getItem('adminUnlocked') === 'true');
     }
