@@ -46,6 +46,7 @@ async function checkStudentStatus() {
     if (loginTimestamp && (new Date().getTime() - loginTimestamp < 120000)) {
         if (modal) modal.style.display = 'none';
         if (display) display.innerText = "Active: " + (localStorage.getItem('studentName') || "Student");
+        if (typeof checkAdminUI === 'function') checkAdminUI();
         return;
     }
 
@@ -53,6 +54,7 @@ async function checkStudentStatus() {
     if (localStorage.getItem('isAdmin') === 'true') {
         if (modal) modal.style.display = 'none';
         if (display) display.innerText = "Active: " + (localStorage.getItem('studentName') || "Admin");
+        if (typeof checkAdminUI === 'function') checkAdminUI();
         return;
     }
 
@@ -88,6 +90,7 @@ async function checkStudentStatus() {
 
         if (modal) modal.style.display = 'none';
         if (display) display.innerText = "Active: " + (serverResult.name || "Student");
+        if (typeof checkAdminUI === 'function') checkAdminUI();
 
     } catch (err) {
         console.error("Connection Error:", err);
