@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Progress — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:    #0f1f38;
+  --ink:     #1e2d42;
+  --steel:   #4a6080;
+  --mist:    #8da0b4;
+  --cloud:   #e8edf3;
+  --snow:    #f6f8fb;
+  --white:   #ffffff;
+  --teal:    #0891b2;
+  --green:   #059669;
+  --green-lt:#d1fae5;
+  --amber:   #d97706;
+  --amber-lt:#fef3c7;
+  --red:     #dc2626;
+  --red-lt:  #fee2e2;
+  --r: 12px;
+  --shadow: 0 1px 3px rgba(15,31,56,.07), 0 4px 16px rgba(15,31,56,.05);
+}
+body { font-family:'DM Sans',sans-serif; background:var(--snow); color:var(--ink); min-height:100vh; }
+
+/* ── Header ─────────────────────────────────────── */
+.header {
+  background: var(--navy); padding: 20px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: relative; overflow: hidden;
+}
+.header::before {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(ellipse 50% 100% at 95% 50%, rgba(8,145,178,.2) 0%, transparent 70%);
+  pointer-events:none;
+}
+.header-left { display:flex; align-items:center; gap:14px; }
+.header h1 { font-family:'DM Serif Display',serif; font-size:1.4rem; color:#fff; }
+.header-sub { font-size:0.73rem; color:rgba(255,255,255,.5); margin-top:2px; }
+.back-btn {
+  display:flex; align-items:center; gap:6px;
+  color:rgba(255,255,255,.6); text-decoration:none;
+  font-size:0.8rem; font-weight:600; letter-spacing:.02em;
+  transition:color .2s;
+}
+.back-btn:hover { color:#fff; }
+.badge-admin {
+  background:rgba(8,145,178,.25); border:1px solid rgba(8,145,178,.4);
+  color:#67e8f9; font-size:0.72rem; font-weight:600;
+  padding:4px 10px; border-radius:20px; letter-spacing:.04em;
+}
+
+/* ── Gate ────────────────────────────────────────── */
+.access-gate { max-width:400px; margin:80px auto; padding:0 16px; text-align:center; }
+.gate-card {
+  background:var(--white); border-radius:var(--r);
+  border:1px solid var(--cloud); box-shadow:var(--shadow);
+  padding:36px 32px;
+}
+.gate-card h2 { font-size:1.15rem; color:var(--navy); margin-bottom:8px; }
+.gate-card p  { font-size:0.85rem; color:var(--steel); margin-bottom:24px; }
+.gate-input {
+  width:100%; padding:10px 14px; border:1px solid var(--cloud); border-radius:8px;
+  font-size:0.9rem; font-family:inherit; margin-bottom:12px; transition:border-color .2s;
+}
+.gate-input:focus { outline:none; border-color:var(--teal); }
+.gate-btn {
+  width:100%; padding:11px; background:var(--navy); color:#fff;
+  border:none; border-radius:8px; font-size:0.9rem; font-weight:600;
+  cursor:pointer; font-family:inherit; transition:background .2s;
+}
+.gate-btn:hover { background:#1a2f50; }
+.gate-err { color:var(--red); font-size:0.82rem; margin-top:8px; display:none; }
+
+/* ── Main ────────────────────────────────────────── */
+.main { display:none; padding:28px 32px 60px; }
+
+/* ── Summary cards ───────────────────────────────── */
+.stats-row { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; margin-bottom:24px; }
+.stat-card {
+  background:var(--white); border-radius:var(--r); border:1px solid var(--cloud);
+  box-shadow:var(--shadow); padding:16px 18px;
+}
+.stat-val { font-size:1.8rem; font-weight:700; color:var(--navy); }
+.stat-lbl { font-size:0.72rem; color:var(--mist); margin-top:2px; }
+
+/* ── Toolbar ─────────────────────────────────────── */
+.toolbar {
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:10px; margin-bottom:16px;
+}
+.search-input {
+  padding:9px 14px; border:1px solid var(--cloud); border-radius:8px;
+  font-size:0.87rem; font-family:inherit; width:260px; transition:border-color .2s;
+}
+.search-input:focus { outline:none; border-color:var(--teal); }
+.toolbar-right { display:flex; gap:8px; }
+.csv-btn {
+  padding:9px 16px; background:var(--green); color:#fff;
+  border:none; border-radius:8px; font-size:0.83rem; font-weight:600;
+  cursor:pointer; font-family:inherit; transition:background .2s;
+  display:flex; align-items:center; gap:6px;
+}
+.csv-btn:hover { background:#047857; }
+.refresh-btn {
+  padding:9px 14px; background:var(--white); color:var(--steel);
+  border:1px solid var(--cloud); border-radius:8px; font-size:0.83rem; font-weight:600;
+  cursor:pointer; font-family:inherit; transition:all .2s;
+}
+.refresh-btn:hover { border-color:var(--teal); color:var(--teal); }
+
+/* ── Table ───────────────────────────────────────── */
+.table-card {
+  background:var(--white); border-radius:var(--r); border:1px solid var(--cloud);
+  box-shadow:var(--shadow); overflow:hidden;
+}
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:0.83rem; }
+th {
+  background:var(--snow); padding:10px 14px; text-align:left;
+  font-size:0.71rem; font-weight:700; color:var(--steel);
+  letter-spacing:.05em; text-transform:uppercase;
+  border-bottom:1px solid var(--cloud); white-space:nowrap;
+}
+td { padding:10px 14px; border-bottom:1px solid var(--cloud); color:var(--ink); }
+tr:last-child td { border-bottom:none; }
+tbody tr { cursor:pointer; transition:background .15s; }
+tbody tr:hover td { background:var(--snow); }
+.state-msg { padding:24px; color:var(--mist); font-size:0.85rem; text-align:center; }
+
+/* ── Integrity badge ─────────────────────────────── */
+.badge {
+  display:inline-block; padding:3px 8px; border-radius:12px;
+  font-size:0.72rem; font-weight:700; letter-spacing:.02em;
+}
+.badge-good { background:var(--green-lt); color:#065f46; }
+.badge-mid  { background:var(--amber-lt); color:#92400e; }
+.badge-bad  { background:var(--red-lt);   color:#991b1b; }
+.badge-none { background:var(--cloud);    color:var(--mist); }
+.alert-dot  {
+  display:inline-block; width:7px; height:7px; border-radius:50%;
+  background:var(--red); margin-right:5px; vertical-align:middle;
+}
+
+/* ── Modal overlay ───────────────────────────────── */
+.modal-overlay {
+  display:none; position:fixed; inset:0; z-index:1000;
+  background:rgba(15,31,56,.45); backdrop-filter:blur(4px);
+  align-items:flex-start; justify-content:center; padding:32px 16px;
+  overflow-y:auto;
+}
+.modal-overlay.open { display:flex; }
+.modal {
+  background:var(--white); border-radius:var(--r);
+  box-shadow:0 8px 40px rgba(15,31,56,.2);
+  width:100%; max-width:800px; overflow:hidden;
+  animation:slideUp .22s ease-out;
+}
+@keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+.modal-header {
+  background:var(--navy); padding:18px 24px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.modal-header h2 { font-family:'DM Serif Display',serif; color:#fff; font-size:1.15rem; }
+.modal-sub { font-size:0.72rem; color:rgba(255,255,255,.5); margin-top:2px; }
+.modal-close {
+  background:none; border:none; color:rgba(255,255,255,.6); font-size:1.4rem;
+  cursor:pointer; line-height:1; padding:2px 6px; transition:color .2s;
+}
+.modal-close:hover { color:#fff; }
+.modal-body { padding:20px 24px; }
+
+/* ── Tabs ────────────────────────────────────────── */
+.tabs { display:flex; gap:0; border-bottom:2px solid var(--cloud); margin-bottom:18px; }
+.tab-btn {
+  padding:9px 18px; border:none; background:none; font-family:inherit;
+  font-size:0.84rem; font-weight:600; color:var(--mist); cursor:pointer;
+  border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .15s;
+}
+.tab-btn.active { color:var(--teal); border-bottom-color:var(--teal); }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+/* ── Detail tables ───────────────────────────────── */
+.detail-table-wrap { overflow-x:auto; max-height:420px; overflow-y:auto; }
+.detail-table { width:100%; border-collapse:collapse; font-size:0.8rem; }
+.detail-table th {
+  background:var(--snow); padding:8px 12px; text-align:left;
+  font-size:0.69rem; font-weight:700; color:var(--steel);
+  letter-spacing:.05em; text-transform:uppercase;
+  border-bottom:1px solid var(--cloud); position:sticky; top:0;
+}
+.detail-table td { padding:8px 12px; border-bottom:1px solid var(--cloud); color:var(--ink); }
+.detail-table tr:last-child td { border-bottom:none; }
+.essay-preview {
+  max-width:240px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  color:var(--steel); font-style:italic;
+}
+.expand-btn {
+  background:none; border:1px solid var(--cloud); border-radius:6px;
+  padding:2px 8px; font-size:0.72rem; color:var(--teal); cursor:pointer;
+  font-family:inherit; transition:all .15s;
+}
+.expand-btn:hover { background:var(--teal); color:#fff; border-color:var(--teal); }
+
+/* ── Essay full text panel ───────────────────────── */
+.essay-full {
+  background:var(--snow); border:1px solid var(--cloud); border-radius:8px;
+  padding:16px; font-size:0.82rem; line-height:1.75; color:var(--ink);
+  white-space:pre-wrap; max-height:300px; overflow-y:auto;
+  display:none; margin-top:12px;
+}
+.essay-full.open { display:block; }
+
+/* ── Modal CSV btn ───────────────────────────────── */
+.modal-footer {
+  padding:14px 24px; border-top:1px solid var(--cloud);
+  display:flex; justify-content:flex-end; gap:10px;
+}
+
+/* ── Loading spinner ─────────────────────────────── */
+.spin { display:inline-block; animation:spin 1s linear infinite; }
+@keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+
+@media (max-width:600px) {
+  .header, .main { padding-left:16px; padding-right:16px; }
+  .stats-row { grid-template-columns:repeat(2,1fr); }
+  .search-input { width:100%; }
+  .modal-body, .modal-header { padding:16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <div>
+      <h1>Student Progress</h1>
+      <div class="header-sub">Academic Reading &amp; Writing — ULEAM</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <a href="admin.html" class="back-btn">← Instructor Panel</a>
+    <span class="badge-admin">ADMIN VIEW</span>
+  </div>
+</div>
+
+<!-- Access Gate -->
+<div class="access-gate" id="accessGate">
+  <div class="gate-card">
+    <h2>🔐 Admin Access Required</h2>
+    <p>Enter the instructor code to access student data.</p>
+    <input type="password" class="gate-input" id="gateInput"
+           placeholder="Instructor code"
+           onkeydown="if(event.key==='Enter') checkAccess()">
+    <button class="gate-btn" onclick="checkAccess()">Access Dashboard →</button>
+    <div class="gate-err" id="gateErr">Incorrect code. Try again.</div>
+  </div>
+</div>
+
+<!-- Main Dashboard -->
+<div class="main" id="mainPanel">
+
+  <!-- Summary stats -->
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card"><div class="stat-val" id="statTotal">—</div><div class="stat-lbl">Total Students</div></div>
+    <div class="stat-card"><div class="stat-val" id="statEssays">—</div><div class="stat-lbl">Essays Submitted</div></div>
+    <div class="stat-card"><div class="stat-val" id="statAvgInt">—</div><div class="stat-lbl">Avg Integrity</div></div>
+    <div class="stat-card"><div class="stat-val" id="statAlerts" style="color:var(--red)">—</div><div class="stat-lbl">Integrity Alerts</div></div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <input class="search-input" id="searchInput" type="text"
+           placeholder="Search by name or email…"
+           oninput="renderTable()">
+    <div class="toolbar-right">
+      <button class="refresh-btn" onclick="loadStudents()">↻ Refresh</button>
+      <button class="csv-btn" onclick="downloadCSV()">
+        ↓ Export CSV
+      </button>
+    </div>
+  </div>
+
+  <!-- Students table -->
+  <div class="table-card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Course</th>
+            <th>Essays</th>
+            <th>Avg Integrity</th>
+            <th>Alerts</th>
+            <th>Last Activity</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr><td colspan="7" class="state-msg"><span class="spin">⟳</span> Loading students…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div>
+        <h2 id="modalName">—</h2>
+        <div class="modal-sub" id="modalSub">—</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('activity', this)">Activity Log</button>
+        <button class="tab-btn" onclick="switchTab('essays', this)">Essays</button>
+        <button class="tab-btn" onclick="switchTab('reading', this)">Reading</button>
+      </div>
+
+      <!-- Activity tab -->
+      <div class="tab-panel active" id="tab-activity">
+        <div class="detail-table-wrap">
+          <table class="detail-table">
+            <thead><tr><th>Activity</th><th>Result</th><th>Date</th></tr></thead>
+            <tbody id="activityBody"><tr><td colspan="3" class="state-msg">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Essays tab -->
+      <div class="tab-panel" id="tab-essays">
+        <div class="detail-table-wrap">
+          <table class="detail-table">
+            <thead>
+              <tr>
+                <th>Lesson</th>
+                <th>Words</th>
+                <th>Integrity</th>
+                <th>Compliance</th>
+                <th>Duration</th>
+                <th>Date</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="essaysBody"><tr><td colspan="7" class="state-msg">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Reading tab -->
+      <div class="tab-panel" id="tab-reading">
+        <div class="detail-table-wrap">
+          <table class="detail-table">
+            <thead><tr><th>Lesson</th><th>Status</th><th>Score</th><th>Date</th></tr></thead>
+            <tbody id="readingBody"><tr><td colspan="4" class="state-msg">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="csv-btn" onclick="downloadStudentCSV()">↓ Export Student CSV</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ADMIN_CODE = 'instructor2025';
+let allStudents = [];
+let currentStudent = null;
+let currentDetail = null;
+
+/* ── Gate ──────────────────────────────────────── */
+function checkAccess() {
+    const val = document.getElementById('gateInput').value.trim();
+    const err = document.getElementById('gateErr');
+    if (val === ADMIN_CODE) {
+        sessionStorage.setItem('adminUnlocked', 'true');
+        localStorage.setItem('adminUnlocked', 'true');
+        showPanel();
+    } else {
+        err.style.display = 'block';
+        document.getElementById('gateInput').value = '';
+        document.getElementById('gateInput').focus();
+    }
+}
+
+function showPanel() {
+    document.getElementById('accessGate').style.display = 'none';
+    document.getElementById('mainPanel').style.display = 'block';
+    loadStudents();
+}
+
+window.onload = function() {
+    if (sessionStorage.getItem('adminUnlocked') === 'true' ||
+        localStorage.getItem('adminUnlocked') === 'true') {
+        showPanel();
+    }
+};
+
+/* ── Load students ─────────────────────────────── */
+async function loadStudents() {
+    document.getElementById('tableBody').innerHTML =
+        '<tr><td colspan="7" class="state-msg"><span class="spin">⟳</span> Loading…</td></tr>';
+    try {
+        const r = await fetch('/api/admin-students');
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        allStudents = await r.json();
+        updateStats();
+        renderTable();
+    } catch(e) {
+        document.getElementById('tableBody').innerHTML =
+            `<tr><td colspan="7" class="state-msg" style="color:var(--red)">Error loading students: ${e.message}</td></tr>`;
+    }
+}
+
+function updateStats() {
+    const total = allStudents.length;
+    const essays = allStudents.reduce((s, x) => s + (x.essays_submitted || 0), 0);
+    const withInt = allStudents.filter(x => x.avg_integrity !== null);
+    const avg = withInt.length
+        ? Math.round(withInt.reduce((s, x) => s + x.avg_integrity, 0) / withInt.length)
+        : null;
+    const alerts = allStudents.reduce((s, x) => s + (x.low_integrity_count || 0), 0);
+
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statEssays').textContent = essays;
+    document.getElementById('statAvgInt').textContent = avg !== null ? avg + '%' : '—';
+    document.getElementById('statAlerts').textContent = alerts;
+}
+
+/* ── Render table ──────────────────────────────── */
+function renderTable() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = q
+        ? allStudents.filter(s =>
+            s.name.toLowerCase().includes(q) ||
+            s.email.toLowerCase().includes(q) ||
+            (s.course || '').toLowerCase().includes(q))
+        : allStudents;
+
+    if (filtered.length === 0) {
+        document.getElementById('tableBody').innerHTML =
+            '<tr><td colspan="7" class="state-msg">No students found.</td></tr>';
+        return;
+    }
+
+    const rows = filtered.map(s => {
+        const intBadge = integrityBadge(s.avg_integrity);
+        const alertCell = s.low_integrity_count > 0
+            ? `<span class="alert-dot"></span>${s.low_integrity_count}`
+            : '<span style="color:var(--mist)">—</span>';
+        const lastAct = s.last_activity
+            ? `<span style="font-size:.8rem">${esc(s.last_activity)}</span><br>
+               <span style="font-size:.72rem;color:var(--mist)">${fmtDate(s.last_activity_date)}</span>`
+            : '<span style="color:var(--mist)">—</span>';
+
+        return `<tr onclick="openDetail('${s.id}')">
+            <td>
+              <div style="font-weight:600">${esc(s.name)}</div>
+              <div style="font-size:.75rem;color:var(--mist)">${esc(s.email)}</div>
+            </td>
+            <td>${esc(s.course || '—')}</td>
+            <td style="text-align:center">${s.essays_submitted || 0}</td>
+            <td>${intBadge}</td>
+            <td>${alertCell}</td>
+            <td>${lastAct}</td>
+            <td><button class="expand-btn" onclick="event.stopPropagation();openDetail('${s.id}')">Detail →</button></td>
+        </tr>`;
+    }).join('');
+
+    document.getElementById('tableBody').innerHTML = rows;
+}
+
+function integrityBadge(score) {
+    if (score === null) return '<span class="badge badge-none">No essays</span>';
+    if (score >= 80) return `<span class="badge badge-good">${score}%</span>`;
+    if (score >= 60) return `<span class="badge badge-mid">${score}%</span>`;
+    return `<span class="badge badge-bad">${score}%</span>`;
+}
+
+/* ── Detail modal ──────────────────────────────── */
+async function openDetail(studentId) {
+    currentStudent = allStudents.find(s => s.id === studentId);
+    if (!currentStudent) return;
+
+    document.getElementById('modalName').textContent = currentStudent.name;
+    document.getElementById('modalSub').textContent = currentStudent.email + ' · ' + (currentStudent.course || 'No course');
+    document.getElementById('activityBody').innerHTML = '<tr><td colspan="3" class="state-msg"><span class="spin">⟳</span></td></tr>';
+    document.getElementById('essaysBody').innerHTML   = '<tr><td colspan="7" class="state-msg"><span class="spin">⟳</span></td></tr>';
+    document.getElementById('readingBody').innerHTML  = '<tr><td colspan="4" class="state-msg"><span class="spin">⟳</span></td></tr>';
+
+    // Reset to first tab
+    switchTab('activity', document.querySelector('.tab-btn'));
+
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    try {
+        const r = await fetch(`/api/admin-student-detail?studentId=${studentId}`);
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        currentDetail = await r.json();
+        renderActivityTab(currentDetail.activities);
+        renderEssaysTab(currentDetail.essays);
+        renderReadingTab(currentDetail.reading);
+    } catch(e) {
+        document.getElementById('activityBody').innerHTML =
+            `<tr><td colspan="3" class="state-msg" style="color:var(--red)">Error: ${e.message}</td></tr>`;
+    }
+}
+
+function renderActivityTab(activities) {
+    if (!activities || activities.length === 0) {
+        document.getElementById('activityBody').innerHTML =
+            '<tr><td colspan="3" class="state-msg">No activity recorded.</td></tr>';
+        return;
+    }
+    document.getElementById('activityBody').innerHTML = activities.map(a =>
+        `<tr>
+            <td>${esc(a.activity || '—')}</td>
+            <td>${esc(a.result || '—')}</td>
+            <td style="white-space:nowrap;color:var(--mist)">${fmtDate(a.created_at)}</td>
+        </tr>`
+    ).join('');
+}
+
+function renderEssaysTab(essays) {
+    if (!essays || essays.length === 0) {
+        document.getElementById('essaysBody').innerHTML =
+            '<tr><td colspan="7" class="state-msg">No essays submitted.</td></tr>';
+        return;
+    }
+    document.getElementById('essaysBody').innerHTML = essays.map((e, i) => {
+        const comp = e.compliance
+            ? `${e.compliance.criteria_met}/${e.compliance.criteria_total} (${Math.round(e.compliance.compliance_pct)}%)`
+            : '—';
+        const dur = e.writing_duration ? Math.round(e.writing_duration / 60) + ' min' : '—';
+        const essayId = `essay-${i}`;
+        return `<tr>
+            <td>${esc(e.activity || '—')}</td>
+            <td style="text-align:center">${e.words || '—'}</td>
+            <td>${integrityBadge(e.integrity_score)}</td>
+            <td style="white-space:nowrap">${comp}</td>
+            <td style="text-align:center">${dur}</td>
+            <td style="white-space:nowrap;color:var(--mist)">${fmtDate(e.created_at)}</td>
+            <td>
+                ${e.essay_text
+                    ? `<button class="expand-btn" onclick="toggleEssay('${essayId}')">Read</button>
+                       <div class="essay-full" id="${essayId}">${esc(e.essay_text)}</div>`
+                    : '—'}
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+function renderReadingTab(reading) {
+    if (!reading || reading.length === 0) {
+        document.getElementById('readingBody').innerHTML =
+            '<tr><td colspan="4" class="state-msg">No reading progress recorded.</td></tr>';
+        return;
+    }
+    document.getElementById('readingBody').innerHTML = reading.map(r =>
+        `<tr>
+            <td>${esc(r.lesson || '—')}</td>
+            <td>${r.completed
+                ? '<span class="badge badge-good">Completed</span>'
+                : '<span class="badge badge-none">In progress</span>'}</td>
+            <td>${r.score !== null ? Math.round(r.score) + '%' : '—'}</td>
+            <td style="white-space:nowrap;color:var(--mist)">${fmtDate(r.created_at)}</td>
+        </tr>`
+    ).join('');
+}
+
+function toggleEssay(id) {
+    const el = document.getElementById(id);
+    el.classList.toggle('open');
+}
+
+function switchTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    if (btn) btn.classList.add('active');
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+function closeModalOnBg(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+/* ── CSV export ────────────────────────────────── */
+function downloadCSV() {
+    const headers = ['Name','Email','Course','Major','Essays','Avg Integrity','Alerts','Last Activity','Last Activity Date'];
+    const rows = allStudents.map(s => [
+        s.name, s.email, s.course || '', s.major || '',
+        s.essays_submitted || 0,
+        s.avg_integrity !== null ? s.avg_integrity : '',
+        s.low_integrity_count || 0,
+        s.last_activity || '',
+        s.last_activity_date ? new Date(s.last_activity_date).toLocaleDateString() : ''
+    ]);
+    triggerCSV('students_progress.csv', headers, rows);
+}
+
+function downloadStudentCSV() {
+    if (!currentStudent || !currentDetail) return;
+    const headers = ['Type','Lesson/Activity','Score/Result','Words','Integrity','Duration(min)','Date'];
+    const rows = [];
+    (currentDetail.activities || []).forEach(a => {
+        rows.push(['Activity', a.activity || '', a.result || '', '', '', '', fmtDate(a.created_at)]);
+    });
+    (currentDetail.essays || []).forEach(e => {
+        rows.push(['Essay', e.activity || '', '', e.words || '', e.integrity_score !== null ? e.integrity_score : '',
+            e.writing_duration ? Math.round(e.writing_duration/60) : '', fmtDate(e.created_at)]);
+    });
+    (currentDetail.reading || []).forEach(r => {
+        rows.push(['Reading', r.lesson || '', r.completed ? 'Completed' : 'In progress', '', r.score !== null ? r.score : '', '', fmtDate(r.created_at)]);
+    });
+    const safe = currentStudent.name.replace(/[^a-z0-9]/gi, '_');
+    triggerCSV(`student_${safe}.csv`, headers, rows);
+}
+
+function triggerCSV(filename, headers, rows) {
+    const escape = v => `"${String(v).replace(/"/g,'""')}"`;
+    const csv = [headers, ...rows].map(r => r.map(escape).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+}
+
+/* ── Helpers ───────────────────────────────────── */
+function esc(s) {
+    return String(s)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function fmtDate(iso) {
+    if (!iso) return '—';
+    try {
+        const d = new Date(iso);
+        return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    } catch { return iso; }
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
