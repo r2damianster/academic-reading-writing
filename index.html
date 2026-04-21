@@ -114,14 +114,49 @@
                 <button class="sf-btn" onclick="closeFlyout(); loadPage('my-progress.html?email=' + encodeURIComponent(localStorage.getItem('studentEmail') || ''))" title="My Progress">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
                 </button>
-                <!-- Instructor Mode Toggle (Solo para admins) -->
-                <button id="instructorToggleBtn" class="sf-btn" style="display:none; color:#fca5a5; border:1px solid #fca5a577;" onclick="toggleInstructorMode()" title="Toggle Instructor Mode">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                </button>
-                <!-- Admin Panel (Solo para admins) -->
-                <button id="adminPanelBtn" class="sf-btn" style="display:none; color:#3498db; border:1px solid #3498db77;" onclick="window.location.href='admin.html'" title="Admin Dashboard">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                </button>
+                <!-- Admin Menu (Solo para admins) -->
+                <div id="adminMenuWrapper" style="display:none; position:relative;">
+                    <button id="adminMenuBtn" class="sf-btn" style="color:#3498db; border:1px solid #3498db77;"
+                            onclick="toggleAdminMenu()" title="Admin Options">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </button>
+                    <div id="adminMenu" style="display:none; position:absolute; bottom:calc(100% + 10px); left:48px;
+                         background:#1a2b45; border:1px solid rgba(255,255,255,0.12); border-radius:10px;
+                         padding:6px; min-width:210px; box-shadow:0 8px 28px rgba(0,0,0,0.35); z-index:1000;">
+                        <button id="instructorModeItem" onclick="toggleInstructorMode(); toggleAdminMenu()"
+                                style="width:100%; display:flex; align-items:center; justify-content:space-between;
+                                       padding:9px 12px; background:none; border:none; border-radius:7px;
+                                       color:rgba(255,255,255,0.75); font-size:0.83rem; font-family:inherit;
+                                       cursor:pointer; transition:background .15s; gap:8px;"
+                                onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                                onmouseout="this.style.background='none'">
+                            <span style="display:flex;align-items:center;gap:8px;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;flex-shrink:0"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                                Instructor Mode
+                            </span>
+                            <span id="instructorModeState" style="font-size:0.7rem; font-weight:700; letter-spacing:.05em;
+                                  padding:2px 7px; border-radius:10px; background:rgba(255,255,255,0.08); color:#8da0b4;">OFF</span>
+                        </button>
+                        <a href="admin-students.html"
+                           style="display:flex; align-items:center; gap:8px; padding:9px 12px; border-radius:7px;
+                                  color:rgba(255,255,255,0.75); text-decoration:none; font-size:0.83rem;
+                                  transition:background .15s;"
+                           onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                           onmouseout="this.style.background='none'">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;flex-shrink:0"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                            Student Progress
+                        </a>
+                        <a href="admin.html"
+                           style="display:flex; align-items:center; gap:8px; padding:9px 12px; border-radius:7px;
+                                  color:rgba(255,255,255,0.75); text-decoration:none; font-size:0.83rem;
+                                  transition:background .15s;"
+                           onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                           onmouseout="this.style.background='none'">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;flex-shrink:0"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M20 12h2M2 12h2M17.66 17.66l-1.41-1.41M6.34 17.66l1.41-1.41"/></svg>
+                            Instructor Panel
+                        </a>
+                    </div>
+                </div>
 
                 <!-- Logout -->
                 <button onclick="closeFlyout(); resetApp()" class="sf-btn sf-btn--ghost" title="Not you? Logout">
@@ -174,37 +209,47 @@
             const newState = !current;
             localStorage.setItem('adminUnlocked', newState ? 'true' : 'false');
             sessionStorage.setItem('adminUnlocked', newState ? 'true' : 'false');
-            
-            const btn = document.getElementById('instructorToggleBtn');
-            if (newState) {
-                btn.style.background = '#fca5a522';
-                btn.classList.add('active-instructor');
-                alert('Modo Instructor: ACTIVADO (Las lecciones mostrarán respuestas)');
-            } else {
-                btn.style.background = 'transparent';
-                btn.classList.remove('active-instructor');
-                alert('Modo Instructor: DESACTIVADO (Vista de estudiante)');
-            }
+            updateInstructorModeState(newState);
+            alert(newState
+                ? 'Modo Instructor: ACTIVADO (Las lecciones mostrarán respuestas)'
+                : 'Modo Instructor: DESACTIVADO (Vista de estudiante)');
 
-            // Notificar al iframe de la lección abierta
             const frame = document.getElementById('contentFrame');
             if (frame && frame.contentWindow) {
-                frame.contentWindow.postMessage({ 
-                    type: 'TOGGLE_INSTRUCTOR', 
-                    unlocked: newState 
-                }, '*');
+                frame.contentWindow.postMessage({ type: 'TOGGLE_INSTRUCTOR', unlocked: newState }, '*');
             }
         }
 
-        // Mostrar u ocultar el botón según el rol
-        function checkAdminUI() {
-            const isAdmin = localStorage.getItem('isAdmin') === 'true';
-            document.getElementById('instructorToggleBtn').style.display = isAdmin ? 'flex' : 'none';
-            document.getElementById('adminPanelBtn').style.display = isAdmin ? 'flex' : 'none';
+        function updateInstructorModeState(active) {
+            const badge = document.getElementById('instructorModeState');
+            if (!badge) return;
+            badge.textContent = active ? 'ON' : 'OFF';
+            badge.style.background = active ? 'rgba(252,165,165,0.2)' : 'rgba(255,255,255,0.08)';
+            badge.style.color      = active ? '#fca5a5'              : '#8da0b4';
         }
 
-        
-        // Ejecutar check al cargar y suscribirse a cambios de storage
+        function toggleAdminMenu() {
+            const menu = document.getElementById('adminMenu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function checkAdminUI() {
+            const isAdmin = localStorage.getItem('isAdmin') === 'true';
+            document.getElementById('adminMenuWrapper').style.display = isAdmin ? 'block' : 'none';
+            if (isAdmin) {
+                updateInstructorModeState(localStorage.getItem('adminUnlocked') === 'true');
+            }
+        }
+
+        // Cerrar menú al hacer clic fuera
+        document.addEventListener('click', function(e) {
+            const wrapper = document.getElementById('adminMenuWrapper');
+            if (wrapper && !wrapper.contains(e.target)) {
+                const menu = document.getElementById('adminMenu');
+                if (menu) menu.style.display = 'none';
+            }
+        });
+
         window.addEventListener('load', checkAdminUI);
         window.addEventListener('storage', checkAdminUI);
     </script>
