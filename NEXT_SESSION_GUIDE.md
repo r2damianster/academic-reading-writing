@@ -18,27 +18,37 @@
 Al entrar a `admin-students.html` con la clave `instructor2025`, la tabla de estudiantes muestra:
 > `Error loading students: HTTP 500`
 
-### Causa más probable
-`SUPABASE_SERVICE_KEY` no está configurada como variable de entorno en Vercel (o está mal escrita). El endpoint la necesita para bypassar RLS y leer todos los estudiantes.
+### Estado del diagnóstico (2026-04-21)
 
-### Diagnóstico ya hecho
-El endpoint ahora devuelve el error real (commit `7007b34`). La respuesta 500 incluye:
-```json
-{ "error": "...", "sb_url_set": true/false, "sb_key_set": true/false }
-```
+**Lo que ya se hizo y NO resolvió el bug:**
+1. ✅ Endpoint reescrito con `@supabase/supabase-js` (commit `c41bb40`)
+2. ✅ Vercel runtime logs confirmaron `injected env (0)` → se configuraron las 6 variables de entorno en Vercel
+3. ✅ `SUPABASE_SERVICE_KEY` tenía valor incorrecto (`sb_secret_...`); se reemplazó con el JWT correcto (`eyJhbGci...` con `role: service_role`)
+4. ✅ Redeploy hecho — pero sigue retornando 500
 
-### Próximo paso — verificar en F12
+### Siguiente paso prioritario — leer el cuerpo del error 500
+
+El endpoint devuelve el mensaje real de Supabase. Para verlo:
 1. Abrir `admin-students.html` en producción
-2. F12 → Network → buscar la llamada a `/api/admin-students`
-3. Ver el cuerpo de la respuesta 500
-4. Si `sb_key_set: false` → ir a Vercel Dashboard → Settings → Environment Variables → agregar `SUPABASE_SERVICE_KEY`
-5. Si `sb_key_set: true` → el error estará en `"error": "Supabase 4xx: ..."` y hay que revisar permisos RLS o nombre de tabla
+2. **F12 → Network → buscar la llamada a `/api/admin-students`**
+3. Click en la llamada → pestaña **Response**
+4. Copiar el JSON completo del error y analizarlo
 
-### Cómo agregar la variable en Vercel
-1. vercel.com → tu proyecto → **Settings → Environment Variables**
-2. Agregar: `SUPABASE_SERVICE_KEY` = (la service_role key de Supabase Dashboard → Settings → API)
-3. Asegurarse de que está en el entorno **Production**
-4. Redeploy
+**Posibles causas según el mensaje:**
+- `"students: relation \"students\" does not exist"` → la tabla se llama diferente en Supabase (verificar en Table Editor)
+- `"permission denied for table students"` → RLS activo y la service_role no tiene acceso (revisar políticas RLS)
+- `"invalid JWT"` → la service_role key en Vercel sigue siendo incorrecta
+- `"Supabase credentials not configured"` → las env vars no se inyectaron en el redeploy (ir a Deployments y verificar)
+
+### Verificar nombres de tablas en Supabase
+En Supabase Dashboard → **Table Editor**, confirmar que existen estas tablas:
+- `students`
+- `essay_submissions`
+- `activity_logs`
+- `reading_progress`
+- `essay_compliance_results`
+
+Si alguna tiene nombre diferente, actualizar las queries en `api/admin-students.js` y `api/admin-student-detail.js`.
 
 ---
 
