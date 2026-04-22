@@ -185,9 +185,25 @@ const ReadingEngine = (function () {
         }
     }
 
+    function _resolveHubUrl() {
+        const p = window.location.pathname;
+        if (p.includes('/00-fundamentals/'))   return 'fundamentals-hub.html';
+        if (p.includes('/unit1-essays/'))      return 'unit1-essays-hub.html';
+        if (p.includes('/unit2-papers/'))      return 'unit2-papers-hub.html';
+        if (p.includes('/apa-integrity/'))     return 'apa-integrity-hub.html';
+        if (p.includes('/connectors/'))        return 'connectors-hub.html';
+        if (p.includes('/grammar/'))           return 'grammar-hub.html';
+        if (p.includes('/vocabulary/'))        return 'vocabulary-hub.html';
+        if (p.includes('/03-peer-review/'))    return 'peer-review-hub.html';
+        if (p.includes('/04-tests/'))          return 'tests-hub.html';
+        return 'index.html';
+    }
+
     function prev() {
         if (_current > 0) {
             _showSlide(_current - 1);
+        } else if (_isAdmin) {
+            window.location.href = _resolveHubUrl();
         }
     }
 
@@ -917,13 +933,15 @@ const ReadingEngine = (function () {
              get studentName() { return _studentName; },
              get isAdmin() { return _isAdmin; },
              addMistake() { _totalMistakes++; },
-             prev() { 
-                 if (_current > 0) { 
-                     _current--; 
-                     _renderPage(_slides[_current]); 
-                     _updateProgress(); 
+             prev() {
+                 if (_current > 0) {
+                     _current--;
+                     _renderPage(_slides[_current]);
+                     _updateProgress();
                      if (_isAdmin) _notifyHelper();
-                 } 
+                 } else if (_isAdmin) {
+                     window.location.href = _resolveHubUrl();
+                 }
              }
     };
 
