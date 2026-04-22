@@ -1,6 +1,138 @@
-<!-- CREAR PROXIMAMENTE -->
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>Coming Soon</title></head>
-<body><p>🚧 This lesson is coming soon.</p></body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Types of Essays | Academic Workspace</title>
+    
+    <link rel="stylesheet" href="../../../css/modules.css">
+    <link rel="stylesheet" href="../../../css/readingsidebar.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <script src="../../../js/activity-tracker.js"></script>
+    <script src="../../../js/essay-handler.js"></script>
+    <script src="../../../js/report.js"></script>
+    <script src="../../../js/reading-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="readingProgressBar"></div>
+    </div>
+    <div style="text-align:right; font-size:0.8rem; color:#6c757d; padding:4px 16px 0;" id="readingSlideCounter">1 / 7</div>
+
+    <div class="reading-slide active" data-type="CONTENT">
+        <h2>Diversity in Rhetorical Patterns</h2>
+        <p>In academic writing, your choice of essay type is dictated by your communicative purpose. We will explore the specialized patterns: Dialectical, Exemplification, Narrative/Descriptive, and History Thesis.</p>
+        <p><strong>Common Universal Structure:</strong> Regardless of the type, every essay MUST contain an Introduction (with thesis), Body (with topic/supporting sentences), and a Conclusion.</p>
+    </div>
+
+    <div class="reading-slide" 
+         data-type="READING_FOCUS" 
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.2.Essay_Form_AW.pdf"
+         data-re-page="5"
+         data-re-label="The Dialectical Essay"
+         data-re-task="Locate the Dialectical Essay section on page 219. Notice how it is used to appraise different, often contradictory positions.">
+        <h2>The Dialectical Essay</h2>
+        <p>This type is fundamental for critical thinking. Its purpose is to analyze complex events from different positions, showing respect for opposing points of view to reach a resolution.</p>
+    </div>
+
+    <div class="reading-slide" 
+         data-type="READING_QUIZ"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.2.Essay_Form_AW.pdf"
+         data-re-page="5"
+         data-re-label="Pattern Logic"
+         data-re-task="Check page 219 for details about 'Illustrative' writing. Look for the quality of examples.">
+        <h2>Exemplification/Illustrative</h2>
+        <p data-re-question>In an Exemplification essay, what is the most important factor regarding the evidence provided according to page 219?</p>
+        <div data-re-option data-re-correct data-re-hint="Quality over quantity is the rule here; examples shouldn't be accidental.">Examples must be brilliant, persuasive, and non-accidental.</div>
+        <div data-re-option>The author must provide the maximum quantity of examples possible.</div>
+        <div data-re-option>Examples should only be used in the introduction.</div>
+    </div>
+
+    <div class="reading-slide" 
+         data-type="READING_COMMENT"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.2.Essay_Form_AW.pdf"
+         data-re-page="5"
+         data-re-label="Relational Writing"
+         data-re-task="Review page 219 to find the difference between Narrative (story-like) and Descriptive (technical) functions.">
+        <h2>Narrative vs. Descriptive</h2>
+        <p>These types focus on relato or characterization rather than technical analysis.</p>
+        <textarea data-re-placeholder="Based on page 219: What is the main difference in function between telling a story (narrative) and detailing an object (descriptive)?"></textarea>
+    </div>
+
+    <div class="reading-slide" 
+         data-type="READING_MATCH"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.2.Essay_Form_AW.pdf"
+         data-re-page="5"
+         data-re-label="Typology Match"
+         data-re-task="Match each purpose to its corresponding essay type based on the definitions on page 219.">
+        <h2>Summary of Purposes</h2>
+        
+        <div data-re-term data-re-id="dia">Dialectical</div>
+        <div data-re-term data-re-id="exe">Exemplification</div>
+        <div data-re-term data-re-id="nar">Narrative</div>
+        <div data-re-term data-re-id="des">Descriptive</div>
+
+        <div data-re-def data-re-match="dia">Appraise different, often contradictory positions to reach a resolution.</div>
+        <div data-re-def data-re-match="exe">Give convincing and brilliant examples to prove an opinion.</div>
+        <div data-re-def data-re-match="nar">Focus on a sequence of events, similar to telling a story.</div>
+        <div data-re-def data-re-match="des">Focus on detailing characteristics, similar to technical descriptions.</div>
+    </div>
+
+    <div class="reading-slide" 
+         data-type="READING_FILL"
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.2.Essay_Form_AW.pdf"
+         data-re-page="4"
+         data-re-label="History Thesis & Structure"
+         data-re-task="Complete the statement using the information about History Thesis on page 218 and general structure on page 219.">
+        <h2>History Thesis & Structure</h2>
+        <p data-re-sentence>
+            The History Thesis is an 
+            <span data-re-blank data-re-answer="academic">___</span> variant. 
+            Every type, including this one, must have an 
+            <span data-re-blank data-re-answer="introduction">___</span>, a 
+            <span data-re-blank data-re-answer="body">___</span>, and a 
+            <span data-re-blank data-re-answer="conclusion">___</span>.
+        </p>
+    </div>
+
+    <div class="reading-slide" 
+         id="essaySlide" 
+         data-type="READING_ESSAY" 
+         data-re-pdf="https://kuvyvyzmpfbndpkzbosb.supabase.co/storage/v1/object/public/articulos/2.1.2.Essay_Form_AW.pdf"
+         data-re-page="5"
+         data-re-min-words="110"
+         data-re-label="Critical Justification"
+         data-re-task="Analyze a controversial educational problem. Using the theory from page 219, justify why a 'Dialectical' rhetorical pattern is more effective than an 'Exemplification' approach for resolving ambiguous or opposing positions. Use 'critical thinking' and 'rhetorical pattern' in your response.">
+    </div>
+
+    <div id="readingDoneScreen" style="display:none; text-align:center; padding:40px 20px;">
+        <div style="font-size:3rem; margin-bottom:16px;">🚀</div>
+        <h2 style="color:#27ae60; margin-bottom:8px;">Lesson Complete!</h2>
+        <p style="color:#6c757d; margin-bottom:24px;">You have explored the diversity of rhetorical patterns.</p>
+        <a href="unit1-essays-hub.html" style="display:inline-block; padding:12px 28px; background:#2c7be5; color:#fff; border-radius:10px; text-decoration:none; font-weight:700;">Finish</a>
+    </div>
+</div>
+
+<script>
+    // Configuración necesaria para PDF.js
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    window.onload = () => {
+        const lessonID = 'types-of-essays';
+        
+        if (typeof ActivityTracker !== 'undefined') {
+            ActivityTracker.init(lessonID);
+        }
+
+        if (typeof ReadingEngine !== 'undefined') {
+            ReadingEngine.init(lessonID);
+        }
+    };
+</script>
+
+</body>
 </html>
