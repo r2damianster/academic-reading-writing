@@ -148,6 +148,8 @@ const ReadingEngine = (function () {
                 case 'READING_FOCUS':     ReadingTypes.READING_FOCUS.mount(slide, i);    break;
                 case 'READING_HIGHLIGHT': ReadingTypes.READING_HIGHLIGHT.mount(slide, i); break;
                 case 'READING_COMMENT':   ReadingTypes.READING_COMMENT.mount(slide, i);  break;
+                case 'READING_WARNING':   ReadingTypes.READING_WARNING.mount(slide, i);  break;
+                case 'READING_ESSAY':     ReadingTypes.READING_ESSAY.mount(slide, i);    break;
                 case 'READING_QUIZ':      ReadingTypes.READING_QUIZ.mount(slide, i);     break;
                 case 'READING_DRAGDROP':  ReadingTypes.READING_DRAGDROP.mount(slide, i); break;
                 case 'READING_FILL':      ReadingTypes.READING_FILL.mount(slide, i);     break;
@@ -1979,5 +1981,165 @@ ReadingTypes.READING_MATCH = {
         }, 100);
 
         btn?.addEventListener('click', () => ReadingEngine.next());
+    }
+};
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TIPO: READING_WARNING
+   Slide de advertencia antes de una tarea de escritura larga.
+   No muestra PDF — ocupa toda la pantalla.
+
+   Atributos:
+     data-re-label="Writing Task: Essay Analysis"
+     data-re-time="12–15"
+     data-re-task="Descripción de la tarea"
+───────────────────────────────────────────────────────────────────────────── */
+ReadingTypes.READING_WARNING = {
+    mount(slide, index) {
+        slide.dataset.reIndex = index;
+        const label = slide.dataset.reLabel || 'Writing Task';
+        const time  = slide.dataset.reTime  || '10–15';
+        const task  = slide.dataset.reTask  || '';
+
+        slide.innerHTML = `
+            <div style="max-width:620px; margin:0 auto; padding:40px 24px; text-align:center;">
+                <div style="font-size:2.8rem; margin-bottom:16px;">&#x270D;&#xFE0F;</div>
+                <h2 style="margin-bottom:8px; color:#1a1a2e;">${label}</h2>
+                <p style="color:#6c757d; font-size:0.9rem; margin-bottom:28px;">
+                    Estimated time: <strong>${time} minutes</strong>
+                </p>
+                <div style="background:#fff8e1; border-left:4px solid #f39c12; border-radius:8px;
+                            padding:20px 24px; text-align:left; margin-bottom:28px; line-height:1.7;">
+                    <strong style="display:block; margin-bottom:8px; color:#856404;">&#x1F4CB; Task Instructions</strong>
+                    <p style="margin:0; color:#3d3d3d;">${task}</p>
+                </div>
+                <div style="background:#e8f4fd; border-left:4px solid #2c7be5; border-radius:8px;
+                            padding:16px 20px; text-align:left; margin-bottom:32px; font-size:0.88rem; line-height:1.6;">
+                    <strong style="color:#1a4a8a;">&#x1F512; Academic Integrity Notice</strong><br>
+                    Your writing activity is monitored. You have access to the article in a separate tab
+                    within this page &#x2014; <strong>do not open external websites or other browser tabs</strong>
+                    during this task. Your response will be saved automatically.
+                </div>
+                <button class="btn-next-slide" style="display:inline-block; padding:14px 36px;
+                    background:#2c7be5; color:#fff; border:none; border-radius:10px;
+                    font-size:1rem; font-weight:700; cursor:pointer; letter-spacing:0.3px;">
+                    Begin Writing Task &#x2192;
+                </button>
+            </div>`;
+
+        slide.querySelector('.btn-next-slide')?.addEventListener('click', () => ReadingEngine.next());
+    }
+};
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TIPO: READING_ESSAY
+   Tarea de escritura larga con dos pestañas internas:
+     ✍️ Write  →  textarea grande (min-words requerido)
+     📄 Article →  visor PDF completo
+
+   Cambiar entre pestañas NO dispara window.blur (UI interna).
+
+   Atributos:
+     data-re-pdf="url"
+     data-re-page="1"
+     data-re-min-words="80"
+     data-re-label="Label de la tarea"
+     data-re-task="Prompt de escritura"
+───────────────────────────────────────────────────────────────────────────── */
+ReadingTypes.READING_ESSAY = {
+    mount(slide, index) {
+        slide.dataset.reIndex = index;
+        const url      = slide.dataset.rePdf      || '';
+        const page     = parseInt(slide.dataset.rePage) || 1;
+        const task     = slide.dataset.reTask     || 'Write your analysis below.';
+        const label    = slide.dataset.reLabel    || 'Essay Task';
+        const minWords = parseInt(slide.dataset.reMinWords) || 80;
+
+        const taId     = `essay-ta-${index}`;
+        const wcId     = `essay-wc-${index}`;
+        const fbId     = `essay-fb-${index}`;
+        const renderId = `re-render-essay-${index}`;
+
+        slide.innerHTML = `
+            <div class="re-essay-layout">
+                <div class="re-essay-tabs">
+                    <button class="re-essay-tab active" data-tab="write">&#x270D;&#xFE0F; Write</button>
+                    <button class="re-essay-tab" data-tab="article">&#x1F4C4; Article</button>
+                </div>
+
+                <div class="re-essay-panel" data-panel="write">
+                    <div class="re-essay-prompt">
+                        <strong>${label}</strong>
+                        <p>${task}</p>
+                    </div>
+                    <textarea id="${taId}" class="re-essay-textarea"
+                        placeholder="Write at least ${minWords} words&#x2026;"></textarea>
+                    <div class="re-essay-footer">
+                        <span id="${wcId}" class="re-word-count">0 / ${minWords} words</span>
+                        <div id="${fbId}" class="reading-feedback" style="display:none;"></div>
+                        <button class="btn-next-slide re-essay-submit" style="display:none;">
+                            Submit &amp; Continue &#x2192;
+                        </button>
+                    </div>
+                </div>
+
+                <div class="re-essay-panel" data-panel="article" style="display:none;">
+                    <div id="${renderId}" class="pdf-render-zone" style="min-height:420px;">
+                        <p style="color:#888; padding:24px; text-align:center;">Loading article&#x2026;</p>
+                    </div>
+                    <div class="pdf-controls">
+                        <button class="pdf-btn-prev">&#8592;</button>
+                        <span>Page <strong class="pdf-page-current">1</strong> of <strong class="pdf-page-total">?</strong></span>
+                        <button class="pdf-btn-next">&#8594;</button>
+                        <button class="pdf-fs-btn" title="Full screen">&#x26F6;</button>
+                    </div>
+                </div>
+            </div>`;
+
+        const tabs    = slide.querySelectorAll('.re-essay-tab');
+        const panels  = slide.querySelectorAll('.re-essay-panel');
+        let pdfLoaded = false;
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const target = tab.dataset.tab;
+                panels.forEach(p => p.style.display = p.dataset.panel === target ? '' : 'none');
+
+                if (target === 'article' && !pdfLoaded && url) {
+                    pdfLoaded = true;
+                    ReadingEngine._renderWithControls(slide, renderId, null, url, page);
+                    const fsBtn = slide.querySelector('.pdf-fs-btn');
+                    if (fsBtn) fsBtn.addEventListener('click', () => _openFullscreen(slide, renderId));
+                }
+            });
+        });
+
+        const ta  = slide.querySelector(`#${taId}`);
+        const wc  = slide.querySelector(`#${wcId}`);
+        const fb  = slide.querySelector(`#${fbId}`);
+        const btn = slide.querySelector('.re-essay-submit');
+
+        ta?.addEventListener('input', () => {
+            const words = ta.value.trim().split(/\s+/).filter(Boolean).length;
+            if (wc) wc.textContent = `${words} / ${minWords} words`;
+            if (words >= minWords) {
+                if (wc) wc.style.color = '#27ae60';
+                if (fb) { fb.className = 'reading-feedback success'; fb.innerHTML = '&#x2705; Well done! You can submit your response.'; fb.style.display = 'block'; }
+                if (btn) btn.style.display = 'inline-block';
+            } else {
+                if (wc) wc.style.color = '#6c757d';
+                if (fb) fb.style.display = 'none';
+                if (btn) btn.style.display = 'none';
+            }
+        });
+
+        btn?.addEventListener('click', () => {
+            ReadingEngine._saveProgress(index, 'essay', { text: ta?.value || '' });
+            ReadingEngine.next();
+        });
     }
 };
