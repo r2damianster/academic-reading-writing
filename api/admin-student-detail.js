@@ -50,9 +50,9 @@ module.exports = async (req, res) => {
                 .order('created_at', { ascending: false })
                 .limit(200),
             supabase.from('reading_progress')
-                .select('lesson,completed,score,created_at')
+                .select('lesson_name,score,completed_at,duration_sec,slides_total')
                 .eq('student_id', studentId)
-                .order('created_at', { ascending: false })
+                .order('completed_at', { ascending: false })
                 .limit(200)
         ]);
 

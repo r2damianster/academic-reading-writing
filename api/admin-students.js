@@ -32,7 +32,7 @@ module.exports = async (req, res) => {
             supabase.from('students').select('id,name,email,course,major').order('name'),
             supabase.from('essay_submissions').select('student_id,integrity_score,created_at').order('created_at', { ascending: false }).limit(5000),
             supabase.from('activity_logs').select('student_id,activity,created_at').order('created_at', { ascending: false }).limit(5000),
-            supabase.from('reading_progress').select('student_id,lesson,completed,created_at').order('created_at', { ascending: false }).limit(5000)
+            supabase.from('reading_progress').select('student_id,lesson_name,completed_at').order('completed_at', { ascending: false }).limit(5000)
         ]);
 
         if (e1) return res.status(500).json({ error: 'students: ' + e1.message });
@@ -57,7 +57,7 @@ module.exports = async (req, res) => {
         const readingMap = {};
         for (const r of (reading || [])) {
             if (!readingMap[r.student_id])
-                readingMap[r.student_id] = { lesson: r.lesson, date: r.created_at };
+                readingMap[r.student_id] = { lesson: r.lesson_name, date: r.completed_at };
         }
 
         const result = (students || []).map(s => {
