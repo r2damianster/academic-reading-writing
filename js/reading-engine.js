@@ -909,8 +909,7 @@ const ReadingEngine = (function () {
         _isAdmin = false;
         const bar = document.getElementById('instructor-controls-bar');
         if (bar) bar.remove();
-        // Redibujar página actual para reactivar bloqueos si es necesario
-        _renderPage(_slides[_current]);
+        _showSlide(_current);
     }
 
     // Listener para comunicación con la ventana principal (index.html)
@@ -935,10 +934,7 @@ const ReadingEngine = (function () {
              addMistake() { _totalMistakes++; },
              prev() {
                  if (_current > 0) {
-                     _current--;
-                     _renderPage(_slides[_current]);
-                     _updateProgress();
-                     if (_isAdmin) _notifyHelper();
+                     _showSlide(_current - 1);
                  } else if (_isAdmin) {
                      window.location.href = _resolveHubUrl();
                  }
