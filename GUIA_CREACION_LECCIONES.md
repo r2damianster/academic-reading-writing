@@ -1,6 +1,6 @@
 # Guía: Creación de Nuevas Lecciones HTML
 
-Sigue este estándar para asegurar que tus lecciones tengan telemetría, seguridad de acceso y soporte para el Modo Instructor.
+Sigue este estándar para asegurar que tus lecciones tengan telemetría, seguridad de acceso y soporte para el Modo .
 
 ## 1. Plantilla Base HTML
 

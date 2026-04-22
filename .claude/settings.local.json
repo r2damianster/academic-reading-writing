@@ -16,7 +16,18 @@
       "Bash(cmd /c \"taskkill /IM node.exe /F\")",
       "Bash(cmd /c \"netstat -ano | findstr :3000 | findstr LISTENING\")",
       "Bash(cmd /c \"netstat -ano | findstr :3000\")",
-      "Bash(curl -s --max-time 3 http://localhost:3000/)"
+      "Bash(curl -s --max-time 3 http://localhost:3000/)",
+      "Bash(git -C \"c:/Users/Arturo/Documents/programas/academic-reading-writing\" status)",
+      "Bash(git -C \"c:/Users/Arturo/Documents/programas/academic-reading-writing\" log --oneline -3)",
+      "Bash(git -C \"c:/Users/Arturo/Documents/programas/academic-reading-writing\" add admin.html admin-students.html api/admin-students.js api/admin-student-detail.js)",
+      "Bash(git -C \"c:/Users/Arturo/Documents/programas/academic-reading-writing\" diff --staged --stat)",
+      "Bash(git -C c:/Users/Arturo/Documents/programas/academic-reading-writing commit -m ' *)",
+      "Bash(git -C \"c:/Users/Arturo/Documents/programas/academic-reading-writing\" push origin main)",
+      "Bash(git -C \"c:/Users/Arturo/Documents/programas/academic-reading-writing\" add .claude/api/INDEX.md .claude/frontend/INDEX.md .claude/frontend/auth.md .claude/CONTEXT.md NEXT_SESSION_GUIDE.md)",
+      "Bash(git -C \"c:/Users/Arturo/Documents/programas/academic-reading-writing\" commit -m \"docs: actualizar documentacion con dashboard admin y bug pendiente del boton sidebar\")",
+      "mcp__claude_ai_Vercel__get_project",
+      "mcp__claude_ai_Vercel__list_teams",
+      "Bash(git add *)"
     ]
   }
 }
