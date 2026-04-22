@@ -277,9 +277,9 @@ tbody tr:hover td { background:var(--snow); }
 
   <!-- Toolbar -->
   <div class="toolbar">
-    <input class="search-input" id="searchInput" type="text"
+    <input class="search-input" id="searchInput" type="search"
            placeholder="Search by name or email…"
-           autocomplete="off"
+           autocomplete="off" autocorrect="off" autocapitalize="off"
            oninput="renderTable()">
     <div class="toolbar-right">
       <button class="refresh-btn" onclick="loadStudents()">↻ Refresh</button>
@@ -400,6 +400,7 @@ function checkAccess() {
 function showPanel() {
     document.getElementById('accessGate').style.display = 'none';
     document.getElementById('mainPanel').style.display = 'block';
+    document.getElementById('searchInput').value = '';
     loadStudents();
 }
 
@@ -418,6 +419,7 @@ async function loadStudents() {
         const r = await fetch('/api/admin-students');
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         allStudents = await r.json();
+        document.getElementById('searchInput').value = '';
         updateStats();
         renderTable();
     } catch(e) {
