@@ -56,6 +56,24 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
+    // ─── 2d. ADMIN: LISTA DE ESTUDIANTES ────────────────────────────────────────
+    if (req.method === 'GET' && req.url.startsWith('/api/admin-students') && !req.url.includes('detail')) {
+        const url = new URL(req.url, 'http://localhost');
+        req.query = Object.fromEntries(url.searchParams);
+        const adminStudents = require('./api/admin-students');
+        adminStudents(req, res);
+        return;
+    }
+
+    // ─── 2e. ADMIN: DETALLE DE ESTUDIANTE ───────────────────────────────────────
+    if (req.method === 'GET' && req.url.startsWith('/api/admin-student-detail')) {
+        const url = new URL(req.url, 'http://localhost');
+        req.query = Object.fromEntries(url.searchParams);
+        const adminStudentDetail = require('./api/admin-student-detail');
+        adminStudentDetail(req, res);
+        return;
+    }
+
     // ─── 3. RUTA DE LA API ───────────────────────────────────────────────────────
     if (req.method === 'POST' && req.url === '/api/validate-student') {
         let body = '';
