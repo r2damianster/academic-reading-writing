@@ -204,6 +204,7 @@ Ver `DEUDA_TECNICA.md` para el estado completo. Items pendientes de mayor impact
 |----|-----------|------------|
 | DT-002 | 🟡 MEDIO | `slide-engine.js` (2482 líneas) mezcla UI + sync Supabase |
 | DT-003 | 🟡 MEDIO | `_calcIntegrityFallback` duplicada en `report.js` y `essay-handler.js` |
+| DT-004 | 🟠 ALTO | Eliminar `READING_COMMENT` (actividades de producción) de lecciones `reading-engine` |
 | DT-005 | ✅ DONE | `index.html` implements `isAdmin` check and manual toggle |
 | L-001 | 🔴 CRÍTICO | Argumentative Essay (HTML vacío, coming soon) |
 | L-002 | 🔴 CRÍTICO | Chain Essay (HTML vacío, coming soon) |
