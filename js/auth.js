@@ -87,6 +87,7 @@ async function checkStudentStatus() {
         localStorage.setItem('studentMajor', serverResult.major || "Student");
         localStorage.setItem('studentInstitution', "ULEAM");
         localStorage.setItem('lastLoginTimestamp', new Date().getTime());
+        if (serverResult.id) localStorage.setItem('studentId', serverResult.id);
 
         if (modal) modal.style.display = 'none';
         if (display) display.innerText = "Active: " + (serverResult.name || "Student");
@@ -171,6 +172,7 @@ async function saveAndStart() {
         localStorage.setItem('studentInstitution', "ULEAM");
         localStorage.setItem('studentRole', serverResult.role || 'student');
         localStorage.setItem('isAdmin', serverResult.role === 'admin' ? 'true' : 'false');
+        if (serverResult.id) localStorage.setItem('studentId', serverResult.id);
         
         // Reset manual toggle on new fresh login
         localStorage.setItem('adminUnlocked', 'false');
