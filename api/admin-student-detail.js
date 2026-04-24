@@ -50,8 +50,9 @@ module.exports = async (req, res) => {
                 .order('created_at', { ascending: false })
                 .limit(200),
             supabase.from('reading_progress')
-                .select('lesson_name,score,completed_at,duration_sec,slides_total')
+                .select('lesson_name,score,completed_at,duration_sec,slides_total,slide_id')
                 .eq('student_id', studentId)
+                .eq('slide_id', -1)
                 .order('completed_at', { ascending: false })
                 .limit(200)
         ]);
@@ -69,10 +70,17 @@ module.exports = async (req, res) => {
             compliance: compMap[e.id] || null
         }));
 
+        const readingMapped = (reading || []).map(r => ({
+            lesson:     r.lesson_name,
+            completed:  !!(r.completed_at || r.score !== null),
+            score:      r.score,
+            created_at: r.completed_at
+        }));
+
         return res.status(200).json({
             activities: activities || [],
             essays: essaysWithCompliance,
-            reading: reading || []
+            reading: readingMapped
         });
 
     } catch (e) {

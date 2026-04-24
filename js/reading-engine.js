@@ -2096,6 +2096,9 @@ ReadingTypes.READING_ESSAY = {
                         <button class="btn-next-slide re-essay-submit" style="display:none;">
                             Submit &amp; Continue &#x2192;
                         </button>
+                        <button class="re-essay-skip" style="margin-top:8px;display:block;background:none;border:none;color:#aaa;font-size:12px;cursor:pointer;text-decoration:underline;">
+                            Skip this activity
+                        </button>
                     </div>
                 </div>
 
@@ -2153,6 +2156,12 @@ ReadingTypes.READING_ESSAY = {
 
         btn?.addEventListener('click', () => {
             ReadingEngine._saveProgress(index, 'essay', { text: ta?.value || '' });
+            ReadingEngine.next();
+        });
+
+        const skipBtn = slide.querySelector('.re-essay-skip');
+        skipBtn?.addEventListener('click', () => {
+            ReadingEngine._saveProgress(index, 'essay', { skipped: true });
             ReadingEngine.next();
         });
     }
