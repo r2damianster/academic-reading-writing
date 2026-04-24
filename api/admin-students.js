@@ -32,7 +32,7 @@ module.exports = async (req, res) => {
             supabase.from('students').select('id,name,email,course,major').order('name'),
             supabase.from('essay_submissions').select('student_id,integrity_score,created_at').order('created_at', { ascending: false }).limit(5000),
             supabase.from('activity_logs').select('student_id,activity,created_at').order('created_at', { ascending: false }).limit(5000),
-            supabase.from('reading_progress').select('student_id,lesson_name,completed_at').order('completed_at', { ascending: false }).limit(5000)
+            supabase.from('reading_progress').select('student_id,lesson_name,score,completed_at').eq('slide_id', -1).order('completed_at', { ascending: false }).limit(5000)
         ]);
 
         if (e1) return res.status(500).json({ error: 'students: ' + e1.message });
@@ -51,29 +51,38 @@ module.exports = async (req, res) => {
         const activityMap = {};
         for (const a of (activities || [])) {
             if (!activityMap[a.student_id])
-                activityMap[a.student_id] = { activity: a.activity, date: a.created_at };
+                activityMap[a.student_id] = { activity: a.activity, date: a.created_at, count: 0 };
+            activityMap[a.student_id].count++;
         }
 
         const readingMap = {};
         for (const r of (reading || [])) {
             if (!readingMap[r.student_id])
-                readingMap[r.student_id] = { lesson: r.lesson_name, date: r.completed_at };
+                readingMap[r.student_id] = { lesson: r.lesson_name, date: r.completed_at, count: 0, scores: [] };
+            readingMap[r.student_id].count++;
+            if (r.score !== null) readingMap[r.student_id].scores.push(r.score);
         }
 
         const result = (students || []).map(s => {
             const em = essayMap[s.id]    || { scores: [], count: 0, alerts: 0 };
             const am = activityMap[s.id] || null;
             const rm = readingMap[s.id]  || null;
-            const avg = em.scores.length
+            const avgEssay = em.scores.length
                 ? Math.round(em.scores.reduce((a, b) => a + b, 0) / em.scores.length)
+                : null;
+            const avgReading = rm?.scores.length
+                ? Math.round(rm.scores.reduce((a, b) => a + b, 0) / rm.scores.length)
                 : null;
             return {
                 id: s.id, name: s.name, email: s.email,
                 course: s.course || '', major: s.major || '',
-                essays_submitted: em.count, avg_integrity: avg,
+                essays_submitted: em.count, avg_integrity: avgEssay,
                 low_integrity_count: em.alerts,
+                activity_count: am?.count || 0,
                 last_activity: am?.activity || null,
                 last_activity_date: am?.date || null,
+                reading_completed: rm?.count || 0,
+                avg_reading_score: avgReading,
                 last_reading: rm?.lesson || null,
                 last_reading_date: rm?.date || null
             };

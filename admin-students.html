@@ -300,12 +300,14 @@ tbody tr:hover td { background:var(--snow); }
             <th>Essays</th>
             <th>Avg Integrity</th>
             <th>Alerts</th>
+            <th>Reading</th>
+            <th>Activities</th>
             <th>Last Activity</th>
             <th></th>
           </tr>
         </thead>
         <tbody id="tableBody">
-          <tr><td colspan="7" class="state-msg"><span class="spin">⟳</span> Loading students…</td></tr>
+          <tr><td colspan="9" class="state-msg"><span class="spin">⟳</span> Loading students…</td></tr>
         </tbody>
       </table>
     </div>
@@ -455,7 +457,7 @@ function renderTable() {
 
     if (filtered.length === 0) {
         document.getElementById('tableBody').innerHTML =
-            '<tr><td colspan="7" class="state-msg">No students found.</td></tr>';
+            '<tr><td colspan="9" class="state-msg">No students found.</td></tr>';
         return;
     }
 
@@ -469,6 +471,11 @@ function renderTable() {
                <span style="font-size:.72rem;color:var(--mist)">${fmtDate(s.last_activity_date)}</span>`
             : '<span style="color:var(--mist)">—</span>';
 
+        const readingCell = s.reading_completed > 0
+            ? `<span style="font-weight:600">${s.reading_completed}</span><span style="font-size:.75rem;color:var(--mist)"> lessons</span>`
+              + (s.avg_reading_score !== null ? `<br><span style="font-size:.72rem;color:#27ae60">${s.avg_reading_score}% avg</span>` : '')
+            : '<span style="color:var(--mist)">—</span>';
+
         return `<tr onclick="openDetail('${s.id}')">
             <td>
               <div style="font-weight:600">${esc(s.name)}</div>
@@ -478,6 +485,10 @@ function renderTable() {
             <td style="text-align:center">${s.essays_submitted || 0}</td>
             <td>${intBadge}</td>
             <td>${alertCell}</td>
+            <td>${readingCell}</td>
+            <td style="text-align:center;color:${s.activity_count > 0 ? 'inherit' : 'var(--mist)'}">
+              ${s.activity_count || '—'}
+            </td>
             <td>${lastAct}</td>
             <td><button class="expand-btn" onclick="event.stopPropagation();openDetail('${s.id}')">Detail →</button></td>
         </tr>`;
