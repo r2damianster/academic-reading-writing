@@ -888,11 +888,12 @@ const ReadingEngine = (function () {
         
         // READING_QUIZ
         if (type === 'READING_QUIZ') {
+            const question = slide.querySelector('[data-re-question], .challenge-card p')?.textContent.trim() || 'Question';
             const options = Array.from(slide.querySelectorAll('[data-re-option], .sidebar-quiz-option'));
             options.forEach(opt => {
                 const isCorrect = opt.hasAttribute('data-re-correct') || opt.dataset.reCorrect === 'true';
                 if (isCorrect) {
-                    answers.push({ label: 'Correct Option', answer: opt.textContent.trim() });
+                    answers.push({ label: `Question: ${question}`, answer: opt.textContent.trim() });
                 }
             });
         }
@@ -911,17 +912,20 @@ const ReadingEngine = (function () {
         // READING_FILL
         if (type === 'READING_FILL') {
             slide.querySelectorAll('[data-re-blank], .re-fill-input').forEach((blank, idx) => {
-                answers.push({ label: `Blank ${idx+1}`, answer: blank.dataset.reAnswer });
+                const ans = blank.dataset.reAnswer || blank.getAttribute('data-re-answer');
+                if (ans) {
+                    answers.push({ label: `Blank ${idx+1}`, answer: ans });
+                }
             });
         }
         
         // READING_MATCH
         if (type === 'READING_MATCH') {
-            const terms = Array.from(slide.querySelectorAll('[data-re-term]'));
-            const defs = Array.from(slide.querySelectorAll('[data-re-def]'));
+            const terms = Array.from(slide.querySelectorAll('[data-re-term], .re-match-term'));
+            const defs = Array.from(slide.querySelectorAll('[data-re-def], .re-match-def'));
             terms.forEach(term => {
-                const matchId = term.dataset.reId;
-                const def = defs.find(d => d.dataset.reMatch === matchId);
+                const matchId = term.dataset.reId || term.dataset.id;
+                const def = defs.find(d => (d.dataset.reMatch === matchId || d.dataset.match === matchId));
                 if (def) answers.push({ label: term.textContent.trim(), answer: def.textContent.trim() });
             });
         }

@@ -873,12 +873,13 @@ const SlideEngine = (function () {
 
         // QUIZ
         if (type === 'QUIZ') {
+            const question = slide.querySelector('[data-se-question]')?.textContent.trim() || 'Question';
             const options = Array.from(slide.querySelectorAll('[data-se-option], .quiz-option'));
             options.forEach(opt => {
                 const isCorrect = opt.hasAttribute('data-se-correct') || opt.getAttribute('data-se-correct') === 'true';
                 if (isCorrect) {
                     answers.push({ 
-                        label: 'Correct Option', 
+                        label: `Question: ${question}`, 
                         answer: opt.textContent.trim(),
                         explanation: getHint(opt)
                     });
@@ -903,12 +904,16 @@ const SlideEngine = (function () {
 
         // FILL_BLANK
         if (type === 'FILL_BLANK') {
-            slide.querySelectorAll('[data-se-blank]').forEach((blank, idx) => {
-                answers.push({ 
-                    label: `Blank ${idx+1}`, 
-                    answer: blank.dataset.seAnswer,
-                    explanation: getHint(blank)
-                });
+            // Buscamos tanto los spans originales como los inputs generados
+            slide.querySelectorAll('[data-se-blank], input[data-se-answer]').forEach((blank, idx) => {
+                const ans = blank.dataset.seAnswer || blank.getAttribute('data-se-answer');
+                if (ans) {
+                    answers.push({ 
+                        label: `Blank ${idx+1}`, 
+                        answer: ans,
+                        explanation: getHint(blank)
+                    });
+                }
             });
         }
 
@@ -966,9 +971,14 @@ const SlideEngine = (function () {
         // CHOOSE_CONTEXT
         if (type === 'CHOOSE_CONTEXT') {
             slide.querySelectorAll('[data-se-sentence]').forEach((sent, idx) => {
-                const correct = sent.querySelector('[data-se-option][data-se-correct], [data-se-correct]');
+                // Buscamos el elemento correcto (puede ser el span original o el botón generado)
+                const correct = sent.querySelector('[data-se-option][data-se-correct], button[data-se-correct="true"]');
                 if (correct) {
-                    answers.push({ label: `Context ${idx+1}`, answer: correct.textContent.trim() });
+                    answers.push({ 
+                        label: `Sentence ${idx+1}: ${sent.textContent.trim().substring(0, 50)}...`, 
+                        answer: correct.textContent.trim(),
+                        explanation: getHint(sent) || getHint(correct)
+                    });
                 }
             });
         }
@@ -2974,6 +2984,7 @@ SlideTypes.CHOOSE_CONTEXT = {
                 const isCorrect = opt.hasAttribute('data-se-correct');
                 const btn       = document.createElement('button');
                 btn.textContent = opt.textContent.trim();
+                btn.dataset.seCorrect = isCorrect ? 'true' : 'false';
                 btn.style.cssText = `padding:3px 12px; border-radius:20px; cursor:pointer;
                                       border:2px solid #3498db; background:#eaf6ff;
                                       color:#2c3e50; font-size:inherit; font-family:inherit;
