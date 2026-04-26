@@ -165,7 +165,9 @@ const ReadingEngine = (function () {
         _showSlide(0);
         _updateProgress();
         _mountReadingAIPanel();
-        if (_isAdmin) _notifyHelper();
+        if (_isAdmin || sessionStorage.getItem('teacherMode') === '1') {
+            _notifyHelper();
+        }
         console.log(`✅ ReadingEngine iniciado: "${lessonName}" — ${_slides.length} slides`);
     }
 
@@ -183,9 +185,9 @@ const ReadingEngine = (function () {
         const next = _slides[index + 1];
         if (next && next.dataset.rePdf) _preloadPdf(next.dataset.rePdf);
 
-        if (_isAdmin) {
+        if (_isAdmin || sessionStorage.getItem('teacherMode') === '1') {
             _notifyHelper();
-            _forceUnlockNext(index);
+            if (_isAdmin) _forceUnlockNext(index);
         }
     }
 
@@ -883,21 +885,35 @@ const ReadingEngine = (function () {
     function _collectAnswers(slide) {
         const answers = [];
         const type = (slide.dataset.type || '').toUpperCase();
+        
+        // READING_QUIZ
         if (type === 'READING_QUIZ') {
             slide.querySelectorAll('[data-re-option]').forEach(opt => {
-                if (opt.hasAttribute('data-re-correct')) answers.push({ label: 'Correct Option', answer: opt.textContent.trim() });
+                if (opt.hasAttribute('data-re-correct')) {
+                    answers.push({ label: 'Correct Option', answer: opt.textContent.trim() });
+                }
             });
         }
+        
+        // READING_TFNG
         if (type === 'READING_TFNG') {
             slide.querySelectorAll('[data-re-tfng-item]').forEach((item, idx) => {
-                answers.push({ label: `Statement ${idx+1}`, answer: item.dataset.reAnswer, explanation: item.dataset.reExplain });
+                answers.push({ 
+                    label: `Statement ${idx+1}`, 
+                    answer: item.dataset.reAnswer, 
+                    explanation: item.dataset.reExplain 
+                });
             });
         }
+        
+        // READING_FILL
         if (type === 'READING_FILL') {
             slide.querySelectorAll('[data-re-blank]').forEach((blank, idx) => {
                 answers.push({ label: `Blank ${idx+1}`, answer: blank.dataset.reAnswer });
             });
         }
+        
+        // READING_MATCH
         if (type === 'READING_MATCH') {
             const terms = Array.from(slide.querySelectorAll('[data-re-term]'));
             const defs = Array.from(slide.querySelectorAll('[data-re-def]'));
@@ -907,7 +923,38 @@ const ReadingEngine = (function () {
                 if (def) answers.push({ label: term.textContent.trim(), answer: def.textContent.trim() });
             });
         }
+
+        // READING_DRAGDROP
+        if (type === 'READING_DRAGDROP') {
+            const drops = slide.querySelectorAll('[data-re-drop]');
+            drops.forEach(drop => {
+                const accepts = drop.dataset.reDropAccepts;
+                const label = drop.dataset.reLabel || 'Zone';
+                const drag = slide.querySelector(`[data-re-drag][data-re-drag-type="${accepts}"]`);
+                if (drag) {
+                    answers.push({ label: `Zone: ${label}`, answer: drag.textContent.trim() });
+                }
+            });
+        }
+
+        // READING_ESSAY / READING_COMMENT
+        if (type === 'READING_ESSAY' || type === 'READING_COMMENT') {
+            const task = slide.dataset.reTask;
+            if (task) {
+                answers.push({ label: 'Writing Task', answer: task, explanation: 'Ensure student meets word count.' });
+            }
+        }
+
         return answers;
+    }
+
+    function _forceUnlockNext(index) {
+        const slides = Array.from(document.querySelectorAll('.reading-slide'));
+        const current = slides[index];
+        if (current) {
+            const btn = current.querySelector('.btn-next-slide');
+            if (btn) btn.classList.add('inst-unlocked');
+        }
     }
 
     function _unmountInstructorUI() {
@@ -988,6 +1035,7 @@ const ReadingEngine = (function () {
         banner.className = 're-teacher-banner';
         banner.innerHTML = '&#x1F511; Teacher Mode &mdash; <em>visible only to instructor</em>';
         document.body.insertAdjacentElement('afterbegin', banner);
+        _notifyHelper();
     }
 
     /* ──────────────────────────────────────────────────────────────────────────
@@ -1010,132 +1058,6 @@ const ReadingEngine = (function () {
     };
 
 })();
-
-/* ──────────────────────────────────────────────────────────────────────────
-   SECCIÓN 1.1 — HELPERS PARA INSTRUCTOR (ReadingEngine)
-────────────────────────────────────────────────────────────────────────── */
-function _mountInstructorUI() {
-    const style = document.createElement('style');
-    style.textContent = `
-        .instructor-controls {
-            position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
-            background: rgba(15, 31, 56, 0.9); padding: 8px 16px; border-radius: 30px;
-            display: flex; gap: 10px; z-index: 10001; align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
-            color: white; font-family: sans-serif; font-size: 13px;
-        }
-        .inst-btn {
-            background: #0891b2; color: white; border: none; padding: 5px 12px;
-            border-radius: 15px; cursor: pointer; font-size: 12px; font-weight: 700;
-            transition: background 0.2s;
-        }
-        .inst-btn:hover { background: #0e7490; }
-        .inst-btn.back { background: #4a6080; }
-        .btn-next-slide.inst-unlocked { display: block !important; opacity: 1 !important; visibility: visible !important; }
-    `;
-    document.head.appendChild(style);
-
-    const div = document.createElement('div');
-    div.className = 'instructor-controls';
-    div.innerHTML = `
-        <span style="font-weight:700; color:#fca5a5;">INSTRUCTOR</span>
-        <button class="inst-btn back" id="inst-prev">← Back</button>
-        <button class="inst-btn" id="inst-next">Next →</button>
-        <button class="inst-btn" id="inst-helper" style="background:#059669;">Teacher Helper</button>
-    `;
-    document.body.appendChild(div);
-
-    document.getElementById('inst-prev').onclick = () => ReadingEngine.prev();
-    document.getElementById('inst-next').onclick = () => ReadingEngine.next();
-    document.getElementById('inst-helper').onclick = _openHelper;
-}
-
-function _openHelper() {
-    const w = 420, h = 600;
-    const left = (screen.width/2)-(w/2);
-    const top = (screen.height/2)-(h/2);
-
-    const helperUrl = window.location.origin + '/teacher-helper.html';
-
-    window._reHelperWindow = window.open(helperUrl, 'TeacherHelper', 
-        `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes,status=no,menubar=no,toolbar=no`);
-    
-    setTimeout(() => _notifyHelper(), 800);
-}
-
-function _notifyHelper() {
-    if (!window._reHelperWindow || window._reHelperWindow.closed) return;
-
-    const slides = Array.from(document.querySelectorAll('.reading-slide'));
-    const current = slides[ReadingEngine.currentIndex];
-    if (!current) return;
-
-    const payload = {
-        index: ReadingEngine.currentIndex,
-        total: slides.length,
-        slideType: current.dataset.type || 'CONTENT',
-        title: current.querySelector('h2')?.textContent || '',
-        answers: _collectAnswers(current)
-    };
-
-    window._reHelperWindow.postMessage({ type: 'UPDATE_HELPER', payload }, '*');
-}
-
-function _forceUnlockNext(index) {
-    const slides = Array.from(document.querySelectorAll('.reading-slide'));
-    const current = slides[index];
-    if (current) {
-        const btn = current.querySelector('.btn-next-slide');
-        if (btn) btn.classList.add('inst-unlocked');
-    }
-}
-
-function _collectAnswers(slide) {
-    const answers = [];
-    const type = (slide.dataset.type || '').toUpperCase();
-
-    // QUIZ
-    if (type === 'READING_QUIZ') {
-        slide.querySelectorAll('[data-re-option]').forEach(opt => {
-            if (opt.hasAttribute('data-re-correct')) {
-                answers.push({ label: 'Correct Option', answer: opt.textContent.trim() });
-            }
-        });
-    }
-
-    // TFNG
-    if (type === 'READING_TFNG') {
-        slide.querySelectorAll('[data-re-tfng-item]').forEach((item, idx) => {
-            answers.push({ 
-                label: `Statement ${idx+1}`, 
-                answer: item.dataset.reAnswer, 
-                explanation: item.dataset.reExplain 
-            });
-        });
-    }
-
-    // FILL
-    if (type === 'READING_FILL') {
-        slide.querySelectorAll('[data-re-blank]').forEach((blank, idx) => {
-            answers.push({ label: `Blank ${idx+1}`, answer: blank.dataset.reAnswer });
-        });
-    }
-
-    // MATCH
-    if (type === 'READING_MATCH') {
-        const terms = Array.from(slide.querySelectorAll('[data-re-term]'));
-        const defs = Array.from(slide.querySelectorAll('[data-re-def]'));
-        terms.forEach(term => {
-            const matchId = term.dataset.reId;
-            const def = defs.find(d => d.dataset.reMatch === matchId);
-            if (def) {
-                answers.push({ label: term.textContent.trim(), answer: def.textContent.trim() });
-            }
-        });
-    }
-
-
-}
 
 
 /* =============================================================================

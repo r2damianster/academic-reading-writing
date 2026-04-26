@@ -127,7 +127,11 @@ const SlideEngine = (function () {
 
         // Teacher mode — activate if ?teacher=1 in URL
         if (new URLSearchParams(window.location.search).get('teacher') === '1') {
-            _activateTeacherMode();
+            await _activateTeacherMode();
+        }
+
+        if (_isAdmin || sessionStorage.getItem('teacherMode') === '1') {
+            _notifyHelper();
         }
 
         console.log(`✅ SlideEngine iniciado: "${lessonName}" — ${_slides.length} slides`);
@@ -170,9 +174,9 @@ const SlideEngine = (function () {
                 finishLesson(_lessonName);
             }
 
-            if (_isAdmin) {
+            if (_isAdmin || sessionStorage.getItem('teacherMode') === '1') {
                 _notifyHelper();
-                _forceUnlockNext(_currentIndex);
+                if (_isAdmin) _forceUnlockNext(_currentIndex);
             }
         } else {
             console.error('SlideEngine: slide no encontrada →', target);
@@ -901,11 +905,11 @@ const SlideEngine = (function () {
 
         // MATCH
         if (type === 'MATCH') {
-            const terms = Array.from(slide.querySelectorAll('[data-se-term]'));
-            const defs = Array.from(slide.querySelectorAll('[data-se-def]'));
+            const terms = Array.from(slide.querySelectorAll('[data-se-term], [data-se-left]'));
+            const defs = Array.from(slide.querySelectorAll('[data-se-def], [data-se-right]'));
             terms.forEach(term => {
-                const matchId = term.dataset.seId;
-                const def = defs.find(d => d.dataset.seMatch === matchId);
+                const matchId = term.dataset.seId || term.dataset.sePair;
+                const def = defs.find(d => (d.dataset.seMatch === matchId || d.dataset.sePair === matchId));
                 if (def) {
                     answers.push({ 
                         label: term.textContent.trim(), 
@@ -916,7 +920,52 @@ const SlideEngine = (function () {
             });
         }
 
-        // CONTRAST (Nuevo soporte)
+        // CATEGORIZE
+        if (type === 'CATEGORIZE') {
+            const zones = slide.querySelectorAll('[data-se-category-zone]');
+            zones.forEach(zone => {
+                const category = zone.dataset.seAccepts;
+                const label = zone.dataset.seLabel || 'Category';
+                const items = Array.from(slide.querySelectorAll(`[data-se-item][data-se-category="${category}"], [data-se-category-item][data-se-drag-type="${category}"]`))
+                    .map(el => el.textContent.trim())
+                    .join(', ');
+                if (items) {
+                    answers.push({ label, answer: items, explanation: getHint(zone) });
+                }
+            });
+        }
+
+        // WORD_BANK
+        if (type === 'WORD_BANK') {
+            slide.querySelectorAll('[data-se-blank]').forEach((blank, idx) => {
+                answers.push({ 
+                    label: `Blank ${idx+1}`, 
+                    answer: blank.dataset.seAnswer,
+                    explanation: getHint(blank)
+                });
+            });
+        }
+
+        // SORT_PARAGRAPH
+        if (type === 'SORT_PARAGRAPH') {
+            const sentences = Array.from(slide.querySelectorAll('[data-se-sentence]'))
+                .sort((a, b) => (parseInt(a.dataset.seOrder) || 0) - (parseInt(b.dataset.seOrder) || 0));
+            sentences.forEach((s, idx) => {
+                answers.push({ label: `Position ${idx+1}`, answer: s.textContent.trim() });
+            });
+        }
+
+        // CHOOSE_CONTEXT
+        if (type === 'CHOOSE_CONTEXT') {
+            slide.querySelectorAll('[data-se-sentence]').forEach((sent, idx) => {
+                const correct = sent.querySelector('[data-se-option][data-se-correct]');
+                if (correct) {
+                    answers.push({ label: `Context ${idx+1}`, answer: correct.textContent.trim() });
+                }
+            });
+        }
+
+        // CONTRAST
         if (type === 'CONTRAST') {
             slide.querySelectorAll('[data-se-correct]').forEach(el => {
                 answers.push({
@@ -927,7 +976,7 @@ const SlideEngine = (function () {
             });
         }
 
-        // ESSAY (Nuevo soporte)
+        // ESSAY
         if (type === 'ESSAY') {
             const prompt = slide.querySelector('[data-se-prompt]');
             if (prompt) {
@@ -1018,6 +1067,7 @@ const SlideEngine = (function () {
         banner.className = 're-teacher-banner';
         banner.innerHTML = '&#x1F511; Teacher Mode &mdash; <em>visible only to instructor</em>';
         document.body.insertAdjacentElement('afterbegin', banner);
+        _notifyHelper();
     }
 
 
