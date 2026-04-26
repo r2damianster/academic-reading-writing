@@ -40,8 +40,19 @@ const SlideEngine = (function () {
     let _lessonName        = '';
     let _slides            = [];
     let _scoreAlreadySaved = false;
-    let _isAdmin           = false;
     let _helperWindow      = null;
+    let _isAdmin           = false;
+
+    function _forceUnlockNext(index) {
+        const slide = _slides[index];
+        if (slide) {
+            const btn = slide.querySelector('.btn-next');
+            if (btn) {
+                btn.classList.add('inst-unlocked');
+                btn.style.display = 'block';
+            }
+        }
+    }
 
     // ── Inicialización ──────────────────────────────────────────────────────────
     // Llama esto en window.onload de cada lección.
@@ -866,7 +877,10 @@ const SlideEngine = (function () {
         if (type === 'QUIZ') {
             const options = Array.from(slide.querySelectorAll('[data-se-option], .quiz-option'));
             options.forEach(opt => {
-                const isCorrect = opt.hasAttribute('data-se-correct') || opt.dataset.seCorrect === 'true';
+                const isCorrect = opt.classList.contains('quiz-option') 
+                    ? opt.getAttribute('data-se-correct') === 'true' 
+                    : opt.hasAttribute('data-se-correct');
+
                 if (isCorrect) {
                     answers.push({ 
                         label: 'Correct Option', 
@@ -939,12 +953,17 @@ const SlideEngine = (function () {
 
         // WORD_BANK
         if (type === 'WORD_BANK') {
-            slide.querySelectorAll('[data-se-blank]').forEach((blank, idx) => {
-                answers.push({ 
-                    label: `Blank ${idx+1}`, 
-                    answer: blank.dataset.seAnswer,
-                    explanation: getHint(blank)
-                });
+            // Buscar tanto el original como el reemplazo (zone)
+            const blanks = slide.querySelectorAll('[data-se-blank], [id^="se-wb-blank-"]');
+            blanks.forEach((blank, idx) => {
+                const answer = blank.dataset.seAnswer;
+                if (answer) {
+                    answers.push({ 
+                        label: `Blank ${idx+1}`, 
+                        answer: answer,
+                        explanation: getHint(blank)
+                    });
+                }
             });
         }
 
@@ -960,9 +979,15 @@ const SlideEngine = (function () {
         // CHOOSE_CONTEXT
         if (type === 'CHOOSE_CONTEXT') {
             slide.querySelectorAll('[data-se-sentence]').forEach((sent, idx) => {
-                const correct = sent.querySelector('[data-se-option][data-se-correct]');
-                if (correct) {
-                    answers.push({ label: `Context ${idx+1}`, answer: correct.textContent.trim() });
+                // Buscar el botón correcto (post-mount) o el elemento original (pre-mount)
+                const correct = Array.from(sent.querySelectorAll('[data-se-correct="true"], [data-se-option][data-se-correct]'))
+                    .find(el => el.classList.contains('quiz-option') || el.classList.contains('se-cc-btn') || el.hasAttribute('data-se-correct'));
+                
+                // Si no hay botón con clase específica, buscamos por atributo valor
+                const finalCorrect = correct || sent.querySelector('[data-se-correct="true"]');
+
+                if (finalCorrect) {
+                    answers.push({ label: `Context ${idx+1}`, answer: finalCorrect.textContent.trim() });
                 }
             });
         }
@@ -980,7 +1005,8 @@ const SlideEngine = (function () {
 
         // ESSAY
         if (type === 'ESSAY') {
-            const prompt = slide.querySelector('[data-se-prompt]');
+            // El prompt se remueve al montar, así que buscamos el texto que se guardó o el original
+            const prompt = slide.querySelector('[data-se-prompt]') || slide.querySelector('.essay-prompt-display');
             if (prompt) {
                 answers.push({
                     label: 'Essay Prompt',
@@ -1011,17 +1037,6 @@ const SlideEngine = (function () {
             }
         }
     });
-
-    function _forceUnlockNext(index) {
-        const slide = _slides[index];
-        if (slide) {
-            const btn = slide.querySelector('.btn-next');
-            if (btn) {
-                btn.classList.add('inst-unlocked');
-                btn.style.display = 'block';
-            }
-        }
-    }
 
 
     async function _activateTeacherMode() {
@@ -1625,7 +1640,16 @@ SlideTypes.ESSAY = {
     _mountWorkspace(slide, lessonName) {
         const promptEl   = slide.querySelector('[data-se-prompt]');
         const promptText = promptEl ? promptEl.innerHTML : '';
-        if (promptEl) promptEl.remove();
+        
+        if (promptEl) {
+            // Guardar una referencia visual para el Teacher Helper antes de remover
+            const helperRef = document.createElement('div');
+            helperRef.className = 'essay-prompt-display';
+            helperRef.style.display = 'none';
+            helperRef.innerHTML = promptText;
+            slide.appendChild(helperRef);
+            promptEl.remove();
+        }
 
         const workspace = document.createElement('div');
         workspace.className = 'essay-workspace';
@@ -2966,6 +2990,7 @@ SlideTypes.CHOOSE_CONTEXT = {
                 const isCorrect = opt.hasAttribute('data-se-correct');
                 const btn       = document.createElement('button');
                 btn.textContent = opt.textContent.trim();
+                btn.dataset.seCorrect = isCorrect ? "true" : "false";
                 btn.style.cssText = `padding:3px 12px; border-radius:20px; cursor:pointer;
                                       border:2px solid #3498db; background:#eaf6ff;
                                       color:#2c3e50; font-size:inherit; font-family:inherit;
