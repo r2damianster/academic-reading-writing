@@ -829,12 +829,12 @@ const ReadingEngine = (function () {
         const left = (screen.width/2)-(w/2);
         const top = (screen.height/2)-(h/2);
         const helperUrl = window.location.origin + '/teacher-helper.html';
-        window._reHelperWindow = window.open(helperUrl, 'TeacherHelper', `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes,status=no,menubar=no,toolbar=no`);
+        _helperWindow = window.open(helperUrl, 'TeacherHelper', `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes,status=no,menubar=no,toolbar=no`);
         setTimeout(() => _notifyHelper(), 800);
     }
 
     function _notifyHelper() {
-        if (!window._reHelperWindow || window._reHelperWindow.closed) return;
+        if (!_helperWindow || _helperWindow.closed) return;
         const slides = Array.from(document.querySelectorAll('.reading-slide'));
         const current = slides[_current];
         if (!current) return;
@@ -843,7 +843,7 @@ const ReadingEngine = (function () {
             title: current.querySelector('h2')?.textContent || '',
             answers: _collectAnswers(current)
         };
-        window._reHelperWindow.postMessage({ type: 'UPDATE_HELPER', payload }, '*');
+        _helperWindow.postMessage({ type: 'UPDATE_HELPER', payload }, '*');
     }
 
     function _showLockedOverlay(status) {
@@ -888,8 +888,10 @@ const ReadingEngine = (function () {
         
         // READING_QUIZ
         if (type === 'READING_QUIZ') {
-            slide.querySelectorAll('[data-re-option]').forEach(opt => {
-                if (opt.hasAttribute('data-re-correct')) {
+            const options = Array.from(slide.querySelectorAll('[data-re-option], .sidebar-quiz-option'));
+            options.forEach(opt => {
+                const isCorrect = opt.hasAttribute('data-re-correct') || opt.dataset.reCorrect === 'true';
+                if (isCorrect) {
                     answers.push({ label: 'Correct Option', answer: opt.textContent.trim() });
                 }
             });
