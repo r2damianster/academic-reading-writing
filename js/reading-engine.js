@@ -138,6 +138,10 @@ const ReadingEngine = (function () {
             _mountInstructorUI();
         }
 
+        // Teacher mode — activate if ?teacher=1 in URL
+        if (new URLSearchParams(window.location.search).get('teacher') === '1') {
+            await _activateTeacherMode();
+        }
 
         // Montar cada slide
         _slides.forEach((slide, i) => {
@@ -523,6 +527,7 @@ const ReadingEngine = (function () {
     }
 
     /* ──────────────────────────────────────────────────────────────────────────
+
        PANEL DE AYUDA AI — Reading Coach
        Botón flotante persistente. Se inyecta una vez en init() y permanece
        visible durante toda la sesión de lectura sin afectar el layout de slides.
@@ -924,6 +929,69 @@ const ReadingEngine = (function () {
     });
 
     /* ──────────────────────────────────────────────────────────────────────────
+
+       TEACHER MODE
+    ────────────────────────────────────────────────────────────────────────── */
+    async function _activateTeacherMode() {
+        const TEACHER_HASH = 'bbe6d5aa8fb5c19ed384f6a37e2e298e2e592b989a0f9c2305ef194aa0a04fc8';
+
+        if (sessionStorage.getItem('teacherMode') === '1') {
+            _showTeacherNotes();
+            return;
+        }
+
+        return new Promise(resolve => {
+            const modal = document.createElement('div');
+            modal.id = 're-teacher-modal';
+            modal.innerHTML = `
+                <div class="re-teacher-modal-box">
+                    <div class="re-teacher-modal-icon">&#x1F511;</div>
+                    <h3>Teacher Mode</h3>
+                    <p>Enter the instructor password to activate the teacher helper.</p>
+                    <input type="password" id="re-teacher-pwd" placeholder="Password" autocomplete="off">
+                    <div id="re-teacher-error" style="display:none">Incorrect password.</div>
+                    <button id="re-teacher-btn">Unlock</button>
+                </div>`;
+            document.body.appendChild(modal);
+
+            const input = modal.querySelector('#re-teacher-pwd');
+            const btn   = modal.querySelector('#re-teacher-btn');
+            const err   = modal.querySelector('#re-teacher-error');
+            input.focus();
+
+            async function attempt() {
+                const hash = await _sha256(input.value);
+                if (hash === TEACHER_HASH) {
+                    sessionStorage.setItem('teacherMode', '1');
+                    modal.remove();
+                    _showTeacherNotes();
+                    resolve();
+                } else {
+                    err.style.display = 'block';
+                    input.value = '';
+                    input.focus();
+                }
+            }
+            btn.addEventListener('click', attempt);
+            input.addEventListener('keydown', e => { if (e.key === 'Enter') attempt(); });
+        });
+    }
+
+    async function _sha256(str) {
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function _showTeacherNotes() {
+        document.querySelectorAll('[data-teacher-note]').forEach(el => el.style.display = 'block');
+        const banner = document.createElement('div');
+        banner.className = 're-teacher-banner';
+        banner.innerHTML = '&#x1F511; Teacher Mode &mdash; <em>visible only to instructor</em>';
+        document.body.insertAdjacentElement('afterbegin', banner);
+    }
+
+    /* ──────────────────────────────────────────────────────────────────────────
+
        API PÚBLICA
     ────────────────────────────────────────────────────────────────────────── */
     return { init, next, _unlockNext, _appendNextBtn, _renderPage, _renderWithControls, _saveProgress,
