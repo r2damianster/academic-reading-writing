@@ -5,7 +5,7 @@
 ---
 
 ### [FEATURE] Teacher Helper Mode
-**Estado:** Pendiente  
+**Estado:** En Progreso (80% completado)  
 **Prioridad:** Media  
 **Descripción:** Panel de guía docente visible únicamente en modo teacher, integrado directamente en cada slide de las lecciones HTML.
 
@@ -31,10 +31,12 @@
 ```
 
 **Trabajo requerido:**
-- [ ] Lógica de activación en `reading-engine.js` (detectar `?teacher=1`, verificar contraseña, setear flag en sessionStorage)
-- [ ] CSS para el panel teacher (estilo diferenciado — fondo amarillo/ámbar, ícono de llave)
-- [ ] Poblar los `data-teacher-note` en las 7 lecciones de `unit1-essays/` como piloto
-- [ ] Extender a los demás módulos si el piloto funciona bien
+- [x] Lógica de activación en `reading-engine.js` (detectar `?teacher=1`, verificar contraseña, setear flag en sessionStorage)
+- [x] CSS para el panel teacher (estilo diferenciado — fondo amarillo/ámbar, ícono de llave)
+- [x] Poblar los `data-teacher-note` en el módulo **00. Fundamentals** (13 lecciones)
+- [x] Poblar los `data-teacher-note` en el módulo **02. Toolbox** (21 lecciones)
+- [ ] Poblar los `data-teacher-note` en el módulo **01. Core Syllabus** (Pendiente)
+- [ ] Extender a los demás módulos y tests
 
 **Lecciones priorizadas para el piloto:**
 1. `essay-patterns.html` (12 slides, ya tiene todas las respuestas definidas)
