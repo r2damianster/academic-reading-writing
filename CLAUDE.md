@@ -205,7 +205,7 @@ Ver `DEUDA_TECNICA.md` para el estado completo. Items pendientes de mayor impact
 | DT-002 | 🟡 MEDIO | `slide-engine.js` (2482 líneas) mezcla UI + sync Supabase |
 | DT-003 | 🟡 MEDIO | `_calcIntegrityFallback` duplicada en `report.js` y `essay-handler.js` |
 | DT-004 | 🟠 ALTO | Eliminar `READING_COMMENT` (actividades de producción) de lecciones `reading-engine` |
-| DT-005 | ✅ DONE | `index.html` implements `isAdmin` check and manual toggle |
+| DT-006 | 🟢 NUEVO | Teacher Helper Mode: Inline annotations via `data-teacher-note` and `?teacher=1` |
 | L-001 | 🔴 CRÍTICO | Argumentative Essay (HTML vacío, coming soon) |
 | L-002 | 🔴 CRÍTICO | Chain Essay (HTML vacío, coming soon) |
 | L-003 | 🟢 NUEVO | Instructor Mode: Manual Toggle implemented (real-time sync) |
@@ -216,10 +216,9 @@ Ver `DEUDA_TECNICA.md` para el estado completo. Items pendientes de mayor impact
 
 El sistema permite a los profesores alternar entre la vista de estudiante y la vista de instructor en tiempo real.
 
-- **Login**: Al entrar como `arturo.rodriguez@uleam.edu.ec`, el sistema habilita el botón de Modo Instructor en la sidebar.
-- **Default**: Siempre inicia en modo estudiante (bloqueos activos).
-- **Activación**: El botón de la sidebar envía un `postMessage` al iframe de la lección.
-- **Motores**: `slide-engine.js` y `reading-engine.js` escuchan el mensaje `TOGGLE_INSTRUCTOR` para mostrar/ocultar el panel de respuestas instantáneamente.
+- **Instructor Mode**: Al entrar como `arturo.rodriguez@uleam.edu.ec`, habilita el botón en la sidebar. Envía `postMessage` a iframes para alternar vista.
+- **Teacher Helper Mode**: Acceso vía URL `?teacher=1` + password (SHA-256: `bbe6d5...`). Revela bloques `[data-teacher-note]` inyectando estilos y un banner ámbar.
+- **Motores**: Ambos motores soportan tanto el toggle manual como el helper vía URL.
 
 ---
 
@@ -244,7 +243,6 @@ npm start 2>&1 | ollama run llama3.2 "Summarize errors only. Be concise."
 ## Notas para Claude Code
 
 - Este proyecto tiene ~200 estudiantes activos en producción. Los cambios en `api/` afectan directamente la experiencia del estudiante.
-- Antes de modificar `api/orchestrator.js`, revisar que todos los agentes siguen funcionando.
-- Los archivos de módulos (`modules/`) son HTML estáticos generados — no modificar manualmente, usar el Content Gen Agent.
-- El `slide-engine.js` tiene 2482 líneas — leer solo las secciones relevantes, no el archivo completo.
-- Cuando el output de un comando sea grande, usar: `| ollama run llama3.2 "Summarize. Focus on errors. Be concise."`
+- El `slide-engine.js` tiene ~3000 líneas — leer solo las secciones relevantes.
+- **Teacher Helper**: Al agregar notas, usar el atributo `data-teacher-note="Texto de la nota"`. Las notas deben explicar el *porqué* pedagógico y proveer citas exactas en español.
+- **READING_COMMENT**: No usar en `reading-engine`. Si se encuentra uno, reportarlo para conversión a QUIZ o FILL.
