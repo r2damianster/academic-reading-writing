@@ -873,9 +873,10 @@ const SlideEngine = (function () {
 
         // QUIZ
         if (type === 'QUIZ') {
-            // Buscamos tanto los divs originales como los botones generados (.quiz-option)
-            slide.querySelectorAll('[data-se-option], .quiz-option').forEach(opt => {
-                if (opt.hasAttribute('data-se-correct')) {
+            const options = Array.from(slide.querySelectorAll('[data-se-option], .quiz-option'));
+            options.forEach(opt => {
+                const isCorrect = opt.hasAttribute('data-se-correct') || opt.getAttribute('data-se-correct') === 'true';
+                if (isCorrect) {
                     answers.push({ 
                         label: 'Correct Option', 
                         answer: opt.textContent.trim(),
@@ -1004,6 +1005,17 @@ const SlideEngine = (function () {
         if (bar) bar.remove();
         // Recargar el slide actual para reactivar bloqueos si es necesario
         goTo(_currentIndex);
+    }
+
+    function _forceUnlockNext(index) {
+        const slide = _slides[index];
+        if (slide) {
+            const btn = slide.querySelector('.btn-next');
+            if (btn) {
+                btn.classList.add('inst-unlocked');
+                btn.style.display = 'block';
+            }
+        }
     }
 
     // Listener para comunicación con la ventana principal (index.html)
@@ -1189,7 +1201,7 @@ SlideTypes.QUIZ = {
         const optionsHTML = optionEls.map(opt => {
             const isCorrect = opt.hasAttribute('data-se-correct');
             const text      = opt.innerHTML.trim();
-            return `<button class="quiz-option" ${isCorrect ? 'data-se-correct' : ''}
+            return `<button class="quiz-option" ${isCorrect ? 'data-se-correct="true"' : ''}
                         onclick="checkAnswer(this, ${isCorrect}, '${feedbackId}')"
                         style="display:block; width:100%; text-align:left; padding:12px 15px;
                                margin:6px 0; border:2px solid #dee2e6; border-radius:8px;
