@@ -864,8 +864,10 @@ const SlideEngine = (function () {
 
         // QUIZ
         if (type === 'QUIZ') {
-            slide.querySelectorAll('[data-se-option]').forEach(opt => {
-                if (opt.hasAttribute('data-se-correct')) {
+            const options = Array.from(slide.querySelectorAll('[data-se-option], .quiz-option'));
+            options.forEach(opt => {
+                const isCorrect = opt.hasAttribute('data-se-correct') || opt.dataset.seCorrect === 'true';
+                if (isCorrect) {
                     answers.push({ 
                         label: 'Correct Option', 
                         answer: opt.textContent.trim(),
@@ -1009,6 +1011,17 @@ const SlideEngine = (function () {
             }
         }
     });
+
+    function _forceUnlockNext(index) {
+        const slide = _slides[index];
+        if (slide) {
+            const btn = slide.querySelector('.btn-next');
+            if (btn) {
+                btn.classList.add('inst-unlocked');
+                btn.style.display = 'block';
+            }
+        }
+    }
 
 
     async function _activateTeacherMode() {
@@ -1183,6 +1196,7 @@ SlideTypes.QUIZ = {
             const isCorrect = opt.hasAttribute('data-se-correct');
             const text      = opt.innerHTML.trim();
             return `<button class="quiz-option" 
+                        data-se-correct="${isCorrect}"
                         onclick="checkAnswer(this, ${isCorrect}, '${feedbackId}')"
                         style="display:block; width:100%; text-align:left; padding:12px 15px;
                                margin:6px 0; border:2px solid #dee2e6; border-radius:8px;
