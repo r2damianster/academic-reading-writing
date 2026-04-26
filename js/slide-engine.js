@@ -40,19 +40,8 @@ const SlideEngine = (function () {
     let _lessonName        = '';
     let _slides            = [];
     let _scoreAlreadySaved = false;
-    let _helperWindow      = null;
     let _isAdmin           = false;
-
-    function _forceUnlockNext(index) {
-        const slide = _slides[index];
-        if (slide) {
-            const btn = slide.querySelector('.btn-next');
-            if (btn) {
-                btn.classList.add('inst-unlocked');
-                btn.style.display = 'block';
-            }
-        }
-    }
+    let _helperWindow      = null;
 
     // ── Inicialización ──────────────────────────────────────────────────────────
     // Llama esto en window.onload de cada lección.
@@ -866,6 +855,15 @@ const SlideEngine = (function () {
         window._seHelperWindow.postMessage({ type: 'UPDATE_HELPER', payload }, '*');
     }
 
+    function _forceUnlockNext(index) {
+        const slides = Array.from(document.querySelectorAll('.slide'));
+        const current = slides[index];
+        if (current) {
+            const btn = current.querySelector('.btn-next');
+            if (btn) btn.style.display = 'block';
+        }
+    }
+
     function _collectAnswers(slide) {
         const answers = [];
         const type = (slide.dataset.type || '').toUpperCase();
@@ -875,13 +873,9 @@ const SlideEngine = (function () {
 
         // QUIZ
         if (type === 'QUIZ') {
-            const options = Array.from(slide.querySelectorAll('[data-se-option], .quiz-option'));
-            options.forEach(opt => {
-                const isCorrect = opt.classList.contains('quiz-option') 
-                    ? opt.getAttribute('data-se-correct') === 'true' 
-                    : opt.hasAttribute('data-se-correct');
-
-                if (isCorrect) {
+            // Buscamos tanto los divs originales como los botones generados (.quiz-option)
+            slide.querySelectorAll('[data-se-option], .quiz-option').forEach(opt => {
+                if (opt.hasAttribute('data-se-correct')) {
                     answers.push({ 
                         label: 'Correct Option', 
                         answer: opt.textContent.trim(),
@@ -893,14 +887,12 @@ const SlideEngine = (function () {
 
         // DRAG_DROP
         if (type === 'DRAG_DROP') {
-            const drops = Array.from(slide.querySelectorAll('[data-se-drop]'));
-            drops.forEach(drop => {
+            slide.querySelectorAll('[data-se-drop]').forEach(drop => {
                 const accepts = drop.dataset.seDropAccepts;
-                const label = drop.dataset.seLabel || 'Zone';
                 const drag = slide.querySelector(`[data-se-drag][data-se-drag-type="${accepts}"]`);
                 if (drag) {
                     answers.push({ 
-                        label: `Zone: ${label}`, 
+                        label: `Zone: ${drop.dataset.seLabel || 'Target'}`, 
                         answer: drag.textContent.trim(),
                         explanation: getHint(drop) || getHint(drag)
                     });
@@ -938,8 +930,7 @@ const SlideEngine = (function () {
 
         // CATEGORIZE
         if (type === 'CATEGORIZE') {
-            const zones = slide.querySelectorAll('[data-se-category-zone]');
-            zones.forEach(zone => {
+            slide.querySelectorAll('[data-se-category-zone]').forEach(zone => {
                 const category = zone.dataset.seAccepts;
                 const label = zone.dataset.seLabel || 'Category';
                 const items = Array.from(slide.querySelectorAll(`[data-se-item][data-se-category="${category}"], [data-se-category-item][data-se-drag-type="${category}"]`))
@@ -953,23 +944,18 @@ const SlideEngine = (function () {
 
         // WORD_BANK
         if (type === 'WORD_BANK') {
-            // Buscar tanto el original como el reemplazo (zone)
-            const blanks = slide.querySelectorAll('[data-se-blank], [id^="se-wb-blank-"]');
-            blanks.forEach((blank, idx) => {
-                const answer = blank.dataset.seAnswer;
-                if (answer) {
-                    answers.push({ 
-                        label: `Blank ${idx+1}`, 
-                        answer: answer,
-                        explanation: getHint(blank)
-                    });
+            slide.querySelectorAll('[data-se-blank], [id^="se-wb-blank-"]').forEach((blank, idx) => {
+                const ans = blank.dataset.seAnswer;
+                if (ans) {
+                    answers.push({ label: `Blank ${idx+1}`, answer: ans, explanation: getHint(blank) });
                 }
             });
         }
 
         // SORT_PARAGRAPH
         if (type === 'SORT_PARAGRAPH') {
-            const sentences = Array.from(slide.querySelectorAll('[data-se-sentence]'))
+            const sentences = Array.from(slide.querySelectorAll('[data-se-sentence], [data-se-sort]'))
+                .filter(el => el.hasAttribute('data-se-order'))
                 .sort((a, b) => (parseInt(a.dataset.seOrder) || 0) - (parseInt(b.dataset.seOrder) || 0));
             sentences.forEach((s, idx) => {
                 answers.push({ label: `Position ${idx+1}`, answer: s.textContent.trim() });
@@ -979,15 +965,9 @@ const SlideEngine = (function () {
         // CHOOSE_CONTEXT
         if (type === 'CHOOSE_CONTEXT') {
             slide.querySelectorAll('[data-se-sentence]').forEach((sent, idx) => {
-                // Buscar el botón correcto (post-mount) o el elemento original (pre-mount)
-                const correct = Array.from(sent.querySelectorAll('[data-se-correct="true"], [data-se-option][data-se-correct]'))
-                    .find(el => el.classList.contains('quiz-option') || el.classList.contains('se-cc-btn') || el.hasAttribute('data-se-correct'));
-                
-                // Si no hay botón con clase específica, buscamos por atributo valor
-                const finalCorrect = correct || sent.querySelector('[data-se-correct="true"]');
-
-                if (finalCorrect) {
-                    answers.push({ label: `Context ${idx+1}`, answer: finalCorrect.textContent.trim() });
+                const correct = sent.querySelector('[data-se-option][data-se-correct], [data-se-correct]');
+                if (correct) {
+                    answers.push({ label: `Context ${idx+1}`, answer: correct.textContent.trim() });
                 }
             });
         }
@@ -996,7 +976,7 @@ const SlideEngine = (function () {
         if (type === 'CONTRAST') {
             slide.querySelectorAll('[data-se-correct]').forEach(el => {
                 answers.push({
-                    label: el.dataset.seLabel || 'Correct Implementation',
+                    label: el.dataset.seLabel || 'Correct',
                     answer: el.textContent.trim(),
                     explanation: getHint(el)
                 });
@@ -1005,8 +985,7 @@ const SlideEngine = (function () {
 
         // ESSAY
         if (type === 'ESSAY') {
-            // El prompt se remueve al montar, así que buscamos el texto que se guardó o el original
-            const prompt = slide.querySelector('[data-se-prompt]') || slide.querySelector('.essay-prompt-display');
+            const prompt = slide.querySelector('[data-se-prompt]');
             if (prompt) {
                 answers.push({
                     label: 'Essay Prompt',
@@ -1210,8 +1189,7 @@ SlideTypes.QUIZ = {
         const optionsHTML = optionEls.map(opt => {
             const isCorrect = opt.hasAttribute('data-se-correct');
             const text      = opt.innerHTML.trim();
-            return `<button class="quiz-option" 
-                        data-se-correct="${isCorrect}"
+            return `<button class="quiz-option" ${isCorrect ? 'data-se-correct' : ''}
                         onclick="checkAnswer(this, ${isCorrect}, '${feedbackId}')"
                         style="display:block; width:100%; text-align:left; padding:12px 15px;
                                margin:6px 0; border:2px solid #dee2e6; border-radius:8px;
@@ -1278,6 +1256,9 @@ SlideTypes.CONTRAST = {
             const content     = el.innerHTML.trim();
 
             const box = document.createElement('div');
+            if (isCorrect) box.setAttribute('data-se-correct', '');
+            if (el.dataset.seLabel) box.setAttribute('data-se-label', el.dataset.seLabel);
+
             box.style.cssText = `padding:15px; border-radius:8px; margin:10px 0;
                                   border-left:5px solid ${border};
                                   background-color:${bg}; color:${color};`;
@@ -1640,16 +1621,7 @@ SlideTypes.ESSAY = {
     _mountWorkspace(slide, lessonName) {
         const promptEl   = slide.querySelector('[data-se-prompt]');
         const promptText = promptEl ? promptEl.innerHTML : '';
-        
-        if (promptEl) {
-            // Guardar una referencia visual para el Teacher Helper antes de remover
-            const helperRef = document.createElement('div');
-            helperRef.className = 'essay-prompt-display';
-            helperRef.style.display = 'none';
-            helperRef.innerHTML = promptText;
-            slide.appendChild(helperRef);
-            promptEl.remove();
-        }
+        if (promptEl) promptEl.remove();
 
         const workspace = document.createElement('div');
         workspace.className = 'essay-workspace';
@@ -2990,7 +2962,6 @@ SlideTypes.CHOOSE_CONTEXT = {
                 const isCorrect = opt.hasAttribute('data-se-correct');
                 const btn       = document.createElement('button');
                 btn.textContent = opt.textContent.trim();
-                btn.dataset.seCorrect = isCorrect ? "true" : "false";
                 btn.style.cssText = `padding:3px 12px; border-radius:20px; cursor:pointer;
                                       border:2px solid #3498db; background:#eaf6ff;
                                       color:#2c3e50; font-size:inherit; font-family:inherit;

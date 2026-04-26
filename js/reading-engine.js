@@ -910,7 +910,7 @@ const ReadingEngine = (function () {
         
         // READING_FILL
         if (type === 'READING_FILL') {
-            slide.querySelectorAll('[data-re-blank]').forEach((blank, idx) => {
+            slide.querySelectorAll('[data-re-blank], .re-fill-input').forEach((blank, idx) => {
                 answers.push({ label: `Blank ${idx+1}`, answer: blank.dataset.reAnswer });
             });
         }
