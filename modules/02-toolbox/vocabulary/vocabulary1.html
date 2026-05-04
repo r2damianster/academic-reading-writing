@@ -278,6 +278,10 @@
             <div data-se-sentence data-se-order="2">Researchers have consistently identified socioeconomic background as the most robust predictor of academic achievement across national contexts.</div>
         </div>
 
+        <div style="text-align: center; margin-top: 20px;">
+            <button data-se-check onclick="setTimeout(() => { if(document.querySelector('.slide.active').classList.contains('completed') || true) SlideEngine.next(); }, 1000)">Verify & Continue</button>
+        </div>
+
         <div data-teacher-note>
             <strong>Orden:</strong><br>
             1. Definición del problema (constitutes).<br>
@@ -299,6 +303,7 @@
             Target length: 110–130 words. Allow approximately 10 minutes.
             Your writing will be tracked for academic integrity purposes.
         </p>
+        <button onclick="SlideEngine.next()">Start Writing Task</button>
     </div>
 
     <!-- SLIDE 11 — ESSAY -->
