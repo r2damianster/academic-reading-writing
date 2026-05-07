@@ -2444,6 +2444,7 @@ SlideTypes.MATCH = {
 
         // Construir tabla de dos columnas
         const grid = document.createElement('div');
+        grid.className = 'se-match-grid';
         grid.style.cssText = `display:grid; grid-template-columns:1fr 1fr; gap:8px;
                                margin:16px 0;`;
 
@@ -2651,6 +2652,7 @@ SlideTypes.WORD_BANK = {
             zone.dataset.seAnswer = answer;
             zone.dataset.seEmpty  = 'true';
             zone.dataset.seWord   = '';
+            zone.className = 'se-wb-zone';
             zone.style.cssText = `display:inline-block;
                                    min-width:${Math.max(answer.length * 11, 80)}px;
                                    padding:2px 10px; border-bottom:2px solid #3498db;
@@ -2843,6 +2845,7 @@ SlideTypes.CATEGORIZE = {
 
         const cols = Math.min(zones.length, 2);
         const grid = document.createElement('div');
+        grid.className = 'se-cat-grid';
         grid.style.cssText = `display:grid; grid-template-columns:repeat(${cols},1fr);
                                gap:10px; margin:10px 0;`;
 

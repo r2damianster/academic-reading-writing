@@ -154,30 +154,66 @@ h2 {
     color: #444;
 }
 
-/* --- RESPONSIVE (Móviles) --- */
-@media (max-width: 600px) {
-    body { padding: 10px; }
-    
-    .lesson-container { 
-        padding: 20px; 
-        border-radius: 0; /* Ocupa mejor el ancho del celular */
+/* --- RESPONSIVE (Móviles) — alineado con breakpoint de main.css --- */
+@media (max-width: 767px) {
+    body { padding: 0; }
+
+    .lesson-container {
+        padding: 15px;
+        border-radius: 0;
     }
 
-    h2 { font-size: 1.3rem; }
+    .progress-bar { margin-bottom: 15px; }
+
+    h2 { font-size: 1.1rem; }
+
+    .quiz-option {
+        padding: 11px 10px;
+        font-size: 0.88rem;
+        margin: 6px 0;
+    }
 
     .btn-next {
-        width: 100%; /* Botón grande para el pulgar */
+        width: 100%;
         float: none;
         margin-left: 0;
     }
 
-    /* Asegura que el iframe no "rompa" el diseño */
-    iframe {
-        height: 250px; 
+    iframe { height: 220px; }
+
+    textarea { font-size: 16px !important; }
+
+    /* Touch targets para drag items del engine */
+    [data-se-item] {
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
     }
 
-    textarea {
-        font-size: 16px !important; /* Evita el zoom automático en iOS al escribir */
+    /* MATCH: texto más compacto en layout 2 columnas */
+    .se-match-grid > div {
+        font-size: 0.82rem !important;
+        padding: 8px !important;
+        min-height: 38px !important;
+        word-break: break-word;
+    }
+
+    /* Word bank: pills más pequeñas */
+    [data-se-bank] [data-se-word] {
+        font-size: 0.82rem !important;
+        padding: 5px 10px !important;
+    }
+
+    /* WORD_BANK blanks: min-width reducido para no romper flujo del texto */
+    .se-wb-zone {
+        min-width: 65px !important;
+    }
+}
+
+/* Pantallas muy pequeñas: CATEGORIZE colapsa a 1 columna */
+@media (max-width: 480px) {
+    .se-cat-grid {
+        grid-template-columns: 1fr !important;
     }
 }
 

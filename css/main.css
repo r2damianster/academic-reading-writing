@@ -628,7 +628,7 @@ body, html {
 @media (max-width: 768px) {
     .flyout-panel {
         flex-direction: column;
-        width: min(320px, 82vw);
+        width: min(320px, calc(100vw - var(--sidebar-width)));
         left: var(--sidebar-width);
         height: auto;
         max-height: 92dvh;
