@@ -2784,6 +2784,7 @@ SlideTypes.CATEGORIZE = {
 
         const pool = document.createElement('div');
         pool.id    = `se-cat-pool-${index}`;
+        pool.dataset.seCatPool = '1';
         pool.style.cssText = `display:flex; flex-wrap:wrap; gap:8px; padding:12px;
                                background:#f8f9fa; border-radius:10px; margin-bottom:16px;
                                border:2px dashed #adb5bd; min-height:52px;`;
@@ -3052,3 +3053,96 @@ SlideTypes.CHOOSE_CONTEXT = {
         _appendNextButton(slide, { hidden: true });
     }
 };
+
+
+/* =============================================================================
+   TOUCH DRAG POLYFILL
+   Traduce touchstart/touchmove/touchend → DragEvent sintéticos para que
+   DRAG_DROP, CATEGORIZE y SORT_PARAGRAPH funcionen en móvil (Android/iOS).
+============================================================================= */
+(function _installTouchDragSupport() {
+    if (!('ontouchstart' in window)) return;
+
+    let _drag = null; // { el, clone, offsetX, offsetY, transferValue }
+
+    document.addEventListener('touchstart', function (e) {
+        const el = e.target.closest('[draggable="true"]');
+        if (!el) return;
+
+        const touch = e.touches[0];
+        const rect  = el.getBoundingClientRect();
+
+        // SORT_PARAGRAPH usa índice como valor; el resto usa el ID del elemento
+        let transferValue = el.id;
+        if (el.classList.contains('se-sort-item')) {
+            transferValue = String(Array.from(el.parentNode.children).indexOf(el));
+        }
+
+        _drag = {
+            el,
+            transferValue,
+            offsetX: touch.clientX - rect.left,
+            offsetY: touch.clientY - rect.top
+        };
+
+        // Clonar el elemento para seguir el dedo visualmente
+        const clone = el.cloneNode(true);
+        clone.style.position      = 'fixed';
+        clone.style.zIndex        = '9999';
+        clone.style.pointerEvents = 'none';
+        clone.style.opacity       = '0.85';
+        clone.style.transform     = 'scale(1.05)';
+        clone.style.width         = rect.width + 'px';
+        clone.style.left          = (touch.clientX - _drag.offsetX) + 'px';
+        clone.style.top           = (touch.clientY - _drag.offsetY) + 'px';
+        clone.style.margin        = '0';
+        clone.style.boxShadow     = '0 4px 16px rgba(0,0,0,0.2)';
+        document.body.appendChild(clone);
+        _drag.clone = clone;
+
+        // 0.5 para se-sort-item: coincide con el fallback del drop handler
+        el.style.opacity = el.classList.contains('se-sort-item') ? '0.5' : '0.4';
+        e.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener('touchmove', function (e) {
+        if (!_drag) return;
+        const touch = e.touches[0];
+        _drag.clone.style.left = (touch.clientX - _drag.offsetX) + 'px';
+        _drag.clone.style.top  = (touch.clientY - _drag.offsetY) + 'px';
+        e.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener('touchend', function (e) {
+        if (!_drag) return;
+        const touch   = e.changedTouches[0];
+        const el      = _drag.el;
+        const xferVal = _drag.transferValue;
+
+        // Ocultar clon para que elementFromPoint vea lo que hay debajo del dedo
+        _drag.clone.style.display = 'none';
+        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+        _drag.clone.remove();
+        _drag = null;
+
+        if (target) {
+            const zone = target.closest('[data-se-drop]')           // DRAG_DROP
+                      || target.closest('[data-se-category-zone]')  // CATEGORIZE zona
+                      || target.closest('[data-se-cat-pool]')        // CATEGORIZE pool
+                      || target.closest('.se-sort-item');            // SORT_PARAGRAPH
+
+            if (zone) {
+                // Event plain + dataTransfer falso: compatible con Samsung Internet
+                // que no soporta new DataTransfer() / new DragEvent con dataTransfer
+                const dropEvt = new Event('drop', { bubbles: true, cancelable: true });
+                dropEvt.dataTransfer = { getData: function () { return xferVal; } };
+                dropEvt.clientX = touch.clientX;
+                dropEvt.clientY = touch.clientY;
+                zone.dispatchEvent(dropEvt);
+            }
+        }
+
+        el.style.opacity = '1';
+        el.dispatchEvent(new Event('dragend', { bubbles: true }));
+    });
+})();
