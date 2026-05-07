@@ -317,9 +317,24 @@ const SlideEngine = (function () {
 
     // ── Skip essay ───────────────────────────────────────────────────────────────
     function skipLessonWithData(lessonName) {
-        if (confirm('Skip the writing exercise? Your current quiz progress will be saved.')) {
+        // confirm() is unreliable on mobile (Samsung Internet, Android) — use inline modal
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;';
+        overlay.innerHTML = `
+            <div style="background:#fff;border-radius:12px;padding:24px;max-width:340px;width:100%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.25);">
+                <p style="margin:0 0 8px;font-size:1.05rem;font-weight:700;color:#2c3e50;">Skip Writing Exercise?</p>
+                <p style="margin:0 0 20px;font-size:0.9rem;color:#555;">Your quiz progress will be saved.</p>
+                <div style="display:flex;gap:10px;">
+                    <button id="_skip-cancel" style="flex:1;padding:11px;border:1px solid #ccc;border-radius:8px;background:#f8f9fa;cursor:pointer;font-size:0.95rem;">Cancel</button>
+                    <button id="_skip-confirm" style="flex:1;padding:11px;border:none;border-radius:8px;background:#e74c3c;color:#fff;cursor:pointer;font-size:0.95rem;font-weight:600;">Yes, Skip</button>
+                </div>
+            </div>`;
+        document.body.appendChild(overlay);
+        overlay.querySelector('#_skip-cancel').addEventListener('click', () => overlay.remove());
+        overlay.querySelector('#_skip-confirm').addEventListener('click', () => {
+            overlay.remove();
             finishLessonWithEssay(lessonName, '[USER SKIPPED ESSAY]', { skipped: true });
-        }
+        });
     }
 
     // ── Guardar en localStorage ───────────────────────────────────────────────────
