@@ -2174,9 +2174,8 @@ SlideTypes.SORT_PARAGRAPH = {
 
             // Drag events
             item.addEventListener('dragstart', e => {
-                e.dataTransfer.setData('text/plain', i.toString());
+                e.dataTransfer.setData('text/plain', Array.from(container.children).indexOf(item).toString());
                 item.style.opacity = '0.5';
-                item._dragIndex    = Array.from(container.children).indexOf(item);
             });
             item.addEventListener('dragend', () => { item.style.opacity = '1'; });
 
