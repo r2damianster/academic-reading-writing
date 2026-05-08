@@ -49,6 +49,7 @@ window.EssayHandler = (function () {
     let _slideStart    = null;
     let _firstKeyTime  = null;
     let _lastKeyTime   = null;
+    let _tabBaseline   = 0;  // tab-switches already accumulated before essay init
 
     function _onPaste()  { _pastesMade++; }
 
@@ -85,6 +86,11 @@ window.EssayHandler = (function () {
         _slideStart   = Date.now();
         _firstKeyTime = null;
         _lastKeyTime  = null;
+        // Snapshot tab-switches already accumulated reading prior slides —
+        // integrity only counts switches that happen while writing.
+        _tabBaseline  = (typeof ActivityTracker !== 'undefined')
+            ? (ActivityTracker.getActivityAudit().tabSwitches || 0)
+            : 0;
 
         const textarea = document.getElementById(_textareaId);
         if (textarea) {
@@ -151,7 +157,7 @@ window.EssayHandler = (function () {
                 ? Math.round((_totalKeys / totalChars) * 100)
                 : 0;
 
-            const tabSwitches = activityAudit.tabSwitches || 0;
+            const tabSwitches = Math.max(0, (activityAudit.tabSwitches || 0) - _tabBaseline);
 
             const integrityScore = _calcIntegrityScore(
                 _pastesMade, _totalKeys, totalChars,
@@ -200,9 +206,10 @@ window.EssayHandler = (function () {
         const writingDuration = (_firstKeyTime && _lastKeyTime)
             ? Math.round((_lastKeyTime - _firstKeyTime) / 1000)
             : 0;
-        const tabSwitches = (typeof ActivityTracker !== 'undefined')
+        const rawTabs     = (typeof ActivityTracker !== 'undefined')
             ? (ActivityTracker.getActivityAudit().tabSwitches || 0)
             : 0;
+        const tabSwitches = Math.max(0, rawTabs - _tabBaseline);
         return {
             keystrokes:      _totalKeys,
             deletions:       _deletions,
