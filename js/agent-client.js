@@ -165,8 +165,8 @@ const AgentClient = (function () {
 
     /**
      * Solicita ayuda con el texto de lectura activo.
-     * @param {string} question   - Pregunta del estudiante
-     * @param {string} pdfId      - ID del PDF activo
+     * @param {string} question    - Pregunta del estudiante
+     * @param {string} pdfId       - ID del PDF activo
      * @param {number} currentPage - Página actual
      */
     async function askReadingQuestion(question, pdfId, currentPage) {
@@ -175,6 +175,22 @@ const AgentClient = (function () {
             question,
             { pdfId, currentPage },
             { outputFormat: 'short_answer', needsHistoryDepth: 1 }
+        );
+    }
+
+    /**
+     * Solicita evaluación de un test con rúbrica de 8 indicadores.
+     * @param {string} testId       - ID del test (ej: 'test1 fundamentals')
+     * @param {string} essayText    - Texto completo (Phase 1 + Phase 2 concatenadas)
+     * @param {object|null} rubric  - Indicadores de la rúbrica activa (fetched from Supabase)
+     * @param {object} auditData    - Datos de auditoría del ActivityTracker
+     */
+    async function requestTestEvaluation(testId, essayText, rubric, auditData) {
+        return call(
+            'test-grader',
+            'Evaluate this academic writing test submission against the provided rubric',
+            { lesson: testId, essay: essayText, rubric, audit: auditData },
+            { outputFormat: 'json', needsHistoryDepth: 0, requiresTools: false }
         );
     }
 
@@ -195,6 +211,7 @@ const AgentClient = (function () {
         requestIntegrityAnalysis,
         requestProgressSummary,
         askReadingQuestion,
+        requestTestEvaluation,
         isPending,
         getPendingCount,
         OUTPUT_FORMATS

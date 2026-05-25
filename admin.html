@@ -469,6 +469,22 @@ tr:hover td { background:var(--snow); }
                 </label>
             </div>
         </div>
+        <div class="avail-form">
+            <div style="display:flex; align-items:flex-end; gap:16px;">
+                <label style="padding-bottom:10px; font-size:0.85rem; cursor:pointer;">
+                    <input type="checkbox" id="availRepeatable" checked> Repeatable?
+                    <span style="font-size:0.75rem; color:#6c757d; display:block; margin-top:2px;">Uncheck = one attempt only</span>
+                </label>
+            </div>
+            <div>
+                <div class="gen-label">Max Attempts <span style="font-weight:400; color:#6c757d;">(leave blank = unlimited)</span></div>
+                <input type="number" class="gen-input" id="availMaxAttempts" placeholder="e.g. 1" min="1" style="width:120px;">
+            </div>
+            <div>
+                <div class="gen-label">Activity Key <span style="font-weight:400; color:#6c757d;">(for attempt counting)</span></div>
+                <input type="text" class="gen-input" id="availActivityKey" placeholder="e.g. test1 fundamentals">
+            </div>
+        </div>
         <div style="margin-bottom:12px;">
             <div class="gen-label">Custom Message (Optional)</div>
             <input type="text" class="gen-input" id="availMessage" placeholder="Why is this lesson blocked?">
@@ -482,6 +498,45 @@ tr:hover td { background:var(--snow); }
             <div class="table-wrap">
                 <div id="availRulesTable"><div class="state-msg">Loading rules...</div></div>
             </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- Test Rubric Manager -->
+  <div class="section-title">Test Rubric Manager</div>
+  <div class="console-card">
+    <div class="console-head">
+        <span>&#x1F4CB;</span> Manage AI Evaluation Rubrics
+    </div>
+    <div class="console-body">
+        <div class="avail-form">
+            <div>
+                <div class="gen-label">Test</div>
+                <select class="gen-select" id="rubricTestId">
+                    <option value="test1 fundamentals">Test 1 — Fundamentals</option>
+                    <option value="test2 essays">Test 2 — Essays</option>
+                    <option value="test3 research">Test 3 — Research</option>
+                    <option value="test4 toolbox">Test 4 — Toolbox</option>
+                </select>
+            </div>
+        </div>
+        <div class="avail-actions" style="margin-bottom:12px;">
+            <button class="console-btn" onclick="loadRubric()">Load Active Rubric →</button>
+        </div>
+
+        <div id="rubricEditor" style="display:none;">
+            <div class="gen-label" style="margin-bottom:8px;">Indicators (edit points or descriptions, then save as new version):</div>
+            <div id="rubricIndicatorsList"></div>
+            <div class="avail-actions" style="margin-top:14px; gap:10px; display:flex;">
+                <button class="console-btn" onclick="saveRubricVersion()">Save as New Version →</button>
+                <button class="console-btn" style="background:var(--steel);" onclick="previewRubric()">Preview JSON</button>
+            </div>
+            <div id="rubricPreview" style="display:none; margin-top:12px; background:#1a1a2e; color:#e8e8e8; border-radius:6px; padding:14px; font-size:0.72rem; font-family:monospace; white-space:pre-wrap; overflow-x:auto; max-height:300px;"></div>
+        </div>
+
+        <div id="rubricVersionList" style="margin-top:16px;">
+            <div class="gen-label">Version History</div>
+            <div id="rubricVersionsTable"><div class="state-msg">Select a test and click Load to view its rubric.</div></div>
         </div>
     </div>
   </div>
@@ -998,29 +1053,35 @@ async function loadAvailRules() {
               <th>Lesson</th>
               <th>Target</th>
               <th>Period</th>
+              <th>Attempts</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             ${rules.map(r => {
-                const status = !r.is_active ? 'Disabled' : 
+                const status = !r.is_active ? 'Disabled' :
                              (r.available_until && new Date(r.available_until) < now) ? 'Expired' :
                              (r.available_from && new Date(r.available_from) > now) ? 'Future' : 'Active';
                 const statusClass = status.toLowerCase();
-                
+
                 let target = 'Global';
                 if (r.student_id) target = `👤 ${r.students?.name || 'Unknown'}`;
                 else if (r.course_id) target = `📚 ${r.course_id}`;
+
+                const attemptsLabel = r.max_attempts
+                    ? `Max ${r.max_attempts}`
+                    : (r.is_repeatable === false ? '1 (no repeat)' : '∞');
 
                 return `<tr>
                     <td style="font-weight:600;">${r.lesson_id}</td>
                     <td style="font-size:0.78rem;">${target}</td>
                     <td style="font-size:0.75rem; color:var(--steel);">
-                        ${r.available_from ? new Date(r.available_from).toLocaleDateString() : '—'} 
-                        → 
+                        ${r.available_from ? new Date(r.available_from).toLocaleDateString() : '—'}
+                        →
                         ${r.available_until ? new Date(r.available_until).toLocaleDateString() : '∞'}
                     </td>
+                    <td style="font-size:0.75rem; color:var(--steel); text-align:center;">${attemptsLabel}</td>
                     <td><span class="avail-status status-${statusClass}">${status}</span></td>
                     <td>
                         <button onclick="deleteAvailRule('${r.id}')" style="background:none; border:none; color:var(--red); cursor:pointer; font-size:0.75rem;">Delete</button>
@@ -1049,11 +1110,18 @@ async function saveAvailRule() {
     btn.disabled = true;
     btn.textContent = 'Saving...';
 
+    const repeatable  = document.getElementById('availRepeatable').checked;
+    const maxAttempts = document.getElementById('availMaxAttempts').value.trim();
+    const activityKey = document.getElementById('availActivityKey').value.trim();
+
     const rule = {
-        lesson_id: lessonId,
-        available_from: from ? new Date(from).toISOString() : null,
-        available_until: until ? new Date(until).toISOString() : null,
-        is_active: active,
+        lesson_id:        lessonId,
+        available_from:   from  ? new Date(from).toISOString()  : null,
+        available_until:  until ? new Date(until).toISOString() : null,
+        is_active:        active,
+        is_repeatable:    repeatable,
+        max_attempts:     maxAttempts ? parseInt(maxAttempts, 10) : null,
+        activity_key:     activityKey || null,
         message_override: message || null
     };
 
@@ -1076,15 +1144,135 @@ async function saveAvailRule() {
         
         alert('Rule saved successfully!');
         loadAvailRules();
-        // Clear form
         document.getElementById('availFrom').value = '';
         document.getElementById('availUntil').value = '';
         document.getElementById('availMessage').value = '';
+        document.getElementById('availMaxAttempts').value = '';
+        document.getElementById('availActivityKey').value = '';
+        document.getElementById('availRepeatable').checked = true;
     } catch (e) {
         alert('Error saving rule: ' + e.message);
     } finally {
         btn.disabled = false;
         btn.textContent = 'Save Rule →';
+    }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   RUBRIC MANAGER
+════════════════════════════════════════════════════════════════ */
+
+let _activeRubric = null;
+
+async function loadRubric() {
+    const testId = document.getElementById('rubricTestId').value;
+    const editor = document.getElementById('rubricEditor');
+    const vTable = document.getElementById('rubricVersionsTable');
+
+    try {
+        // Load active rubric
+        const rows = await sbGet(`test_rubrics?test_id=eq.${encodeURIComponent(testId)}&order=version.desc`);
+        const active = rows.find(r => r.is_active) || rows[0] || null;
+
+        // Version history table
+        if (rows.length) {
+            vTable.innerHTML = `<table>
+              <thead><tr><th>Version</th><th>Created</th><th>Active</th></tr></thead>
+              <tbody>${rows.map(r => `<tr>
+                <td>${r.version}</td>
+                <td style="font-size:0.75rem;color:var(--steel);">${new Date(r.created_at).toLocaleDateString()}</td>
+                <td>${r.is_active ? '&#x2705; Active' : ''}</td>
+              </tr>`).join('')}</tbody>
+            </table>`;
+        } else {
+            vTable.innerHTML = '<div class="state-msg">No rubric found for this test. Create one via SQL seed.</div>';
+        }
+
+        if (!active) return;
+        _activeRubric = active;
+
+        // Render indicators
+        const list = document.getElementById('rubricIndicatorsList');
+        list.innerHTML = (active.indicators || []).map((ind, i) => `
+          <div style="border:1px solid #dee2e6; border-radius:8px; padding:14px; margin-bottom:10px; background:#fafafa;">
+            <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
+              <span style="font-size:0.75rem; font-weight:700; color:#6c757d;">#${i+1}</span>
+              <input type="text" value="${ind.title}" data-ind="${i}" data-field="title"
+                style="flex:1; padding:6px 10px; border:1px solid #ced4da; border-radius:6px; font-size:0.83rem; font-weight:600;">
+              <input type="number" value="${ind.max_points}" data-ind="${i}" data-field="max_points" step="0.25" min="0" max="10"
+                style="width:72px; padding:6px; border:1px solid #ced4da; border-radius:6px; font-size:0.83rem; text-align:center;">
+              <span style="font-size:0.72rem; color:#6c757d; white-space:nowrap;">pts max</span>
+            </div>
+            ${ind.levels.map((lv, j) => `
+              <div style="display:flex; gap:8px; align-items:center; margin-bottom:5px;">
+                <span style="min-width:96px; font-size:0.72rem; font-weight:600; color:#495057;">${lv.label} (${lv.points})</span>
+                <input type="text" value="${lv.desc.replace(/"/g, '&quot;')}" data-ind="${i}" data-lv="${j}" data-field="level_desc"
+                  style="flex:1; padding:5px 8px; border:1px solid #e9ecef; border-radius:5px; font-size:0.75rem; color:#495057;">
+              </div>`).join('')}
+          </div>`).join('');
+
+        editor.style.display = 'block';
+        document.getElementById('rubricPreview').style.display = 'none';
+    } catch (e) {
+        vTable.innerHTML = `<div class="state-msg state-err">Error: ${e.message}</div>`;
+    }
+}
+
+function _collectRubricEdits() {
+    if (!_activeRubric) return null;
+    const indicators = JSON.parse(JSON.stringify(_activeRubric.indicators));
+    document.querySelectorAll('[data-ind]').forEach(el => {
+        const i = parseInt(el.dataset.ind, 10);
+        if (el.dataset.field === 'title')      indicators[i].title = el.value;
+        if (el.dataset.field === 'max_points') indicators[i].max_points = parseFloat(el.value);
+        if (el.dataset.field === 'level_desc') {
+            const j = parseInt(el.dataset.lv, 10);
+            indicators[i].levels[j].desc = el.value;
+        }
+    });
+    return indicators;
+}
+
+function previewRubric() {
+    const indicators = _collectRubricEdits();
+    if (!indicators) return;
+    const preview = document.getElementById('rubricPreview');
+    preview.style.display = preview.style.display === 'none' ? 'block' : 'none';
+    preview.textContent = JSON.stringify(indicators, null, 2);
+}
+
+async function saveRubricVersion() {
+    if (!_activeRubric) { alert('Load a rubric first.'); return; }
+    const indicators = _collectRubricEdits();
+    if (!indicators) return;
+
+    const testId = document.getElementById('rubricTestId').value;
+    const total  = indicators.reduce((s, ind) => s + (ind.max_points || 0), 0);
+
+    try {
+        // Get next version number
+        const existing = await sbGet(`test_rubrics?test_id=eq.${encodeURIComponent(testId)}&select=version&order=version.desc&limit=1`);
+        const nextVersion = (existing[0]?.version || 0) + 1;
+
+        // Deactivate all existing versions
+        await fetch(`${SB_URL}/rest/v1/test_rubrics?test_id=eq.${encodeURIComponent(testId)}`, {
+            method: 'PATCH',
+            headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ is_active: false })
+        });
+
+        // Insert new version
+        const res = await fetch(`${SB_URL}/rest/v1/test_rubrics`, {
+            method: 'POST',
+            headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+            body: JSON.stringify({ test_id: testId, version: nextVersion, is_active: true, total_points: parseFloat(total.toFixed(2)), indicators, created_by: 'arturo.rodriguez@uleam.edu.ec' })
+        });
+
+        if (!res.ok) throw new Error(`Supabase ${res.status}`);
+        alert(`Rubric saved as version ${nextVersion} (total: ${total.toFixed(2)} pts).`);
+        loadRubric();
+    } catch (e) {
+        alert('Error saving rubric: ' + e.message);
     }
 }
 

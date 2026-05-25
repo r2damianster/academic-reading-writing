@@ -728,6 +728,102 @@ const SlideEngine = (function () {
             .replace(/\n/g, '<br>');
     }
 
+    // Fetches active rubric for a test from Supabase and calls test-grader agent.
+    // Renders a scored table inside #se-feedback-content after the writing feedback.
+    async function _renderTestRubric(lessonName, essay, audit) {
+        const content = document.getElementById('se-feedback-content');
+        if (!content) return;
+
+        try {
+            await _configReady;
+            // 1. Fetch active rubric
+            const rubricRes = await fetch(
+                `${SUPABASE_URL}/rest/v1/test_rubrics?test_id=eq.${encodeURIComponent(lessonName)}&is_active=eq.true&limit=1`,
+                { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }, credentials: 'omit' }
+            );
+            const rubricRows = rubricRes.ok ? await rubricRes.json() : [];
+            const rubric = rubricRows[0] || null;
+
+            // 2. Call test-grader agent
+            const aiRes = await _callOrchestrator(
+                'test-grader', '',
+                { lesson: lessonName, essay: (essay || '').slice(0, 6000), rubric: rubric?.indicators || null },
+                'json'
+            );
+
+            let evaluation = null;
+            try {
+                const raw = (aiRes?.response || '').trim();
+                evaluation = JSON.parse(raw.startsWith('{') ? raw : raw.replace(/^```json?\n?/, '').replace(/```$/, ''));
+            } catch (e) {
+                console.warn('⚠️ SlideEngine: test-grader JSON parse failed:', e.message);
+            }
+
+            if (!evaluation) return;
+
+            // 3. Persist in test_evaluations
+            const studentId = await _resolveStudentId();
+            _insertToSupabase('test_evaluations', {
+                student_id:       studentId,
+                test_id:          lessonName,
+                rubric_id:        rubric?.id || null,
+                attempt_number:   1,
+                total_score:      evaluation.total_score ?? null,
+                indicator_scores: evaluation.indicator_scores || [],
+                overall_feedback: evaluation.overall_feedback || '',
+                model_used:       aiRes?.model || null
+            }, `TEST_EVAL "${lessonName}"`);
+
+            // 4. Render rubric table
+            const levelColors = { Excellent: '#27ae60', Satisfactory: '#f39c12', 'In Progress': '#e67e22', Unsatisfactory: '#e74c3c' };
+            const rows = (evaluation.indicator_scores || []).map((s, i) => {
+                const color = levelColors[s.level] || '#6c757d';
+                const ind   = (rubric?.indicators || [])[i] || {};
+                return `<tr>
+                    <td style="font-size:0.78rem;font-weight:600;color:#2c3e50;padding:7px 8px;border-bottom:1px solid #f0f0f0;">${ind.title || s.key}</td>
+                    <td style="text-align:center;padding:7px 8px;border-bottom:1px solid #f0f0f0;">
+                        <span style="background:${color};color:white;border-radius:10px;padding:2px 8px;font-size:0.72rem;font-weight:700;white-space:nowrap;">${s.level}</span>
+                    </td>
+                    <td style="text-align:center;font-weight:700;color:${color};padding:7px 8px;border-bottom:1px solid #f0f0f0;">${(+s.points).toFixed(2)}</td>
+                    <td style="font-size:0.76rem;color:#495057;padding:7px 8px;border-bottom:1px solid #f0f0f0;">${s.comment || ''}</td>
+                </tr>`;
+            }).join('');
+
+            const totalColor = (evaluation.total_score >= 7) ? '#27ae60' : (evaluation.total_score >= 5) ? '#f39c12' : '#e74c3c';
+            const rubricHtml = `
+                <div style="margin-top:18px;border-top:2px solid #2c3e50;padding-top:14px;">
+                    <div style="font-size:0.82rem;font-weight:700;color:#2c3e50;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.04em;">
+                        &#x1F4CB; AI Rubric Evaluation — 8 Indicators
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
+                            <thead>
+                                <tr style="background:#f8f9fa;">
+                                    <th style="text-align:left;padding:8px;font-size:0.75rem;color:#6c757d;font-weight:600;border-bottom:2px solid #dee2e6;">Indicator</th>
+                                    <th style="text-align:center;padding:8px;font-size:0.75rem;color:#6c757d;font-weight:600;border-bottom:2px solid #dee2e6;white-space:nowrap;">Level</th>
+                                    <th style="text-align:center;padding:8px;font-size:0.75rem;color:#6c757d;font-weight:600;border-bottom:2px solid #dee2e6;">Pts</th>
+                                    <th style="text-align:left;padding:8px;font-size:0.75rem;color:#6c757d;font-weight:600;border-bottom:2px solid #dee2e6;">Comment</th>
+                                </tr>
+                            </thead>
+                            <tbody>${rows}</tbody>
+                            <tfoot>
+                                <tr style="background:#f8f9fa;">
+                                    <td colspan="2" style="font-weight:700;padding:10px 8px;font-size:0.85rem;color:#2c3e50;">TOTAL SCORE</td>
+                                    <td style="text-align:center;font-weight:800;font-size:1.05rem;color:${totalColor};padding:10px 8px;">${(+evaluation.total_score).toFixed(2)}<span style="font-size:0.7rem;color:#6c757d;font-weight:400;">/10</span></td>
+                                    <td style="padding:10px 8px;font-size:0.8rem;color:#495057;font-style:italic;">${evaluation.overall_feedback || ''}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>`;
+
+            content.insertAdjacentHTML('beforeend', rubricHtml);
+
+        } catch (e) {
+            console.warn('⚠️ SlideEngine: _renderTestRubric failed (non-critical):', e.message);
+        }
+    }
+
     // Activa el botón "Continue →" en el panel de feedback
     function _activateContinueButton(dest) {
         const footer = document.getElementById('se-feedback-footer');
@@ -796,6 +892,11 @@ const SlideEngine = (function () {
                 content.style.display = 'block';
                 content.innerHTML = '<p style="color:#e74c3c;font-size:0.85rem;">AI feedback unavailable right now. Your essay was saved. ✓</p>';
             }
+        }
+
+        // For test lessons: append rubric evaluation table after writing feedback
+        if (lessonName && lessonName.startsWith('test') && !(audit && audit.skipped)) {
+            _renderTestRubric(lessonName, essay, audit).catch(() => {});
         }
 
         _activateContinueButton(redirectDest);

@@ -31,7 +31,7 @@ const Memory       = require('../lib/agents/memory');
 // Módulos de agentes con transformaciones específicas de payload
 // Si el módulo no existe, el orquestador usa el payload tal como llega
 const AGENT_MODULES = {};
-['writing', 'integrity', 'reading', 'content-gen', 'github', 'frontend', 'peer-review', 'report-analyst'].forEach(name => {
+['writing', 'integrity', 'reading', 'content-gen', 'github', 'frontend', 'peer-review', 'report-analyst', 'test-grader'].forEach(name => {
     try { AGENT_MODULES[name] = require(`../lib/agents/${name}`); } catch (e) {}
 });
 
@@ -103,7 +103,9 @@ const AGENT_MAP = {
     github:     'github',
     dbAdmin:    'dbAdmin',
     frontend:   'frontend',
-    reportAnalyst: 'reportAnalyst'
+    reportAnalyst:  'reportAnalyst',
+    testGrader:     'testGrader',
+    'test-grader':  'testGrader'
 };
 
 // ── Registro de interacción en Supabase ──────────────────────────────────────

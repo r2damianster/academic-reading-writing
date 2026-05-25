@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Test 1 — Fundamentals | Academic Writing Assessment</title>
+    <link rel="stylesheet" href="../../css/modules.css">
+    <style>
+        .test-badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .thesis-box {
+            background: #f0f4ff;
+            border-left: 4px solid #3498db;
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.93rem;
+            color: #2c3e50;
+        }
+        .phase-header {
+            background: #2c3e50;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px 8px 0 0;
+            font-weight: 700;
+            font-size: 0.88rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .phase-body {
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 16px;
+            margin-bottom: 18px;
+        }
+        .ts-row { margin-bottom: 14px; }
+        .ts-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        .ts-input {
+            width: 100%;
+            min-height: 60px;
+            padding: 10px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            font-family: inherit;
+            resize: vertical;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .ts-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52,152,219,0.15);
+        }
+        .instruction-list {
+            background: #fff8e1;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 14px 0;
+        }
+        .instruction-list li { font-size: 0.88rem; margin-bottom: 6px; color: #495057; }
+        .pattern-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+        .pattern-card { border: 1px solid #dee2e6; border-radius: 8px; padding: 12px; background: #f8f9fa; }
+        .pattern-card h4 { font-size: 0.82rem; font-weight: 700; color: #2c3e50; margin: 0 0 6px 0; text-transform: uppercase; }
+        .pattern-card p  { font-size: 0.78rem; color: #6c757d; margin: 0; line-height: 1.5; }
+        .awl-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+        .awl-chip {
+            background: #e8f4fd;
+            border: 1px solid #3498db;
+            color: #2980b9;
+            border-radius: 14px;
+            padding: 3px 10px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .note-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 12px;
+            font-style: italic;
+        }
+    </style>
+    <script src="../../js/activity-tracker.js"></script>
+    <script src="../../js/essay-handler.js"></script>
+    <script src="../../js/report.js"></script>
+    <script src="../../js/slide-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — COVER -->
+    <div class="slide active" data-type="CONTENT">
+        <span class="test-badge">Official Assessment</span>
+        <h2>Test 1 — Fundamentals</h2>
+        <p>This assessment evaluates your mastery of the core writing skills practiced in the Fundamentals module.</p>
+
+        <div class="thesis-box">
+            <strong>Essay Question:</strong> How does the integration of virtual assistants affect the development of autonomous learning skills in university education?<br><br>
+            <strong>Given Thesis:</strong> "The adoption of Artificial Intelligence in higher education is both inevitable and beneficial."
+        </div>
+
+        <p style="font-size:0.88rem; color:#495057;">This test has <strong>two phases</strong>:</p>
+        <ol style="font-size:0.88rem; color:#495057; line-height:2;">
+            <li><strong>Phase 1</strong> — Planning: Draft 4 Topic Sentences using Block or Alternating Pattern.</li>
+            <li><strong>Phase 2</strong> — Writing: Develop 4 full academic body paragraphs applying PEER, cause/effect connectors, and AWL vocabulary.</li>
+        </ol>
+
+        <div class="note-box">
+            Note: Strikethroughs and erasures are allowed, as long as they do not interrupt the teacher's reading.
+        </div>
+    </div>
+
+    <!-- SLIDE 1 — PHASE 1: PLANNING WORKSPACE -->
+    <div class="slide" data-type="CONTENT" id="phase1Slide">
+        <div class="phase-header">Phase 1 — Structural Planning (Block / Alternating Pattern)</div>
+        <div class="phase-body">
+            <p style="font-size:0.88rem; margin:0 0 10px 0;">Before writing, design the structural outline of your argument. Choose your pattern:</p>
+
+            <div class="pattern-grid">
+                <div class="pattern-card">
+                    <h4>Block Pattern</h4>
+                    <p>P1 + P2 develop Topic A → P3 + P4 develop Topic B. Strong, focused blocks per variable.</p>
+                </div>
+                <div class="pattern-card">
+                    <h4>Alternating Pattern</h4>
+                    <p>P1 = A₁ → P2 = B₁ → P3 = A₂ → P4 = B₂. Point-by-point comparison across two perspectives.</p>
+                </div>
+            </div>
+
+            <p style="font-size:0.85rem; font-weight:600; color:#2c3e50; margin-bottom:12px;">
+                Write ONLY the Topic Sentence (Point) for each body paragraph:
+            </p>
+
+            <div class="ts-row">
+                <div class="ts-label">Paragraph 1 of the Body — Topic Sentence (Point):</div>
+                <textarea class="ts-input" id="ts-p1"
+                    placeholder="Write a complete, arguable sentence that will guide Paragraph 1..."></textarea>
+            </div>
+            <div class="ts-row">
+                <div class="ts-label">Paragraph 2 of the Body — Topic Sentence (Point):</div>
+                <textarea class="ts-input" id="ts-p2"
+                    placeholder="Write a complete, arguable sentence that will guide Paragraph 2..."></textarea>
+            </div>
+            <div class="ts-row">
+                <div class="ts-label">Paragraph 3 of the Body — Topic Sentence (Point):</div>
+                <textarea class="ts-input" id="ts-p3"
+                    placeholder="Write a complete, arguable sentence that will guide Paragraph 3..."></textarea>
+            </div>
+            <div class="ts-row">
+                <div class="ts-label">Paragraph 4 of the Body — Topic Sentence (Point):</div>
+                <textarea class="ts-input" id="ts-p4"
+                    placeholder="Write a complete, arguable sentence that will guide Paragraph 4..."></textarea>
+            </div>
+        </div>
+        <p style="font-size:0.78rem; color:#6c757d; margin:0;">
+            When your 4 Topic Sentences are ready, click <strong>Next</strong> to proceed to Phase 2.
+        </p>
+    </div>
+
+    <!-- SLIDE 2 — PHASE 2 INSTRUCTIONS -->
+    <div class="slide" data-type="CONTENT">
+        <div class="phase-header">Phase 2 — Advanced Academic Writing &amp; Integration</div>
+        <div class="phase-body">
+            <p style="font-size:0.88rem; margin:0 0 12px 0;">
+                Proceed to write your 4 body paragraphs applying ALL of the following criteria:
+            </p>
+            <ul class="instruction-list">
+                <li><strong>PEER Model + One Point Rule:</strong> Each paragraph must follow Point → Evidence → Explanation → Relevance, focused on a single variable subordinate to the thesis.</li>
+                <li><strong>Cause Structure (×1 minimum):</strong> Use cause-oriented connectors (e.g., <em>because, since, due to the fact that, as a result of</em>).</li>
+                <li><strong>Effect Structure (×1 minimum):</strong> Use effect-oriented connectors (e.g., <em>therefore, consequently, as a result, this leads to</em>).</li>
+                <li><strong>Formal Register:</strong> Absolutely prohibited: <em>thing, bad, good, stuff, a lot, get, make, do, have</em> (as weak verbs). Substitute with AWL equivalents.</li>
+                <li><strong>AWL Integration:</strong> Include at least <strong>5 distinct words</strong> from the Academic Word List organically woven into your paragraphs.</li>
+            </ul>
+
+            <p style="font-size:0.82rem; font-weight:600; color:#2c3e50; margin:10px 0 6px 0;">AWL suggestion bank:</p>
+            <div class="awl-chips">
+                <span class="awl-chip">enhance</span>
+                <span class="awl-chip">facilitate</span>
+                <span class="awl-chip">acquire</span>
+                <span class="awl-chip">significant</span>
+                <span class="awl-chip">consequently</span>
+                <span class="awl-chip">implement</span>
+                <span class="awl-chip">demonstrate</span>
+                <span class="awl-chip">integration</span>
+                <span class="awl-chip">outcome</span>
+                <span class="awl-chip">constitute</span>
+                <span class="awl-chip">framework</span>
+                <span class="awl-chip">capacity</span>
+                <span class="awl-chip">generate</span>
+                <span class="awl-chip">indicate</span>
+                <span class="awl-chip">approach</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 3 — PRE-ESSAY WARNING (triggers finishLesson / quiz score save) -->
+    <div class="slide" id="preEssaySlide"
+         data-type="ESSAY" data-se-role="warning"
+         data-se-lesson="test1 fundamentals">
+        <h2>Phase 2 — Writing Workspace</h2>
+        <p data-se-warning>
+            You are about to write your 4 academic body paragraphs. This is the official submission for Test 1.<br><br>
+            Your work will be evaluated automatically using an 8-indicator AI rubric and reviewed by your instructor. Write directly in the text area on the next screen. Take your time — there is no time limit.
+        </p>
+    </div>
+
+    <!-- SLIDE 4 — ESSAY WORKSPACE (Phase 2 actual writing) -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="test1 fundamentals">
+        <p data-se-prompt>
+            Write your 4 body paragraphs following the structural plan you designed in Phase 1.
+            Apply PEER Model, One Point Rule, cause/effect connectors, and AWL vocabulary.
+            Target: 300–450 words total (approximately 75–120 words per paragraph).
+            Do NOT write an introduction or conclusion — body paragraphs only.
+        </p>
+    </div>
+
+</div><!-- /.lesson-container -->
+
+<script>
+window.onload = () => {
+    // 1. Boot engines
+    SlideEngine.init('test1 fundamentals');
+    ActivityTracker.init('test1 fundamentals');
+
+    // 2. Override finishLessonWithEssay to prepend Phase 1 topic sentences.
+    //    slide-engine.js exports this to window inside SlideEngine.init().
+    const _origFinish = window.finishLessonWithEssay;
+    window.finishLessonWithEssay = function(lessonName, essay, audit, redirectUrl) {
+        const p1 = (document.getElementById('ts-p1')?.value || '').trim() || '(not provided)';
+        const p2 = (document.getElementById('ts-p2')?.value || '').trim() || '(not provided)';
+        const p3 = (document.getElementById('ts-p3')?.value || '').trim() || '(not provided)';
+        const p4 = (document.getElementById('ts-p4')?.value || '').trim() || '(not provided)';
+
+        const fullEssay =
+            '[PHASE 1 — TOPIC SENTENCES]\n' +
+            'P1: ' + p1 + '\n' +
+            'P2: ' + p2 + '\n' +
+            'P3: ' + p3 + '\n' +
+            'P4: ' + p4 + '\n\n' +
+            '[PHASE 2 — BODY PARAGRAPHS]\n' + (essay || '');
+
+        _origFinish(lessonName, fullEssay, audit, redirectUrl);
+    };
+};
+</script>
+
+</body>
+</html>
