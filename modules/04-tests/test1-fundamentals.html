@@ -100,6 +100,23 @@
             margin-top: 12px;
             font-style: italic;
         }
+        .btn-back {
+            display: inline-block;
+            margin-bottom: 16px;
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            color: #495057;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-back:hover { background: #e9ecef; }
+
+        /* Compliance panel hidden — students must not see what is being evaluated */
+        #se-req-panel, #se-req-badge { display: none !important; }
     </style>
     <script src="../../js/activity-tracker.js"></script>
     <script src="../../js/essay-handler.js"></script>
@@ -113,7 +130,7 @@
         <div class="progress-fill" id="progressBar"></div>
     </div>
 
-    <!-- SLIDE 0 — COVER -->
+    <!-- SLIDE 0 — TEST WARNING (cover + full Phase 2 criteria) -->
     <div class="slide active" data-type="CONTENT">
         <span class="test-badge">Official Assessment</span>
         <h2>Test 1 — Fundamentals</h2>
@@ -130,13 +147,43 @@
             <li><strong>Phase 2</strong> — Writing: Develop 4 full academic body paragraphs applying PEER, cause/effect connectors, and AWL vocabulary.</li>
         </ol>
 
+        <ul class="instruction-list">
+            <li><strong>PEER Model + One Point Rule:</strong> Each paragraph must follow Point → Evidence → Explanation → Relevance, focused on a single variable subordinate to the thesis.</li>
+            <li><strong>Cause Structure (×1 minimum):</strong> Use cause-oriented connectors (e.g., <em>because, since, due to the fact that, as a result of</em>).</li>
+            <li><strong>Effect Structure (×1 minimum):</strong> Use effect-oriented connectors (e.g., <em>therefore, consequently, as a result, this leads to</em>).</li>
+            <li><strong>Formal Register:</strong> Absolutely prohibited: <em>thing, bad, good, stuff, a lot, get, make, do, have</em> (as weak verbs). Substitute with AWL equivalents.</li>
+            <li><strong>AWL Integration:</strong> Include at least <strong>5 distinct words</strong> from the Academic Word List organically woven into your paragraphs.</li>
+        </ul>
+
+        <p style="font-size:0.82rem; font-weight:600; color:#2c3e50; margin:10px 0 6px 0;">AWL suggestion bank:</p>
+        <div class="awl-chips">
+            <span class="awl-chip">enhance</span>
+            <span class="awl-chip">facilitate</span>
+            <span class="awl-chip">acquire</span>
+            <span class="awl-chip">significant</span>
+            <span class="awl-chip">consequently</span>
+            <span class="awl-chip">implement</span>
+            <span class="awl-chip">demonstrate</span>
+            <span class="awl-chip">integration</span>
+            <span class="awl-chip">outcome</span>
+            <span class="awl-chip">constitute</span>
+            <span class="awl-chip">framework</span>
+            <span class="awl-chip">capacity</span>
+            <span class="awl-chip">generate</span>
+            <span class="awl-chip">indicate</span>
+            <span class="awl-chip">approach</span>
+        </div>
+
         <div class="note-box">
             Note: Strikethroughs and erasures are allowed, as long as they do not interrupt the teacher's reading.
         </div>
     </div>
 
     <!-- SLIDE 1 — PHASE 1: PLANNING WORKSPACE -->
-    <div class="slide" data-type="CONTENT" id="phase1Slide">
+    <!-- id="preEssaySlide" triggers finishLesson() (quiz score save) when entered -->
+    <div class="slide" data-type="CONTENT" id="preEssaySlide">
+        <button class="btn-back" onclick="window.prevSlide && window.prevSlide()">&#8592; Back to Instructions</button>
+
         <div class="phase-header">Phase 1 — Structural Planning (Block / Alternating Pattern)</div>
         <div class="phase-body">
             <p style="font-size:0.88rem; margin:0 0 10px 0;">Before writing, design the structural outline of your argument. Choose your pattern:</p>
@@ -177,59 +224,13 @@
                     placeholder="Write a complete, arguable sentence that will guide Paragraph 4..."></textarea>
             </div>
         </div>
-        <p style="font-size:0.78rem; color:#6c757d; margin:0;">
+        <p style="font-size:0.78rem; color:#6c757d; margin:0 0 12px 0;">
             When your 4 Topic Sentences are ready, click <strong>Next</strong> to proceed to Phase 2.
         </p>
     </div>
 
-    <!-- SLIDE 2 — PHASE 2 INSTRUCTIONS -->
-    <div class="slide" data-type="CONTENT">
-        <div class="phase-header">Phase 2 — Advanced Academic Writing &amp; Integration</div>
-        <div class="phase-body">
-            <p style="font-size:0.88rem; margin:0 0 12px 0;">
-                Proceed to write your 4 body paragraphs applying ALL of the following criteria:
-            </p>
-            <ul class="instruction-list">
-                <li><strong>PEER Model + One Point Rule:</strong> Each paragraph must follow Point → Evidence → Explanation → Relevance, focused on a single variable subordinate to the thesis.</li>
-                <li><strong>Cause Structure (×1 minimum):</strong> Use cause-oriented connectors (e.g., <em>because, since, due to the fact that, as a result of</em>).</li>
-                <li><strong>Effect Structure (×1 minimum):</strong> Use effect-oriented connectors (e.g., <em>therefore, consequently, as a result, this leads to</em>).</li>
-                <li><strong>Formal Register:</strong> Absolutely prohibited: <em>thing, bad, good, stuff, a lot, get, make, do, have</em> (as weak verbs). Substitute with AWL equivalents.</li>
-                <li><strong>AWL Integration:</strong> Include at least <strong>5 distinct words</strong> from the Academic Word List organically woven into your paragraphs.</li>
-            </ul>
-
-            <p style="font-size:0.82rem; font-weight:600; color:#2c3e50; margin:10px 0 6px 0;">AWL suggestion bank:</p>
-            <div class="awl-chips">
-                <span class="awl-chip">enhance</span>
-                <span class="awl-chip">facilitate</span>
-                <span class="awl-chip">acquire</span>
-                <span class="awl-chip">significant</span>
-                <span class="awl-chip">consequently</span>
-                <span class="awl-chip">implement</span>
-                <span class="awl-chip">demonstrate</span>
-                <span class="awl-chip">integration</span>
-                <span class="awl-chip">outcome</span>
-                <span class="awl-chip">constitute</span>
-                <span class="awl-chip">framework</span>
-                <span class="awl-chip">capacity</span>
-                <span class="awl-chip">generate</span>
-                <span class="awl-chip">indicate</span>
-                <span class="awl-chip">approach</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- SLIDE 3 — PRE-ESSAY WARNING (triggers finishLesson / quiz score save) -->
-    <div class="slide" id="preEssaySlide"
-         data-type="ESSAY" data-se-role="warning"
-         data-se-lesson="test1 fundamentals">
-        <h2>Phase 2 — Writing Workspace</h2>
-        <p data-se-warning>
-            You are about to write your 4 academic body paragraphs. This is the official submission for Test 1.<br><br>
-            Your work will be evaluated automatically using an 8-indicator AI rubric and reviewed by your instructor. Write directly in the text area on the next screen. Take your time — there is no time limit.
-        </p>
-    </div>
-
-    <!-- SLIDE 4 — ESSAY WORKSPACE (Phase 2 actual writing) -->
+    <!-- SLIDE 2 — ESSAY WORKSPACE (Phase 2 writing) -->
+    <!-- Back button injected via JS after SlideEngine.init() -->
     <div class="slide" id="essaySlide"
          data-type="ESSAY" data-se-role="workspace"
          data-se-lesson="test1 fundamentals">
@@ -245,29 +246,130 @@
 
 <script>
 window.onload = () => {
-    // 1. Boot engines
-    SlideEngine.init('test1 fundamentals');
+    // ── Phase 1 integrity tracker ────────────────────────────────────────────
+    // Monitors keystrokes and pastes in the planning textareas so that
+    // Phase 1 input is included in the cumulative integrity audit.
+    window._phase1Audit = { pastes: 0, keystrokes: 0, deletions: 0 };
+
+    document.querySelectorAll('.ts-input').forEach(ta => {
+        ta.addEventListener('paste', () => { window._phase1Audit.pastes++; });
+        ta.addEventListener('keydown', e => {
+            window._phase1Audit.keystrokes++;
+            if (e.key === 'Backspace' || e.key === 'Delete') window._phase1Audit.deletions++;
+        });
+    });
+
+    // ── Boot engines ─────────────────────────────────────────────────────────
+    // ActivityTracker must init before SlideEngine mounts the workspace
+    // so the tab-switch baseline is set correctly when EssayHandler.init() fires.
     ActivityTracker.init('test1 fundamentals');
 
-    // 2. Override finishLessonWithEssay to prepend Phase 1 topic sentences.
-    //    slide-engine.js exports this to window inside SlideEngine.init().
-    const _origFinish = window.finishLessonWithEssay;
-    window.finishLessonWithEssay = function(lessonName, essay, audit, redirectUrl) {
-        const p1 = (document.getElementById('ts-p1')?.value || '').trim() || '(not provided)';
-        const p2 = (document.getElementById('ts-p2')?.value || '').trim() || '(not provided)';
-        const p3 = (document.getElementById('ts-p3')?.value || '').trim() || '(not provided)';
-        const p4 = (document.getElementById('ts-p4')?.value || '').trim() || '(not provided)';
+    const engineReady = SlideEngine.init('test1 fundamentals');
 
-        const fullEssay =
-            '[PHASE 1 — TOPIC SENTENCES]\n' +
-            'P1: ' + p1 + '\n' +
-            'P2: ' + p2 + '\n' +
-            'P3: ' + p3 + '\n' +
-            'P4: ' + p4 + '\n\n' +
-            '[PHASE 2 — BODY PARAGRAPHS]\n' + (essay || '');
+    engineReady.then(() => {
 
-        _origFinish(lessonName, fullEssay, audit, redirectUrl);
-    };
+        // ── Override finishLessonWithEssay ────────────────────────────────────
+        // Prepend Phase 1 topic sentences and recalculate integrity score
+        // using combined Phase 1 + Phase 2 raw stats.
+        const _origFinish = window.finishLessonWithEssay;
+        window.finishLessonWithEssay = function(lessonName, essay, audit, redirectUrl) {
+            const p1t = (document.getElementById('ts-p1')?.value || '').trim() || '(not provided)';
+            const p2t = (document.getElementById('ts-p2')?.value || '').trim() || '(not provided)';
+            const p3t = (document.getElementById('ts-p3')?.value || '').trim() || '(not provided)';
+            const p4t = (document.getElementById('ts-p4')?.value || '').trim() || '(not provided)';
+
+            const fullEssay =
+                '[PHASE 1 — TOPIC SENTENCES]\n' +
+                'P1: ' + p1t + '\n' +
+                'P2: ' + p2t + '\n' +
+                'P3: ' + p3t + '\n' +
+                'P4: ' + p4t + '\n\n' +
+                '[PHASE 2 — BODY PARAGRAPHS]\n' + (essay || '');
+
+            // Skip merge if essay was discarded (skipped flag) or no Phase 1 activity
+            const p1a = window._phase1Audit || { pastes: 0, keystrokes: 0, deletions: 0 };
+            const mergedAudit = Object.assign({}, audit);
+
+            if (!audit?.skipped && (p1a.pastes > 0 || p1a.keystrokes > 0)) {
+                const p1Chars = ['ts-p1', 'ts-p2', 'ts-p3', 'ts-p4']
+                    .reduce((s, id) => s + (document.getElementById(id)?.value.length || 0), 0);
+
+                const combinedPastes      = (audit?.pastes         || 0) + p1a.pastes;
+                const combinedKeystrokes  = (audit?.keystrokes      || 0) + p1a.keystrokes;
+                const combinedChars       = (audit?.chars           || 0) + p1Chars;
+                const combinedDeletions   = (audit?.deletions       || 0) + p1a.deletions;
+                const combinedWords       =  audit?.words           || 0;
+                const tabSwitches         =  audit?.tabSwitches     || 0;
+                const writingDuration     =  audit?.writingDuration || 0;
+
+                // Replicate EssayHandler._calcIntegrityScore with combined stats
+                let score = 100;
+                if (combinedPastes > 0 && combinedChars > 30) {
+                    const ratio     = Math.round((combinedKeystrokes / combinedChars) * 100);
+                    const pastedPct = Math.max(0, 100 - ratio);
+                    if      (pastedPct >= 60) score -= 50;
+                    else if (pastedPct >= 30) score -= 25;
+                    else if (pastedPct >= 10) score -= 10;
+                    else                      score -= 5;
+                } else if (combinedPastes > 0) {
+                    score -= 20;
+                }
+                if (tabSwitches >= 5)      score -= Math.min(tabSwitches * 4, 25);
+                else if (tabSwitches >= 2) score -= tabSwitches * 3;
+                if (combinedWords > 10 && combinedDeletions > 0) {
+                    const delRatio = combinedDeletions / Math.max(combinedKeystrokes, 1);
+                    if (delRatio > 0.6) score -= 10;
+                }
+                if (combinedPastes === 0 && combinedWords > 30 && writingDuration > 0 && writingDuration < 30) {
+                    score -= 15;
+                }
+
+                mergedAudit.pastes          = combinedPastes;
+                mergedAudit.keystrokes      = combinedKeystrokes;
+                mergedAudit.deletions       = combinedDeletions;
+                mergedAudit.integrityScore  = Math.max(0, score);
+                mergedAudit.charsTypedRatio = combinedChars > 0
+                    ? Math.round((combinedKeystrokes / combinedChars) * 100)
+                    : (audit?.charsTypedRatio || 0);
+            }
+
+            _origFinish(lessonName, fullEssay, mergedAudit, redirectUrl);
+        };
+
+        // ── Intercept Phase 1 Next button to init EssayHandler once ──────────
+        // EssayHandler normally starts via the warning-slide "Start Writing" button.
+        // Since there is no warning slide in this test, we trigger it the first time
+        // the student navigates from Phase 1 to the writing workspace.
+        let _essayHandlerInited = false;
+        const phase1NextBtn = document.querySelector('#preEssaySlide .btn-next');
+        if (phase1NextBtn) {
+            phase1NextBtn.addEventListener('click', () => {
+                if (!_essayHandlerInited && window.EssayHandler) {
+                    EssayHandler.init('test1 fundamentals');
+                    _essayHandlerInited = true;
+                }
+            });
+        }
+
+        // ── Inject "Review Plan" back button into the essay workspace ─────────
+        // Allows the student to freely navigate back to Phase 1 planning.
+        const workspace = document.querySelector('#essaySlide .essay-workspace');
+        const finalBtn  = document.getElementById('finalBtn');
+        if (workspace && finalBtn) {
+            const backBtn = document.createElement('button');
+            backBtn.innerHTML = '&#8592; Review Phase 1 Plan';
+            backBtn.style.cssText =
+                'display:block; width:100%; margin-bottom:10px; padding:10px 20px;' +
+                'background:#f8f9fa; border:1px solid #dee2e6; border-radius:8px;' +
+                'color:#495057; font-size:0.9rem; font-weight:600; cursor:pointer;' +
+                'transition:background 0.2s;';
+            backBtn.onmouseover = () => { backBtn.style.background = '#e9ecef'; };
+            backBtn.onmouseout  = () => { backBtn.style.background = '#f8f9fa'; };
+            backBtn.onclick     = () => { window.prevSlide && window.prevSlide(); };
+            workspace.insertBefore(backBtn, finalBtn);
+        }
+
+    }); // end engineReady.then()
 };
 </script>
 

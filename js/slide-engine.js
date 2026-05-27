@@ -91,6 +91,7 @@ const SlideEngine = (function () {
         // Exponer globales para compatibilidad con essay-handler.js y activity-tracker.js
         window.mistakes    = _mistakes;
         window.nextSlide   = goTo;
+        window.prevSlide   = prev;
         window.checkAnswer = _handleQuizAnswer;
         window.finishLesson           = finishLesson;
         window.finishLessonWithEssay  = finishLessonWithEssay;
