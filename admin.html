@@ -1039,7 +1039,11 @@ function toggleAvailScope() {
 async function loadAvailRules() {
     const container = document.getElementById('availRulesTable');
     try {
-        const rules = await sbGet('lesson_availability?select=*,students(name,email)&order=lesson_id.asc,created_at.desc');
+        const r = await fetch('/api/lesson-availability', {
+            headers: { 'x-admin-password': sessionStorage.getItem('adminPwd') || '' }
+        });
+        if (!r.ok) throw new Error(`API ${r.status}`);
+        const rules = await r.json();
         if (!rules.length) {
             container.innerHTML = '<div class="state-msg">No availability rules defined yet.</div>';
             return;
@@ -1129,13 +1133,11 @@ async function saveAvailRule() {
     else if (scope === 'course') rule.course_id = target;
 
     try {
-        const response = await fetch(`${SB_URL}/rest/v1/lesson_availability`, {
+        const response = await fetch('/api/lesson-availability', {
             method: 'POST',
             headers: {
-                'apikey': SB_KEY,
-                'Authorization': `Bearer ${SB_KEY}`,
                 'Content-Type': 'application/json',
-                'Prefer': 'return=minimal'
+                'x-admin-password': sessionStorage.getItem('adminPwd') || ''
             },
             body: JSON.stringify(rule)
         });
@@ -1279,12 +1281,9 @@ async function saveRubricVersion() {
 async function deleteAvailRule(id) {
     if (!confirm('Are you sure you want to delete this rule?')) return;
     try {
-        const response = await fetch(`${SB_URL}/rest/v1/lesson_availability?id=eq.${id}`, {
+        const response = await fetch(`/api/lesson-availability?id=${id}`, {
             method: 'DELETE',
-            headers: {
-                'apikey': SB_KEY,
-                'Authorization': `Bearer ${SB_KEY}`
-            }
+            headers: { 'x-admin-password': sessionStorage.getItem('adminPwd') || '' }
         });
         if (!response.ok) throw new Error(`Supabase ${response.status}`);
         loadAvailRules();

@@ -173,6 +173,7 @@ async function saveAndStart() {
         localStorage.setItem('studentRole', serverResult.role || 'student');
         localStorage.setItem('isAdmin', serverResult.role === 'admin' ? 'true' : 'false');
         if (serverResult.id) localStorage.setItem('studentId', serverResult.id);
+        if (serverResult.role === 'admin') sessionStorage.setItem('adminPwd', adminPassword);
         
         // Reset manual toggle on new fresh login
         localStorage.setItem('adminUnlocked', 'false');
