@@ -239,7 +239,6 @@ const SlideEngine = (function () {
         if (isCorrect) {
             btn.style.backgroundColor = '#2ecc71';
             btn.style.color           = 'white';
-            // Deshabilitar todas las opciones de esta slide al acertar
             parentSlide.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
             if (feedback) {
                 feedback.innerHTML  = '✅ Correct! Well done.';
@@ -247,14 +246,36 @@ const SlideEngine = (function () {
             }
             if (nextBtn) nextBtn.style.display = 'block';
         } else {
+            const attempts = (parseInt(parentSlide.dataset.seAttempts || '0', 10)) + 1;
+            parentSlide.dataset.seAttempts = attempts;
+
             btn.style.backgroundColor = '#e74c3c';
             btn.style.color           = 'white';
-            if (feedback) {
-                feedback.innerHTML  = '❌ Not quite. Try again!';
-                feedback.style.color = '#c0392b';
-            }
             _mistakes++;
             window.mistakes = _mistakes;
+
+            if (attempts >= 3) {
+                parentSlide.querySelectorAll('.quiz-option').forEach(b => {
+                    b.disabled = true;
+                    if (b.dataset.seCorrect === 'true') {
+                        b.style.backgroundColor = '#f39c12';
+                        b.style.color = 'white';
+                    }
+                });
+                _mistakes += 2;
+                window.mistakes = _mistakes;
+                if (feedback) {
+                    feedback.innerHTML  = '⚠️ Answer revealed after 3 attempts. Review and continue.';
+                    feedback.style.color = '#e67e22';
+                }
+                if (nextBtn) nextBtn.style.display = 'block';
+            } else {
+                const left = 3 - attempts;
+                if (feedback) {
+                    feedback.innerHTML  = `❌ Not quite. Try again! (${left} attempt${left !== 1 ? 's' : ''} left)`;
+                    feedback.style.color = '#c0392b';
+                }
+            }
         }
     }
 
@@ -1511,6 +1532,7 @@ SlideTypes.DRAG_DROP = {
                     SlideTypes.DRAG_DROP._checkCompletion(slide, feedbackId);
                 } else {
                     zone.style.borderColor = '#e74c3c';
+                    window.mistakes++;
                     setTimeout(() => {
                         zone.style.borderColor = '#adb5bd';
                         zone.style.background  = '#f8f9fa';
@@ -1638,9 +1660,41 @@ SlideTypes.FILL_BLANK = {
                 const nextBtn = slide.querySelector('.btn-next');
                 if (nextBtn) nextBtn.style.display = 'block';
             } else {
-                feedback.innerHTML  = '❌ Some answers need revision. Try again!';
+                const attempts = (parseInt(slide.dataset.seAttempts || '0', 10)) + 1;
+                slide.dataset.seAttempts = attempts;
+
+                const penalty = Math.min(attempts, 3);
+                for (let p = 0; p < penalty; p++) window.mistakes++;
+
+                let msg = '❌ Some answers need revision. Try again!';
+                if (attempts === 2) {
+                    msg += ' <em style="font-size:0.9em;color:#888"> Tip: check word count and spelling.</em>';
+                }
+                if (attempts >= 3 && !slide.querySelector('.btn-show-answer')) {
+                    const showBtn = document.createElement('button');
+                    showBtn.className = 'btn-show-answer';
+                    showBtn.textContent = 'Show Answers (−5 pts)';
+                    showBtn.style.cssText = 'margin-top:8px; margin-left:8px; padding:8px 16px; background:#95a5a6; color:white; border:none; border-radius:6px; cursor:pointer; font-size:0.9rem;';
+                    showBtn.addEventListener('click', () => {
+                        inputs.forEach(input => {
+                            if (!input.dataset.seAnswer) return;
+                            input.value = input.dataset.seAnswer;
+                            input.style.borderBottomColor = '#f39c12';
+                            input.style.color = '#e67e22';
+                        });
+                        window.mistakes++;
+                        showBtn.disabled = true;
+                        showBtn.style.opacity = '0.5';
+                        feedback.innerHTML = '⚠️ Answers revealed. Review and continue.';
+                        feedback.style.color = '#e67e22';
+                        const nextBtn = slide.querySelector('.btn-next');
+                        if (nextBtn) nextBtn.style.display = 'block';
+                    });
+                    feedback.insertAdjacentElement('afterend', showBtn);
+                }
+
+                feedback.innerHTML  = msg;
                 feedback.style.color = '#c0392b';
-                window.mistakes++;
             }
         }
     }
@@ -2338,6 +2392,7 @@ SlideTypes.SORT_PARAGRAPH = {
         // Botón de verificación
         const checkBtn = document.createElement('button');
         checkBtn.textContent  = 'Check Order';
+        checkBtn.className    = 'se-sort-check-btn';
         checkBtn.style.cssText = `margin-top:8px; padding:10px 24px; background:#3498db;
                                    color:white; border:none; border-radius:8px;
                                    cursor:pointer; font-size:1rem;`;
@@ -2382,6 +2437,17 @@ SlideTypes.SORT_PARAGRAPH = {
                 feedback.innerHTML  = '❌ Not quite. Some sentences are out of order — try again!';
                 feedback.style.color = '#c0392b';
                 window.mistakes++;
+                const checkBtn = slide.querySelector('.se-sort-check-btn');
+                if (checkBtn && !checkBtn.disabled) {
+                    checkBtn.disabled = true;
+                    checkBtn.textContent = 'Wait 5s…';
+                    checkBtn.style.opacity = '0.5';
+                    setTimeout(() => {
+                        checkBtn.disabled = false;
+                        checkBtn.textContent = 'Check Order';
+                        checkBtn.style.opacity = '1';
+                    }, 5000);
+                }
             }
         }
     }
@@ -2630,7 +2696,7 @@ SlideTypes.MATCH = {
                     }
 
                 } else {
-                    // Fallo: parpadeo rojo y reset
+                    // Fallo: parpadeo rojo y reset con cooldown
                     [selected, el].forEach(item => {
                         item.style.background  = '#f8d7da';
                         item.style.borderColor = '#dc3545';
@@ -2642,6 +2708,11 @@ SlideTypes.MATCH = {
                     }
                     window.mistakes++;
 
+                    // Bloquear todos los items no emparejados durante 2s
+                    [...lefts, ...rights].forEach(item => {
+                        if (!item.dataset.seMatched) item.style.pointerEvents = 'none';
+                    });
+
                     const prevSelected = selected;
                     selected = null;
                     setTimeout(() => {
@@ -2651,7 +2722,10 @@ SlideTypes.MATCH = {
                                 item.style.borderColor = '#dee2e6';
                             }
                         });
-                    }, 800);
+                        [...lefts, ...rights].forEach(item => {
+                            if (!item.dataset.seMatched) item.style.pointerEvents = 'auto';
+                        });
+                    }, 2000);
                 }
             }
         };
