@@ -323,7 +323,7 @@ const SlideEngine = (function () {
                 <p style="margin:0 0 20px;font-size:0.9rem;color:#555;">Your quiz progress will be saved.</p>
                 <div style="display:flex;gap:10px;">
                     <button id="_skip-cancel" style="flex:1;padding:11px;border:1px solid #ccc;border-radius:8px;background:#f8f9fa;cursor:pointer;font-size:0.95rem;">Cancel</button>
-                    <button id="_skip-confirm" style="flex:1;padding:11px;border:none;border-radius:8px;background:#e74c3c;color:#fff;cursor:pointer;font-size:0.95rem;font-weight:600;">Yes, Skip</button>
+                    <button id="_skip-confirm" style="flex:1;padding:11px;border:none;border-radius:8px;background:#6c757d;color:#fff;cursor:pointer;font-size:0.95rem;font-weight:600;">Yes, Skip</button>
                 </div>
             </div>`;
         document.body.appendChild(overlay);
@@ -1623,7 +1623,7 @@ SlideTypes.FILL_BLANK = {
         inputs.forEach(input => {
             const expected = (input.dataset.seAnswer || '').toLowerCase().trim();
             const given    = input.value.toLowerCase().trim();
-            const correct  = given === expected || given.includes(expected) || expected.includes(given);
+            const correct  = given !== '' && (given === expected || given.includes(expected) || expected.includes(given));
 
             input.style.borderBottomColor = correct ? '#2ecc71' : '#e74c3c';
             input.style.color             = correct ? '#27ae60' : '#c0392b';
