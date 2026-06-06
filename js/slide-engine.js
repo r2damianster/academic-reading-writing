@@ -1077,12 +1077,20 @@ const SlideEngine = (function () {
 
         // SORT_PARAGRAPH
         if (type === 'SORT_PARAGRAPH') {
-            const sentences = Array.from(slide.querySelectorAll('[data-se-sentence], [data-se-sort]'))
-                .filter(el => el.hasAttribute('data-se-order'))
-                .sort((a, b) => (parseInt(a.dataset.seOrder) || 0) - (parseInt(b.dataset.seOrder) || 0));
-            sentences.forEach((s, idx) => {
-                answers.push({ label: `Position ${idx+1}`, answer: s.textContent.trim() });
-            });
+            const container = slide.querySelector('[id^="se-sort-container-"]');
+            if (container && container.dataset.seCorrectOrder) {
+                JSON.parse(container.dataset.seCorrectOrder).forEach((text, idx) => {
+                    answers.push({ label: `Position ${idx+1}`, answer: text });
+                });
+            } else {
+                // fallback: elementos originales aún no montados
+                Array.from(slide.querySelectorAll('[data-se-sort]'))
+                    .filter(el => el.hasAttribute('data-se-order'))
+                    .sort((a, b) => (parseInt(a.dataset.seOrder) || 0) - (parseInt(b.dataset.seOrder) || 0))
+                    .forEach((s, idx) => {
+                        answers.push({ label: `Position ${idx+1}`, answer: s.textContent.trim() });
+                    });
+            }
         }
 
         // CHOOSE_CONTEXT
@@ -2276,6 +2284,7 @@ SlideTypes.SORT_PARAGRAPH = {
         const container = document.createElement('div');
         container.id = containerId;
         container.style.cssText = 'display:flex; flex-direction:column; gap:8px; margin:16px 0;';
+        container.dataset.seCorrectOrder = JSON.stringify(correctOrder);
 
         shuffled.forEach((text, i) => {
             const item = document.createElement('div');
@@ -2839,7 +2848,7 @@ SlideTypes.WORD_BANK = {
         zones.forEach(zone => {
             const expected = (zone.dataset.seAnswer || '').toLowerCase().trim();
             const given    = (zone.dataset.seWord   || '').toLowerCase().trim();
-            const correct  = given === expected || given.includes(expected) || expected.includes(given);
+            const correct  = given !== '' && (given === expected || given.includes(expected) || expected.includes(given));
             zone.style.borderColor = correct ? '#2ecc71' : '#e74c3c';
             zone.style.background  = correct ? '#d4edda' : '#f8d7da';
             zone.style.color       = correct ? '#155724' : '#721c24';
