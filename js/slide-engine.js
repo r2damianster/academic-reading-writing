@@ -303,13 +303,9 @@ const SlideEngine = (function () {
         }
 
         // Calcular destino de redirección
-        let dest = redirectUrl || 'index.html';
+        let dest = redirectUrl || _resolveHubUrl();
         if (!redirectUrl) {
-            const path = window.location.pathname;
-            if (path.includes('/00-fundamentals/')) dest = 'fundamentals-hub.html';
-            if (path.includes('/unit1-essays/'))    dest = 'unit1-essays-hub.html';
-            if (path.includes('/unit2-papers/'))    dest = 'unit2-papers-hub.html';
-            if (path.includes('/apa-integrity/'))   dest = 'apa-integrity-hub.html';
+            dest = _resolveHubUrl();
         }
 
         // Mostrar panel de feedback IA (reemplaza el alert + redirect automático)
