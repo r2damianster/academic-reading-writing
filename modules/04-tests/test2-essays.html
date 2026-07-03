@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Test 2 — Essays | Academic Writing Assessment</title>
+    <link rel="stylesheet" href="../../css/modules.css">
+    <style>
+        .test-badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .thesis-box {
+            background: #f0f4ff;
+            border-left: 4px solid #3498db;
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.93rem;
+            color: #2c3e50;
+        }
+        .phase-header {
+            background: #2c3e50;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px 8px 0 0;
+            font-weight: 700;
+            font-size: 0.88rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .phase-body {
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 16px;
+            margin-bottom: 18px;
+        }
+        .ts-row { margin-bottom: 14px; }
+        .ts-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        .ts-input {
+            width: 100%;
+            min-height: 60px;
+            padding: 10px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            font-family: inherit;
+            resize: vertical;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .ts-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52,152,219,0.15);
+        }
+        .instruction-list {
+            background: #fff8e1;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 14px 0;
+        }
+        .instruction-list li { font-size: 0.88rem; margin-bottom: 6px; color: #495057; }
+        .awl-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+        .awl-chip {
+            background: #e8f4fd;
+            border: 1px solid #3498db;
+            color: #2980b9;
+            border-radius: 14px;
+            padding: 3px 10px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .note-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 12px;
+            font-style: italic;
+        }
+        .btn-back {
+            display: inline-block;
+            margin-bottom: 16px;
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            color: #495057;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-back:hover { background: #e9ecef; }
+
+        /* Compliance panel hidden — students must not see what is being evaluated */
+        #se-req-panel, #se-req-badge { display: none !important; }
+    </style>
+    <script src="../../js/activity-tracker.js"></script>
+    <script src="../../js/essay-handler.js"></script>
+    <script src="../../js/report.js"></script>
+    <script src="../../js/slide-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — TEST WARNING (cover + full Phase 2 criteria) -->
+    <div class="slide active" data-type="CONTENT">
+        <span class="test-badge">Official Assessment</span>
+        <h2>Test 2 — Essays</h2>
+        <p>This assessment evaluates your ability to build a complete argumentative essay from a given thesis, using the PEER paragraph model, organizational connectors, academic vocabulary, and nominalizations.</p>
+
+        <div class="thesis-box">
+            <strong>Given Thesis:</strong> "Despite the rapid proliferation of advanced translation software and artificial intelligence, specialized higher education in the English language remains indispensable for the development of cross-cultural mediation and nuanced global communication."
+        </div>
+
+        <p style="font-size:0.88rem; color:#495057;">This test has <strong>two phases</strong>:</p>
+        <ol style="font-size:0.88rem; color:#495057; line-height:2;">
+            <li><strong>Phase 1</strong> — Planning: Draft 3 Topic Sentences, one for each argument.</li>
+            <li><strong>Phase 2</strong> — Writing: Develop your 3 argument paragraphs plus a conclusion, applying PEER, organizational connectors, AWL vocabulary, and nominalizations.</li>
+        </ol>
+
+        <ul class="instruction-list">
+            <li><strong>Three Arguments:</strong> Develop exactly 3 arguments supporting the given thesis, each in its own paragraph.</li>
+            <li><strong>PEER Model (Point, Evidence, Explanation, Relevance):</strong> Every argument paragraph must strictly follow Point → Evidence → Explanation → Relevance. Relevance is where you link the paragraph back to the thesis.</li>
+            <li><strong>Heading Vocabulary:</strong> Use organizational connectors to signal structure and link ideas between and within paragraphs (avoid basic sequencers like <em>firstly/secondly/finally</em>; prefer sophisticated transitions).</li>
+            <li><strong>Academic Vocabulary (AWL):</strong> Organically incorporate at least <strong>2 distinct words</strong> from the Academic Word List studied in the Toolbox lessons.</li>
+            <li><strong>Nominalizations:</strong> Convert verbs/adjectives into nouns (e.g., <em>develop → development, integrate → integration</em>) throughout the essay to raise formality and academic rigor.</li>
+            <li><strong>Conclusion:</strong> Close with a conclusion paragraph that restates the thesis and synthesizes the three arguments — no new ideas.</li>
+        </ul>
+
+        <p style="font-size:0.82rem; font-weight:600; color:#2c3e50; margin:10px 0 6px 0;">AWL suggestion bank:</p>
+        <div class="awl-chips">
+            <span class="awl-chip">facilitate</span>
+            <span class="awl-chip">integration</span>
+            <span class="awl-chip">significant</span>
+            <span class="awl-chip">phenomenon</span>
+            <span class="awl-chip">perspective</span>
+            <span class="awl-chip">sustain</span>
+            <span class="awl-chip">comprehensive</span>
+            <span class="awl-chip">enhance</span>
+            <span class="awl-chip">capacity</span>
+            <span class="awl-chip">generate</span>
+            <span class="awl-chip">framework</span>
+            <span class="awl-chip">constitute</span>
+            <span class="awl-chip">adequate</span>
+            <span class="awl-chip">dynamic</span>
+            <span class="awl-chip">ensure</span>
+        </div>
+
+        <div class="note-box">
+            Note: Strikethroughs and erasures are allowed, as long as they do not interrupt the teacher's reading.
+        </div>
+    </div>
+
+    <!-- SLIDE 1 — PHASE 1: PLANNING WORKSPACE -->
+    <!-- id="preEssaySlide" triggers finishLesson() (quiz score save) when entered -->
+    <div class="slide" data-type="CONTENT" id="preEssaySlide">
+        <button class="btn-back" onclick="window.prevSlide && window.prevSlide()">&#8592; Back to Instructions</button>
+
+        <div class="phase-header">Phase 1 — Argument Planning</div>
+        <div class="phase-body">
+            <p style="font-size:0.88rem; margin:0 0 10px 0;">Before writing, draft the Topic Sentence (Point) that will open each argument paragraph.</p>
+
+            <p style="font-size:0.85rem; font-weight:600; color:#2c3e50; margin-bottom:12px;">
+                Write ONLY the Topic Sentence (Point) for each argument:
+            </p>
+
+            <div class="ts-row">
+                <div class="ts-label">Argument 1 — Topic Sentence (Point):</div>
+                <textarea class="ts-input" id="ts-p1"
+                    placeholder="Write a complete, arguable sentence that will guide Argument 1..."></textarea>
+            </div>
+            <div class="ts-row">
+                <div class="ts-label">Argument 2 — Topic Sentence (Point):</div>
+                <textarea class="ts-input" id="ts-p2"
+                    placeholder="Write a complete, arguable sentence that will guide Argument 2..."></textarea>
+            </div>
+            <div class="ts-row">
+                <div class="ts-label">Argument 3 — Topic Sentence (Point):</div>
+                <textarea class="ts-input" id="ts-p3"
+                    placeholder="Write a complete, arguable sentence that will guide Argument 3..."></textarea>
+            </div>
+        </div>
+        <p style="font-size:0.78rem; color:#6c757d; margin:0 0 12px 0;">
+            When your 3 Topic Sentences are ready, click <strong>Next</strong> to proceed to Phase 2.
+        </p>
+    </div>
+
+    <!-- SLIDE 2 — ESSAY WORKSPACE (Phase 2 writing) -->
+    <!-- Back button injected via JS after SlideEngine.init() -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="test2 essays">
+        <p data-se-prompt>
+            Write your 3 argument paragraphs following the structural plan you designed in Phase 1, followed by a conclusion paragraph.
+            Apply the PEER Model in every argument, use organizational connectors to link ideas, include at least 2 distinct AWL words, and use nominalizations throughout to sustain a formal academic tone.
+            Target: 350–500 words total.
+        </p>
+    </div>
+
+</div><!-- /.lesson-container -->
+
+<script>
+window.onload = () => {
+    // ── Phase 1 integrity tracker ────────────────────────────────────────────
+    // Monitors keystrokes and pastes in the planning textareas so that
+    // Phase 1 input is included in the cumulative integrity audit.
+    window._phase1Audit = { pastes: 0, keystrokes: 0, deletions: 0 };
+
+    document.querySelectorAll('.ts-input').forEach(ta => {
+        ta.addEventListener('paste', () => { window._phase1Audit.pastes++; });
+        ta.addEventListener('keydown', e => {
+            window._phase1Audit.keystrokes++;
+            if (e.key === 'Backspace' || e.key === 'Delete') window._phase1Audit.deletions++;
+        });
+    });
+
+    // ── Boot engines ─────────────────────────────────────────────────────────
+    // ActivityTracker must init before SlideEngine mounts the workspace
+    // so the tab-switch baseline is set correctly when EssayHandler.init() fires.
+    ActivityTracker.init('test2 essays');
+
+    const engineReady = SlideEngine.init('test2 essays');
+
+    engineReady.then(() => {
+
+        // ── Override finishLessonWithEssay ────────────────────────────────────
+        // Prepend Phase 1 topic sentences and recalculate integrity score
+        // using combined Phase 1 + Phase 2 raw stats.
+        const _origFinish = window.finishLessonWithEssay;
+        window.finishLessonWithEssay = function(lessonName, essay, audit, redirectUrl) {
+            const p1t = (document.getElementById('ts-p1')?.value || '').trim() || '(not provided)';
+            const p2t = (document.getElementById('ts-p2')?.value || '').trim() || '(not provided)';
+            const p3t = (document.getElementById('ts-p3')?.value || '').trim() || '(not provided)';
+
+            const fullEssay =
+                '[PHASE 1 — TOPIC SENTENCES]\n' +
+                'Argument 1: ' + p1t + '\n' +
+                'Argument 2: ' + p2t + '\n' +
+                'Argument 3: ' + p3t + '\n\n' +
+                '[PHASE 2 — ARGUMENT PARAGRAPHS + CONCLUSION]\n' + (essay || '');
+
+            // Skip merge if essay was discarded (skipped flag) or no Phase 1 activity
+            const p1a = window._phase1Audit || { pastes: 0, keystrokes: 0, deletions: 0 };
+            const mergedAudit = Object.assign({}, audit);
+
+            if (!audit?.skipped && (p1a.pastes > 0 || p1a.keystrokes > 0)) {
+                const p1Chars = ['ts-p1', 'ts-p2', 'ts-p3']
+                    .reduce((s, id) => s + (document.getElementById(id)?.value.length || 0), 0);
+
+                const combinedPastes      = (audit?.pastes         || 0) + p1a.pastes;
+                const combinedKeystrokes  = (audit?.keystrokes      || 0) + p1a.keystrokes;
+                const combinedChars       = (audit?.chars           || 0) + p1Chars;
+                const combinedDeletions   = (audit?.deletions       || 0) + p1a.deletions;
+                const combinedWords       =  audit?.words           || 0;
+                const tabSwitches         =  audit?.tabSwitches     || 0;
+                const writingDuration     =  audit?.writingDuration || 0;
+
+                // Replicate EssayHandler._calcIntegrityScore with combined stats
+                let score = 100;
+                if (combinedPastes > 0 && combinedChars > 30) {
+                    const ratio     = Math.round((combinedKeystrokes / combinedChars) * 100);
+                    const pastedPct = Math.max(0, 100 - ratio);
+                    if      (pastedPct >= 60) score -= 50;
+                    else if (pastedPct >= 30) score -= 25;
+                    else if (pastedPct >= 10) score -= 10;
+                    else                      score -= 5;
+                } else if (combinedPastes > 0) {
+                    score -= 20;
+                }
+                if (tabSwitches >= 5)      score -= Math.min(tabSwitches * 4, 25);
+                else if (tabSwitches >= 2) score -= tabSwitches * 3;
+                if (combinedWords > 10 && combinedDeletions > 0) {
+                    const delRatio = combinedDeletions / Math.max(combinedKeystrokes, 1);
+                    if (delRatio > 0.6) score -= 10;
+                }
+                if (combinedPastes === 0 && combinedWords > 30 && writingDuration > 0 && writingDuration < 30) {
+                    score -= 15;
+                }
+
+                mergedAudit.pastes          = combinedPastes;
+                mergedAudit.keystrokes      = combinedKeystrokes;
+                mergedAudit.deletions       = combinedDeletions;
+                mergedAudit.integrityScore  = Math.max(0, score);
+                mergedAudit.charsTypedRatio = combinedChars > 0
+                    ? Math.round((combinedKeystrokes / combinedChars) * 100)
+                    : (audit?.charsTypedRatio || 0);
+            }
+
+            _origFinish(lessonName, fullEssay, mergedAudit, redirectUrl);
+        };
+
+        // ── Intercept Phase 1 Next button to init EssayHandler once ──────────
+        // EssayHandler normally starts via the warning-slide "Start Writing" button.
+        // Since there is no warning slide in this test, we trigger it the first time
+        // the student navigates from Phase 1 to the writing workspace.
+        let _essayHandlerInited = false;
+        const phase1NextBtn = document.querySelector('#preEssaySlide .btn-next');
+        if (phase1NextBtn) {
+            phase1NextBtn.addEventListener('click', () => {
+                if (!_essayHandlerInited && window.EssayHandler) {
+                    EssayHandler.init('test2 essays');
+                    _essayHandlerInited = true;
+                }
+            });
+        }
+
+        // ── Inject "Review Plan" back button into the essay workspace ─────────
+        // Allows the student to freely navigate back to Phase 1 planning.
+        const workspace = document.querySelector('#essaySlide .essay-workspace');
+        const finalBtn  = document.getElementById('finalBtn');
+        if (workspace && finalBtn) {
+            const backBtn = document.createElement('button');
+            backBtn.innerHTML = '&#8592; Review Phase 1 Plan';
+            backBtn.style.cssText =
+                'display:block; width:100%; margin-bottom:10px; padding:10px 20px;' +
+                'background:#f8f9fa; border:1px solid #dee2e6; border-radius:8px;' +
+                'color:#495057; font-size:0.9rem; font-weight:600; cursor:pointer;' +
+                'transition:background 0.2s;';
+            backBtn.onmouseover = () => { backBtn.style.background = '#e9ecef'; };
+            backBtn.onmouseout  = () => { backBtn.style.background = '#f8f9fa'; };
+            backBtn.onclick     = () => { window.prevSlide && window.prevSlide(); };
+            workspace.insertBefore(backBtn, finalBtn);
+        }
+
+    }); // end engineReady.then()
+};
+</script>
+
+</body>
+</html>
