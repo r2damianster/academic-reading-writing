@@ -28,6 +28,23 @@
    ============================================================================= */
 
 
+// ── Coincidencia por palabra completa ──────────────────────────────────────
+// text.includes(w) hacía substring match: una forbidden word que es raíz de una
+// required word (fail→failure, first→firstly, but→", but") disparaba falso
+// positivo. \b evita eso; solo se omite el límite en el lado que empieza/termina
+// con un carácter no alfanumérico (ej. ", but", ";") ya que ahí no aplica \b.
+// Top-level (fuera del IIFE de SlideEngine) porque _calcCompliance (dentro del
+// IIFE) y _renderTestRubric (fuera, más abajo en el archivo) la necesitan ambas.
+function _wholeWordIncludes(text, phrase) {
+    const p = (phrase || '').toLowerCase();
+    if (!p) return false;
+    const escaped    = p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const startsWord = /^\w/.test(p);
+    const endsWord   = /\w$/.test(p);
+    const pattern    = (startsWord ? '\\b' : '') + escaped + (endsWord ? '\\b' : '');
+    return new RegExp(pattern).test(text);
+}
+
 /* =============================================================================
    SECCIÓN 1 — ENGINE CORE
    Navegación, barra de progreso, contador de errores.
@@ -626,7 +643,7 @@ const SlideEngine = (function () {
         const forbMap  = toMap(req.forbidden_words);
         const forbList = Object.keys(forbMap);
         if (forbList.length > 0) {
-            const found    = forbList.filter(w => text.includes(w.toLowerCase()));
+            const found    = forbList.filter(w => _wholeWordIncludes(text, w));
             const forbidOk = found.length === 0;
             flags.forbidden = forbidOk;
             snapshot.forbidden_found = found.map(w => ({ word: w, label: forbMap[w] || '' }));
@@ -2121,7 +2138,7 @@ SlideTypes.ESSAY = {
             const forbList = Object.keys(forbMap);
             if (forbList.length > 0) {
                 total++;
-                const found    = forbList.filter(w => text.includes(w.toLowerCase()));
+                const found    = forbList.filter(w => _wholeWordIncludes(text, w));
                 const forbidOk = found.length === 0;
                 if (forbidOk) met++;
                 const fEl = document.getElementById('se-req-forbidden');
