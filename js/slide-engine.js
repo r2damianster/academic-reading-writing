@@ -1344,7 +1344,7 @@ SlideTypes.CONTENT = {
 SlideTypes.QUIZ = {
     mount(slide, index) {
         const questionEl = slide.querySelector('[data-se-question]');
-        const optionEls  = Array.from(slide.querySelectorAll('[data-se-option]'));
+        const optionEls  = _shuffleArray(Array.from(slide.querySelectorAll('[data-se-option]')));
         if (!questionEl || optionEls.length === 0) return;
 
         const feedbackId = `se-quiz-feedback-${index}`;
@@ -2237,6 +2237,16 @@ SlideTypes.ESSAY = {
    SECCIÓN 4 — UTILIDADES INTERNAS
    Helpers compartidos entre tipos. No se exportan al scope global.
    ============================================================================= */
+
+// Mezcla un array in-place (Fisher-Yates) para que la posición de la
+// respuesta correcta no sea predecible por el orden en el HTML fuente.
+function _shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
 
 // Añade el botón "Next →" al final de una slide.
 // options.hidden = true  → inicia oculto (para quiz, drag_drop, fill_blank)
@@ -3174,7 +3184,7 @@ SlideTypes.CHOOSE_CONTEXT = {
             const choiceEl = sentence.querySelector('[data-se-choice]');
             if (!choiceEl) return;
 
-            const options = Array.from(choiceEl.querySelectorAll('[data-se-option]'));
+            const options = _shuffleArray(Array.from(choiceEl.querySelectorAll('[data-se-option]')));
             const wrapper = document.createElement('span');
             wrapper.style.cssText = `display:inline-flex; gap:4px; flex-wrap:wrap;
                                       vertical-align:middle; margin:0 3px;`;
