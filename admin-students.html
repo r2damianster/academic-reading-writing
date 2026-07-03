@@ -374,6 +374,7 @@ tbody tr:hover td { background:var(--snow); }
 
     <div class="modal-footer">
       <button class="csv-btn" onclick="downloadStudentCSV()">↓ Export Student CSV</button>
+      <button class="csv-btn" style="background:var(--red);color:#fff" onclick="deleteStudent()">🗑 Delete Student</button>
     </div>
   </div>
 </div>
@@ -532,6 +533,30 @@ async function openDetail(studentId) {
     } catch(e) {
         document.getElementById('activityBody').innerHTML =
             `<tr><td colspan="3" class="state-msg" style="color:var(--red)">Error: ${e.message}</td></tr>`;
+    }
+}
+
+async function deleteStudent() {
+    if (!currentStudent) return;
+    const typed = prompt(
+        `This permanently deletes "${currentStudent.name}" and ALL their essays, activity logs, and reading progress. This cannot be undone.\n\nType the student's exact name to confirm:`
+    );
+    if (typed !== currentStudent.name) {
+        if (typed !== null) alert('Name did not match. Deletion cancelled.');
+        return;
+    }
+    try {
+        const r = await fetch(`/api/admin-student-detail?studentId=${currentStudent.id}`, { method: 'DELETE' });
+        if (!r.ok) {
+            const err = await r.json().catch(() => ({}));
+            throw new Error(err.error || `HTTP ${r.status}`);
+        }
+        allStudents = allStudents.filter(s => s.id !== currentStudent.id);
+        closeModal();
+        renderTable();
+        updateStats();
+    } catch (e) {
+        alert('Error deleting student: ' + e.message);
     }
 }
 
