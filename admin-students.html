@@ -408,7 +408,8 @@ function showPanel() {
 
 window.onload = function() {
     if (sessionStorage.getItem('adminUnlocked') === 'true' ||
-        localStorage.getItem('adminUnlocked') === 'true') {
+        localStorage.getItem('adminUnlocked') === 'true' ||
+        localStorage.getItem('isAdmin') === 'true') {
         showPanel();
     }
 };

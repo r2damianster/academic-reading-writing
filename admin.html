@@ -565,7 +565,10 @@ async function init() {
     }
 
     // Verificar si ya hay sesión de admin guardada (soporta sessionStorage y localStorage)
-    if (sessionStorage.getItem('adminUnlocked') === 'true' || localStorage.getItem('adminUnlocked') === 'true') {
+    // o si ya iniciaste sesión como docente (arturo.rodriguez@uleam.edu.ec + ADMIN_PASSWORD)
+    if (sessionStorage.getItem('adminUnlocked') === 'true' ||
+        localStorage.getItem('adminUnlocked') === 'true' ||
+        localStorage.getItem('isAdmin') === 'true') {
         showPanel();
     }
 }
