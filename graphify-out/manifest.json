@@ -1,0 +1,1047 @@
+{
+  ".claude/settings.json": {
+    "mtime": 1777162276.3590853,
+    "ast_hash": "a23769966051bd834b6d64367a46afc2",
+    "semantic_hash": ""
+  },
+  ".claude/settings.local.json": {
+    "mtime": 1785261523.7635446,
+    "ast_hash": "f2820dfb320a9aa762a88def29a6c8d2",
+    "semantic_hash": ""
+  },
+  ".mcp.json": {
+    "mtime": 1785261523.792892,
+    "ast_hash": "a42f4349181b3c0fab60ca9d52af8531",
+    "semantic_hash": ""
+  },
+  "RUN_SETUP.sh": {
+    "mtime": 1785261523.843073,
+    "ast_hash": "4c63d0a19cccbd2a180c0bb587b52c68",
+    "semantic_hash": ""
+  },
+  "SUPABASE_SETUP_ALL_IN_ONE.sql": {
+    "mtime": 1785261523.856126,
+    "ast_hash": "61c1564b9b55c5e377e0595d286e4b9d",
+    "semantic_hash": ""
+  },
+  "SYNC_READING_INTEGRATION_EXAMPLE.js": {
+    "mtime": 1785261523.856126,
+    "ast_hash": "c8831717a3a5515a65f8141c0f20e327",
+    "semantic_hash": ""
+  },
+  "TEST_COMPLETE.sh": {
+    "mtime": 1785261523.8648584,
+    "ast_hash": "fa75196bb0014a2db0253b6484bc3398",
+    "semantic_hash": ""
+  },
+  "VERIFY_AND_TEST.sh": {
+    "mtime": 1785261523.8738313,
+    "ast_hash": "16a4479f4e81b5bc258a9d6242efdbfd",
+    "semantic_hash": ""
+  },
+  "api/admin-student-detail.js": {
+    "mtime": 1783093647.6221902,
+    "ast_hash": "2a42a16968e3b142a1f2722300cb0684",
+    "semantic_hash": ""
+  },
+  "api/admin-students.js": {
+    "mtime": 1777162234.3076634,
+    "ast_hash": "4ca0631c61f3492a5724cece5074241e",
+    "semantic_hash": ""
+  },
+  "api/config.js": {
+    "mtime": 1774644938.595567,
+    "ast_hash": "4cede0229e1617f32afb0b2afc51a4a3",
+    "semantic_hash": ""
+  },
+  "api/cron/compress-profiles.js": {
+    "mtime": 1777162234.3097706,
+    "ast_hash": "d532402e8467f38346f1bf5886002f36",
+    "semantic_hash": ""
+  },
+  "api/cron/keep-alive.js": {
+    "mtime": 1785261523.881988,
+    "ast_hash": "9c3b15246b9043db7400e4cb0c58061f",
+    "semantic_hash": ""
+  },
+  "api/cron/leagues-reset.js": {
+    "mtime": 1785261523.881988,
+    "ast_hash": "03a011573c742d8567457414284522f6",
+    "semantic_hash": ""
+  },
+  "api/cron/streaks-check.js": {
+    "mtime": 1785261523.881988,
+    "ast_hash": "190eb973762758aa5d3e23f758414a30",
+    "semantic_hash": ""
+  },
+  "api/gamification.js": {
+    "mtime": 1785261523.8955214,
+    "ast_hash": "7f59429cfb98fce9ceafeb1c0609af84",
+    "semantic_hash": ""
+  },
+  "api/lesson-availability.js": {
+    "mtime": 1779994424.9451103,
+    "ast_hash": "9d316dd49bec7d1838198e5c6ed61ace",
+    "semantic_hash": ""
+  },
+  "api/orchestrator.js": {
+    "mtime": 1779737505.8292716,
+    "ast_hash": "6928b8ebd436c973e548d34be6f1b9ce",
+    "semantic_hash": ""
+  },
+  "api/sync-reading.js": {
+    "mtime": 1785261523.9018013,
+    "ast_hash": "97d6766edd577529ce733adfae3f98cf",
+    "semantic_hash": ""
+  },
+  "api/validate-student.js": {
+    "mtime": 1779994439.265112,
+    "ast_hash": "7ef6a6953d39716ba146ea2af9cd5d20",
+    "semantic_hash": ""
+  },
+  "check_word_bank_bugs.py": {
+    "mtime": 1780787302.2240224,
+    "ast_hash": "657bef0a17c496d4788629902f3a311f",
+    "semantic_hash": ""
+  },
+  "js/activity-tracker.js": {
+    "mtime": 1773016267.9186387,
+    "ast_hash": "85df06c10c3cbc3581d96a305ee04693",
+    "semantic_hash": ""
+  },
+  "js/agent-client.js": {
+    "mtime": 1779737754.723981,
+    "ast_hash": "44aedb7a212698dd738606d6cee7b6b6",
+    "semantic_hash": ""
+  },
+  "js/auth.js": {
+    "mtime": 1779994491.2380152,
+    "ast_hash": "4380e4b25c8f84497e9802d557bccae9",
+    "semantic_hash": ""
+  },
+  "js/config-loader.js": {
+    "mtime": 1777162234.337391,
+    "ast_hash": "bfb89328525e7ff79df1ebaf751b432a",
+    "semantic_hash": ""
+  },
+  "js/essay-handler.js": {
+    "mtime": 1778199870.2522173,
+    "ast_hash": "900d1e98f217c0abf7629377be66c8e4",
+    "semantic_hash": ""
+  },
+  "js/lesson-access.js": {
+    "mtime": 1779737731.8284278,
+    "ast_hash": "afc889aab059224645b062f0910a0189",
+    "semantic_hash": ""
+  },
+  "js/nav.js": {
+    "mtime": 1774982703.4783833,
+    "ast_hash": "16b9a6fd186fff2b7a69f4af4d90c59f",
+    "semantic_hash": ""
+  },
+  "js/navigation.js": {
+    "mtime": 1774281859.562894,
+    "ast_hash": "b41961687943daca6b1002962edb20a3",
+    "semantic_hash": ""
+  },
+  "js/pdf-annotator.js": {
+    "mtime": 1774445703.8231702,
+    "ast_hash": "e87786d9e1862436c602198f12493b2a",
+    "semantic_hash": ""
+  },
+  "js/pdf-proxy.js": {
+    "mtime": 1774445703.8231702,
+    "ast_hash": "ea5c463717b794cdd906d99734d5a306",
+    "semantic_hash": ""
+  },
+  "js/reading-engine.js": {
+    "mtime": 1777166459.67637,
+    "ast_hash": "757d762e535642a82dee8782aec9a03e",
+    "semantic_hash": ""
+  },
+  "js/report.js": {
+    "mtime": 1777162234.3461447,
+    "ast_hash": "dbb16e3660b0a0c8f7a282384bdc432d",
+    "semantic_hash": ""
+  },
+  "js/slide-engine.js": {
+    "mtime": 1783113741.9409454,
+    "ast_hash": "a973eacb87069eb650eafe5bd5f8bd1c",
+    "semantic_hash": ""
+  },
+  "js/translations.js": {
+    "mtime": 1785261523.908555,
+    "ast_hash": "be0e1ed88b658228bb333b7b33c0fb3d",
+    "semantic_hash": ""
+  },
+  "lib/agents/_prompts.js": {
+    "mtime": 1779737491.5168383,
+    "ast_hash": "bb4f2ea17f59ebb8f189eb454fbe7492",
+    "semantic_hash": ""
+  },
+  "lib/agents/content-gen.js": {
+    "mtime": 1777162234.3580163,
+    "ast_hash": "a176c656b577f1b51fe6f5b8fb5195b4",
+    "semantic_hash": ""
+  },
+  "lib/agents/frontend.js": {
+    "mtime": 1777162234.3608847,
+    "ast_hash": "ff88854d8a2c3c6cd20fe50bd25b48e3",
+    "semantic_hash": ""
+  },
+  "lib/agents/github.js": {
+    "mtime": 1777162234.3640833,
+    "ast_hash": "dcf0a64a9b1e0e0bde0ec22d865b22e2",
+    "semantic_hash": ""
+  },
+  "lib/agents/integrity.js": {
+    "mtime": 1777162234.3662505,
+    "ast_hash": "365dd6ecd57e4dc3f3639032b71f1dc6",
+    "semantic_hash": ""
+  },
+  "lib/agents/keep-alive.js": {
+    "mtime": 1785261523.9142823,
+    "ast_hash": "074df09aeb97bcfcdece9fbdf8e8f879",
+    "semantic_hash": ""
+  },
+  "lib/agents/memory.js": {
+    "mtime": 1777162234.368984,
+    "ast_hash": "db5b201591fb456f7063a6d6e43f1765",
+    "semantic_hash": ""
+  },
+  "lib/agents/peer-review.js": {
+    "mtime": 1777162234.368984,
+    "ast_hash": "df90ab6dfcc4d1d87f97977da1079e36",
+    "semantic_hash": ""
+  },
+  "lib/agents/reading.js": {
+    "mtime": 1777162234.374372,
+    "ast_hash": "fd55b0cca257d4b558889558a7fd7537",
+    "semantic_hash": ""
+  },
+  "lib/agents/report-analyst.js": {
+    "mtime": 1777162234.3763907,
+    "ast_hash": "ee555d413ed2638d2946705f6d38977a",
+    "semantic_hash": ""
+  },
+  "lib/agents/test-grader.js": {
+    "mtime": 1779737473.4808667,
+    "ast_hash": "505d45e0f3377e53313df59491da19bc",
+    "semantic_hash": ""
+  },
+  "lib/agents/writing.js": {
+    "mtime": 1777162234.378031,
+    "ast_hash": "731437098176f58c16736c5fea42f0c6",
+    "semantic_hash": ""
+  },
+  "lib/content-loader.js": {
+    "mtime": 1785261523.9142823,
+    "ast_hash": "69e405ef6e55550a3bf2a8a467cd78b9",
+    "semantic_hash": ""
+  },
+  "lib/dojo-badges.js": {
+    "mtime": 1785261523.9219573,
+    "ast_hash": "cc40356992d7df8fa7c8802fcc209613",
+    "semantic_hash": ""
+  },
+  "lib/dojo-sync.js": {
+    "mtime": 1785261523.92914,
+    "ast_hash": "dbd1e1e7fa9e0b028404c795b7a7fe5d",
+    "semantic_hash": ""
+  },
+  "lib/groq-client.js": {
+    "mtime": 1777162234.3806126,
+    "ast_hash": "06ed7992230b484e6b60a54fc99c2f80",
+    "semantic_hash": ""
+  },
+  "lib/localStorage-sync.js": {
+    "mtime": 1785261523.93546,
+    "ast_hash": "2c2218fcffe8186d98e0cdd90d782703",
+    "semantic_hash": ""
+  },
+  "package.json": {
+    "mtime": 1785261114.9682102,
+    "ast_hash": "3d39e3f2d46a6b5aaebbbc096673fa63",
+    "semantic_hash": ""
+  },
+  "scripts/execute-migrations.js": {
+    "mtime": 1785261523.9753478,
+    "ast_hash": "3f80aa68723d68176c0f44303786cb48",
+    "semantic_hash": ""
+  },
+  "scripts/github-check.js": {
+    "mtime": 1777162234.4426174,
+    "ast_hash": "d1b0474709d3efbe303ad18d5b39a9e0",
+    "semantic_hash": ""
+  },
+  "scripts/setup-dojo.js": {
+    "mtime": 1785261523.9807982,
+    "ast_hash": "3d2bad6ab50aab58a296f437303257da",
+    "semantic_hash": ""
+  },
+  "scripts/test-endpoints.sh": {
+    "mtime": 1785261523.987126,
+    "ast_hash": "49c590769083498346c2ae1f8bd9cf7a",
+    "semantic_hash": ""
+  },
+  "scripts/verify-quick-think-setup.js": {
+    "mtime": 1785261523.9931867,
+    "ast_hash": "ded60639cc62def5cb8a7899d47daa26",
+    "semantic_hash": ""
+  },
+  "server.js": {
+    "mtime": 1785261524.001328,
+    "ast_hash": "e21622eb8fb9bef3b7b9c9c0f745915b",
+    "semantic_hash": ""
+  },
+  "supabase-agents-schema.sql": {
+    "mtime": 1777162234.4518747,
+    "ast_hash": "39cdae92c66b7adc9fd129d6fb244047",
+    "semantic_hash": ""
+  },
+  "supabase/content/badges.json": {
+    "mtime": 1785261524.010685,
+    "ast_hash": "e88c706e915cd73dd8501b5181319ed2",
+    "semantic_hash": ""
+  },
+  "supabase/content/dojo-content.json": {
+    "mtime": 1785261524.0174131,
+    "ast_hash": "7e7049180ffcb8e2f99ab0fe9f5783d1",
+    "semantic_hash": ""
+  },
+  "supabase/content/quick-think-content.json": {
+    "mtime": 1785261524.0174131,
+    "ast_hash": "2825050bebc2e71d40a929cc29ebee16",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/0_dojo_gamification_schema.sql": {
+    "mtime": 1785261524.0227697,
+    "ast_hash": "50f15a3fb4ba54d28f6c64c651e013c2",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/1_quick_think_schema.sql": {
+    "mtime": 1785261524.030022,
+    "ast_hash": "17ce262b94023c4d6f33c7ef56056b22",
+    "semantic_hash": ""
+  },
+  "supabase/quick_think_seed.sql": {
+    "mtime": 1785261524.0328002,
+    "ast_hash": "05bc72ee2fe64a72a8e61661de6c8a64",
+    "semantic_hash": ""
+  },
+  "supabase/seed_data.sql": {
+    "mtime": 1785261524.0386329,
+    "ast_hash": "605df9f471bd7170b26a736db5421ca2",
+    "semantic_hash": ""
+  },
+  "vercel.json": {
+    "mtime": 1785268607.5571785,
+    "ast_hash": "2098c815ee771ccb873b183903a4f75c",
+    "semantic_hash": ""
+  },
+  ".claude/CONTEXT.md": {
+    "mtime": 1777162234.1776311,
+    "ast_hash": "3be172b0aed993b612d93a319a57105f",
+    "semantic_hash": ""
+  },
+  ".claude/agents/INDEX.md": {
+    "mtime": 1777162234.1824255,
+    "ast_hash": "dd4c67109fac12b64d1cdcb175580e64",
+    "semantic_hash": ""
+  },
+  ".claude/agents/content-gen.md": {
+    "mtime": 1777162234.1854746,
+    "ast_hash": "6b97f0ecf9731e816bb3e80aec595222",
+    "semantic_hash": ""
+  },
+  ".claude/agents/db-admin.md": {
+    "mtime": 1777162234.1874955,
+    "ast_hash": "6e2955a8c5bfb5a4ea9e4398922cdb4a",
+    "semantic_hash": ""
+  },
+  ".claude/agents/frontend.md": {
+    "mtime": 1777162234.1895282,
+    "ast_hash": "ff5bed8985a342c9a08955d159a7f2c4",
+    "semantic_hash": ""
+  },
+  ".claude/agents/github.md": {
+    "mtime": 1777162234.1926222,
+    "ast_hash": "9f4f3143fddff7384f99b91b16267fcd",
+    "semantic_hash": ""
+  },
+  ".claude/agents/integrity.md": {
+    "mtime": 1777162234.195696,
+    "ast_hash": "b3a609ca22b84f3cef97f943b311dbfd",
+    "semantic_hash": ""
+  },
+  ".claude/agents/memory.md": {
+    "mtime": 1777162234.197207,
+    "ast_hash": "517b04ff759761f23c9b9e5d7dc26398",
+    "semantic_hash": ""
+  },
+  ".claude/agents/peer-review.md": {
+    "mtime": 1777162234.199837,
+    "ast_hash": "6193116256c0312402ea708e5bf3576f",
+    "semantic_hash": ""
+  },
+  ".claude/agents/progress.md": {
+    "mtime": 1777162234.2018714,
+    "ast_hash": "c540c9af506022450db85a79f14973f3",
+    "semantic_hash": ""
+  },
+  ".claude/agents/reading.md": {
+    "mtime": 1777162234.2029085,
+    "ast_hash": "e003005aab45103fc673ee9fb2539843",
+    "semantic_hash": ""
+  },
+  ".claude/agents/writing.md": {
+    "mtime": 1777162234.2067826,
+    "ast_hash": "05001156d948357d6cbb3e64c11fec07",
+    "semantic_hash": ""
+  },
+  ".claude/api/INDEX.md": {
+    "mtime": 1777162234.2094715,
+    "ast_hash": "12f5072980ee07005bf73c10a894e32d",
+    "semantic_hash": ""
+  },
+  ".claude/api/config.md": {
+    "mtime": 1777162234.2127545,
+    "ast_hash": "3640121cf3436dc43385f097767745fe",
+    "semantic_hash": ""
+  },
+  ".claude/api/orchestrator.md": {
+    "mtime": 1777162234.2137625,
+    "ast_hash": "1d4e04f0782b4ad3bb8b729cf0e9d532",
+    "semantic_hash": ""
+  },
+  ".claude/api/sync-reading.md": {
+    "mtime": 1777162234.217906,
+    "ast_hash": "8cefc488fe4bf1dc5677521967385c5f",
+    "semantic_hash": ""
+  },
+  ".claude/api/validate-student.md": {
+    "mtime": 1777162234.2189324,
+    "ast_hash": "17679c92eb9ead098a97c77ce672a710",
+    "semantic_hash": ""
+  },
+  ".claude/database/INDEX.md": {
+    "mtime": 1777162234.2226048,
+    "ast_hash": "cc569d657d3c6077a929c730f605498a",
+    "semantic_hash": ""
+  },
+  ".claude/database/env-vars.md": {
+    "mtime": 1777162234.2248924,
+    "ast_hash": "1922ae7e49d33169882b266d5a948118",
+    "semantic_hash": ""
+  },
+  ".claude/database/schema.md": {
+    "mtime": 1777162234.2275562,
+    "ast_hash": "5cb3e2e5f47aafa522a1e3a934e977b1",
+    "semantic_hash": ""
+  },
+  ".claude/decisions/commonjs-only.md": {
+    "mtime": 1777162234.2275562,
+    "ast_hash": "efbab08c96b195619fa169524ea7cf59",
+    "semantic_hash": ""
+  },
+  ".claude/decisions/groq-model-selection.md": {
+    "mtime": 1777162234.2307746,
+    "ast_hash": "b629865513080b41069bb8d798ecc783",
+    "semantic_hash": ""
+  },
+  ".claude/decisions/lecciones-pendientes.md": {
+    "mtime": 1777162234.2307746,
+    "ast_hash": "5f987628f787847a025a1490c3a7bcda",
+    "semantic_hash": ""
+  },
+  ".claude/decisions/vercel-12-limit.md": {
+    "mtime": 1777162234.2353213,
+    "ast_hash": "74c6d78ba2ad49780454275a4a221854",
+    "semantic_hash": ""
+  },
+  ".claude/domain/INDEX.md": {
+    "mtime": 1777162234.237357,
+    "ast_hash": "7f652f660c50547556d75a9bab72db54",
+    "semantic_hash": ""
+  },
+  ".claude/domain/academic-writing.md": {
+    "mtime": 1777162234.240474,
+    "ast_hash": "2d6e6e59468e3174f19234b6a978a2f4",
+    "semantic_hash": ""
+  },
+  ".claude/domain/integrity.md": {
+    "mtime": 1777162234.2426195,
+    "ast_hash": "100af6bc72900b3146ff5a8142286538",
+    "semantic_hash": ""
+  },
+  ".claude/domain/pedagogy.md": {
+    "mtime": 1777162234.244707,
+    "ast_hash": "ee4f56c8c14935e872b13447291baaa3",
+    "semantic_hash": ""
+  },
+  ".claude/frontend/INDEX.md": {
+    "mtime": 1777162234.2458217,
+    "ast_hash": "55bd02746234c4f187af51b1ea6cb927",
+    "semantic_hash": ""
+  },
+  ".claude/frontend/auth.md": {
+    "mtime": 1777162234.249886,
+    "ast_hash": "75e1372d666aa3f7d63ad761f83df33e",
+    "semantic_hash": ""
+  },
+  ".claude/frontend/essay-handler.md": {
+    "mtime": 1777162234.2519376,
+    "ast_hash": "a852199ac4cac2f5913601c8d4d7a01e",
+    "semantic_hash": ""
+  },
+  ".claude/frontend/report.md": {
+    "mtime": 1777162234.2519376,
+    "ast_hash": "2566a041914c22a2a315cf4689e407f4",
+    "semantic_hash": ""
+  },
+  ".claude/frontend/slide-engine.md": {
+    "mtime": 1777162234.2578838,
+    "ast_hash": "559f3e57e83e50ca982abfe39e9473f1",
+    "semantic_hash": ""
+  },
+  ".claude/mcp/INDEX.md": {
+    "mtime": 1777162234.26048,
+    "ast_hash": "549b9b61233d2617765bd4b0585367d0",
+    "semantic_hash": ""
+  },
+  ".claude/mcp/groq.md": {
+    "mtime": 1777162234.26048,
+    "ast_hash": "f2f14b052c7f71130d4ad2bf7fbc1ab4",
+    "semantic_hash": ""
+  },
+  ".claude/mcp/supabase.md": {
+    "mtime": 1777162234.2640414,
+    "ast_hash": "28de67962e84160f07fc38f3d33235fa",
+    "semantic_hash": ""
+  },
+  ".claude/mcp/vercel.md": {
+    "mtime": 1777162234.2675917,
+    "ast_hash": "7a19c46359020a991c72d01ef4f214b0",
+    "semantic_hash": ""
+  },
+  ".claude/troubleshooting/lesson-access-status.md": {
+    "mtime": 1777162234.2766073,
+    "ast_hash": "b56b02c45301575f84a7ba757508a805",
+    "semantic_hash": ""
+  },
+  "AUDIT_COMPLETE.md": {
+    "mtime": 1785261523.797837,
+    "ast_hash": "2f578600eed9f1a32ba6a5131cd8c526",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1777162433.0527177,
+    "ast_hash": "20c97b448ea2c7608e24c0dc63dccfba",
+    "semantic_hash": ""
+  },
+  "CODE_REVIEW.md": {
+    "mtime": 1785261523.8062623,
+    "ast_hash": "f5140fb71df7059b019c76d707d8b7e4",
+    "semantic_hash": ""
+  },
+  "CRON_SETUP.md": {
+    "mtime": 1785261523.8133888,
+    "ast_hash": "018b37fe0cfb7f13cdf09657abfaad9d",
+    "semantic_hash": ""
+  },
+  "DEUDA_TECNICA.md": {
+    "mtime": 1777162234.2844734,
+    "ast_hash": "fb235d39bdc615f7c21fe67ea072fe84",
+    "semantic_hash": ""
+  },
+  "GUIA_CREACION_LECCIONES.md": {
+    "mtime": 1777162234.285491,
+    "ast_hash": "9153aa3f623cc08d3a3826327f9448b2",
+    "semantic_hash": ""
+  },
+  "GUIA_INSTRUCTOR_PANEL.md": {
+    "mtime": 1777162234.2881434,
+    "ast_hash": "d309979f1f99f779ba1426aae5392d00",
+    "semantic_hash": ""
+  },
+  "HYBRID_ARCHITECTURE.md": {
+    "mtime": 1785261523.8165772,
+    "ast_hash": "68dce318f2804b2cd15a2f68421db13d",
+    "semantic_hash": ""
+  },
+  "INDEX.md": {
+    "mtime": 1785261523.824648,
+    "ast_hash": "5c9e1944de4825a51488ee694a883927",
+    "semantic_hash": ""
+  },
+  "QUICK_SETUP.md": {
+    "mtime": 1785261523.8328066,
+    "ast_hash": "4fa9ba1bd9da90ddf63bf3bfe1d150d2",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1785261523.8410442,
+    "ast_hash": "b660b21ff0f0cb394626a573d7d292bc",
+    "semantic_hash": ""
+  },
+  "SECURITY_AUDIT.md": {
+    "mtime": 1785261523.8487954,
+    "ast_hash": "f9ceba76cec96ca26248385ec3ee198e",
+    "semantic_hash": ""
+  },
+  "STATUS.md": {
+    "mtime": 1785261523.8487954,
+    "ast_hash": "e3238343eb8469e21e72c9844abb52ba",
+    "semantic_hash": ""
+  },
+  "VERCEL_SETUP.md": {
+    "mtime": 1785261523.8648584,
+    "ast_hash": "4fe0e1201f1f0675c9dc737853e27967",
+    "semantic_hash": ""
+  },
+  "admin-students.html": {
+    "mtime": 1783093662.4085813,
+    "ast_hash": "647ae60b29cf457382448d20d4f1972f",
+    "semantic_hash": ""
+  },
+  "admin.html": {
+    "mtime": 1783092454.3257554,
+    "ast_hash": "6969a62acf6b83deb2b30abb1a5b524d",
+    "semantic_hash": ""
+  },
+  "docs/TEACHER_HELPER_GUIDE.md": {
+    "mtime": 1777162234.899864,
+    "ast_hash": "d6e1dfa939c4c9bcfebac86758ffe3b0",
+    "semantic_hash": ""
+  },
+  "index.html": {
+    "mtime": 1783130922.3175917,
+    "ast_hash": "5f023cc39828cb7973f33ea6722b6655",
+    "semantic_hash": ""
+  },
+  "modules/00-fundamentals/body-paragraphs.html": {
+    "mtime": 1777162234.9046483,
+    "ast_hash": "39c04abfadda7556c3cb52a5b4e74aec",
+    "semantic_hash": ""
+  },
+  "modules/00-fundamentals/conclusion-paragraphs.html": {
+    "mtime": 1777162234.9078865,
+    "ast_hash": "b22c1c3ac7c19b4a0b848c5a5e5f2551",
+    "semantic_hash": ""
+  },
+  "modules/00-fundamentals/fundamentals-hub.html": {
+    "mtime": 1773172648.4269102,
+    "ast_hash": "a152dacb727df902f2d5ba4c69c054ee",
+    "semantic_hash": ""
+  },
+  "modules/00-fundamentals/integrating-visuals.html": {
+    "mtime": 1777162234.9096336,
+    "ast_hash": "49a5356ea1b457a9f223260dfc4054d3",
+    "semantic_hash": ""
+  },
+  "modules/00-fundamentals/introduction-strategies.html": {
+    "mtime": 1777162234.9096336,
+    "ast_hash": "a3415867c15dea8ade42373f8f2d4e4a",
+    "semantic_hash": ""
+  },
+  "modules/00-fundamentals/one-idea.html": {
+    "mtime": 1777162234.9096336,
+    "ast_hash": "d5fdb7d52a4514763939da901ae0365b",
+    "semantic_hash": ""
+  },
+  "modules/00-fundamentals/organizational-patterns.html": {
+    "mtime": 1777162234.9096336,
+    "ast_hash": "ce2778bbd0591625e0bb71772cc71de0",
+    "semantic_hash": ""
+  },
+  "modules/00-fundamentals/paragraph-review.html": {
+    "mtime": 1777162234.914178,
+    "ast_hash": "1a566d748a33b3f1c2f257163d19438f",
+    "semantic_hash": ""
+  },
+  "modules/00-fundamentals/paragraphs-to-essay.html": {
+    "mtime": 1777162234.9147284,
+    "ast_hash": "8cf14ab94cc04eb5a2ae53f20ddc20e0",
+    "semantic_hash": ""
+  },
+  "modules/00-fundamentals/peer.html": {
+    "mtime": 1777162234.9147284,
+    "ast_hash": "79680cf9c561e85df54b6456b7921255",
+    "semantic_hash": ""
+  },
+  "modules/00-fundamentals/rebuttal-block.html": {
+    "mtime": 1774644736.460536,
+    "ast_hash": "b73e4dc63ccc4068e3f8df834d8c31b5",
+    "semantic_hash": ""
+  },
+  "modules/00-fundamentals/supporting-sentences.html": {
+    "mtime": 1777162234.9180524,
+    "ast_hash": "95b5f16d0be3a5f4999c9dd1f468f718",
+    "semantic_hash": ""
+  },
+  "modules/00-fundamentals/topic-sentences.html": {
+    "mtime": 1777162234.91857,
+    "ast_hash": "86f7cbe49e6b73818532b64c2b4dcd60",
+    "semantic_hash": ""
+  },
+  "modules/00-fundamentals/why-write.html": {
+    "mtime": 1777162234.91857,
+    "ast_hash": "3c7430e3c2b84f05965abb8bb6eccfc7",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/apa-integrity/apa-integrity-hub.html": {
+    "mtime": 1773089238.8600123,
+    "ast_hash": "d3a1f7ddfa21a86da4b6c33a782d6f64",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/apa-integrity/apa-style-7.html": {
+    "mtime": 1773089238.8617604,
+    "ast_hash": "b73e4dc63ccc4068e3f8df834d8c31b5",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/apa-integrity/citation-referencing.html": {
+    "mtime": 1773089238.8632376,
+    "ast_hash": "b73e4dc63ccc4068e3f8df834d8c31b5",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/apa-integrity/research-ethics.html": {
+    "mtime": 1773089238.8644836,
+    "ast_hash": "b73e4dc63ccc4068e3f8df834d8c31b5",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/core-hub.html": {
+    "mtime": 1773162734.8935027,
+    "ast_hash": "ddcba232609fd0c74b139b58933cc1e6",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/unit1-essays/argumentative-essay.html": {
+    "mtime": 1779656545.9815252,
+    "ast_hash": "44623eecd6a6e8771c3043a51241eee5",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/unit1-essays/chain-essay.html": {
+    "mtime": 1777164347.54361,
+    "ast_hash": "0ba7552b5a092514a63cacfd65e268d4",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/unit1-essays/essay-patterns.html": {
+    "mtime": 1777162234.9222083,
+    "ast_hash": "86990469f0713eacdaf13405d168fb8d",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/unit1-essays/essay-structure.html": {
+    "mtime": 1777164361.6675181,
+    "ast_hash": "6b586617884671c03fcb94db8ce6a513",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/unit1-essays/semantic-waves.html": {
+    "mtime": 1777164368.8377721,
+    "ast_hash": "788a0cebbb82aa1f82a6b6af92280031",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/unit1-essays/summarizing-paraphrasing.html": {
+    "mtime": 1773089238.8705,
+    "ast_hash": "b73e4dc63ccc4068e3f8df834d8c31b5",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/unit1-essays/types-essay.html": {
+    "mtime": 1777164354.9767861,
+    "ast_hash": "40d2480e54a15431bcaab9613882a916",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/unit1-essays/unit1-essays-hub.html": {
+    "mtime": 1773089238.8730156,
+    "ast_hash": "1ae8b7b24db008e12f7beb6a206007fc",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/unit2-papers/academic-presentation.html": {
+    "mtime": 1773089238.8750665,
+    "ast_hash": "5845829ef41f7c95b4a1c6944f0556c4",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/unit2-papers/essays-to-papers.html": {
+    "mtime": 1773089238.8750665,
+    "ast_hash": "b73e4dc63ccc4068e3f8df834d8c31b5",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/unit2-papers/logic-of-research.html": {
+    "mtime": 1773089238.8760667,
+    "ast_hash": "b73e4dc63ccc4068e3f8df834d8c31b5",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/unit2-papers/reading-chart.html": {
+    "mtime": 1773089238.877068,
+    "ast_hash": "b73e4dc63ccc4068e3f8df834d8c31b5",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/unit2-papers/scientific-articles.html": {
+    "mtime": 1773354638.8905022,
+    "ast_hash": "b73e4dc63ccc4068e3f8df834d8c31b5",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/unit2-papers/sections-research-paper.html": {
+    "mtime": 1773089238.8780668,
+    "ast_hash": "b73e4dc63ccc4068e3f8df834d8c31b5",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/unit2-papers/unit2-papers-hub.html": {
+    "mtime": 1773089238.879069,
+    "ast_hash": "0ccf652bf11ab85ff1e3dfad6a851026",
+    "semantic_hash": ""
+  },
+  "modules/01-core-syllabus/unit2-papers/writing-abstract.html": {
+    "mtime": 1773354638.8905022,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/connectors/adding-information.html": {
+    "mtime": 1777162234.9275467,
+    "ast_hash": "c901c4ad4c427ffac3649c1ddc059681",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/connectors/cause-effect-connectors.html": {
+    "mtime": 1777162234.9275467,
+    "ast_hash": "5aadad68a9aa849fc322f790fac19d4f",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/connectors/connectors-hub.html": {
+    "mtime": 1773089238.8832173,
+    "ast_hash": "1a1d8d04bf9c16680e93619977a58e8c",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/connectors/contrast-concession.html": {
+    "mtime": 1779059922.7730174,
+    "ast_hash": "22e52bfbc0a7ff186e4e618c8053f218",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/connectors/discourse-markers.html": {
+    "mtime": 1777162234.929058,
+    "ast_hash": "581a38fd8f0b6fbb376a659e6f0a0092",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/connectors/logical-division-signals.html": {
+    "mtime": 1778886119.0001378,
+    "ast_hash": "6f334ff3241fa189f4839d1504c08aa9",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/connectors/transitions.html": {
+    "mtime": 1779059910.7458665,
+    "ast_hash": "c8c719d1d980c4e4c0336a81eada09fd",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/grammar/although-despite.html": {
+    "mtime": 1778886119.0127592,
+    "ast_hash": "2f922a95b8b3355023acbc27d32209d3",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/grammar/compound-complex-sentences.html": {
+    "mtime": 1779059932.7682016,
+    "ast_hash": "59162d2082b92732cf8748b58406e561",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/grammar/conditionals.html": {
+    "mtime": 1778886119.0420575,
+    "ast_hash": "93d276771893c546b7833b409aa784a8",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/grammar/grammar-hub.html": {
+    "mtime": 1773089238.8878407,
+    "ast_hash": "fefea4d1fe46ad548ca590f477ed93d4",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/grammar/hedging-language.html": {
+    "mtime": 1777162234.93467,
+    "ast_hash": "fb53de71ae17dd61016f82e9bdc31511",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/grammar/inverted-conditionals.html": {
+    "mtime": 1778886119.0541892,
+    "ast_hash": "f003831d9d13ee9e524efe882bfc061d",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/grammar/nominalization.html": {
+    "mtime": 1780786581.044896,
+    "ast_hash": "a68279d9d2dd601ab080b0b1713f091e",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/grammar/passive-voice.html": {
+    "mtime": 1778886119.0678048,
+    "ast_hash": "5ca2caa965601b5a21a2c04e20ac7fee",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/grammar/relative-clauses.html": {
+    "mtime": 1777162234.940511,
+    "ast_hash": "e107c39dc76de4995fdf2bbe9135a268",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/toolbox-hub.html": {
+    "mtime": 1773175043.1393769,
+    "ast_hash": "bea28d5aa9549d795e08d78a93f96325",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/vocabulary/discipline-specific.html": {
+    "mtime": 1778886119.086128,
+    "ast_hash": "8ae4d32c7b45c992896468baaddf0cef",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/vocabulary/formal-language.html": {
+    "mtime": 1777162234.9431767,
+    "ast_hash": "be7dab0dee5e2485b89e215698949a13",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/vocabulary/hedging-vocabulary.html": {
+    "mtime": 1778886119.0973673,
+    "ast_hash": "ca8e397e6a2cc5a8d04bf25b560d7d91",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/vocabulary/phrasal-verbs-academic.html": {
+    "mtime": 1778802075.717586,
+    "ast_hash": "96c3b40864b9e773c075f123d59ad191",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/vocabulary/reporting-verbs.html": {
+    "mtime": 1778190861.7062366,
+    "ast_hash": "89fcc3c2aa89bab912202592dc3e9f97",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/vocabulary/vocabulary-hub.html": {
+    "mtime": 1773089238.8928006,
+    "ast_hash": "815fb62125ae6d03d37850c64d948998",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/vocabulary/vocabulary1.html": {
+    "mtime": 1778173645.6137779,
+    "ast_hash": "414628cb77c3bf2fa98715a9bada4c7e",
+    "semantic_hash": ""
+  },
+  "modules/02-toolbox/vocabulary/vocabulary2.html": {
+    "mtime": 1779059815.8139765,
+    "ast_hash": "14d7e188f3544cb817fa540d3ae04f23",
+    "semantic_hash": ""
+  },
+  "modules/03-peer-review/checklist.html": {
+    "mtime": 1774560400.1626072,
+    "ast_hash": "39b4699fac514e0ad59b0aff1d8e053d",
+    "semantic_hash": ""
+  },
+  "modules/03-peer-review/how-to-give-feedback.html": {
+    "mtime": 1774560400.1626072,
+    "ast_hash": "703a81886818f669345c227adb97a22d",
+    "semantic_hash": ""
+  },
+  "modules/03-peer-review/how-to-receive-feedback.html": {
+    "mtime": 1774560400.1700318,
+    "ast_hash": "5177870554a441b780aacab8b09cbff4",
+    "semantic_hash": ""
+  },
+  "modules/03-peer-review/peer-review-form.html": {
+    "mtime": 1777162234.4355857,
+    "ast_hash": "454138286ba7a7abd27e5e11933f2bfb",
+    "semantic_hash": ""
+  },
+  "modules/03-peer-review/peer-review-hub.html": {
+    "mtime": 1773175312.506168,
+    "ast_hash": "3392f6f3356c61667dc9d115ec778b72",
+    "semantic_hash": ""
+  },
+  "modules/03-peer-review/self-assessment-rubric.html": {
+    "mtime": 1774560400.1727214,
+    "ast_hash": "317cc770aceb921d9958bc39941895a8",
+    "semantic_hash": ""
+  },
+  "modules/04-tests/test1-fundamentals.html": {
+    "mtime": 1779911781.5320337,
+    "ast_hash": "f7b72d8c2cce7f9749e98370d652a4f2",
+    "semantic_hash": ""
+  },
+  "modules/04-tests/test2-essays.html": {
+    "mtime": 1783112089.099476,
+    "ast_hash": "f6d2635798057c1cb364dcf76a076d8c",
+    "semantic_hash": ""
+  },
+  "modules/04-tests/test3-research.html": {
+    "mtime": 1773089238.9029891,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "modules/04-tests/test4-toolbox.html": {
+    "mtime": 1773089238.9029891,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "modules/04-tests/tests-hub.html": {
+    "mtime": 1773175461.3881092,
+    "ast_hash": "5c5c323e7943a200b75e133efa2073d0",
+    "semantic_hash": ""
+  },
+  "modules/ethics-and-data.html": {
+    "mtime": 1774319849.687275,
+    "ast_hash": "82176799da1af7e51e5eee2b2d5c62b9",
+    "semantic_hash": ""
+  },
+  "modules/lecciones-desarrollar.txt": {
+    "mtime": 1774984561.4603772,
+    "ast_hash": "a45fab4413eb83acdbcf7b9da911eb1b",
+    "semantic_hash": ""
+  },
+  "my-progress.html": {
+    "mtime": 1777162234.4376144,
+    "ast_hash": "9b35e83dcfd29b08b7a0c82be684bfb7",
+    "semantic_hash": ""
+  },
+  "public/dojo-consent.html": {
+    "mtime": 1785261523.9406922,
+    "ast_hash": "6d7a69b099eee0675cc8179051072a37",
+    "semantic_hash": ""
+  },
+  "public/dojo-home.html": {
+    "mtime": 1785261523.946587,
+    "ast_hash": "58348ef3be4d1c1b54527c8996e30f82",
+    "semantic_hash": ""
+  },
+  "public/mock-testing.html": {
+    "mtime": 1785261523.951272,
+    "ast_hash": "7340b5d776cef6222e2fd844d82eafaf",
+    "semantic_hash": ""
+  },
+  "public/professor-dashboard.html": {
+    "mtime": 1785261523.958993,
+    "ast_hash": "2ca6e2bdac0bc5db89a6eb276ba23b6d",
+    "semantic_hash": ""
+  },
+  "public/quick-think-leaderboard.html": {
+    "mtime": 1785261523.9630725,
+    "ast_hash": "61a8123a1047e4f940ddea044ff86e55",
+    "semantic_hash": ""
+  },
+  "public/quick-think.html": {
+    "mtime": 1785261523.970291,
+    "ast_hash": "e60dbf1cebad47136290e62de370506c",
+    "semantic_hash": ""
+  },
+  "teacher-helper.html": {
+    "mtime": 1777162234.4518747,
+    "ast_hash": "8b7555cb70a63fb5b094f6e2c8258240",
+    "semantic_hash": ""
+  },
+  "welcome-content.html": {
+    "mtime": 1773705805.25602,
+    "ast_hash": "cae1cdb5b42b2485476424a755c43d16",
+    "semantic_hash": ""
+  },
+  "Informal logic and fallacies in the field of history.pdf": {
+    "mtime": 1779656810.7298198,
+    "ast_hash": "f40a220137ea55c4d5603839428855ad",
+    "semantic_hash": ""
+  },
+  "css/foto.png": {
+    "mtime": 1772909393.3985808,
+    "ast_hash": "0f8379f123ba91c14aea2d571ab48b08",
+    "semantic_hash": ""
+  },
+  "public/index.html": {
+    "mtime": 1785269815.0276265,
+    "ast_hash": "a322d9cd63ace81ca04751f6ca33131b",
+    "semantic_hash": ""
+  }
+}
