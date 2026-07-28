@@ -4,14 +4,344 @@
   "graph": {},
   "nodes": [
     {
+      "label": "gamification.js",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "api_gamification",
+      "community": 2,
+      "norm_label": "gamification.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "api_gamification_fs",
+      "community": 2,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "api_gamification_path",
+      "community": 2,
+      "norm_label": "path"
+    },
+    {
+      "label": "{ createClient }",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "api_gamification_createclient",
+      "community": 2,
+      "norm_label": "{ createclient }"
+    },
+    {
+      "label": "{ calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo }",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "api_gamification_calcexercisepoints_calcquickthinkpoints_getstreakstatus_checkbadgeunlock_getleaguerankinfo",
+      "community": 2,
+      "norm_label": "{ calcexercisepoints, calcquickthinkpoints, getstreakstatus, checkbadgeunlock, getleaguerankinfo }"
+    },
+    {
+      "label": "supabase",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "api_gamification_supabase",
+      "community": 2,
+      "norm_label": "supabase"
+    },
+    {
+      "label": "DOJO_CACHE",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "api_gamification_dojo_cache",
+      "community": 2,
+      "norm_label": "dojo_cache"
+    },
+    {
+      "label": "loadDojoContent()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "api_gamification_loaddojocontent",
+      "community": 4,
+      "norm_label": "loaddojocontent()"
+    },
+    {
+      "label": "getStudentDojoProgress()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "api_gamification_getstudentdojoprogress",
+      "community": 4,
+      "norm_label": "getstudentdojoprogress()"
+    },
+    {
+      "label": "handleDojoSeries()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L44",
+      "_origin": "ast",
+      "id": "api_gamification_handledojoseries",
+      "community": 4,
+      "norm_label": "handledojoseries()"
+    },
+    {
+      "label": "handleDojoTopic()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L68",
+      "_origin": "ast",
+      "id": "api_gamification_handledojotopic",
+      "community": 4,
+      "norm_label": "handledojotopic()"
+    },
+    {
+      "label": "handleSubmitExercise()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L102",
+      "_origin": "ast",
+      "id": "api_gamification_handlesubmitexercise",
+      "community": 4,
+      "norm_label": "handlesubmitexercise()"
+    },
+    {
+      "label": "handleQuickThinkSets()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L146",
+      "_origin": "ast",
+      "id": "api_gamification_handlequickthinksets",
+      "community": 4,
+      "norm_label": "handlequickthinksets()"
+    },
+    {
+      "label": "handleSubmitQuickThink()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L168",
+      "_origin": "ast",
+      "id": "api_gamification_handlesubmitquickthink",
+      "community": 5,
+      "norm_label": "handlesubmitquickthink()"
+    },
+    {
+      "label": "handleGetLeaderboard()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L226",
+      "_origin": "ast",
+      "id": "api_gamification_handlegetleaderboard",
+      "community": 2,
+      "norm_label": "handlegetleaderboard()"
+    },
+    {
+      "label": "scoring-engine.js",
+      "file_type": "code",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "lib_scoring_engine",
+      "community": 1,
+      "norm_label": "scoring-engine.js"
+    },
+    {
+      "label": "getStreakMultiplier()",
+      "file_type": "code",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "lib_scoring_engine_getstreakmultiplier",
+      "community": 1,
+      "norm_label": "getstreakmultiplier()"
+    },
+    {
+      "label": "getTimeMultiplier()",
+      "file_type": "code",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "lib_scoring_engine_gettimemultiplier",
+      "community": 1,
+      "norm_label": "gettimemultiplier()"
+    },
+    {
+      "label": "calcExercisePoints()",
+      "file_type": "code",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "lib_scoring_engine_calcexercisepoints",
+      "community": 1,
+      "norm_label": "calcexercisepoints()"
+    },
+    {
+      "label": "calcQuickThinkPoints()",
+      "file_type": "code",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L25",
+      "_origin": "ast",
+      "id": "lib_scoring_engine_calcquickthinkpoints",
+      "community": 5,
+      "norm_label": "calcquickthinkpoints()"
+    },
+    {
+      "label": "getStreakStatus()",
+      "file_type": "code",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "lib_scoring_engine_getstreakstatus",
+      "community": 1,
+      "norm_label": "getstreakstatus()"
+    },
+    {
+      "label": "checkBadgeUnlock()",
+      "file_type": "code",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L45",
+      "_origin": "ast",
+      "id": "lib_scoring_engine_checkbadgeunlock",
+      "community": 1,
+      "norm_label": "checkbadgeunlock()"
+    },
+    {
+      "label": "getLeagueRankInfo()",
+      "file_type": "code",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L66",
+      "_origin": "ast",
+      "id": "lib_scoring_engine_getleaguerankinfo",
+      "community": 1,
+      "norm_label": "getleaguerankinfo()"
+    },
+    {
+      "label": "calcLeaguePointsFromActivities()",
+      "file_type": "code",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L74",
+      "_origin": "ast",
+      "id": "lib_scoring_engine_calcleaguepointsfromactivities",
+      "community": 1,
+      "norm_label": "calcleaguepointsfromactivities()"
+    },
+    {
+      "label": "getLeagueTier()",
+      "file_type": "code",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L78",
+      "_origin": "ast",
+      "id": "lib_scoring_engine_getleaguetier",
+      "community": 1,
+      "norm_label": "getleaguetier()"
+    },
+    {
+      "label": "server.js",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "server",
+      "community": 3,
+      "norm_label": "server.js"
+    },
+    {
+      "label": "http",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "server_http",
+      "community": 3,
+      "norm_label": "http"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "server_fs",
+      "community": 3,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "server_path",
+      "community": 3,
+      "norm_label": "path"
+    },
+    {
+      "label": "{ createClient }",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "server_createclient",
+      "community": 3,
+      "norm_label": "{ createclient }"
+    },
+    {
+      "label": "supabase",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "server_supabase",
+      "community": 3,
+      "norm_label": "supabase"
+    },
+    {
+      "label": "MIME",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "server_mime",
+      "community": 3,
+      "norm_label": "mime"
+    },
+    {
+      "label": "server",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "server_server",
+      "community": 3,
+      "norm_label": "server"
+    },
+    {
       "label": "vercel.json",
       "file_type": "code",
       "source_file": "vercel.json",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "vercel",
       "community": 0,
-      "norm_label": "vercel.json"
+      "norm_label": "vercel.json",
+      "id": "vercel"
     },
     {
       "label": "rewrites",
@@ -19,9 +349,9 @@
       "source_file": "vercel.json",
       "source_location": "L2",
       "_origin": "ast",
-      "id": "vercel_rewrites",
       "community": 0,
-      "norm_label": "rewrites"
+      "norm_label": "rewrites",
+      "id": "vercel_rewrites"
     },
     {
       "label": "crons",
@@ -29,21 +359,508 @@
       "source_file": "vercel.json",
       "source_location": "L5",
       "_origin": "ast",
-      "id": "vercel_crons",
       "community": 0,
-      "norm_label": "crons"
+      "norm_label": "crons",
+      "id": "vercel_crons"
     }
   ],
   "links": [
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "api_gamification_calcexercisepoints_calcquickthinkpoints_getstreakstatus_checkbadgeunlock_getleaguerankinfo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "api_gamification_createclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "api_gamification_dojo_cache",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "api_gamification_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "api_gamification_getstudentdojoprogress",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "api_gamification_handledojoseries",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "api_gamification_handledojotopic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L226",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "api_gamification_handlegetleaderboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L146",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "api_gamification_handlequickthinksets",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L102",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "api_gamification_handlesubmitexercise",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L168",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "api_gamification_handlesubmitquickthink",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "api_gamification_loaddojocontent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "api_gamification_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "api_gamification_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "lib_scoring_engine",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "lib_scoring_engine_calcexercisepoints",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "lib_scoring_engine_calcquickthinkpoints",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "lib_scoring_engine_checkbadgeunlock",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "lib_scoring_engine_getleaguerankinfo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "lib_scoring_engine_getstreakstatus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "api_gamification_handledojoseries",
+      "target": "api_gamification_loaddojocontent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L69",
+      "weight": 1.0,
+      "source": "api_gamification_handledojotopic",
+      "target": "api_gamification_loaddojocontent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L147",
+      "weight": 1.0,
+      "source": "api_gamification_handlequickthinksets",
+      "target": "api_gamification_loaddojocontent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L103",
+      "weight": 1.0,
+      "source": "api_gamification_handlesubmitexercise",
+      "target": "api_gamification_loaddojocontent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L169",
+      "weight": 1.0,
+      "source": "api_gamification_handlesubmitquickthink",
+      "target": "api_gamification_loaddojocontent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "api_gamification_handledojoseries",
+      "target": "api_gamification_getstudentdojoprogress",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L117",
+      "weight": 1.0,
+      "source": "api_gamification_handlesubmitexercise",
+      "target": "api_gamification_getstudentdojoprogress",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "api/gamification.js",
+      "source_location": "L119",
+      "weight": 1.0,
+      "source": "api_gamification_handlesubmitexercise",
+      "target": "lib_scoring_engine_calcexercisepoints"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "api/gamification.js",
+      "source_location": "L189",
+      "weight": 1.0,
+      "source": "api_gamification_handlesubmitquickthink",
+      "target": "lib_scoring_engine_calcquickthinkpoints"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "lib_scoring_engine",
+      "target": "lib_scoring_engine_calcexercisepoints",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "lib_scoring_engine",
+      "target": "lib_scoring_engine_calcleaguepointsfromactivities",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "lib_scoring_engine",
+      "target": "lib_scoring_engine_calcquickthinkpoints",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "lib_scoring_engine",
+      "target": "lib_scoring_engine_checkbadgeunlock",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "lib_scoring_engine",
+      "target": "lib_scoring_engine_getleaguerankinfo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L78",
+      "weight": 1.0,
+      "source": "lib_scoring_engine",
+      "target": "lib_scoring_engine_getleaguetier",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "lib_scoring_engine",
+      "target": "lib_scoring_engine_getstreakmultiplier",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "lib_scoring_engine",
+      "target": "lib_scoring_engine_getstreakstatus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "lib_scoring_engine",
+      "target": "lib_scoring_engine_gettimemultiplier",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "lib_scoring_engine_calcexercisepoints",
+      "target": "lib_scoring_engine_getstreakmultiplier",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/scoring-engine.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "lib_scoring_engine_calcexercisepoints",
+      "target": "lib_scoring_engine_gettimemultiplier",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "server",
+      "target": "server_createclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "server",
+      "target": "server_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "server",
+      "target": "server_http",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "server",
+      "target": "server_mime",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "server",
+      "target": "server_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "server",
+      "target": "server_server",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "server",
+      "target": "server_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "vercel.json",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vercel",
-      "target": "vercel_crons",
-      "confidence_score": 1.0
+      "target": "vercel_crons"
     },
     {
       "relation": "contains",
@@ -51,11 +868,11 @@
       "source_file": "vercel.json",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vercel",
-      "target": "vercel_rewrites",
-      "confidence_score": 1.0
+      "target": "vercel_rewrites"
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "2c21833f2a7ee13e9aa304224575fda6de0f948b"
+  "built_at_commit": "418d3d3b1a5ed222fccf2a9c9f44fc98eda41210"
 }

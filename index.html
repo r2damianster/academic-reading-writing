@@ -110,6 +110,12 @@
                 <button class="sf-btn" onclick="closeFlyout(); loadPage('modules/ethics-and-data.html')" title="Ethics & Privacy Policy">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </button>
+                <!-- Dojo Académico -->
+                <button class="sf-btn" id="dojoBtn" onclick="closeFlyout(); loadPage('dojo-home.html')" title="Dojo Académico">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><text x="2" y="20" font-size="16">🥋</text></svg>
+                    <span class="nav-label" id="dojoStreakBadge" style="position: absolute; top: -8px; right: -8px; background: #ffc107; color: #333; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></span>
+                </button>
+
                 <!-- My Progress -->
                 <button class="sf-btn" onclick="closeFlyout(); loadPage('my-progress.html?email=' + encodeURIComponent(localStorage.getItem('studentEmail') || ''))" title="My Progress">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
@@ -247,6 +253,20 @@
     <script src="js/activity-tracker.js?v=1.0"></script>
     <script src="js/navigation.js?v=1.2"></script>
     <script src="js/report.js?v=1.2"></script>
+    <script src="js/dojo-client.js?v=1.0"></script>
+
+    <script>
+        (async function() {
+            await dojoClient.init();
+            const streak = dojoClient.getLocalStreak();
+            if (streak.current > 0) {
+                document.getElementById('dojoStreakBadge').textContent = '⚡ ' + streak.current;
+                document.getElementById('dojoStreakBadge').style.display = 'flex';
+            } else {
+                document.getElementById('dojoStreakBadge').style.display = 'none';
+            }
+        })();
+    </script>
 
     <!-- =====================================================================
          FLYOUT SYSTEM — Doble panel (grupos → ítems)
