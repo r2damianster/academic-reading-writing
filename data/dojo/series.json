@@ -1,0 +1,57 @@
+[
+  {
+    "series_id": "argumentative-essays",
+    "name": "Argumentative Essays",
+    "name_es": "Ensayos Argumentativos",
+    "description": "Master the art of building compelling arguments with evidence and rebuttals.",
+    "description_es": "Domina el arte de construir argumentos convincentes con evidencia y contrarréplicas.",
+    "icon": "📝",
+    "category": "essays",
+    "difficulty_range": "easy-hard",
+    "estimated_time_hours": 8
+  },
+  {
+    "series_id": "research-papers",
+    "name": "Research Papers",
+    "name_es": "Trabajos de Investigación",
+    "description": "Learn to structure, research, and present academic findings professionally.",
+    "description_es": "Aprende a estructurar, investigar y presentar hallazgos académicos profesionalmente.",
+    "icon": "🔬",
+    "category": "research",
+    "difficulty_range": "medium-hard",
+    "estimated_time_hours": 12
+  },
+  {
+    "series_id": "grammar-precision",
+    "name": "Grammar & Precision",
+    "name_es": "Gramática y Precisión",
+    "description": "Refine your technical writing with advanced grammar and clarity drills.",
+    "description_es": "Perfecciona tu escritura técnica con ejercicios avanzados de gramática y claridad.",
+    "icon": "✏️",
+    "category": "grammar",
+    "difficulty_range": "easy-medium",
+    "estimated_time_hours": 6
+  },
+  {
+    "series_id": "academic-integrity",
+    "name": "Academic Integrity",
+    "name_es": "Integridad Académica",
+    "description": "Understand citation, paraphrasing, and ethical writing practices.",
+    "description_es": "Comprende citación, paráfrasis y prácticas de escritura ética.",
+    "icon": "🛡️",
+    "category": "integrity",
+    "difficulty_range": "easy-medium",
+    "estimated_time_hours": 5
+  },
+  {
+    "series_id": "speed-challenge",
+    "name": "Speed Challenge",
+    "name_es": "Desafío de Velocidad",
+    "description": "Race against the clock with timed exercises. Unlock speed bonuses!",
+    "description_es": "Compite contra el reloj con ejercicios cronometrados. ¡Desbloquea bonificaciones de velocidad!",
+    "icon": "⚡",
+    "category": "speed",
+    "difficulty_range": "easy-hard",
+    "estimated_time_hours": 4
+  }
+]

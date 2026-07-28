@@ -1,0 +1,241 @@
+[
+  {
+    "set_id": "qt-grammar-basics",
+    "name": "Grammar Basics",
+    "name_es": "Conceptos Básicos de Gramática",
+    "description": "10 quick questions on essential grammar rules.",
+    "description_es": "10 preguntas rápidas sobre reglas gramaticales esenciales.",
+    "topic_id": "gram-subject-verb",
+    "difficulty": "easy",
+    "time_limit_per_q": 30,
+    "total_questions": 10,
+    "max_score": 50,
+    "questions": [
+      {
+        "question_id": "qtg-1",
+        "question": "Which is correct: 'The team are playing' or 'The team is playing'?",
+        "question_es": "¿Cuál es correcto: 'The team are playing' o 'The team is playing'?",
+        "options": [
+          { "text": "The team are playing", "text_es": "The team are playing" },
+          { "text": "The team is playing", "text_es": "The team is playing" }
+        ],
+        "correct_index": 1,
+        "explanation": "In American English, 'team' is singular, so 'is' is correct."
+      },
+      {
+        "question_id": "qtg-2",
+        "question": "Choose the sentence without errors: A) Everyone have finished. B) Everyone has finished.",
+        "question_es": "Elige la oración sin errores: A) Everyone have finished. B) Everyone has finished.",
+        "options": [
+          { "text": "Everyone have finished", "text_es": "Everyone have finished" },
+          { "text": "Everyone has finished", "text_es": "Everyone has finished" }
+        ],
+        "correct_index": 1,
+        "explanation": "'Everyone' is singular, so use 'has'."
+      },
+      {
+        "question_id": "qtg-3",
+        "question": "What is a run-on sentence?",
+        "question_es": "¿Qué es una oración de corrida?",
+        "options": [
+          { "text": "A sentence that is too long", "text_es": "Una oración que es muy larga" },
+          { "text": "Two independent clauses joined without proper punctuation or conjunction", "text_es": "Dos cláusulas independientes unidas sin puntuación o conjunción adecuadas" },
+          { "text": "A sentence with too many verbs", "text_es": "Una oración con demasiados verbos" }
+        ],
+        "correct_index": 1,
+        "explanation": "A run-on joins two complete thoughts without proper connection."
+      },
+      {
+        "question_id": "qtg-4",
+        "question": "Which punctuation ends an interrogative sentence?",
+        "question_es": "¿Qué puntuación termina una oración interrogativa?",
+        "options": [
+          { "text": "Period (.)", "text_es": "Punto (.)" },
+          { "text": "Question mark (?)", "text_es": "Signo de interrogación (?)" },
+          { "text": "Semicolon (;)", "text_es": "Punto y coma (;)" }
+        ],
+        "correct_index": 1,
+        "explanation": "A question ends with a question mark."
+      },
+      {
+        "question_id": "qtg-5",
+        "question": "What is the difference between 'its' and 'it's'?",
+        "question_es": "¿Cuál es la diferencia entre 'its' e 'it's'?",
+        "options": [
+          { "text": "No difference; they're interchangeable", "text_es": "Sin diferencia; son intercambiables" },
+          { "text": "'its' = possessive; 'it's' = it is or it has", "text_es": "'its' = posesivo; 'it's' = it is o it has" },
+          { "text": "'it's' is British; 'its' is American", "text_es": "'it's' es británico; 'its' es americano" }
+        ],
+        "correct_index": 1,
+        "explanation": "'Its' shows possession (the dog and its bone). 'It's' = it is/has."
+      },
+      {
+        "question_id": "qtg-6",
+        "question": "Correct: 'She dont like coffee' or 'She doesn't like coffee'?",
+        "question_es": "¿Correcto: 'She dont like coffee' o 'She doesn't like coffee'?",
+        "options": [
+          { "text": "She dont like coffee", "text_es": "She dont like coffee" },
+          { "text": "She doesn't like coffee", "text_es": "She doesn't like coffee" }
+        ],
+        "correct_index": 1,
+        "explanation": "'doesn't' is the correct contraction of 'does not'."
+      },
+      {
+        "question_id": "qtg-7",
+        "question": "What is a clause?",
+        "question_es": "¿Qué es una cláusula?",
+        "options": [
+          { "text": "A word or phrase", "text_es": "Una palabra o frase" },
+          { "text": "A group of words with a subject and verb", "text_es": "Un grupo de palabras con un sujeto y verbo" },
+          { "text": "A type of punctuation", "text_es": "Un tipo de puntuación" }
+        ],
+        "correct_index": 1,
+        "explanation": "A clause contains a subject and predicate (verb)."
+      },
+      {
+        "question_id": "qtg-8",
+        "question": "When should you use a semicolon?",
+        "question_es": "¿Cuándo debes usar un punto y coma?",
+        "options": [
+          { "text": "Between an adjective and noun", "text_es": "Entre un adjetivo y un sustantivo" },
+          { "text": "To join two independent clauses or separate items in a complex list", "text_es": "Para unir dos cláusulas independientes o separar elementos en una lista compleja" },
+          { "text": "At the end of every sentence", "text_es": "Al final de cada oración" }
+        ],
+        "correct_index": 1,
+        "explanation": "Semicolons join related independent clauses or separate complex list items."
+      },
+      {
+        "question_id": "qtg-9",
+        "question": "Which is a sentence fragment? A) Running quickly down the street. B) She ran down the street.",
+        "question_es": "¿Cuál es un fragmento? A) Running quickly down the street. B) She ran down the street.",
+        "options": [
+          { "text": "Running quickly down the street", "text_es": "Running quickly down the street" },
+          { "text": "She ran down the street", "text_es": "She ran down the street" }
+        ],
+        "correct_index": 0,
+        "explanation": "The first lacks a main subject + verb; it's a phrase, not a complete sentence."
+      },
+      {
+        "question_id": "qtg-10",
+        "question": "What is parallel structure in writing?",
+        "question_es": "¿Qué es la estructura paralela en la escritura?",
+        "options": [
+          { "text": "Using the same word twice", "text_es": "Usar la misma palabra dos veces" },
+          { "text": "Using similar grammatical forms for items in a list or series", "text_es": "Usar formas gramaticales similares para elementos en una lista o serie" },
+          { "text": "Writing on two lines at once", "text_es": "Escribir en dos líneas a la vez" }
+        ],
+        "correct_index": 1,
+        "explanation": "Parallel structure balances grammatical forms (e.g., 'I came, I saw, I conquered')."
+      }
+    ]
+  },
+  {
+    "set_id": "qt-citations-basics",
+    "name": "APA Citations 101",
+    "name_es": "Citas APA 101",
+    "description": "Quick review of essential APA citation rules.",
+    "description_es": "Repaso rápido de reglas esenciales de citación APA.",
+    "topic_id": "int-citations",
+    "difficulty": "medium",
+    "time_limit_per_q": 40,
+    "total_questions": 8,
+    "max_score": 40,
+    "questions": [
+      {
+        "question_id": "qtc-1",
+        "question": "In APA style, how do you cite a book by one author?",
+        "question_es": "En estilo APA, ¿cómo citas un libro de un autor?",
+        "options": [
+          { "text": "Author (Year). Title. Publisher.", "text_es": "Autor (Año). Título. Editorial." },
+          { "text": "Author, A. (Year). Title of book. Publisher.", "text_es": "Autor, A. (Año). Título del libro. Editorial." },
+          { "text": "[1] Author. Title. Year.", "text_es": "[1] Autor. Título. Año." }
+        ],
+        "correct_index": 1,
+        "explanation": "APA format: Last name, Initial(s). (Year). Title. Publisher."
+      },
+      {
+        "question_id": "qtc-2",
+        "question": "What goes inside parentheses in a direct quote citation?",
+        "question_es": "¿Qué va entre paréntesis en una cita directa?",
+        "options": [
+          { "text": "Author and year (and page if direct quote)", "text_es": "Autor y año (y página si cita directa)" },
+          { "text": "Only the year", "text_es": "Solo el año" },
+          { "text": "DOI link", "text_es": "Enlace DOI" }
+        ],
+        "correct_index": 0,
+        "explanation": "In-text citations include author, year, and page number for direct quotes: (Author, Year, p. #)."
+      },
+      {
+        "question_id": "qtc-3",
+        "question": "How do you cite a source with two authors in APA?",
+        "question_es": "¿Cómo citas una fuente con dos autores en APA?",
+        "options": [
+          { "text": "(Author1 & Author2, Year)", "text_es": "(Autor1 & Autor2, Año)" },
+          { "text": "(Author1 and Author2, Year)", "text_es": "(Autor1 and Autor2, Año)" },
+          { "text": "(Author1, Author2, Year)", "text_es": "(Autor1, Autor2, Año)" }
+        ],
+        "correct_index": 0,
+        "explanation": "APA uses '&' in parenthetical citations and 'and' in narrative citations."
+      },
+      {
+        "question_id": "qtc-4",
+        "question": "What is the difference between a Reference list and a Bibliography?",
+        "question_es": "¿Cuál es la diferencia entre una lista de referencias y una bibliografía?",
+        "options": [
+          { "text": "No difference", "text_es": "Sin diferencia" },
+          { "text": "APA uses 'References' (sources cited); Bibliography includes all sources consulted", "text_es": "APA usa 'Referencias' (fuentes citadas); Bibliografía incluye todas las fuentes consultadas" },
+          { "text": "Bibliography is older; References is new", "text_es": "Bibliografía es más antigua; Referencias es nueva" }
+        ],
+        "correct_index": 1,
+        "explanation": "In APA, only cited sources go in 'References'. A bibliography may include uncited sources."
+      },
+      {
+        "question_id": "qtc-5",
+        "question": "How is a Reference list arranged?",
+        "question_es": "¿Cómo se organiza una lista de referencias?",
+        "options": [
+          { "text": "By topic", "text_es": "Por tema" },
+          { "text": "Alphabetically by author's last name", "text_es": "Alfabéticamente por apellido del autor" },
+          { "text": "By date (newest first)", "text_es": "Por fecha (más reciente primero)" }
+        ],
+        "correct_index": 1,
+        "explanation": "References are alphabetized by author's last name."
+      },
+      {
+        "question_id": "qtc-6",
+        "question": "What is a DOI in an APA citation?",
+        "question_es": "¿Qué es un DOI en una cita APA?",
+        "options": [
+          { "text": "Date of Issue", "text_es": "Fecha de Emisión" },
+          { "text": "Digital Object Identifier — a permanent URL for online sources", "text_es": "Identificador de Objeto Digital — una URL permanente para fuentes en línea" },
+          { "text": "Department of Information", "text_es": "Departamento de Información" }
+        ],
+        "correct_index": 1,
+        "explanation": "DOI is a stable link. Use it instead of a URL if available."
+      },
+      {
+        "question_id": "qtc-7",
+        "question": "True or False: In APA, titles of articles are capitalized like book titles.",
+        "question_es": "Verdadero o Falso: En APA, los títulos de artículos se capitalizan como títulos de libros.",
+        "options": [
+          { "text": "True", "text_es": "Verdadero" },
+          { "text": "False", "text_es": "Falso" }
+        ],
+        "correct_index": 1,
+        "explanation": "In APA, article titles use sentence case (capitalize only first word and proper nouns)."
+      },
+      {
+        "question_id": "qtc-8",
+        "question": "What is the hanging indent in APA?",
+        "question_es": "¿Qué es la sangría colgante en APA?",
+        "options": [
+          { "text": "The first line is indented", "text_es": "La primera línea se indenta" },
+          { "text": "The second and subsequent lines are indented (References format)", "text_es": "La segunda y siguientes líneas se indentan (formato de Referencias)" },
+          { "text": "No indentation at all", "text_es": "Sin sangría en absoluto" }
+        ],
+        "correct_index": 1,
+        "explanation": "Reference entries use hanging indent: first line flush left, rest indented 0.5 inches."
+      }
+    ]
+  }
+]

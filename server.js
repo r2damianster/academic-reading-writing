@@ -49,14 +49,21 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    // ─── 2c. CRON: COMPRESIÓN DE PERFILES (Memory Agent) ────────────────────────
+    // ─── 2c. DOJO GAMIFICATION ──────────────────────────────────────────────────
+    if (req.method === 'POST' && req.url === '/api/gamification') {
+        const gamification = require('./api/gamification');
+        gamification(req, res);
+        return;
+    }
+
+    // ─── 2d. CRON: COMPRESIÓN DE PERFILES (Memory Agent) ────────────────────────
     if ((req.method === 'GET' || req.method === 'POST') && req.url === '/api/cron/compress-profiles') {
         const compressProfiles = require('./api/cron/compress-profiles');
         compressProfiles(req, res);
         return;
     }
 
-    // ─── 2d. ADMIN: LISTA DE ESTUDIANTES ────────────────────────────────────────
+    // ─── 2e. ADMIN: LISTA DE ESTUDIANTES ────────────────────────────────────────
     if (req.method === 'GET' && req.url.startsWith('/api/admin-students') && !req.url.includes('detail')) {
         const url = new URL(req.url, 'http://localhost');
         req.query = Object.fromEntries(url.searchParams);
@@ -65,7 +72,7 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    // ─── 2e. ADMIN: DETALLE DE ESTUDIANTE ───────────────────────────────────────
+    // ─── 2f. ADMIN: DETALLE DE ESTUDIANTE ───────────────────────────────────────
     if (req.method === 'GET' && req.url.startsWith('/api/admin-student-detail')) {
         const url = new URL(req.url, 'http://localhost');
         req.query = Object.fromEntries(url.searchParams);
