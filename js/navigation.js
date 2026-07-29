@@ -22,7 +22,13 @@ function loadPage(url) {
         console.log("Navigating to:", url);
 
         // 2. TRUCO DE CACHÉ: v=Timestamp asegura que cargue el archivo más reciente de GitHub
-        const versionedUrl = url + (url.includes('?') ? '&' : '?') + "v=" + Date.now();
+        let versionedUrl = url + (url.includes('?') ? '&' : '?') + "v=" + Date.now();
+
+        // 2b. DOJO: Pasar studentId para acceso desde iframe
+        if (url.includes('dojo') && window.currentStudent?.id) {
+            versionedUrl += '&studentId=' + encodeURIComponent(window.currentStudent.id);
+        }
+
         frame.src = versionedUrl;
 
         // 3. REGISTRO AUTOMÁTICO: Si existe la función en report.js, guarda el progreso

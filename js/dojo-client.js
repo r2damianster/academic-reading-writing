@@ -19,9 +19,27 @@ class DojoClient {
       }
     }
 
-    // Get student from parent or self
-    this.studentId = window.currentStudent?.id || window.parent?.currentStudent?.id;
-    if (!this.studentId) console.warn('⚠️ DojoClient: no studentId');
+    // Try multiple sources for studentId:
+    // 1. URL query param (for iframe context)
+    const urlParams = new URLSearchParams(window.location.search);
+    this.studentId = urlParams.get('studentId');
+
+    // 2. window.currentStudent (direct load)
+    if (!this.studentId) {
+      this.studentId = window.currentStudent?.id;
+    }
+
+    // 3. window.parent.currentStudent (iframe with access)
+    if (!this.studentId) {
+      try {
+        this.studentId = window.parent?.currentStudent?.id;
+      } catch (e) {
+        // Cross-origin iframe, expected
+      }
+    }
+
+    if (!this.studentId) console.warn('⚠️ DojoClient: no studentId found');
+    else console.log('✅ DojoClient initialized with studentId:', this.studentId);
   }
 
   // ─── API CALLS ──────────────────────────────────────────────────────────
