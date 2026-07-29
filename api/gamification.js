@@ -208,17 +208,34 @@ async function handleSubmitExercise(studentId, exerciseId, body, res) {
     const speedBonusCount = (progress?.speed_bonus_count || 0) + (isSpeedBonus ? 1 : 0);
     const exerciseCount = (progress?.total_exercise_count || 0) + 1;
 
-    const { error } = await supabase
-      .from('gamification_student_dojo_progress')
-      .update({
-        total_series_points: totalPoints,
-        speed_bonus_count: speedBonusCount,
-        total_exercise_count: exerciseCount,
-        updated_at: new Date().toISOString()
-      })
-      .eq('student_id', studentId);
-
-    if (error) throw error;
+    if (!progress) {
+      // Create new progress record if doesn't exist
+      const { error: insertError } = await supabase
+        .from('gamification_student_dojo_progress')
+        .insert({
+          student_id: studentId,
+          total_series_points: totalPoints,
+          speed_bonus_count: speedBonusCount,
+          total_exercise_count: exerciseCount,
+          current_streak: 0,
+          longest_streak: 0,
+          qt_correct_count: 0,
+          updated_at: new Date().toISOString()
+        });
+      if (insertError) throw insertError;
+    } else {
+      // Update existing record
+      const { error: updateError } = await supabase
+        .from('gamification_student_dojo_progress')
+        .update({
+          total_series_points: totalPoints,
+          speed_bonus_count: speedBonusCount,
+          total_exercise_count: exerciseCount,
+          updated_at: new Date().toISOString()
+        })
+        .eq('student_id', studentId);
+      if (updateError) throw updateError;
+    }
 
     // Check badges after update
     await checkAndUnlockBadges(studentId);
@@ -307,13 +324,30 @@ async function handleSubmitQuickThink(studentId, setId, body, res) {
     const progress = await getStudentDojoProgress(studentId);
     const qtCorrectCount = (progress?.qt_correct_count || 0) + correctCount;
 
-    await supabase
-      .from('gamification_student_dojo_progress')
-      .update({
-        qt_correct_count: qtCorrectCount,
-        updated_at: new Date().toISOString()
-      })
-      .eq('student_id', studentId);
+    if (!progress) {
+      // Create new progress record if doesn't exist
+      await supabase
+        .from('gamification_student_dojo_progress')
+        .insert({
+          student_id: studentId,
+          total_series_points: 0,
+          speed_bonus_count: 0,
+          total_exercise_count: 0,
+          current_streak: 0,
+          longest_streak: 0,
+          qt_correct_count: qtCorrectCount,
+          updated_at: new Date().toISOString()
+        });
+    } else {
+      // Update existing record
+      await supabase
+        .from('gamification_student_dojo_progress')
+        .update({
+          qt_correct_count: qtCorrectCount,
+          updated_at: new Date().toISOString()
+        })
+        .eq('student_id', studentId);
+    }
 
     // Check badges
     await checkAndUnlockBadges(studentId);
