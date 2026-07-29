@@ -249,9 +249,9 @@ async function handleSubmitExercise(studentId, exerciseId, body, res) {
       speedBonus: isSpeedBonus
     }));
   } catch (e) {
-    console.warn('⚠️ Submit exercise failed:', e.message);
+    console.error('❌ Submit exercise ERROR:', e.message, e.code, e);
     res.writeHead(500, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ error: 'Failed to submit exercise' }));
+    res.end(JSON.stringify({ error: 'Failed to submit exercise', details: e.message }));
   }
 }
 
@@ -361,9 +361,9 @@ async function handleSubmitQuickThink(studentId, setId, body, res) {
       score: Math.round((correctCount / set.total_questions) * 100)
     }));
   } catch (e) {
-    console.warn('⚠️ Submit QuickThink failed:', e.message);
+    console.error('❌ Submit QuickThink ERROR:', e.message, e.code, e);
     res.writeHead(500, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ error: 'Failed to submit QuickThink' }));
+    res.end(JSON.stringify({ error: 'Failed to submit QuickThink', details: e.message }));
   }
 }
 
