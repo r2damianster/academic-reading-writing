@@ -544,10 +544,14 @@ async function handleGetLeaderboard(studentId, res) {
   const studentRank = sorted.findIndex(p => p.student_id === studentId) + 1;
   const top5 = sorted.slice(0, 5);
 
+  // The student may sit outside the top 5, so send their own points explicitly
+  const studentRow = sorted.find(p => p.student_id === studentId);
+
   res.writeHead(200, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify({
     status: 'ok',
     studentRank,
+    studentPoints: studentRow?.total_series_points || 0,
     topStudents: top5,
     totalInCourse: sorted.length
   }));
@@ -562,6 +566,44 @@ async function handleGetStreak(studentId, res) {
     currentStreak: streak?.current_streak || 0,
     longestStreak: streak?.longest_streak || 0,
     lastActivityDate: streak?.last_activity_date || null
+  }));
+}
+
+// Returns the whole badge catalog merged with what this student has unlocked,
+// so the UI can render locked badges too instead of an empty panel.
+async function handleGetBadges(studentId, res) {
+  // Re-check first: a student may have met a condition before the catalog was seeded
+  await checkAndUnlockBadges(studentId);
+
+  const { data: catalog, error: catalogError } = await supabase
+    .from('gamification_badges')
+    .select('badge_id, name, name_es, description, description_es, category, points_reward');
+
+  if (catalogError) {
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ error: 'Failed to fetch badge catalog', details: catalogError.message }));
+  }
+
+  const { data: unlockedRows } = await supabase
+    .from('gamification_student_badges')
+    .select('badge_id, unlocked_at')
+    .eq('student_id', studentId);
+
+  const unlockedAtByBadge = {};
+  (unlockedRows || []).forEach(row => { unlockedAtByBadge[row.badge_id] = row.unlocked_at; });
+
+  const badges = (catalog || []).map(badge => ({
+    ...badge,
+    unlocked: Object.prototype.hasOwnProperty.call(unlockedAtByBadge, badge.badge_id),
+    unlockedAt: unlockedAtByBadge[badge.badge_id] || null
+  }));
+
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({
+    status: 'ok',
+    badges,
+    unlockedCount: badges.filter(badge => badge.unlocked).length,
+    totalCount: badges.length
   }));
 }
 
@@ -594,6 +636,8 @@ module.exports = async (req, res) => {
             return handleGetLeaderboard(studentId, res);
           case 'get-streak':
             return handleGetStreak(studentId, res);
+          case 'get-badges':
+            return handleGetBadges(studentId, res);
           default:
             res.writeHead(400, { 'Content-Type': 'application/json' });
             return res.end(JSON.stringify({ error: 'Unknown action' }));

@@ -659,6 +659,9 @@ td.lesson-name { font-weight: 600; color: var(--ink); }
 
 </div><!-- /.page-content -->
 
+<!-- Loaded before the inline script: loadDojoData() needs window.dojoClient to exist -->
+<script src="js/dojo-client.js?v=1.2"></script>
+
 <script>
 /* ════════════════════════════════════════════════════════════════════
     CONFIGURATION & INITIALIZATION
@@ -1237,12 +1240,64 @@ function renderReading(readingMap) {
 /* ════════════════════════════════════════════════════════════════════
    DOJO DATA LOADER
 ════════════════════════════════════════════════════════════════════ */
+const BADGE_ICONS = {
+  'consistency': '🔥',
+  'speed-demon': '⚡',
+  'quick-thinker': '🧠',
+  'essay-master': '📝',
+  'writing-legend': '👑'
+};
+
+function renderDojoBadges(badges) {
+  const container = document.getElementById('dojo-badges-container');
+
+  if (!badges.length) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 40px; color: #999; grid-column: 1 / -1;">
+        <p>🔄 Badges sync with Dojo activities</p>
+        <small>Complete exercises to unlock Consistency, Essay Master, Speed Demon, and more!</small>
+      </div>
+    `;
+    return;
+  }
+
+  // Unlocked first, so what the student earned is what they see at the top
+  const ordered = [...badges].sort((a, b) => Number(b.unlocked) - Number(a.unlocked));
+
+  container.innerHTML = ordered.map(badge => {
+    const icon = BADGE_ICONS[badge.badge_id] || '🏅';
+    const label = badge.name_es || badge.name || badge.badge_id;
+    const description = badge.description_es || badge.description || '';
+    const opacity = badge.unlocked ? '1' : '0.35';
+    const border = badge.unlocked ? '2px solid #667eea' : '1px dashed #ccc';
+    const state = badge.unlocked
+      ? `<small style="color:#667eea; font-weight:600;">+${badge.points_reward || 0} pts</small>`
+      : '<small style="color:#999;">🔒 Locked</small>';
+
+    return `<div title="${escapeAttr(description)}" style="text-align:center; padding:14px 10px; border:${border}; border-radius:12px; opacity:${opacity};">
+      <div style="font-size:28px; line-height:1;">${icon}</div>
+      <div style="font-size:12px; font-weight:600; margin:6px 0 2px;">${escapeAttr(label)}</div>
+      ${state}
+    </div>`;
+  }).join('');
+}
+
+function escapeAttr(text) {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 async function loadDojoData(studentId) {
   try {
     // Initialize dojoClient if not already done
     if (typeof dojoClient === 'undefined') return;
 
-    await dojoClient.init();
+    // Pass the resolved id explicitly: this page is opened with ?email=, not
+    // ?studentId=, so the client's own lookup finds nothing and every call 401s.
+    await dojoClient.init(studentId);
 
     // Get streak from Supabase (single source of truth)
     const streakData = await dojoClient.getStreak();
@@ -1251,16 +1306,15 @@ async function loadDojoData(studentId) {
     // Get leaderboard
     const leaderboardResult = await dojoClient.getLeaderboard();
     if (!leaderboardResult.error) {
-      const { studentRank = 0, topStudents = [], totalInCourse = 0 } = leaderboardResult;
+      const { studentRank = 0, studentPoints = 0, topStudents = [], totalInCourse = 0 } = leaderboardResult;
 
       document.getElementById('dojo-rank').textContent = studentRank || '—';
       document.getElementById('dojo-rank-total').textContent = `of ${totalInCourse}`;
 
-      // Get tier from points
-      const points = topStudents.find(s => s.student_id === studentId)?.total_series_points || 0;
-      const tier = points >= 5000 ? 'Platinum' : points >= 3000 ? 'Gold' : points >= 1000 ? 'Silver' : 'Bronze';
+      // Tier from the student's own points (they may sit outside the top 5)
+      const tier = studentPoints >= 5000 ? 'Platinum' : studentPoints >= 3000 ? 'Gold' : studentPoints >= 1000 ? 'Silver' : 'Bronze';
       document.getElementById('dojo-tier').textContent = tier;
-      document.getElementById('dojo-points').textContent = points;
+      document.getElementById('dojo-points').textContent = studentPoints;
 
       // Render top performers
       const topHtml = topStudents.slice(0, 3).map((s, i) => {
@@ -1270,16 +1324,17 @@ async function loadDojoData(studentId) {
           <span style="font-weight: 600; color: #667eea;">${s.total_series_points || 0} pts</span>
         </div>`;
       }).join('');
-      document.getElementById('dojo-leaderboard-mini').innerHTML = topHtml;
+      document.getElementById('dojo-leaderboard-mini').innerHTML =
+        topHtml || '<div class="state-msg">No hay actividad todavía</div>';
+    } else {
+      document.getElementById('dojo-leaderboard-mini').innerHTML =
+        '<div class="state-msg">Leaderboard unavailable</div>';
     }
 
-    // Load badges (placeholder)
-    document.getElementById('dojo-badges-container').innerHTML = `
-      <div style="text-align: center; padding: 40px; color: #999; grid-column: 1 / -1;">
-        <p>🔄 Badges sync with Dojo activities</p>
-        <small>Complete exercises to unlock Consistency, Essay Master, Speed Demon, and more!</small>
-      </div>
-    `;
+    // Load badges from the catalog + this student's unlocks
+    const badgeResult = await dojoClient.getBadges();
+    if (badgeResult.error) renderDojoBadges([]);
+    else renderDojoBadges(badgeResult.badges || []);
 
   } catch (err) {
     console.warn('⚠️ Dojo load:', err);
@@ -1299,7 +1354,6 @@ fetch('/api/config')
   })
   .catch(() => loadAll());
 </script>
-<script src="js/dojo-client.js?v=1.1"></script>
 <script src="js/report.js?v=1.2"></script>
 </body>
 </html>

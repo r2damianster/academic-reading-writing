@@ -9,7 +9,7 @@ class DojoClient {
     this.queuePrefix = 'dojo_queue_';
   }
 
-  async init() {
+  async init(explicitStudentId) {
     // Wait for config if available (in main window)
     if (typeof window.configReady !== 'undefined') {
       try {
@@ -20,9 +20,14 @@ class DojoClient {
     }
 
     // Try multiple sources for studentId:
+    // 0. Explicit argument — the caller already resolved the student
+    this.studentId = explicitStudentId || null;
+
     // 1. URL query param (for iframe context)
-    const urlParams = new URLSearchParams(window.location.search);
-    this.studentId = urlParams.get('studentId');
+    if (!this.studentId) {
+      const urlParams = new URLSearchParams(window.location.search);
+      this.studentId = urlParams.get('studentId');
+    }
 
     // 2. window.currentStudent (direct load)
     if (!this.studentId) {
@@ -33,6 +38,18 @@ class DojoClient {
     if (!this.studentId) {
       try {
         this.studentId = window.parent?.currentStudent?.id;
+      } catch (e) {
+        // Cross-origin iframe, expected
+      }
+    }
+
+    // 4. localStorage (set by the login flow), own window then parent
+    if (!this.studentId) {
+      this.studentId = localStorage.getItem('studentId');
+    }
+    if (!this.studentId) {
+      try {
+        this.studentId = window.parent?.localStorage?.getItem('studentId');
       } catch (e) {
         // Cross-origin iframe, expected
       }
@@ -98,6 +115,10 @@ class DojoClient {
 
   async getStreak() {
     return this._apiCall('get-streak', {});
+  }
+
+  async getBadges() {
+    return this._apiCall('get-badges', {});
   }
 
   // ─── OFFLINE-FIRST + SYNC ───────────────────────────────────────────────
