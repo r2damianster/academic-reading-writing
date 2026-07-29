@@ -127,7 +127,7 @@
       "label": "._addToQueue()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L100",
+      "source_location": "L110",
       "_origin": "ast",
       "id": "js_dojo_client_dojoclient_addtoqueue",
       "community": 7,
@@ -137,7 +137,7 @@
       "label": ".getPendingQueue()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L106",
+      "source_location": "L116",
       "_origin": "ast",
       "id": "js_dojo_client_dojoclient_getpendingqueue",
       "community": 6,
@@ -147,7 +147,7 @@
       "label": ".clearQueue()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L117",
+      "source_location": "L127",
       "_origin": "ast",
       "id": "js_dojo_client_dojoclient_clearqueue",
       "community": 6,
@@ -157,7 +157,7 @@
       "label": "._setCache()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L123",
+      "source_location": "L133",
       "_origin": "ast",
       "id": "js_dojo_client_dojoclient_setcache",
       "community": 6,
@@ -167,7 +167,7 @@
       "label": "._getCache()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L131",
+      "source_location": "L141",
       "_origin": "ast",
       "id": "js_dojo_client_dojoclient_getcache",
       "community": 8,
@@ -177,7 +177,7 @@
       "label": ".clearAllCache()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L144",
+      "source_location": "L154",
       "_origin": "ast",
       "id": "js_dojo_client_dojoclient_clearallcache",
       "community": 6,
@@ -187,7 +187,7 @@
       "label": ".showLeaderboardIfEligible()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L152",
+      "source_location": "L162",
       "_origin": "ast",
       "id": "js_dojo_client_dojoclient_showleaderboardifeligible",
       "community": 9,
@@ -197,7 +197,7 @@
       "label": ".getLocalStreak()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L168",
+      "source_location": "L178",
       "_origin": "ast",
       "id": "js_dojo_client_dojoclient_getlocalstreak",
       "community": 6,
@@ -207,7 +207,7 @@
       "label": ".recordActivity()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L200",
+      "source_location": "L210",
       "_origin": "ast",
       "id": "js_dojo_client_dojoclient_recordactivity",
       "community": 6,
@@ -219,9 +219,9 @@
       "source_file": "js/nav.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "js_nav",
       "community": 10,
-      "norm_label": "nav.js"
+      "norm_label": "nav.js",
+      "id": "js_nav"
     },
     {
       "label": "MENU",
@@ -229,9 +229,9 @@
       "source_file": "js/nav.js",
       "source_location": "L5",
       "_origin": "ast",
-      "id": "js_nav_menu",
       "community": 10,
-      "norm_label": "menu"
+      "norm_label": "menu",
+      "id": "js_nav_menu"
     },
     {
       "label": "buildMenu()",
@@ -239,9 +239,9 @@
       "source_file": "js/nav.js",
       "source_location": "L149",
       "_origin": "ast",
-      "id": "js_nav_buildmenu",
       "community": 10,
-      "norm_label": "buildmenu()"
+      "norm_label": "buildmenu()",
+      "id": "js_nav_buildmenu"
     },
     {
       "label": "DOJO_DEPLOYMENT.md",
@@ -1122,9 +1122,9 @@
       "source_file": "js/nav.js",
       "source_location": "L149",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_nav",
-      "target": "js_nav_buildmenu",
-      "confidence_score": 1.0
+      "target": "js_nav_buildmenu"
     },
     {
       "relation": "contains",
@@ -1132,9 +1132,9 @@
       "source_file": "js/nav.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_nav",
-      "target": "js_nav_menu",
-      "confidence_score": 1.0
+      "target": "js_nav_menu"
     },
     {
       "relation": "contains",
@@ -1869,5 +1869,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "e0ff610b25a71621dba7c4b44b089178ba42092a"
+  "built_at_commit": "db69718a5fa5a1baf76e8ba7bb56bb158859aad4"
 }
