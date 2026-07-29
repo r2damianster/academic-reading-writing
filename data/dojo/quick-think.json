@@ -16,8 +16,14 @@
         "question": "Which is correct: 'The team are playing' or 'The team is playing'?",
         "question_es": "¿Cuál es correcto: 'The team are playing' o 'The team is playing'?",
         "options": [
-          { "text": "The team are playing", "text_es": "The team are playing" },
-          { "text": "The team is playing", "text_es": "The team is playing" }
+          {
+            "text": "The team are playing",
+            "text_es": "The team are playing"
+          },
+          {
+            "text": "The team is playing",
+            "text_es": "The team is playing"
+          }
         ],
         "correct_index": 1,
         "explanation": "In American English, 'team' is singular, so 'is' is correct."
@@ -27,8 +33,14 @@
         "question": "Choose the sentence without errors: A) Everyone have finished. B) Everyone has finished.",
         "question_es": "Elige la oración sin errores: A) Everyone have finished. B) Everyone has finished.",
         "options": [
-          { "text": "Everyone have finished", "text_es": "Everyone have finished" },
-          { "text": "Everyone has finished", "text_es": "Everyone has finished" }
+          {
+            "text": "Everyone have finished",
+            "text_es": "Everyone have finished"
+          },
+          {
+            "text": "Everyone has finished",
+            "text_es": "Everyone has finished"
+          }
         ],
         "correct_index": 1,
         "explanation": "'Everyone' is singular, so use 'has'."
@@ -38,9 +50,18 @@
         "question": "What is a run-on sentence?",
         "question_es": "¿Qué es una oración de corrida?",
         "options": [
-          { "text": "A sentence that is too long", "text_es": "Una oración que es muy larga" },
-          { "text": "Two independent clauses joined without proper punctuation or conjunction", "text_es": "Dos cláusulas independientes unidas sin puntuación o conjunción adecuadas" },
-          { "text": "A sentence with too many verbs", "text_es": "Una oración con demasiados verbos" }
+          {
+            "text": "A sentence that is too long",
+            "text_es": "Una oración que es muy larga"
+          },
+          {
+            "text": "Two independent clauses joined without proper punctuation or conjunction",
+            "text_es": "Dos cláusulas independientes unidas sin puntuación o conjunción adecuadas"
+          },
+          {
+            "text": "A sentence with too many verbs",
+            "text_es": "Una oración con demasiados verbos"
+          }
         ],
         "correct_index": 1,
         "explanation": "A run-on joins two complete thoughts without proper connection."
@@ -50,9 +71,18 @@
         "question": "Which punctuation ends an interrogative sentence?",
         "question_es": "¿Qué puntuación termina una oración interrogativa?",
         "options": [
-          { "text": "Period (.)", "text_es": "Punto (.)" },
-          { "text": "Question mark (?)", "text_es": "Signo de interrogación (?)" },
-          { "text": "Semicolon (;)", "text_es": "Punto y coma (;)" }
+          {
+            "text": "Period (.)",
+            "text_es": "Punto (.)"
+          },
+          {
+            "text": "Question mark (?)",
+            "text_es": "Signo de interrogación (?)"
+          },
+          {
+            "text": "Semicolon (;)",
+            "text_es": "Punto y coma (;)"
+          }
         ],
         "correct_index": 1,
         "explanation": "A question ends with a question mark."
@@ -62,9 +92,18 @@
         "question": "What is the difference between 'its' and 'it's'?",
         "question_es": "¿Cuál es la diferencia entre 'its' e 'it's'?",
         "options": [
-          { "text": "No difference; they're interchangeable", "text_es": "Sin diferencia; son intercambiables" },
-          { "text": "'its' = possessive; 'it's' = it is or it has", "text_es": "'its' = posesivo; 'it's' = it is o it has" },
-          { "text": "'it's' is British; 'its' is American", "text_es": "'it's' es británico; 'its' es americano" }
+          {
+            "text": "No difference; they're interchangeable",
+            "text_es": "Sin diferencia; son intercambiables"
+          },
+          {
+            "text": "'its' = possessive; 'it's' = it is or it has",
+            "text_es": "'its' = posesivo; 'it's' = it is o it has"
+          },
+          {
+            "text": "'it's' is British; 'its' is American",
+            "text_es": "'it's' es británico; 'its' es americano"
+          }
         ],
         "correct_index": 1,
         "explanation": "'Its' shows possession (the dog and its bone). 'It's' = it is/has."
@@ -74,8 +113,14 @@
         "question": "Correct: 'She dont like coffee' or 'She doesn't like coffee'?",
         "question_es": "¿Correcto: 'She dont like coffee' o 'She doesn't like coffee'?",
         "options": [
-          { "text": "She dont like coffee", "text_es": "She dont like coffee" },
-          { "text": "She doesn't like coffee", "text_es": "She doesn't like coffee" }
+          {
+            "text": "She dont like coffee",
+            "text_es": "She dont like coffee"
+          },
+          {
+            "text": "She doesn't like coffee",
+            "text_es": "She doesn't like coffee"
+          }
         ],
         "correct_index": 1,
         "explanation": "'doesn't' is the correct contraction of 'does not'."
@@ -85,9 +130,18 @@
         "question": "What is a clause?",
         "question_es": "¿Qué es una cláusula?",
         "options": [
-          { "text": "A word or phrase", "text_es": "Una palabra o frase" },
-          { "text": "A group of words with a subject and verb", "text_es": "Un grupo de palabras con un sujeto y verbo" },
-          { "text": "A type of punctuation", "text_es": "Un tipo de puntuación" }
+          {
+            "text": "A word or phrase",
+            "text_es": "Una palabra o frase"
+          },
+          {
+            "text": "A group of words with a subject and verb",
+            "text_es": "Un grupo de palabras con un sujeto y verbo"
+          },
+          {
+            "text": "A type of punctuation",
+            "text_es": "Un tipo de puntuación"
+          }
         ],
         "correct_index": 1,
         "explanation": "A clause contains a subject and predicate (verb)."
@@ -97,9 +151,18 @@
         "question": "When should you use a semicolon?",
         "question_es": "¿Cuándo debes usar un punto y coma?",
         "options": [
-          { "text": "Between an adjective and noun", "text_es": "Entre un adjetivo y un sustantivo" },
-          { "text": "To join two independent clauses or separate items in a complex list", "text_es": "Para unir dos cláusulas independientes o separar elementos en una lista compleja" },
-          { "text": "At the end of every sentence", "text_es": "Al final de cada oración" }
+          {
+            "text": "Between an adjective and noun",
+            "text_es": "Entre un adjetivo y un sustantivo"
+          },
+          {
+            "text": "To join two independent clauses or separate items in a complex list",
+            "text_es": "Para unir dos cláusulas independientes o separar elementos en una lista compleja"
+          },
+          {
+            "text": "At the end of every sentence",
+            "text_es": "Al final de cada oración"
+          }
         ],
         "correct_index": 1,
         "explanation": "Semicolons join related independent clauses or separate complex list items."
@@ -109,8 +172,14 @@
         "question": "Which is a sentence fragment? A) Running quickly down the street. B) She ran down the street.",
         "question_es": "¿Cuál es un fragmento? A) Running quickly down the street. B) She ran down the street.",
         "options": [
-          { "text": "Running quickly down the street", "text_es": "Running quickly down the street" },
-          { "text": "She ran down the street", "text_es": "She ran down the street" }
+          {
+            "text": "Running quickly down the street",
+            "text_es": "Running quickly down the street"
+          },
+          {
+            "text": "She ran down the street",
+            "text_es": "She ran down the street"
+          }
         ],
         "correct_index": 0,
         "explanation": "The first lacks a main subject + verb; it's a phrase, not a complete sentence."
@@ -120,14 +189,294 @@
         "question": "What is parallel structure in writing?",
         "question_es": "¿Qué es la estructura paralela en la escritura?",
         "options": [
-          { "text": "Using the same word twice", "text_es": "Usar la misma palabra dos veces" },
-          { "text": "Using similar grammatical forms for items in a list or series", "text_es": "Usar formas gramaticales similares para elementos en una lista o serie" },
-          { "text": "Writing on two lines at once", "text_es": "Escribir en dos líneas a la vez" }
+          {
+            "text": "Using the same word twice",
+            "text_es": "Usar la misma palabra dos veces"
+          },
+          {
+            "text": "Using similar grammatical forms for items in a list or series",
+            "text_es": "Usar formas gramaticales similares para elementos en una lista o serie"
+          },
+          {
+            "text": "Writing on two lines at once",
+            "text_es": "Escribir en dos líneas a la vez"
+          }
         ],
         "correct_index": 1,
         "explanation": "Parallel structure balances grammatical forms (e.g., 'I came, I saw, I conquered')."
+      },
+      {
+        "question_id": "qtg-11",
+        "question": "Which sentence uses the comma correctly?",
+        "question_es": "¿Qué oración usa la coma correctamente?",
+        "options": [
+          {
+            "text": "Although the data was limited the results were clear.",
+            "text_es": "Although the data was limited the results were clear."
+          },
+          {
+            "text": "Although the data was limited, the results were clear.",
+            "text_es": "Although the data was limited, the results were clear."
+          },
+          {
+            "text": "Although, the data was limited the results were clear.",
+            "text_es": "Although, the data was limited the results were clear."
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "An introductory dependent clause is followed by a comma before the main clause."
+      },
+      {
+        "question_id": "qtg-12",
+        "question": "In academic writing, which is generally preferred?",
+        "question_es": "En escritura académica, ¿qué se prefiere generalmente?",
+        "options": [
+          {
+            "text": "The researchers analyzed the data.",
+            "text_es": "The researchers analyzed the data."
+          },
+          {
+            "text": "The data was analyzed by the researchers.",
+            "text_es": "The data was analyzed by the researchers."
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Active voice is usually clearer and more concise than passive voice."
+      },
+      {
+        "question_id": "qtg-13",
+        "question": "Which word correctly completes the sentence: 'The findings had a strong ____ on policy.'",
+        "question_es": "¿Qué palabra completa correctamente: 'The findings had a strong ____ on policy.'",
+        "options": [
+          {
+            "text": "effect",
+            "text_es": "effect"
+          },
+          {
+            "text": "affect",
+            "text_es": "affect"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "'Effect' is the noun; 'affect' is normally the verb."
+      },
+      {
+        "question_id": "qtg-14",
+        "question": "Which sentence has correct subject-verb agreement?",
+        "question_es": "¿Qué oración tiene concordancia correcta entre sujeto y verbo?",
+        "options": [
+          {
+            "text": "The list of variables were incomplete.",
+            "text_es": "The list of variables were incomplete."
+          },
+          {
+            "text": "The list of variables was incomplete.",
+            "text_es": "The list of variables was incomplete."
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "The subject is 'list' (singular), not 'variables', so the verb is 'was'."
+      },
+      {
+        "question_id": "qtg-15",
+        "question": "What is a dangling modifier?",
+        "question_es": "¿Qué es un modificador suelto (dangling modifier)?",
+        "options": [
+          {
+            "text": "A modifier placed at the end of a sentence",
+            "text_es": "Un modificador colocado al final de la oración"
+          },
+          {
+            "text": "A modifier whose intended subject is missing from the sentence",
+            "text_es": "Un modificador cuyo sujeto previsto no aparece en la oración"
+          },
+          {
+            "text": "A modifier that repeats the subject",
+            "text_es": "Un modificador que repite el sujeto"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "In 'Having finished the survey, the data was analyzed', nobody performs 'having finished'."
+      },
+      {
+        "question_id": "qtg-16",
+        "question": "Which is correct: 'fewer participants' or 'less participants'?",
+        "question_es": "¿Cuál es correcto: 'fewer participants' o 'less participants'?",
+        "options": [
+          {
+            "text": "fewer participants",
+            "text_es": "fewer participants"
+          },
+          {
+            "text": "less participants",
+            "text_es": "less participants"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Use 'fewer' for countable nouns and 'less' for uncountable ones."
+      },
+      {
+        "question_id": "qtg-17",
+        "question": "Which sentence correctly joins two independent clauses?",
+        "question_es": "¿Qué oración une correctamente dos cláusulas independientes?",
+        "options": [
+          {
+            "text": "The sample was small, the results were inconclusive.",
+            "text_es": "The sample was small, the results were inconclusive."
+          },
+          {
+            "text": "The sample was small; the results were inconclusive.",
+            "text_es": "The sample was small; the results were inconclusive."
+          },
+          {
+            "text": "The sample was small the results were inconclusive.",
+            "text_es": "The sample was small the results were inconclusive."
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "A comma alone creates a comma splice; a semicolon or a conjunction is required."
+      },
+      {
+        "question_id": "qtg-18",
+        "question": "Which pronoun agrees with 'each student'?",
+        "question_es": "¿Qué pronombre concuerda con 'each student'?",
+        "options": [
+          {
+            "text": "Each student submitted their essay.",
+            "text_es": "Each student submitted their essay."
+          },
+          {
+            "text": "Each student submitted his or her essay.",
+            "text_es": "Each student submitted his or her essay."
+          },
+          {
+            "text": "Both are accepted in current academic style guides.",
+            "text_es": "Ambas se aceptan en las guías de estilo académico actuales."
+          }
+        ],
+        "correct_index": 2,
+        "explanation": "APA 7th edition accepts singular 'they' as well as 'his or her'."
+      },
+      {
+        "question_id": "qtg-19",
+        "question": "Which verb tense is standard for reporting completed research results in APA style?",
+        "question_es": "¿Qué tiempo verbal es estándar para reportar resultados de investigación completados en estilo APA?",
+        "options": [
+          {
+            "text": "Present tense: 'The study shows'",
+            "text_es": "Presente: 'The study shows'"
+          },
+          {
+            "text": "Past tense: 'The study showed'",
+            "text_es": "Pasado: 'The study showed'"
+          },
+          {
+            "text": "Future tense: 'The study will show'",
+            "text_es": "Futuro: 'The study will show'"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "Results already obtained are reported in past tense."
+      },
+      {
+        "question_id": "qtg-20",
+        "question": "Which is the correct plural of 'analysis'?",
+        "question_es": "¿Cuál es el plural correcto de 'analysis'?",
+        "options": [
+          {
+            "text": "analysises",
+            "text_es": "analysises"
+          },
+          {
+            "text": "analyses",
+            "text_es": "analyses"
+          },
+          {
+            "text": "analysis",
+            "text_es": "analysis"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "Greek-origin nouns ending in -is form plurals in -es: analysis, analyses."
+      },
+      {
+        "question_id": "qtg-21",
+        "question": "Where should the apostrophe go: the theories of several researchers?",
+        "question_es": "¿Dónde va el apóstrofo: las teorías de varios investigadores?",
+        "options": [
+          {
+            "text": "the researcher's theories",
+            "text_es": "the researcher's theories"
+          },
+          {
+            "text": "the researchers' theories",
+            "text_es": "the researchers' theories"
+          },
+          {
+            "text": "the researchers theories",
+            "text_es": "the researchers theories"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "For a plural noun already ending in -s, the apostrophe follows the s."
+      },
+      {
+        "question_id": "qtg-22",
+        "question": "Which sentence avoids redundancy?",
+        "question_es": "¿Qué oración evita la redundancia?",
+        "options": [
+          {
+            "text": "The results were completely unanimous among all participants.",
+            "text_es": "The results were completely unanimous among all participants."
+          },
+          {
+            "text": "The results were unanimous.",
+            "text_es": "The results were unanimous."
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "'Unanimous' already implies complete agreement by everyone."
+      },
+      {
+        "question_id": "qtg-23",
+        "question": "Which transition signals a contrast?",
+        "question_es": "¿Qué conector señala un contraste?",
+        "options": [
+          {
+            "text": "Furthermore",
+            "text_es": "Furthermore"
+          },
+          {
+            "text": "Therefore",
+            "text_es": "Therefore"
+          },
+          {
+            "text": "Nevertheless",
+            "text_es": "Nevertheless"
+          }
+        ],
+        "correct_index": 2,
+        "explanation": "'Nevertheless' contrasts; 'furthermore' adds and 'therefore' concludes."
+      },
+      {
+        "question_id": "qtg-24",
+        "question": "Which sentence keeps parallel structure?",
+        "question_es": "¿Qué oración mantiene estructura paralela?",
+        "options": [
+          {
+            "text": "The course improves reading, writing, and how to think critically.",
+            "text_es": "The course improves reading, writing, and how to think critically."
+          },
+          {
+            "text": "The course improves reading, writing, and critical thinking.",
+            "text_es": "The course improves reading, writing, and critical thinking."
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "All three items must share the same grammatical form (noun phrases)."
       }
-    ]
+    ],
+    "pool_size": 24
   },
   {
     "set_id": "qt-citations-basics",
@@ -146,9 +495,18 @@
         "question": "In APA style, how do you cite a book by one author?",
         "question_es": "En estilo APA, ¿cómo citas un libro de un autor?",
         "options": [
-          { "text": "Author (Year). Title. Publisher.", "text_es": "Autor (Año). Título. Editorial." },
-          { "text": "Author, A. (Year). Title of book. Publisher.", "text_es": "Autor, A. (Año). Título del libro. Editorial." },
-          { "text": "[1] Author. Title. Year.", "text_es": "[1] Autor. Título. Año." }
+          {
+            "text": "Author (Year). Title. Publisher.",
+            "text_es": "Autor (Año). Título. Editorial."
+          },
+          {
+            "text": "Author, A. (Year). Title of book. Publisher.",
+            "text_es": "Autor, A. (Año). Título del libro. Editorial."
+          },
+          {
+            "text": "[1] Author. Title. Year.",
+            "text_es": "[1] Autor. Título. Año."
+          }
         ],
         "correct_index": 1,
         "explanation": "APA format: Last name, Initial(s). (Year). Title. Publisher."
@@ -158,9 +516,18 @@
         "question": "What goes inside parentheses in a direct quote citation?",
         "question_es": "¿Qué va entre paréntesis en una cita directa?",
         "options": [
-          { "text": "Author and year (and page if direct quote)", "text_es": "Autor y año (y página si cita directa)" },
-          { "text": "Only the year", "text_es": "Solo el año" },
-          { "text": "DOI link", "text_es": "Enlace DOI" }
+          {
+            "text": "Author and year (and page if direct quote)",
+            "text_es": "Autor y año (y página si cita directa)"
+          },
+          {
+            "text": "Only the year",
+            "text_es": "Solo el año"
+          },
+          {
+            "text": "DOI link",
+            "text_es": "Enlace DOI"
+          }
         ],
         "correct_index": 0,
         "explanation": "In-text citations include author, year, and page number for direct quotes: (Author, Year, p. #)."
@@ -170,9 +537,18 @@
         "question": "How do you cite a source with two authors in APA?",
         "question_es": "¿Cómo citas una fuente con dos autores en APA?",
         "options": [
-          { "text": "(Author1 & Author2, Year)", "text_es": "(Autor1 & Autor2, Año)" },
-          { "text": "(Author1 and Author2, Year)", "text_es": "(Autor1 and Autor2, Año)" },
-          { "text": "(Author1, Author2, Year)", "text_es": "(Autor1, Autor2, Año)" }
+          {
+            "text": "(Author1 & Author2, Year)",
+            "text_es": "(Autor1 & Autor2, Año)"
+          },
+          {
+            "text": "(Author1 and Author2, Year)",
+            "text_es": "(Autor1 and Autor2, Año)"
+          },
+          {
+            "text": "(Author1, Author2, Year)",
+            "text_es": "(Autor1, Autor2, Año)"
+          }
         ],
         "correct_index": 0,
         "explanation": "APA uses '&' in parenthetical citations and 'and' in narrative citations."
@@ -182,9 +558,18 @@
         "question": "What is the difference between a Reference list and a Bibliography?",
         "question_es": "¿Cuál es la diferencia entre una lista de referencias y una bibliografía?",
         "options": [
-          { "text": "No difference", "text_es": "Sin diferencia" },
-          { "text": "APA uses 'References' (sources cited); Bibliography includes all sources consulted", "text_es": "APA usa 'Referencias' (fuentes citadas); Bibliografía incluye todas las fuentes consultadas" },
-          { "text": "Bibliography is older; References is new", "text_es": "Bibliografía es más antigua; Referencias es nueva" }
+          {
+            "text": "No difference",
+            "text_es": "Sin diferencia"
+          },
+          {
+            "text": "APA uses 'References' (sources cited); Bibliography includes all sources consulted",
+            "text_es": "APA usa 'Referencias' (fuentes citadas); Bibliografía incluye todas las fuentes consultadas"
+          },
+          {
+            "text": "Bibliography is older; References is new",
+            "text_es": "Bibliografía es más antigua; Referencias es nueva"
+          }
         ],
         "correct_index": 1,
         "explanation": "In APA, only cited sources go in 'References'. A bibliography may include uncited sources."
@@ -194,9 +579,18 @@
         "question": "How is a Reference list arranged?",
         "question_es": "¿Cómo se organiza una lista de referencias?",
         "options": [
-          { "text": "By topic", "text_es": "Por tema" },
-          { "text": "Alphabetically by author's last name", "text_es": "Alfabéticamente por apellido del autor" },
-          { "text": "By date (newest first)", "text_es": "Por fecha (más reciente primero)" }
+          {
+            "text": "By topic",
+            "text_es": "Por tema"
+          },
+          {
+            "text": "Alphabetically by author's last name",
+            "text_es": "Alfabéticamente por apellido del autor"
+          },
+          {
+            "text": "By date (newest first)",
+            "text_es": "Por fecha (más reciente primero)"
+          }
         ],
         "correct_index": 1,
         "explanation": "References are alphabetized by author's last name."
@@ -206,9 +600,18 @@
         "question": "What is a DOI in an APA citation?",
         "question_es": "¿Qué es un DOI en una cita APA?",
         "options": [
-          { "text": "Date of Issue", "text_es": "Fecha de Emisión" },
-          { "text": "Digital Object Identifier — a permanent URL for online sources", "text_es": "Identificador de Objeto Digital — una URL permanente para fuentes en línea" },
-          { "text": "Department of Information", "text_es": "Departamento de Información" }
+          {
+            "text": "Date of Issue",
+            "text_es": "Fecha de Emisión"
+          },
+          {
+            "text": "Digital Object Identifier — a permanent URL for online sources",
+            "text_es": "Identificador de Objeto Digital — una URL permanente para fuentes en línea"
+          },
+          {
+            "text": "Department of Information",
+            "text_es": "Departamento de Información"
+          }
         ],
         "correct_index": 1,
         "explanation": "DOI is a stable link. Use it instead of a URL if available."
@@ -218,8 +621,14 @@
         "question": "True or False: In APA, titles of articles are capitalized like book titles.",
         "question_es": "Verdadero o Falso: En APA, los títulos de artículos se capitalizan como títulos de libros.",
         "options": [
-          { "text": "True", "text_es": "Verdadero" },
-          { "text": "False", "text_es": "Falso" }
+          {
+            "text": "True",
+            "text_es": "Verdadero"
+          },
+          {
+            "text": "False",
+            "text_es": "Falso"
+          }
         ],
         "correct_index": 1,
         "explanation": "In APA, article titles use sentence case (capitalize only first word and proper nouns)."
@@ -229,13 +638,267 @@
         "question": "What is the hanging indent in APA?",
         "question_es": "¿Qué es la sangría colgante en APA?",
         "options": [
-          { "text": "The first line is indented", "text_es": "La primera línea se indenta" },
-          { "text": "The second and subsequent lines are indented (References format)", "text_es": "La segunda y siguientes líneas se indentan (formato de Referencias)" },
-          { "text": "No indentation at all", "text_es": "Sin sangría en absoluto" }
+          {
+            "text": "The first line is indented",
+            "text_es": "La primera línea se indenta"
+          },
+          {
+            "text": "The second and subsequent lines are indented (References format)",
+            "text_es": "La segunda y siguientes líneas se indentan (formato de Referencias)"
+          },
+          {
+            "text": "No indentation at all",
+            "text_es": "Sin sangría en absoluto"
+          }
         ],
         "correct_index": 1,
         "explanation": "Reference entries use hanging indent: first line flush left, rest indented 0.5 inches."
+      },
+      {
+        "question_id": "qtc-9",
+        "question": "In APA 7th edition, how many authors are listed in a reference before using an ellipsis?",
+        "question_es": "En APA 7ª edición, ¿cuántos autores se listan en una referencia antes de usar puntos suspensivos?",
+        "options": [
+          {
+            "text": "Up to 6 authors",
+            "text_es": "Hasta 6 autores"
+          },
+          {
+            "text": "Up to 20 authors",
+            "text_es": "Hasta 20 autores"
+          },
+          {
+            "text": "All authors, with no limit",
+            "text_es": "Todos los autores, sin límite"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "APA 7 lists up to 20 authors; with 21 or more, use an ellipsis before the final author."
+      },
+      {
+        "question_id": "qtc-10",
+        "question": "How do you cite a work with two authors in text?",
+        "question_es": "¿Cómo se cita en el texto una obra con dos autores?",
+        "options": [
+          {
+            "text": "(Smith and Jones, 2020)",
+            "text_es": "(Smith and Jones, 2020)"
+          },
+          {
+            "text": "(Smith & Jones, 2020)",
+            "text_es": "(Smith & Jones, 2020)"
+          },
+          {
+            "text": "(Smith et al., 2020)",
+            "text_es": "(Smith et al., 2020)"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "Use '&' inside parentheses and 'and' in running text."
+      },
+      {
+        "question_id": "qtc-11",
+        "question": "When is 'et al.' used in APA 7 in-text citations?",
+        "question_es": "¿Cuándo se usa 'et al.' en citas en texto de APA 7?",
+        "options": [
+          {
+            "text": "From three or more authors, on every citation",
+            "text_es": "Desde tres o más autores, en cada cita"
+          },
+          {
+            "text": "Only from six or more authors",
+            "text_es": "Solo desde seis o más autores"
+          },
+          {
+            "text": "Only after the first full citation of six authors",
+            "text_es": "Solo después de la primera cita completa de seis autores"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "APA 7 uses 'et al.' from the first citation when there are three or more authors."
+      },
+      {
+        "question_id": "qtc-12",
+        "question": "What must a direct quotation always include that a paraphrase does not?",
+        "question_es": "¿Qué debe incluir siempre una cita directa que una paráfrasis no?",
+        "options": [
+          {
+            "text": "Quotation marks or block format",
+            "text_es": "Comillas o formato de bloque"
+          },
+          {
+            "text": "The publisher name",
+            "text_es": "El nombre de la editorial"
+          },
+          {
+            "text": "A DOI",
+            "text_es": "Un DOI"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Quoted wording must be marked as quoted, and APA also requires a page or paragraph number."
+      },
+      {
+        "question_id": "qtc-13",
+        "question": "A quotation of 40 or more words in APA 7 should be formatted as:",
+        "question_es": "Una cita de 40 o más palabras en APA 7 debe formatearse como:",
+        "options": [
+          {
+            "text": "An indented block quotation without quotation marks",
+            "text_es": "Una cita en bloque con sangría y sin comillas"
+          },
+          {
+            "text": "Italic text inside quotation marks",
+            "text_es": "Texto en cursiva dentro de comillas"
+          },
+          {
+            "text": "A footnote",
+            "text_es": "Una nota al pie"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Block quotations are indented 0.5 in and carry no quotation marks."
+      },
+      {
+        "question_id": "qtc-14",
+        "question": "Which element replaces a missing publication date in APA 7?",
+        "question_es": "¿Qué elemento reemplaza una fecha de publicación faltante en APA 7?",
+        "options": [
+          {
+            "text": "(no date)",
+            "text_es": "(no date)"
+          },
+          {
+            "text": "(n.d.)",
+            "text_es": "(n.d.)"
+          },
+          {
+            "text": "(undated)",
+            "text_es": "(undated)"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "APA uses the abbreviation (n.d.) for 'no date'."
+      },
+      {
+        "question_id": "qtc-15",
+        "question": "How should a DOI be presented in an APA 7 reference?",
+        "question_es": "¿Cómo se debe presentar un DOI en una referencia APA 7?",
+        "options": [
+          {
+            "text": "doi:10.1037/xxx",
+            "text_es": "doi:10.1037/xxx"
+          },
+          {
+            "text": "https://doi.org/10.1037/xxx",
+            "text_es": "https://doi.org/10.1037/xxx"
+          },
+          {
+            "text": "DOI 10.1037/xxx",
+            "text_es": "DOI 10.1037/xxx"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "APA 7 formats DOIs as full https://doi.org/ URLs."
+      },
+      {
+        "question_id": "qtc-16",
+        "question": "Paraphrasing an idea without any citation is:",
+        "question_es": "Parafrasear una idea sin ninguna cita es:",
+        "options": [
+          {
+            "text": "Acceptable, because the wording is your own",
+            "text_es": "Aceptable, porque la redacción es propia"
+          },
+          {
+            "text": "Plagiarism, because the idea is still someone else's",
+            "text_es": "Plagio, porque la idea sigue siendo de otra persona"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "Credit is owed for ideas, not only for wording."
+      },
+      {
+        "question_id": "qtc-17",
+        "question": "How are entries ordered in an APA 7 reference list?",
+        "question_es": "¿Cómo se ordenan las entradas en una lista de referencias APA 7?",
+        "options": [
+          {
+            "text": "By order of appearance in the text",
+            "text_es": "Por orden de aparición en el texto"
+          },
+          {
+            "text": "Alphabetically by the first author's surname",
+            "text_es": "Alfabéticamente por el apellido del primer autor"
+          },
+          {
+            "text": "Chronologically, newest first",
+            "text_es": "Cronológicamente, más reciente primero"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "APA reference lists are alphabetical by first author surname."
+      },
+      {
+        "question_id": "qtc-18",
+        "question": "Which capitalization is correct for a journal article title in an APA 7 reference?",
+        "question_es": "¿Qué capitalización es correcta para el título de un artículo de revista en una referencia APA 7?",
+        "options": [
+          {
+            "text": "Sentence case: 'Reading strategies in higher education'",
+            "text_es": "Tipo oración: 'Reading strategies in higher education'"
+          },
+          {
+            "text": "Title Case: 'Reading Strategies in Higher Education'",
+            "text_es": "Tipo título: 'Reading Strategies in Higher Education'"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Article titles use sentence case; the journal name uses title case."
+      },
+      {
+        "question_id": "qtc-19",
+        "question": "You cite a source you found described inside another author's paper. You should:",
+        "question_es": "Citas una fuente que encontraste descrita dentro del artículo de otro autor. Debes:",
+        "options": [
+          {
+            "text": "Cite it as if you had read the original",
+            "text_es": "Citarla como si hubieras leído el original"
+          },
+          {
+            "text": "Locate and read the original whenever possible",
+            "text_es": "Localizar y leer el original siempre que sea posible"
+          },
+          {
+            "text": "Omit the citation entirely",
+            "text_es": "Omitir la cita por completo"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "Prefer primary sources; use 'as cited in' only when the original is genuinely unavailable."
+      },
+      {
+        "question_id": "qtc-20",
+        "question": "Which in-text citation correctly accompanies a direct quotation in APA 7?",
+        "question_es": "¿Qué cita en texto acompaña correctamente una cita directa en APA 7?",
+        "options": [
+          {
+            "text": "(Ramirez, 2021)",
+            "text_es": "(Ramirez, 2021)"
+          },
+          {
+            "text": "(Ramirez, 2021, p. 45)",
+            "text_es": "(Ramirez, 2021, p. 45)"
+          },
+          {
+            "text": "(Ramirez)",
+            "text_es": "(Ramirez)"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "Direct quotations require a page (or paragraph) locator."
       }
-    ]
+    ],
+    "pool_size": 20
   }
 ]

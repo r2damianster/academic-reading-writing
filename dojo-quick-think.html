@@ -154,7 +154,7 @@
     <div id="resultsContainer"></div>
 </div>
 
-<script src="js/dojo-client.js?v=1.0"></script>
+<script src="js/dojo-client.js?v=1.1"></script>
 
 <script>
 let QT_SETS_MAP = {};
@@ -190,9 +190,14 @@ function deepCopySet(set) {
     };
 }
 
-function shuffleQuestionsAndOptions(set) {
+// Draws total_questions at random from the full pool, then shuffles the option
+// order of each one. The pool is larger than the quiz, so repeating a set gives
+// a different selection of questions rather than the same list reordered.
+function buildSession(set) {
     const shuffled = deepCopySet(set);
-    shuffled.questions = shuffleArray(shuffled.questions).map(q => {
+    const quizLength = Math.min(set.total_questions || shuffled.questions.length, shuffled.questions.length);
+
+    shuffled.questions = shuffleArray(shuffled.questions).slice(0, quizLength).map(q => {
         const options = q.options.map((opt, idx) => ({ text: opt, originalIdx: idx }));
         const shuffledOpts = shuffleArray(options);
         const newCorrectIdx = shuffledOpts.findIndex(opt => opt.originalIdx === q.correct_index);
@@ -202,6 +207,10 @@ function shuffleQuestionsAndOptions(set) {
             correct_index: newCorrectIdx
         };
     });
+
+    // Navigation and progress read total_questions, so keep it in sync with the
+    // number of questions actually drawn.
+    shuffled.total_questions = quizLength;
     return shuffled;
 }
 
@@ -229,9 +238,11 @@ function shuffleQuestionsAndOptions(set) {
         return;
     }
 
-    // Shuffle questions and options for variety
-    set = shuffleQuestionsAndOptions(set);
-    console.log('🔀 QuickThink set shuffled:', set.set_id);
+    // Draw a fresh random selection from the question pool for this session
+    const poolSize = set.questions.length;
+    set = buildSession(set);
+    console.log(`🔀 QuickThink session: ${set.total_questions} questions drawn from pool of ${poolSize}`,
+                set.questions.map(q => q.question_id).join(','));
 
     let currentQuestionIdx = 0;
     let answers = [];

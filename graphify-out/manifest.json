@@ -1,7 +1,7 @@
 {
   ".claude/settings.json": {
-    "mtime": 1777162276.3590853,
-    "ast_hash": "a23769966051bd834b6d64367a46afc2",
+    "mtime": 1785361129.1316094,
+    "ast_hash": "6b37722ca92037bbb50ccd96aa055ccb",
     "semantic_hash": ""
   },
   ".claude/settings.local.json": {
@@ -30,8 +30,8 @@
     "semantic_hash": ""
   },
   "api/gamification.js": {
-    "mtime": 1785347946.578196,
-    "ast_hash": "66d7f5df07c2e9947fe044ba60209b9a",
+    "mtime": 1785354904.4073832,
+    "ast_hash": "ffcce74273a6dea2b8a98807d1968af6",
     "semantic_hash": ""
   },
   "api/lesson-availability.js": {
@@ -810,8 +810,8 @@
     "semantic_hash": ""
   },
   "my-progress.html": {
-    "mtime": 1785284090.4444468,
-    "ast_hash": "4955d82b1183d2de689c4574c828be81",
+    "mtime": 1785354927.087285,
+    "ast_hash": "3bae4cc95b1fc5b8c99714672abd7f82",
     "semantic_hash": ""
   },
   "teacher-helper.html": {
@@ -905,8 +905,8 @@
     "semantic_hash": ""
   },
   "js/dojo-client.js": {
-    "mtime": 1785353397.4973638,
-    "ast_hash": "a4791c4c69542de8d54c7199d135abb1",
+    "mtime": 1785360524.5302238,
+    "ast_hash": "37d882541727662164c79e10d638eb5b",
     "semantic_hash": ""
   },
   "dojo-home.html": {
@@ -920,8 +920,8 @@
     "semantic_hash": ""
   },
   "dojo-quick-think.html": {
-    "mtime": 1785353496.6350727,
-    "ast_hash": "0e8fe08f51c107b26b4db21bd053adde",
+    "mtime": 1785354770.4594135,
+    "ast_hash": "ca415e130f8a1494fe6eee5253e80705",
     "semantic_hash": ""
   },
   "dojo-series.html": {
