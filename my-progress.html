@@ -475,6 +475,7 @@ td.lesson-name { font-weight: 600; color: var(--ink); }
     <button class="tab-btn active" onclick="switchTab('overview',this)">📊 Overview</button>
     <button class="tab-btn" onclick="switchTab('writing',this)">✍️ Writing</button>
     <button class="tab-btn" onclick="switchTab('reading',this)">📖 Reading</button>
+    <button class="tab-btn" onclick="switchTab('dojo',this)">🥋 Dojo</button>
     <button class="tab-btn" onclick="switchTab('insights',this)">🤖 AI Insights</button>
   </div>
 </div>
@@ -573,7 +574,56 @@ td.lesson-name { font-weight: 600; color: var(--ink); }
   </div>
 
   <!-- ════════════════════════════════════════════════════════════
-       TAB 4 — AI INSIGHTS (Progress Agent)
+       TAB 4 — DOJO (Gamification)
+  ════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="panel-dojo">
+
+    <!-- Streak Badge -->
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 32px; border-radius: 16px; margin-bottom: 24px; text-align: center;">
+      <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 12px;">Current Streak</div>
+      <div style="font-size: 3rem; font-weight: 700; margin-bottom: 8px;" id="dojo-streak">0</div>
+      <div style="font-size: 0.85rem; opacity: 0.85;" id="dojo-streak-label">days</div>
+    </div>
+
+    <!-- Badges Section -->
+    <div class="section-head">🏆 Unlocked Badges</div>
+    <div class="cards-grid" id="dojo-badges-container" style="margin-bottom: 24px;">
+      <div class="state-msg">Loading badges...</div>
+    </div>
+
+    <!-- League Section -->
+    <div class="section-head">📊 Your League Standing</div>
+    <div style="background: white; padding: 24px; border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 24px;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+        <div style="text-align: center; padding: 16px; background: #f0f4ff; border-radius: 8px;">
+          <div style="font-size: 0.85rem; color: #666; margin-bottom: 8px;">Your Rank</div>
+          <div style="font-size: 2rem; font-weight: 700; color: #667eea;" id="dojo-rank">—</div>
+          <div style="font-size: 0.75rem; color: #999;" id="dojo-rank-total"></div>
+        </div>
+        <div style="text-align: center; padding: 16px; background: #fff3cd; border-radius: 8px;">
+          <div style="font-size: 0.85rem; color: #666; margin-bottom: 8px;">Tier</div>
+          <div style="font-size: 2rem; font-weight: 700; color: #ff9800;" id="dojo-tier">—</div>
+          <div style="font-size: 0.75rem; color: #999;">This Week</div>
+        </div>
+        <div style="text-align: center; padding: 16px; background: #d4edda; border-radius: 8px;">
+          <div style="font-size: 0.85rem; color: #666; margin-bottom: 8px;">Points</div>
+          <div style="font-size: 2rem; font-weight: 700; color: #28a745;" id="dojo-points">—</div>
+          <div style="font-size: 0.75rem; color: #999;">Weekly</div>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid #eee; padding-top: 16px;">
+        <div style="font-size: 0.9rem; font-weight: 600; margin-bottom: 12px;">🏅 Top Performers</div>
+        <div id="dojo-leaderboard-mini" style="font-size: 0.85rem;">
+          <div style="color: #999;">Loading...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       TAB 5 — AI INSIGHTS (Progress Agent)
   ════════════════════════════════════════════════════════════════ -->
   <div class="tab-panel" id="panel-insights">
     <div class="insights-wrapper">
@@ -922,6 +972,9 @@ async function loadAll() {
             essayCount:        Object.keys(essayMap).length
         };
 
+        // ── 9. Load Dojo data ─────────────────────────────────────────
+        await loadDojoData(st.id);
+
     } catch(err) {
         console.error(err);
         const msg = `<div class="state-msg err">
@@ -1182,6 +1235,59 @@ function renderReading(readingMap) {
 }
 
 /* ════════════════════════════════════════════════════════════════════
+   DOJO DATA LOADER
+════════════════════════════════════════════════════════════════════ */
+async function loadDojoData(studentId) {
+  try {
+    // Initialize dojoClient if not already done
+    if (typeof dojoClient === 'undefined') return;
+
+    await dojoClient.init();
+
+    // Get streak from localStorage
+    const streak = dojoClient.getLocalStreak();
+    document.getElementById('dojo-streak').textContent = streak.current || 0;
+
+    // Get leaderboard
+    const leaderboardResult = await dojoClient.getLeaderboard();
+    if (!leaderboardResult.error) {
+      const { studentRank = 0, topStudents = [], totalInCourse = 0 } = leaderboardResult;
+
+      document.getElementById('dojo-rank').textContent = studentRank || '—';
+      document.getElementById('dojo-rank-total').textContent = `of ${totalInCourse}`;
+
+      // Get tier from points
+      const points = topStudents.find(s => s.student_id === studentId)?.total_series_points || 0;
+      const tier = points >= 5000 ? 'Platinum' : points >= 3000 ? 'Gold' : points >= 1000 ? 'Silver' : 'Bronze';
+      document.getElementById('dojo-tier').textContent = tier;
+      document.getElementById('dojo-points').textContent = points;
+
+      // Render top performers
+      const topHtml = topStudents.slice(0, 3).map((s, i) => {
+        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉';
+        return `<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee;">
+          <span>${medal} #${i + 1}</span>
+          <span style="font-weight: 600; color: #667eea;">${s.total_series_points || 0} pts</span>
+        </div>`;
+      }).join('');
+      document.getElementById('dojo-leaderboard-mini').innerHTML = topHtml;
+    }
+
+    // Load badges (placeholder)
+    document.getElementById('dojo-badges-container').innerHTML = `
+      <div style="text-align: center; padding: 40px; color: #999; grid-column: 1 / -1;">
+        <p>🔄 Badges sync with Dojo activities</p>
+        <small>Complete exercises to unlock Consistency, Essay Master, Speed Demon, and more!</small>
+      </div>
+    `;
+
+  } catch (err) {
+    console.warn('⚠️ Dojo load:', err);
+    document.getElementById('dojo-badges-container').innerHTML = '<div class="state-msg">Dojo data unavailable</div>';
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════
    INIT
 ════════════════════════════════════════════════════════════════════ */
 fetch('/api/config')
@@ -1193,6 +1299,7 @@ fetch('/api/config')
   })
   .catch(() => loadAll());
 </script>
+<script src="js/dojo-client.js?v=1.0"></script>
 <script src="js/report.js?v=1.2"></script>
 </body>
 </html>
