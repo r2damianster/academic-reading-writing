@@ -200,14 +200,16 @@ class DojoClient {
       .forEach(k => localStorage.removeItem(k));
   }
 
-  // ─── LEADERBOARD 24H LOGIC ─────────────────────────────────────────────
+  // ─── LEADERBOARD GATE ──────────────────────────────────────────────────
+  // The podium shows on entry at most once per interval, then stays out of the
+  // way until the interval elapses again.
 
   async showLeaderboardIfEligible() {
     const lastShownKey = 'dojo_leaderboard_last_shown';
     const lastShown = localStorage.getItem(lastShownKey);
     const now = Date.now();
 
-    if (!lastShown || (now - parseInt(lastShown)) > 86400000) {
+    if (!lastShown || (now - parseInt(lastShown)) > DojoClient.LEADERBOARD_INTERVAL_MS) {
       localStorage.setItem(lastShownKey, now.toString());
       const leaderboard = await this.getLeaderboard();
       return { show: true, data: leaderboard };
@@ -239,5 +241,8 @@ class DojoClient {
     }
   }
 }
+
+// How often the leaderboard podium reappears on entry (4 hours).
+DojoClient.LEADERBOARD_INTERVAL_MS = 4 * 60 * 60 * 1000;
 
 window.dojoClient = new DojoClient();

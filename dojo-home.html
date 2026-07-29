@@ -108,7 +108,7 @@
 
 <div class="container">
 
-    <!-- Leaderboard 24h Modal (populates dynamically) -->
+    <!-- Leaderboard Modal — shown on entry once per interval (populates dynamically) -->
     <div class="modal fade" id="leaderboardModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -219,7 +219,7 @@
         }
     }
 
-    // ─── Leaderboard 24h Logic ───
+    // ─── Leaderboard Gate (interval set in dojo-client.js) ───
     async function checkLeaderboard() {
         const { show, data } = await dojoClient.showLeaderboardIfEligible();
         if (show && data?.topStudents) {
