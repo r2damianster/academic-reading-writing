@@ -1,7 +1,7 @@
 # Graph Report - Academic_reading_and_writing  (2026-07-29)
 
 ## Corpus Check
-- 103 files · ~223,955 words
+- 103 files · ~224,024 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `09789fde`
+- Built from commit: `4b006822`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -29,13 +29,13 @@
 1. `DojoClient` - 20 edges
 2. `Dojo Académico — Deployment & Operations Guide` - 10 edges
 3. `loadDojoContent()` - 6 edges
-4. `Deployment Checklist` - 5 edges
-5. `getStudentDojoProgress()` - 5 edges
-6. `handleSubmitExercise()` - 5 edges
-7. `handleSubmitQuickThink()` - 5 edges
+4. `getStudentDojoProgress()` - 5 edges
+5. `handleSubmitExercise()` - 5 edges
+6. `handleSubmitQuickThink()` - 5 edges
+7. `Deployment Checklist` - 5 edges
 8. `calcExercisePoints()` - 5 edges
-9. `Architecture` - 4 edges
-10. `checkAndUnlockBadges()` - 4 edges
+9. `checkAndUnlockBadges()` - 4 edges
+10. `Architecture` - 4 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `handleSubmitExercise()` --calls--> `calcExercisePoints()`  [EXTRACTED]
@@ -69,7 +69,7 @@ Cohesion: 0.40
 Nodes (5): 1. Apply Supabase RLS Policies, 2. Seed Initial Data (Optional), 3. Deploy to Vercel, 4. Monitor (Post-Deploy), Deployment Checklist
 
 ## Knowledge Gaps
-- **30 isolated node(s):** `MENU`, `Overview`, `Frontend (Client)`, `Backend (Server)`, `Database (Supabase)` (+25 more)
+- **30 isolated node(s):** `fs`, `path`, `{ createClient }`, `{ calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo }`, `supabase` (+25 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -82,5 +82,5 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.037) - this node is a cross-community bridge._
 - **Why does `Deployment Checklist` connect `Community 5` to `Community 4`?**
   _High betweenness centrality (0.018) - this node is a cross-community bridge._
-- **What connects `MENU`, `Overview`, `Frontend (Client)` to the rest of the system?**
+- **What connects `fs`, `path`, `{ createClient }` to the rest of the system?**
   _30 weakly-connected nodes found - possible documentation gaps or missing edges._
