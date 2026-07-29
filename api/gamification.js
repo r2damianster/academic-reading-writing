@@ -167,10 +167,14 @@ async function checkAndUnlockBadges(studentId) {
     const progress = await getStudentDojoProgress(studentId);
     if (!progress) return;
 
+    // longest_streak lives in gamification_streaks, not in the progress row
+    const streak = await getStudentStreak(studentId);
+
     const badges = [
-      { id: 'consistency', condition: progress.longest_streak >= 7 },
+      { id: 'consistency', condition: (streak?.longest_streak || 0) >= 7 },
       { id: 'speed-demon', condition: (progress.speed_bonus_count || 0) >= 10 },
       { id: 'quick-thinker', condition: (progress.qt_correct_count || 0) >= 50 },
+      { id: 'essay-master', condition: (progress.total_exercise_count || 0) >= 25 },
       { id: 'writing-legend', condition: (progress.total_exercise_count || 0) >= 100 }
     ];
 
@@ -185,18 +189,25 @@ async function checkAndUnlockBadges(studentId) {
         .limit(1);
 
       if (!existing || existing.length === 0) {
-        await supabase
+        const { error: insertError } = await supabase
           .from('gamification_student_badges')
           .insert({
             student_id: studentId,
             badge_id: badge.id,
             unlocked_at: new Date().toISOString()
           });
-        console.log(`✅ Badge unlocked: ${badge.id} for ${studentId}`);
+
+        // badge_id is a foreign key into gamification_badges, so an unseeded
+        // catalog fails here. Surface it instead of losing the unlock silently.
+        if (insertError) {
+          console.error(`❌ Badge unlock failed for ${badge.id}:`, insertError.message);
+          continue;
+        }
+        console.log(`✅ Badge unlocked: ${badge.id}`);
       }
     }
   } catch (e) {
-    console.warn('⚠️ Badge check failed:', e.message);
+    console.error('❌ Badge check failed:', e.message);
   }
 }
 

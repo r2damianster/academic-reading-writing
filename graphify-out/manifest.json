@@ -440,8 +440,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1785345820.4959257,
-    "ast_hash": "f0fe8b63a50bf59830190c9b468f8d4f",
+    "mtime": 1785361487.263058,
+    "ast_hash": "458d152aa0e9465bcb2e11e4165a1200",
     "semantic_hash": ""
   },
   "modules/00-fundamentals/body-paragraphs.html": {
@@ -810,8 +810,8 @@
     "semantic_hash": ""
   },
   "my-progress.html": {
-    "mtime": 1785354927.087285,
-    "ast_hash": "3bae4cc95b1fc5b8c99714672abd7f82",
+    "mtime": 1785361487.3371284,
+    "ast_hash": "4ca9b63d875ebd18f4d354641587497e",
     "semantic_hash": ""
   },
   "teacher-helper.html": {
@@ -840,8 +840,8 @@
     "semantic_hash": ""
   },
   "data/dojo/quick-think.json": {
-    "mtime": 1785282775.348415,
-    "ast_hash": "9e8be8fc23a265d2f3ff5d6f082eccd2",
+    "mtime": 1785361378.8636217,
+    "ast_hash": "a0d558ad2e27aa90f9b859bfc9dda075",
     "semantic_hash": ""
   },
   "data/dojo/series.json": {
@@ -910,23 +910,23 @@
     "semantic_hash": ""
   },
   "dojo-home.html": {
-    "mtime": 1785337851.0960617,
-    "ast_hash": "f8795403dcfcde1167e19a7b13f6c87f",
+    "mtime": 1785361487.0128129,
+    "ast_hash": "b31cf5e451aa7dc49dd4e411ab0b81ac",
     "semantic_hash": ""
   },
   "dojo-exercise.html": {
-    "mtime": 1785353402.0673542,
-    "ast_hash": "7bb4dcff51777c4e95da2ead092e3513",
+    "mtime": 1785361486.9449291,
+    "ast_hash": "c5b618986f8316fa5867e5b340cd3140",
     "semantic_hash": ""
   },
   "dojo-quick-think.html": {
-    "mtime": 1785354770.4594135,
-    "ast_hash": "ca415e130f8a1494fe6eee5253e80705",
+    "mtime": 1785361487.123407,
+    "ast_hash": "e5b851c031b135b2168b01103d6d2d42",
     "semantic_hash": ""
   },
   "dojo-series.html": {
-    "mtime": 1785340146.5006185,
-    "ast_hash": "19f16a48b7933f4c805568552b0e5268",
+    "mtime": 1785361487.2025323,
+    "ast_hash": "450016853c5d46d7feff8418a8e05903",
     "semantic_hash": ""
   },
   "supabase-dojo-rls.sql": {
