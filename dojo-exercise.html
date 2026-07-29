@@ -34,7 +34,7 @@
         }
 
         .exercise-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 12px; }
-        .exercise-meta { display: flex; gap: 16px; margin-bottom: 24px; font-size: 0.9rem; }
+        .exercise-meta { display: flex; gap: 16px; margin-bottom: 24px; font-size: 0.9rem; flex-wrap: wrap; }
         .meta-item { display: flex; align-items: center; gap: 6px; }
         .difficulty-badge {
             padding: 4px 10px;
@@ -47,7 +47,7 @@
         .difficulty-badge.hard { background: #f8d7da; color: #721c24; }
 
         .instructions { background: #f0f4ff; padding: 16px; border-radius: 8px; margin-bottom: 24px; line-height: 1.6; }
-        .prompt { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 24px; font-family: 'Courier New', monospace; white-space: pre-wrap; word-break: break-word; }
+        .prompt { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 24px; font-family: 'Courier New', monospace; white-space: pre-wrap; word-break: break-word; line-height: 1.6; }
 
         .form-group { margin-bottom: 20px; }
         .form-group label { font-weight: 600; margin-bottom: 8px; display: block; }
@@ -73,9 +73,13 @@
             gap: 8px;
             font-weight: 700;
             font-size: 1.1rem;
+            padding: 8px 12px;
+            background: #f0f4ff;
+            border-radius: 6px;
+            width: fit-content;
         }
-        .timer.warning { color: #ff9800; }
-        .timer.danger { color: #f44336; }
+        .timer.warning { color: #ff9800; background: #fff3cd; }
+        .timer.danger { color: #f44336; background: #f8d7da; }
 
         .submit-btn {
             background: #667eea;
@@ -90,15 +94,35 @@
         .submit-btn:hover { background: #5568d3; }
         .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
 
-        .success-message {
-            background: #d4edda;
-            color: #155724;
+        .results-message {
             padding: 16px;
             border-radius: 8px;
             margin-top: 20px;
             display: none;
         }
-        .success-message.show { display: block; }
+        .results-message.show { display: block; }
+        .results-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .results-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .score-display {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+        .score-display.show { display: block; }
+        .score-big { font-size: 2.5rem; font-weight: 700; color: #667eea; }
+        .score-label { color: #666; font-size: 0.9rem; }
 
         .loading { text-align: center; padding: 40px; color: #999; }
         .error { background: #f8d7da; color: #721c24; padding: 16px; border-radius: 8px; }
@@ -119,6 +143,20 @@
 <script src="js/dojo-client.js?v=1.0"></script>
 
 <script>
+let EXERCISES_MAP = {};
+
+async function loadExercisesMap() {
+    try {
+        const response = await fetch('/data/dojo/exercises.json');
+        const exercises = await response.json();
+        exercises.forEach(ex => {
+            EXERCISES_MAP[ex.exercise_id] = ex;
+        });
+    } catch (e) {
+        console.warn('⚠️ Exercises load:', e);
+    }
+}
+
 (async function() {
     const params = new URLSearchParams(window.location.search);
     const exerciseId = params.get('exercise');
@@ -129,30 +167,138 @@
     }
 
     await dojoClient.init();
+    await loadExercisesMap();
+
+    const exercise = EXERCISES_MAP[exerciseId];
+
+    if (!exercise) {
+        document.getElementById('exerciseContainer').innerHTML = '<div class="error">Exercise not found.</div>';
+        return;
+    }
 
     let startTime = Date.now();
     let timerInterval = null;
-    let exercise = null;
+    let submitted = false;
 
-    try {
-        // Load all dojo content to find exercise
-        const result = await dojoClient.getDojoSeries();
-        if (result.error) throw result;
-
-        // For now, show placeholder (will be fetched from exercises.json in a real impl)
-        document.getElementById('exerciseContainer').innerHTML = `
-            <div class="exercise-container">
-                <div class="loading">Exercise details loading...</div>
-                <p style="text-align: center; color: #999; margin-top: 20px; font-size: 0.9rem;">
-                    (Full exercise view coming in FASE 2.2)
-                </p>
-            </div>
-        `;
-
-    } catch (e) {
-        console.error('❌ Exercise load:', e);
-        document.getElementById('exerciseContainer').innerHTML = '<div class="error">Failed to load exercise. Try refreshing.</div>';
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
     }
+
+    function startTimer() {
+        const timeLimitMs = exercise.time_limit_seconds * 1000;
+        timerInterval = setInterval(() => {
+            const elapsed = Date.now() - startTime;
+            const remaining = timeLimitMs - elapsed;
+            const remainingSecs = Math.ceil(remaining / 1000);
+
+            const timerEl = document.getElementById('timer');
+            if (!timerEl) {
+                clearInterval(timerInterval);
+                return;
+            }
+
+            timerEl.textContent = formatTime(Math.max(0, remainingSecs));
+
+            if (remainingSecs <= 60) {
+                timerEl.parentElement.classList.add('warning');
+            }
+            if (remainingSecs <= 10) {
+                timerEl.parentElement.classList.add('danger');
+            }
+        }, 100);
+    }
+
+    const timeMs = exercise.time_limit_seconds * 1000;
+    const html = `
+        <div class="exercise-container">
+            <h2 class="exercise-title">${exercise.title}</h2>
+            <div class="exercise-meta">
+                <span class="meta-item">
+                    <span class="difficulty-badge ${exercise.difficulty}">${exercise.difficulty}</span>
+                </span>
+                <span class="meta-item">⏱️ <span id="timer">${formatTime(exercise.time_limit_seconds)}</span></span>
+                <span class="meta-item">💰 ${exercise.points_base} base pts</span>
+            </div>
+
+            <div class="instructions">${exercise.instructions}</div>
+
+            <div class="prompt">${exercise.prompt}</div>
+
+            <form id="exerciseForm">
+                <div class="form-group">
+                    <label for="answerInput">Your Answer:</label>
+                    <textarea id="answerInput" placeholder="Type your response here..." required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">Submit Answer</button>
+            </form>
+
+            <div class="results-message" id="resultsMessage"></div>
+            <div class="score-display" id="scoreDisplay"></div>
+        </div>
+    `;
+
+    document.getElementById('exerciseContainer').innerHTML = html;
+    startTimer();
+
+    document.getElementById('exerciseForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (submitted) return;
+        submitted = true;
+
+        const answer = document.getElementById('answerInput').value;
+        const elapsedMs = Date.now() - startTime;
+
+        document.getElementById('submitBtn').disabled = true;
+
+        try {
+            const result = await dojoClient.submitExercise(exerciseId, answer, elapsedMs);
+
+            if (result.error) {
+                throw result;
+            }
+
+            const { points, totalPoints } = result;
+            const speedBonus = elapsedMs <= (timeMs * 0.5);
+
+            document.getElementById('resultsMessage').className = 'results-message show success';
+            document.getElementById('resultsMessage').innerHTML = `
+                ✅ <strong>Exercise Submitted!</strong><br>
+                ${speedBonus ? '⚡ <strong>Speed Bonus Applied!</strong><br>' : ''}
+                Your answer has been recorded. Keep going!
+            `;
+
+            document.getElementById('scoreDisplay').className = 'score-display show';
+            document.getElementById('scoreDisplay').innerHTML = `
+                <div class="score-label">Points Earned</div>
+                <div class="score-big">+${points}</div>
+                <div class="score-label">Total: ${totalPoints} pts</div>
+            `;
+
+            dojoClient.recordActivity();
+
+            setTimeout(() => {
+                history.back();
+            }, 3000);
+
+        } catch (e) {
+            console.error('❌ Submit failed:', e);
+
+            document.getElementById('resultsMessage').className = 'results-message show error';
+            document.getElementById('resultsMessage').innerHTML = `
+                ⚠️ <strong>Submission failed.</strong><br>
+                ${e.offline ? 'Saved offline. Will sync when online.' : 'Try again or contact support.'}
+            `;
+
+            document.getElementById('submitBtn').disabled = false;
+        }
+
+        clearInterval(timerInterval);
+    });
+
 })();
 </script>
 

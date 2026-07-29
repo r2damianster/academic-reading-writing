@@ -22,15 +22,19 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
-        .progress-text { font-weight: 600; }
+        .progress-text { font-weight: 600; color: #667eea; }
         .timer {
             font-size: 1.3rem;
             font-weight: 700;
             color: #667eea;
+            padding: 8px 12px;
+            background: #f0f4ff;
+            border-radius: 6px;
         }
-        .timer.warning { color: #ff9800; }
-        .timer.danger { color: #f44336; }
+        .timer.warning { color: #ff9800; background: #fff3cd; }
+        .timer.danger { color: #f44336; background: #f8d7da; }
 
         .qt-container {
             background: white;
@@ -65,10 +69,12 @@
         .option.correct {
             background: #d4edda;
             border-color: #28a745;
+            cursor: default;
         }
         .option.incorrect {
             background: #f8d7da;
             border-color: #dc3545;
+            cursor: default;
         }
 
         .explanation {
@@ -120,6 +126,15 @@
 
         .score-big { font-size: 3rem; font-weight: 700; color: #667eea; margin: 20px 0; }
         .results-text { font-size: 1.1rem; color: #666; margin-bottom: 20px; }
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
 
         .loading { text-align: center; padding: 40px; color: #999; }
         .error { background: #f8d7da; color: #721c24; padding: 16px; border-radius: 8px; }
@@ -129,17 +144,33 @@
 
 <div class="qt-header">
     <div class="container">
-        <button onclick="history.back()" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">← Back</button>
+        <button class="back-btn" onclick="history.back()">← Back</button>
     </div>
 </div>
 
 <div class="container">
+    <div id="progressBar"></div>
     <div id="qtContainer" class="loading">Loading Quick Think...</div>
+    <div id="resultsContainer"></div>
 </div>
 
 <script src="js/dojo-client.js?v=1.0"></script>
 
 <script>
+let QT_SETS_MAP = {};
+
+async function loadQTSetsMap() {
+    try {
+        const response = await fetch('/data/dojo/quick-think.json');
+        const sets = await response.json();
+        sets.forEach(set => {
+            QT_SETS_MAP[set.set_id] = set;
+        });
+    } catch (e) {
+        console.warn('⚠️ QT sets load:', e);
+    }
+}
+
 (async function() {
     const params = new URLSearchParams(window.location.search);
     const setId = params.get('set');
@@ -150,54 +181,181 @@
     }
 
     await dojoClient.init();
+    await loadQTSetsMap();
+
+    const set = QT_SETS_MAP[setId];
+
+    if (!set || !set.questions || set.questions.length === 0) {
+        document.getElementById('qtContainer').innerHTML = '<div class="error">Quick Think set not found.</div>';
+        return;
+    }
 
     let currentQuestionIdx = 0;
     let answers = [];
-    let questions = [];
-    let timePerQuestion = 30;
-    let timeRemaining = 0;
-    let isAnswered = false;
-    let sessionStartTime = Date.now();
+    let questionStartTime = Date.now();
     let timerInterval = null;
+    let sessionStartTime = Date.now();
 
-    try {
-        // Load QT sets
-        const result = await dojoClient.getQuickThinkSets();
-        if (result.error) throw result;
-
-        const { sets = [] } = result;
-        const set = sets.find(s => s.set_id === setId);
-
-        if (!set) {
-            document.getElementById('qtContainer').innerHTML = '<div class="error">Quick Think set not found.</div>';
-            return;
-        }
-
-        timePerQuestion = set.time_limit_per_q || 30;
-        document.getElementById('qtContainer').innerHTML = '<div class="loading">Initializing...</div>';
-
-        setTimeout(() => {
-            showQuestion();
-        }, 500);
-
-    } catch (e) {
-        console.error('❌ QT load:', e);
-        document.getElementById('qtContainer').innerHTML = '<div class="error">Failed to load Quick Think. Try refreshing.</div>';
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
     }
 
-    function showQuestion() {
-        // Placeholder: will be implemented in FASE 2.2
-        document.getElementById('qtContainer').innerHTML = `
-            <div class="qt-container">
-                <div class="loading">
-                    Question details loading...
-                </div>
-                <p style="text-align: center; color: #999; margin-top: 20px; font-size: 0.9rem;">
-                    (Full Quick Think UI coming in FASE 2.2)
-                </p>
+    function updateProgress() {
+        const html = `
+            <div class="qt-progress">
+                <div class="progress-text">Question ${currentQuestionIdx + 1} of ${set.total_questions}</div>
+                <div class="timer" id="timer">${formatTime(set.time_limit_per_q)}</div>
             </div>
         `;
+        document.getElementById('progressBar').innerHTML = html;
     }
+
+    function startQuestionTimer() {
+        clearInterval(timerInterval);
+        questionStartTime = Date.now();
+        const limitMs = set.time_limit_per_q * 1000;
+
+        timerInterval = setInterval(() => {
+            const elapsed = Date.now() - questionStartTime;
+            const remaining = limitMs - elapsed;
+            const remainingSecs = Math.ceil(remaining / 1000);
+
+            const timerEl = document.getElementById('timer');
+            if (!timerEl) {
+                clearInterval(timerInterval);
+                return;
+            }
+
+            timerEl.textContent = formatTime(Math.max(0, remainingSecs));
+            timerEl.parentElement.classList.remove('warning', 'danger');
+
+            if (remainingSecs <= 10) {
+                timerEl.parentElement.classList.add('warning');
+            }
+            if (remainingSecs <= 5) {
+                timerEl.parentElement.classList.add('danger');
+            }
+        }, 100);
+    }
+
+    function showQuestion(idx) {
+        const q = set.questions[idx];
+        if (!q) return;
+
+        updateProgress();
+
+        const optionsHtml = q.options.map((opt, optIdx) => `
+            <div class="option" id="opt-${optIdx}" onclick="selectOption(${optIdx})">
+                ${opt.text}
+            </div>
+        `).join('');
+
+        const html = `
+            <div class="qt-container">
+                <div class="question-number">Question ${idx + 1}</div>
+                <div class="question-text">${q.question}</div>
+                <div class="options">${optionsHtml}</div>
+                <div class="explanation" id="explanation"></div>
+                <div class="buttons">
+                    ${idx > 0 ? '<button class="btn-secondary" onclick="prevQuestion()">← Previous</button>' : '<div></div>'}
+                    ${idx < set.total_questions - 1 ? '<button class="btn-primary" id="nextBtn" disabled onclick="nextQuestion()">Next →</button>' : '<button class="btn-primary" id="submitBtn" onclick="submitQuickThink()">Submit & Score</button>'}
+                </div>
+            </div>
+        `;
+
+        document.getElementById('qtContainer').innerHTML = html;
+        startQuestionTimer();
+
+        // Restore selected answer if exists
+        if (answers[idx] !== undefined) {
+            document.getElementById(`opt-${answers[idx]}`)?.classList.add('selected');
+            showFeedback(idx);
+        }
+    }
+
+    function showFeedback(idx) {
+        const q = set.questions[idx];
+        if (answers[idx] === undefined) return;
+
+        const isCorrect = answers[idx] === q.correct_index;
+        document.getElementById(`opt-${answers[idx]}`)?.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+        if (q.explanation) {
+            const expEl = document.getElementById('explanation');
+            expEl.innerHTML = `<strong>${isCorrect ? '✅ Correct!' : '❌ Incorrect'}</strong> — ${q.explanation}`;
+            expEl.classList.add('show');
+        }
+
+        if (idx < set.total_questions - 1) {
+            document.getElementById('nextBtn').disabled = false;
+        } else {
+            document.getElementById('submitBtn').disabled = false;
+        }
+    }
+
+    window.selectOption = function(optIdx) {
+        // Deselect prev
+        document.querySelectorAll('.option').forEach(el => el.classList.remove('selected', 'correct', 'incorrect'));
+        document.getElementById(`opt-${optIdx}`).classList.add('selected');
+
+        answers[currentQuestionIdx] = optIdx;
+        showFeedback(currentQuestionIdx);
+    };
+
+    window.nextQuestion = function() {
+        if (currentQuestionIdx < set.total_questions - 1) {
+            currentQuestionIdx++;
+            showQuestion(currentQuestionIdx);
+        }
+    };
+
+    window.prevQuestion = function() {
+        if (currentQuestionIdx > 0) {
+            currentQuestionIdx--;
+            showQuestion(currentQuestionIdx);
+        }
+    };
+
+    window.submitQuickThink = async function() {
+        clearInterval(timerInterval);
+        const timeSpentSeconds = Math.round((Date.now() - sessionStartTime) / 1000);
+
+        try {
+            const result = await dojoClient.submitQuickThink(setId, answers, timeSpentSeconds);
+
+            if (result.error) throw result;
+
+            const { correctCount, totalQuestions, points, score } = result;
+
+            const resultsHtml = `
+                <div class="results show">
+                    <h2>📊 Results</h2>
+                    <div class="score-big">${correctCount}/${totalQuestions}</div>
+                    <div class="results-text">You got ${score}% correct!</div>
+                    <div style="background: #f0f4ff; padding: 16px; border-radius: 8px; margin: 20px 0;">
+                        <div style="color: #667eea; font-weight: 700; font-size: 1.3rem;">+${points} points</div>
+                        <small style="color: #666;">Quick Think Bonus</small>
+                    </div>
+                    <button class="btn-primary" onclick="history.back()" style="margin-top: 20px;">← Back to Dojo</button>
+                </div>
+            `;
+
+            document.getElementById('qtContainer').innerHTML = '';
+            document.getElementById('progressBar').innerHTML = '';
+            document.getElementById('resultsContainer').innerHTML = resultsHtml;
+
+            dojoClient.recordActivity();
+
+        } catch (e) {
+            console.error('❌ Submit failed:', e);
+            alert('Failed to submit. ' + (e.offline ? 'Saved offline.' : 'Try again.'));
+        }
+    };
+
+    showQuestion(0);
+
 })();
 </script>
 
