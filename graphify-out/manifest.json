@@ -910,23 +910,23 @@
     "semantic_hash": ""
   },
   "dojo-home.html": {
-    "mtime": 1785283911.9335222,
-    "ast_hash": "c433937870a1907fb084426036a2f591",
+    "mtime": 1785321175.0592594,
+    "ast_hash": "726b7ce8fdabba82077bdc827ee4fea3",
     "semantic_hash": ""
   },
   "dojo-exercise.html": {
-    "mtime": 1785283835.2001872,
-    "ast_hash": "b5dacc76379de3823eba4b12169f5659",
+    "mtime": 1785321188.9568005,
+    "ast_hash": "7f1d5ef10929bb0aad3cb6bcd2f72ff5",
     "semantic_hash": ""
   },
   "dojo-quick-think.html": {
-    "mtime": 1785283884.6467402,
-    "ast_hash": "5767968d731cc2a9409e090dfd7634ac",
+    "mtime": 1785321194.604223,
+    "ast_hash": "bc1ffc26465f285711c18e6922d7ef66",
     "semantic_hash": ""
   },
   "dojo-series.html": {
-    "mtime": 1785283890.2577324,
-    "ast_hash": "4b59f4bc8d8135e7443402ab09fd2eb9",
+    "mtime": 1785321180.8119154,
+    "ast_hash": "f25312b66117cd01af5f5b3b92fcb414",
     "semantic_hash": ""
   },
   "supabase-dojo-rls.sql": {
