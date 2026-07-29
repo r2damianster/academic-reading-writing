@@ -171,6 +171,30 @@ async function loadQTSetsMap() {
     }
 }
 
+function shuffleArray(arr) {
+    const copy = [...arr];
+    for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+}
+
+function shuffleQuestionsAndOptions(set) {
+    const shuffled = { ...set };
+    shuffled.questions = shuffleArray(set.questions).map(q => {
+        const options = q.options.map((opt, idx) => ({ text: opt, originalIdx: idx }));
+        const shuffledOpts = shuffleArray(options);
+        const newCorrectIdx = shuffledOpts.findIndex(opt => opt.originalIdx === q.correct_index);
+        return {
+            ...q,
+            options: shuffledOpts.map(opt => opt.text),
+            correct_index: newCorrectIdx
+        };
+    });
+    return shuffled;
+}
+
 (async function() {
     // Get studentId from parent window or direct
     if (!window.currentStudent && window.parent && window.parent.currentStudent) {
@@ -188,12 +212,16 @@ async function loadQTSetsMap() {
     await dojoClient.init();
     await loadQTSetsMap();
 
-    const set = QT_SETS_MAP[setId];
+    let set = QT_SETS_MAP[setId];
 
     if (!set || !set.questions || set.questions.length === 0) {
         document.getElementById('qtContainer').innerHTML = '<div class="error">Quick Think set not found.</div>';
         return;
     }
+
+    // Shuffle questions and options for variety
+    set = shuffleQuestionsAndOptions(set);
+    console.log('🔀 QuickThink set shuffled:', set.set_id);
 
     let currentQuestionIdx = 0;
     let answers = [];
