@@ -96,6 +96,10 @@ class DojoClient {
     return this._apiCall('leaderboard', {});
   }
 
+  async getStreak() {
+    return this._apiCall('get-streak', {});
+  }
+
   // ─── OFFLINE-FIRST + SYNC ───────────────────────────────────────────────
 
   _apiCall(action, body) {

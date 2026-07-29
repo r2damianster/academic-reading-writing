@@ -492,6 +492,28 @@ async function handleGetLeaderboard(studentId, res) {
   }));
 }
 
+async function handleGetStreak(studentId, res) {
+  const { data: streak, error } = await supabase
+    .from('gamification_streaks')
+    .select('current_streak, longest_streak, last_activity_date')
+    .eq('student_id', studentId)
+    .maybeSingle();
+
+  if (error) {
+    console.warn('⚠️ Streak fetch failed:', error.message);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ error: 'Failed to fetch streak' }));
+  }
+
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({
+    status: 'ok',
+    currentStreak: streak?.current_streak || 0,
+    longestStreak: streak?.longest_streak || 0,
+    lastActivityDate: streak?.last_activity_date || null
+  }));
+}
+
 module.exports = async (req, res) => {
   try {
     let body = '';
@@ -519,6 +541,8 @@ module.exports = async (req, res) => {
             return handleSubmitQuickThink(studentId, setId, parsedBody, res);
           case 'leaderboard':
             return handleGetLeaderboard(studentId, res);
+          case 'get-streak':
+            return handleGetStreak(studentId, res);
           default:
             res.writeHead(400, { 'Content-Type': 'application/json' });
             return res.end(JSON.stringify({ error: 'Unknown action' }));

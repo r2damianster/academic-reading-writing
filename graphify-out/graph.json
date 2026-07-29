@@ -124,10 +124,20 @@
       "norm_label": "checkandunlockbadges()"
     },
     {
-      "label": "handleSubmitExercise()",
+      "label": "updateStreak()",
       "file_type": "code",
       "source_file": "api/gamification.js",
       "source_location": "L186",
+      "_origin": "ast",
+      "id": "api_gamification_updatestreak",
+      "community": 2,
+      "norm_label": "updatestreak()"
+    },
+    {
+      "label": "handleSubmitExercise()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L262",
       "_origin": "ast",
       "id": "api_gamification_handlesubmitexercise",
       "community": 2,
@@ -137,7 +147,7 @@
       "label": "handleQuickThinkSets()",
       "file_type": "code",
       "source_file": "api/gamification.js",
-      "source_location": "L258",
+      "source_location": "L335",
       "_origin": "ast",
       "id": "api_gamification_handlequickthinksets",
       "community": 2,
@@ -147,7 +157,7 @@
       "label": "handleSubmitQuickThink()",
       "file_type": "code",
       "source_file": "api/gamification.js",
-      "source_location": "L280",
+      "source_location": "L357",
       "_origin": "ast",
       "id": "api_gamification_handlesubmitquickthink",
       "community": 2,
@@ -157,7 +167,7 @@
       "label": "handleGetLeaderboard()",
       "file_type": "code",
       "source_file": "api/gamification.js",
-      "source_location": "L370",
+      "source_location": "L448",
       "_origin": "ast",
       "id": "api_gamification_handlegetleaderboard",
       "community": 2,
@@ -976,6 +986,16 @@
       "target": "api_gamification_supabase"
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L186",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "api_gamification_updatestreak",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -1161,6 +1181,28 @@
       "confidence_score": 1.0,
       "source": "api_gamification_handlesubmitquickthink",
       "target": "api_gamification_checkandunlockbadges"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L318",
+      "weight": 1.0,
+      "source": "api_gamification_handlesubmitexercise",
+      "target": "api_gamification_updatestreak",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L431",
+      "weight": 1.0,
+      "source": "api_gamification_handlesubmitquickthink",
+      "target": "api_gamification_updatestreak",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -1930,5 +1972,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "a1d462f969d4112164cae21e58c4dc3c2ba29e58"
+  "built_at_commit": "bc9397fba0d1f64eac56533cffdb77386c2304e7"
 }

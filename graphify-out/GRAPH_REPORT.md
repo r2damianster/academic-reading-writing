@@ -1,16 +1,16 @@
 # Graph Report - Academic_reading_and_writing  (2026-07-29)
 
 ## Corpus Check
-- 103 files · ~224,358 words
+- 103 files · ~224,604 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 82 nodes · 107 edges · 12 communities (8 shown, 4 thin omitted)
+- 83 nodes · 110 edges · 12 communities (8 shown, 4 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a1d462f9`
+- Built from commit: `bc9397fb`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -29,9 +29,9 @@
 1. `DojoClient` - 20 edges
 2. `Dojo Académico — Deployment & Operations Guide` - 10 edges
 3. `loadDojoContent()` - 6 edges
-4. `getStudentDojoProgress()` - 5 edges
-5. `handleSubmitExercise()` - 5 edges
-6. `handleSubmitQuickThink()` - 5 edges
+4. `handleSubmitExercise()` - 6 edges
+5. `handleSubmitQuickThink()` - 6 edges
+6. `getStudentDojoProgress()` - 5 edges
 7. `Deployment Checklist` - 5 edges
 8. `calcExercisePoints()` - 5 edges
 9. `checkAndUnlockBadges()` - 4 edges
@@ -53,8 +53,8 @@ Cohesion: 0.28
 Nodes (6): calcExercisePoints(), checkBadgeUnlock(), getLeagueRankInfo(), getStreakMultiplier(), getStreakStatus(), getTimeMultiplier()
 
 ### Community 2 - "Community 2"
-Cohesion: 0.21
-Nodes (15): { calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo }, checkAndUnlockBadges(), { createClient }, DOJO_CACHE, fs, getStudentDojoProgress(), handleDojoSeries(), handleDojoTopic() (+7 more)
+Cohesion: 0.20
+Nodes (16): { calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo }, checkAndUnlockBadges(), { createClient }, DOJO_CACHE, fs, getStudentDojoProgress(), handleDojoSeries(), handleDojoTopic() (+8 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.25
@@ -77,10 +77,10 @@ Nodes (5): 1. Apply Supabase RLS Policies, 2. Seed Initial Data (Optional), 3. D
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `DojoClient` connect `Community 6` to `Community 8`, `Community 9`, `Community 7`?**
-  _High betweenness centrality (0.052) - this node is a cross-community bridge._
+  _High betweenness centrality (0.051) - this node is a cross-community bridge._
 - **Why does `Dojo Académico — Deployment & Operations Guide` connect `Community 4` to `Community 5`?**
-  _High betweenness centrality (0.037) - this node is a cross-community bridge._
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
 - **Why does `Deployment Checklist` connect `Community 5` to `Community 4`?**
-  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+  _High betweenness centrality (0.017) - this node is a cross-community bridge._
 - **What connects `fs`, `path`, `{ createClient }` to the rest of the system?**
   _30 weakly-connected nodes found - possible documentation gaps or missing edges._
