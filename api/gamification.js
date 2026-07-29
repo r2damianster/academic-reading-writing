@@ -88,10 +88,25 @@ async function getStudentDojoProgress(studentId) {
   return data;
 }
 
+async function getStudentStreak(studentId) {
+  const { data, error } = await supabase
+    .from('gamification_streaks')
+    .select('current_streak, longest_streak, last_activity_date')
+    .eq('student_id', studentId)
+    .maybeSingle();
+
+  if (error) {
+    console.warn('⚠️ Streak fetch failed:', error.message);
+    return null;
+  }
+  return data;
+}
+
 async function handleDojoSeries(studentId, res) {
   const { series } = loadDojoContent();
 
   const progress = await getStudentDojoProgress(studentId);
+  const streak = await getStudentStreak(studentId);
   const completed = progress?.topics_completed || [];
 
   const seriesWithProgress = series.map(s => ({
@@ -107,7 +122,8 @@ async function handleDojoSeries(studentId, res) {
     studentProgress: progress ? {
       totalPoints: progress.total_series_points || 0,
       topicsCompleted: completed.length,
-      currentStreak: progress.current_streak || 0
+      // gamification_streaks is the single source of truth for streaks
+      currentStreak: streak?.current_streak || 0
     } : null
   }));
 }
@@ -378,13 +394,22 @@ async function handleSubmitQuickThink(studentId, setId, body, res) {
     return res.end(JSON.stringify({ error: 'Answers array required' }));
   }
 
+  // Answers arrive as { question_id, selected } because the client shuffles
+  // both question order and option order. Resolving by question_id keeps
+  // scoring correct no matter how the session was shuffled.
   let correctCount = 0;
-  answers.forEach((answerIdx, qIdx) => {
-    const question = set.questions[qIdx];
-    if (question && answerIdx === question.correct_index) correctCount++;
+  answers.forEach(answer => {
+    if (!answer || typeof answer !== 'object' || !answer.question_id) return;
+
+    const question = set.questions.find(q => q.question_id === answer.question_id);
+    if (!question) return;
+
+    const correctOption = question.options[question.correct_index];
+    if (correctOption && answer.selected === correctOption.text) correctCount++;
   });
 
-  const points = calcQuickThinkPoints(correctCount, set.total_questions);
+  const answeredQuestions = answers.length;
+  const points = calcQuickThinkPoints(correctCount, answeredQuestions);
 
   try {
     const sessionId = `qt-${studentId}-${Date.now()}`;
@@ -397,7 +422,7 @@ async function handleSubmitQuickThink(studentId, setId, body, res) {
           set_id: setId,
           answers: JSON.stringify(answers),
           score: points,
-          total_questions: set.total_questions,
+          total_questions: answeredQuestions,
           correct_count: correctCount,
           time_spent_seconds: timeSpentSeconds,
           completed_at: new Date().toISOString()
@@ -409,6 +434,7 @@ async function handleSubmitQuickThink(studentId, setId, body, res) {
     // Update student progress for badge checking
     const progress = await getStudentDojoProgress(studentId);
     const qtCorrectCount = (progress?.qt_correct_count || 0) + correctCount;
+    const totalPoints = (progress?.total_series_points || 0) + points;
 
     if (!progress) {
       // Create new progress record if doesn't exist
@@ -416,7 +442,7 @@ async function handleSubmitQuickThink(studentId, setId, body, res) {
         .from('gamification_student_dojo_progress')
         .insert({
           student_id: studentId,
-          total_series_points: 0,
+          total_series_points: totalPoints,
           speed_bonus_count: 0,
           total_exercise_count: 0,
           current_streak: 0,
@@ -430,6 +456,7 @@ async function handleSubmitQuickThink(studentId, setId, body, res) {
         .from('gamification_student_dojo_progress')
         .update({
           qt_correct_count: qtCorrectCount,
+          total_series_points: totalPoints,
           updated_at: new Date().toISOString()
         })
         .eq('student_id', studentId);
@@ -443,9 +470,9 @@ async function handleSubmitQuickThink(studentId, setId, body, res) {
     res.end(JSON.stringify({
       status: 'completed',
       correctCount,
-      totalQuestions: set.total_questions,
+      totalQuestions: answeredQuestions,
       points,
-      score: Math.round((correctCount / set.total_questions) * 100)
+      score: Math.round((correctCount / answeredQuestions) * 100)
     }));
   } catch (e) {
     console.error('❌ Submit QuickThink ERROR:', e.message, e.code, e);
@@ -478,15 +505,29 @@ async function handleGetLeaderboard(studentId, res) {
   }
 
   const studentIds = courseStudents.map(s => s.id);
-  const { data: progressList, error: progressError } = await supabase
+  const { data: progressRows, error: progressError } = await supabase
     .from('gamification_student_dojo_progress')
-    .select('student_id, total_series_points, current_streak')
+    .select('student_id, total_series_points')
     .in('student_id', studentIds);
 
   if (progressError) {
     res.writeHead(500, { 'Content-Type': 'application/json' });
     return res.end(JSON.stringify({ error: 'Failed to fetch progress' }));
   }
+
+  // Streaks live in their own table, so pull them separately and merge
+  const { data: streakRows } = await supabase
+    .from('gamification_streaks')
+    .select('student_id, current_streak')
+    .in('student_id', studentIds);
+
+  const streakByStudent = {};
+  (streakRows || []).forEach(row => { streakByStudent[row.student_id] = row.current_streak || 0; });
+
+  const progressList = (progressRows || []).map(row => ({
+    ...row,
+    current_streak: streakByStudent[row.student_id] || 0
+  }));
 
   const sorted = (progressList || []).sort((a, b) => b.total_series_points - a.total_series_points);
   const studentRank = sorted.findIndex(p => p.student_id === studentId) + 1;
@@ -502,17 +543,7 @@ async function handleGetLeaderboard(studentId, res) {
 }
 
 async function handleGetStreak(studentId, res) {
-  const { data: streak, error } = await supabase
-    .from('gamification_streaks')
-    .select('current_streak, longest_streak, last_activity_date')
-    .eq('student_id', studentId)
-    .maybeSingle();
-
-  if (error) {
-    console.warn('⚠️ Streak fetch failed:', error.message);
-    res.writeHead(500, { 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({ error: 'Failed to fetch streak' }));
-  }
+  const streak = await getStudentStreak(studentId);
 
   res.writeHead(200, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify({

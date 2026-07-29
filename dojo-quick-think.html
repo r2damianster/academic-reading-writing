@@ -365,8 +365,15 @@ function shuffleQuestionsAndOptions(set) {
         clearInterval(timerInterval);
         const timeSpentSeconds = Math.round((Date.now() - sessionStartTime) / 1000);
 
+        // Send question_id + selected option text so the server can score
+        // correctly regardless of how questions and options were shuffled.
+        const gradedAnswers = set.questions.map((q, idx) => ({
+            question_id: q.question_id,
+            selected: answers[idx] !== undefined ? q.options[answers[idx]].text : null
+        }));
+
         try {
-            const result = await dojoClient.submitQuickThink(setId, answers, timeSpentSeconds);
+            const result = await dojoClient.submitQuickThink(setId, gradedAnswers, timeSpentSeconds);
 
             if (result.error) throw result;
 

@@ -9,7 +9,10 @@
       "Bash(git checkout *)",
       "mcp__claude_ai_Supabase__list_tables",
       "Bash(grep -r \"Math.random\" --include=\"*.js\" ! -path \"./node_modules/*\")",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/modules/01-core-syllabus/unit1-essays/essay-patterns.html)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/modules/01-core-syllabus/unit1-essays/essay-patterns.html)",
+      "Bash(node -e ' *)",
+      "Bash(node -e \"require\\('./api/gamification.js'\\); require\\('./lib/dojo-integrity.js'\\); console.log\\('OK: modules load, no syntax errors'\\);\")",
+      "Bash(SUPABASE_URL=https://x.supabase.co SUPABASE_SERVICE_KEY=dummy node -e \"require\\('./api/gamification.js'\\); require\\('./lib/dojo-integrity.js'\\); console.log\\('OK: modules load clean'\\);\")"
     ]
   }
 }

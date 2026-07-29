@@ -1244,9 +1244,9 @@ async function loadDojoData(studentId) {
 
     await dojoClient.init();
 
-    // Get streak from localStorage
-    const streak = dojoClient.getLocalStreak();
-    document.getElementById('dojo-streak').textContent = streak.current || 0;
+    // Get streak from Supabase (single source of truth)
+    const streakData = await dojoClient.getStreak();
+    document.getElementById('dojo-streak').textContent = streakData?.currentStreak || 0;
 
     // Get leaderboard
     const leaderboardResult = await dojoClient.getLeaderboard();

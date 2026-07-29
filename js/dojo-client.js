@@ -196,38 +196,8 @@ class DojoClient {
   }
 
   // ─── STREAK ─────────────────────────────────────────────────────────────
-
-  getLocalStreak() {
-    const lastActivityKey = 'dojo_last_activity_date';
-    const currentStreakKey = 'dojo_current_streak';
-
-    const lastDate = localStorage.getItem(lastActivityKey);
-    const currentStreak = parseInt(localStorage.getItem(currentStreakKey) || '0');
-
-    if (!lastDate) return { current: 0, longest: 0 };
-
-    const last = new Date(lastDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    last.setHours(0, 0, 0, 0);
-
-    const daysDiff = Math.floor((today - last) / (1000 * 60 * 60 * 24));
-
-    if (daysDiff === 0) {
-      return { current: currentStreak, longest: currentStreak };
-    }
-
-    if (daysDiff === 1) {
-      const newStreak = currentStreak + 1;
-      localStorage.setItem(currentStreakKey, newStreak.toString());
-      localStorage.setItem(lastActivityKey, today.toISOString());
-      return { current: newStreak, longest: newStreak };
-    }
-
-    localStorage.setItem(currentStreakKey, '1');
-    localStorage.setItem(lastActivityKey, today.toISOString());
-    return { current: 1, longest: currentStreak };
-  }
+  // The streak lives in Supabase (gamification_streaks) and is computed by the
+  // server on submit. Use getStreak() to read it — never derive it locally.
 
   recordActivity() {
     const today = new Date();
