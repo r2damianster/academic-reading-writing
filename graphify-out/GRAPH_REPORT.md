@@ -1,16 +1,16 @@
 # Graph Report - Academic_reading_and_writing  (2026-07-29)
 
 ## Corpus Check
-- 104 files · ~225,442 words
+- 105 files · ~227,831 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 89 nodes · 122 edges · 8 communities (4 shown, 4 thin omitted)
+- 89 nodes · 123 edges · 10 communities (6 shown, 4 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2451c04e`
+- Built from commit: `53ab25e0`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -20,7 +20,9 @@
 - [[_COMMUNITY_Community 2|Community 2]]
 - [[_COMMUNITY_Community 3|Community 3]]
 - [[_COMMUNITY_Community 4|Community 4]]
+- [[_COMMUNITY_Community 5|Community 5]]
 - [[_COMMUNITY_Community 6|Community 6]]
+- [[_COMMUNITY_Community 7|Community 7]]
 - [[_COMMUNITY_Community 10|Community 10]]
 - [[_COMMUNITY_Community 11|Community 11]]
 
@@ -31,31 +33,31 @@
 4. `loadDojoContent()` - 6 edges
 5. `handleSubmitQuickThink()` - 6 edges
 6. `getStudentDojoProgress()` - 5 edges
-7. `Deployment Checklist` - 5 edges
-8. `calcExercisePoints()` - 5 edges
-9. `handleDojoSeries()` - 4 edges
-10. `checkAndUnlockBadges()` - 4 edges
+7. `checkAndUnlockBadges()` - 5 edges
+8. `Deployment Checklist` - 5 edges
+9. `calcExercisePoints()` - 5 edges
+10. `getStudentStreak()` - 4 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `handleSubmitExercise()` --calls--> `validateExerciseAnswer()`  [EXTRACTED]
+  api/gamification.js → lib/dojo-integrity.js
 - `handleSubmitExercise()` --calls--> `calcExercisePoints()`  [EXTRACTED]
   api/gamification.js → lib/scoring-engine.js
 - `handleSubmitQuickThink()` --calls--> `calcQuickThinkPoints()`  [EXTRACTED]
   api/gamification.js → lib/scoring-engine.js
-- `handleSubmitExercise()` --calls--> `validateExerciseAnswer()`  [EXTRACTED]
-  api/gamification.js → lib/dojo-integrity.js
 
 ## Import Cycles
 - None detected.
 
-## Communities (8 total, 4 thin omitted)
+## Communities (10 total, 4 thin omitted)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.24
-Nodes (7): calcExercisePoints(), calcQuickThinkPoints(), checkBadgeUnlock(), getLeagueRankInfo(), getStreakMultiplier(), getStreakStatus(), getTimeMultiplier()
+Cohesion: 0.28
+Nodes (6): calcExercisePoints(), checkBadgeUnlock(), getLeagueRankInfo(), getStreakMultiplier(), getStreakStatus(), getTimeMultiplier()
 
 ### Community 2 - "Community 2"
-Cohesion: 0.16
-Nodes (19): { calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo }, checkAndUnlockBadges(), { createClient }, DOJO_CACHE, fs, getStudentDojoProgress(), getStudentStreak(), handleDojoSeries() (+11 more)
+Cohesion: 0.20
+Nodes (8): { calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo }, { createClient }, DOJO_CACHE, fs, path, supabase, { validateExerciseAnswer }, validateExerciseAnswer()
 
 ### Community 3 - "Community 3"
 Cohesion: 0.25
@@ -64,6 +66,14 @@ Nodes (7): { createClient }, fs, http, MIME, path, server, supabase
 ### Community 4 - "Community 4"
 Cohesion: 0.11
 Nodes (17): 1. Apply Supabase RLS Policies, 2. Seed Initial Data (Optional), 3. Deploy to Vercel, 4. Monitor (Post-Deploy), Architecture, Backend (Server), Badge Criteria (Auto-Unlock), Database (Supabase) (+9 more)
+
+### Community 5 - "Community 5"
+Cohesion: 0.33
+Nodes (7): handleDojoTopic(), handleQuickThinkSets(), handleSubmitExercise(), handleSubmitQuickThink(), loadDojoContent(), updateStreak(), calcQuickThinkPoints()
+
+### Community 7 - "Community 7"
+Cohesion: 0.50
+Nodes (5): checkAndUnlockBadges(), getStudentDojoProgress(), getStudentStreak(), handleDojoSeries(), handleGetStreak()
 
 ## Knowledge Gaps
 - **31 isolated node(s):** `fs`, `path`, `{ createClient }`, `{ calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo }`, `{ validateExerciseAnswer }` (+26 more)

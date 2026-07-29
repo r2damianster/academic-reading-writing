@@ -30,8 +30,8 @@
     "semantic_hash": ""
   },
   "api/gamification.js": {
-    "mtime": 1785354904.4073832,
-    "ast_hash": "ffcce74273a6dea2b8a98807d1968af6",
+    "mtime": 1785361565.4858854,
+    "ast_hash": "e4d7e56e1e9bd819931c67ce69902f06",
     "semantic_hash": ""
   },
   "api/lesson-availability.js": {
@@ -942,6 +942,11 @@
   "lib/dojo-integrity.js": {
     "mtime": 1785347934.7745326,
     "ast_hash": "5b3d57c50ec4ad6d7d24b0051d923e9f",
+    "semantic_hash": ""
+  },
+  "supabase-dojo-badges-seed.sql": {
+    "mtime": 1785361577.5066602,
+    "ast_hash": "7ba22cf1f4e6b3ed9336fba6821fdb51",
     "semantic_hash": ""
   }
 }
