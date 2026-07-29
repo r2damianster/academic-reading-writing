@@ -4,14 +4,194 @@
   "graph": {},
   "nodes": [
     {
+      "label": "DOJO_DEPLOYMENT.md",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "dojo_deployment",
+      "community": 4,
+      "norm_label": "dojo_deployment.md"
+    },
+    {
+      "label": "Dojo Acad\u00e9mico \u2014 Deployment & Operations Guide",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "dojo_deployment_dojo_acad\u00e9mico_deployment_operations_guide",
+      "community": 4,
+      "norm_label": "dojo academico \u2014 deployment & operations guide"
+    },
+    {
+      "label": "Overview",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "dojo_deployment_overview",
+      "community": 4,
+      "norm_label": "overview"
+    },
+    {
+      "label": "Architecture",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "dojo_deployment_architecture",
+      "community": 4,
+      "norm_label": "architecture"
+    },
+    {
+      "label": "Frontend (Client)",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "dojo_deployment_frontend_client",
+      "community": 4,
+      "norm_label": "frontend (client)"
+    },
+    {
+      "label": "Backend (Server)",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "dojo_deployment_backend_server",
+      "community": 4,
+      "norm_label": "backend (server)"
+    },
+    {
+      "label": "Database (Supabase)",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "dojo_deployment_database_supabase",
+      "community": 4,
+      "norm_label": "database (supabase)"
+    },
+    {
+      "label": "Deployment Checklist",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L55",
+      "_origin": "ast",
+      "id": "dojo_deployment_deployment_checklist",
+      "community": 5,
+      "norm_label": "deployment checklist"
+    },
+    {
+      "label": "1. Apply Supabase RLS Policies",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L57",
+      "_origin": "ast",
+      "id": "dojo_deployment_1_apply_supabase_rls_policies",
+      "community": 5,
+      "norm_label": "1. apply supabase rls policies"
+    },
+    {
+      "label": "2. Seed Initial Data (Optional)",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L68",
+      "_origin": "ast",
+      "id": "dojo_deployment_2_seed_initial_data_optional",
+      "community": 5,
+      "norm_label": "2. seed initial data (optional)"
+    },
+    {
+      "label": "3. Deploy to Vercel",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L89",
+      "_origin": "ast",
+      "id": "dojo_deployment_3_deploy_to_vercel",
+      "community": 5,
+      "norm_label": "3. deploy to vercel"
+    },
+    {
+      "label": "4. Monitor (Post-Deploy)",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L105",
+      "_origin": "ast",
+      "id": "dojo_deployment_4_monitor_post_deploy",
+      "community": 5,
+      "norm_label": "4. monitor (post-deploy)"
+    },
+    {
+      "label": "Scoring Formula (Student-Visible)",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L120",
+      "_origin": "ast",
+      "id": "dojo_deployment_scoring_formula_student_visible",
+      "community": 4,
+      "norm_label": "scoring formula (student-visible)"
+    },
+    {
+      "label": "Badge Criteria (Auto-Unlock)",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L149",
+      "_origin": "ast",
+      "id": "dojo_deployment_badge_criteria_auto_unlock",
+      "community": 4,
+      "norm_label": "badge criteria (auto-unlock)"
+    },
+    {
+      "label": "Leaderboard (24-Hour Gate)",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L159",
+      "_origin": "ast",
+      "id": "dojo_deployment_leaderboard_24_hour_gate",
+      "community": 4,
+      "norm_label": "leaderboard (24-hour gate)"
+    },
+    {
+      "label": "File Structure",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L169",
+      "_origin": "ast",
+      "id": "dojo_deployment_file_structure",
+      "community": 4,
+      "norm_label": "file structure"
+    },
+    {
+      "label": "Known Limitations & Future Work",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L192",
+      "_origin": "ast",
+      "id": "dojo_deployment_known_limitations_future_work",
+      "community": 4,
+      "norm_label": "known limitations & future work"
+    },
+    {
+      "label": "Support & Debugging",
+      "file_type": "document",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L200",
+      "_origin": "ast",
+      "id": "dojo_deployment_support_debugging",
+      "community": 4,
+      "norm_label": "support & debugging"
+    },
+    {
       "label": "gamification.js",
       "file_type": "code",
       "source_file": "api/gamification.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "api_gamification",
       "community": 2,
-      "norm_label": "gamification.js"
+      "norm_label": "gamification.js",
+      "id": "api_gamification"
     },
     {
       "label": "fs",
@@ -19,9 +199,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "api_gamification_fs",
       "community": 2,
-      "norm_label": "fs"
+      "norm_label": "fs",
+      "id": "api_gamification_fs"
     },
     {
       "label": "path",
@@ -29,9 +209,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L7",
       "_origin": "ast",
-      "id": "api_gamification_path",
       "community": 2,
-      "norm_label": "path"
+      "norm_label": "path",
+      "id": "api_gamification_path"
     },
     {
       "label": "{ createClient }",
@@ -39,9 +219,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L8",
       "_origin": "ast",
-      "id": "api_gamification_createclient",
       "community": 2,
-      "norm_label": "{ createclient }"
+      "norm_label": "{ createclient }",
+      "id": "api_gamification_createclient"
     },
     {
       "label": "{ calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo }",
@@ -49,9 +229,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L9",
       "_origin": "ast",
-      "id": "api_gamification_calcexercisepoints_calcquickthinkpoints_getstreakstatus_checkbadgeunlock_getleaguerankinfo",
       "community": 2,
-      "norm_label": "{ calcexercisepoints, calcquickthinkpoints, getstreakstatus, checkbadgeunlock, getleaguerankinfo }"
+      "norm_label": "{ calcexercisepoints, calcquickthinkpoints, getstreakstatus, checkbadgeunlock, getleaguerankinfo }",
+      "id": "api_gamification_calcexercisepoints_calcquickthinkpoints_getstreakstatus_checkbadgeunlock_getleaguerankinfo"
     },
     {
       "label": "supabase",
@@ -59,9 +239,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "api_gamification_supabase",
       "community": 2,
-      "norm_label": "supabase"
+      "norm_label": "supabase",
+      "id": "api_gamification_supabase"
     },
     {
       "label": "DOJO_CACHE",
@@ -69,9 +249,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L13",
       "_origin": "ast",
-      "id": "api_gamification_dojo_cache",
       "community": 2,
-      "norm_label": "dojo_cache"
+      "norm_label": "dojo_cache",
+      "id": "api_gamification_dojo_cache"
     },
     {
       "label": "loadDojoContent()",
@@ -79,9 +259,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L15",
       "_origin": "ast",
-      "id": "api_gamification_loaddojocontent",
-      "community": 4,
-      "norm_label": "loaddojocontent()"
+      "community": 2,
+      "norm_label": "loaddojocontent()",
+      "id": "api_gamification_loaddojocontent"
     },
     {
       "label": "getStudentDojoProgress()",
@@ -89,9 +269,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L30",
       "_origin": "ast",
-      "id": "api_gamification_getstudentdojoprogress",
-      "community": 5,
-      "norm_label": "getstudentdojoprogress()"
+      "community": 2,
+      "norm_label": "getstudentdojoprogress()",
+      "id": "api_gamification_getstudentdojoprogress"
     },
     {
       "label": "handleDojoSeries()",
@@ -99,9 +279,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L44",
       "_origin": "ast",
-      "id": "api_gamification_handledojoseries",
-      "community": 4,
-      "norm_label": "handledojoseries()"
+      "community": 2,
+      "norm_label": "handledojoseries()",
+      "id": "api_gamification_handledojoseries"
     },
     {
       "label": "handleDojoTopic()",
@@ -109,9 +289,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L68",
       "_origin": "ast",
-      "id": "api_gamification_handledojotopic",
-      "community": 4,
-      "norm_label": "handledojotopic()"
+      "community": 2,
+      "norm_label": "handledojotopic()",
+      "id": "api_gamification_handledojotopic"
     },
     {
       "label": "checkAndUnlockBadges()",
@@ -119,9 +299,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L102",
       "_origin": "ast",
-      "id": "api_gamification_checkandunlockbadges",
-      "community": 5,
-      "norm_label": "checkandunlockbadges()"
+      "community": 2,
+      "norm_label": "checkandunlockbadges()",
+      "id": "api_gamification_checkandunlockbadges"
     },
     {
       "label": "handleSubmitExercise()",
@@ -129,9 +309,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L140",
       "_origin": "ast",
-      "id": "api_gamification_handlesubmitexercise",
-      "community": 5,
-      "norm_label": "handlesubmitexercise()"
+      "community": 2,
+      "norm_label": "handlesubmitexercise()",
+      "id": "api_gamification_handlesubmitexercise"
     },
     {
       "label": "handleQuickThinkSets()",
@@ -139,9 +319,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L195",
       "_origin": "ast",
-      "id": "api_gamification_handlequickthinksets",
-      "community": 4,
-      "norm_label": "handlequickthinksets()"
+      "community": 2,
+      "norm_label": "handlequickthinksets()",
+      "id": "api_gamification_handlequickthinksets"
     },
     {
       "label": "handleSubmitQuickThink()",
@@ -149,9 +329,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L217",
       "_origin": "ast",
-      "id": "api_gamification_handlesubmitquickthink",
-      "community": 5,
-      "norm_label": "handlesubmitquickthink()"
+      "community": 2,
+      "norm_label": "handlesubmitquickthink()",
+      "id": "api_gamification_handlesubmitquickthink"
     },
     {
       "label": "handleGetLeaderboard()",
@@ -159,9 +339,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L290",
       "_origin": "ast",
-      "id": "api_gamification_handlegetleaderboard",
       "community": 2,
-      "norm_label": "handlegetleaderboard()"
+      "norm_label": "handlegetleaderboard()",
+      "id": "api_gamification_handlegetleaderboard"
     },
     {
       "label": "dojo-client.js",
@@ -419,7 +599,7 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L25",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "norm_label": "calcquickthinkpoints()",
       "id": "lib_scoring_engine_calcquickthinkpoints"
     },
@@ -588,6 +768,176 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "dojo_deployment",
+      "target": "dojo_deployment_dojo_acad\u00e9mico_deployment_operations_guide",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "dojo_deployment_dojo_acad\u00e9mico_deployment_operations_guide",
+      "target": "dojo_deployment_architecture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L149",
+      "weight": 1.0,
+      "source": "dojo_deployment_dojo_acad\u00e9mico_deployment_operations_guide",
+      "target": "dojo_deployment_badge_criteria_auto_unlock",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "dojo_deployment_dojo_acad\u00e9mico_deployment_operations_guide",
+      "target": "dojo_deployment_deployment_checklist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L169",
+      "weight": 1.0,
+      "source": "dojo_deployment_dojo_acad\u00e9mico_deployment_operations_guide",
+      "target": "dojo_deployment_file_structure",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L192",
+      "weight": 1.0,
+      "source": "dojo_deployment_dojo_acad\u00e9mico_deployment_operations_guide",
+      "target": "dojo_deployment_known_limitations_future_work",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L159",
+      "weight": 1.0,
+      "source": "dojo_deployment_dojo_acad\u00e9mico_deployment_operations_guide",
+      "target": "dojo_deployment_leaderboard_24_hour_gate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "dojo_deployment_dojo_acad\u00e9mico_deployment_operations_guide",
+      "target": "dojo_deployment_overview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L120",
+      "weight": 1.0,
+      "source": "dojo_deployment_dojo_acad\u00e9mico_deployment_operations_guide",
+      "target": "dojo_deployment_scoring_formula_student_visible",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L200",
+      "weight": 1.0,
+      "source": "dojo_deployment_dojo_acad\u00e9mico_deployment_operations_guide",
+      "target": "dojo_deployment_support_debugging",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "dojo_deployment_architecture",
+      "target": "dojo_deployment_backend_server",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "dojo_deployment_architecture",
+      "target": "dojo_deployment_database_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "dojo_deployment_architecture",
+      "target": "dojo_deployment_frontend_client",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "dojo_deployment_deployment_checklist",
+      "target": "dojo_deployment_1_apply_supabase_rls_policies",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "dojo_deployment_deployment_checklist",
+      "target": "dojo_deployment_2_seed_initial_data_optional",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L89",
+      "weight": 1.0,
+      "source": "dojo_deployment_deployment_checklist",
+      "target": "dojo_deployment_3_deploy_to_vercel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DOJO_DEPLOYMENT.md",
+      "source_location": "L105",
+      "weight": 1.0,
+      "source": "dojo_deployment_deployment_checklist",
+      "target": "dojo_deployment_4_monitor_post_deploy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "api/gamification.js",
       "source_location": "L9",
       "weight": 1.0,
@@ -601,9 +951,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L102",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "api_gamification_checkandunlockbadges",
-      "confidence_score": 1.0
+      "target": "api_gamification_checkandunlockbadges"
     },
     {
       "relation": "contains",
@@ -863,9 +1213,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L104",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification_checkandunlockbadges",
-      "target": "api_gamification_getstudentdojoprogress",
-      "confidence_score": 1.0
+      "target": "api_gamification_getstudentdojoprogress"
     },
     {
       "relation": "calls",
@@ -896,9 +1246,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L261",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification_handlesubmitquickthink",
-      "target": "api_gamification_getstudentdojoprogress",
-      "confidence_score": 1.0
+      "target": "api_gamification_getstudentdojoprogress"
     },
     {
       "relation": "calls",
@@ -907,9 +1257,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L178",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification_handlesubmitexercise",
-      "target": "api_gamification_checkandunlockbadges",
-      "confidence_score": 1.0
+      "target": "api_gamification_checkandunlockbadges"
     },
     {
       "relation": "calls",
@@ -918,9 +1268,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L273",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification_handlesubmitquickthink",
-      "target": "api_gamification_checkandunlockbadges",
-      "confidence_score": 1.0
+      "target": "api_gamification_checkandunlockbadges"
     },
     {
       "relation": "calls",
@@ -1469,5 +1819,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "d8a9f5a409ac9a935a1fbb483754928bdc3367d5"
+  "built_at_commit": "997d90f651871b60fcde5aaa0ef163e8b64d6c4e"
 }
