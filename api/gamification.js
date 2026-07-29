@@ -99,6 +99,44 @@ async function handleDojoTopic(studentId, seriesId, res) {
   }));
 }
 
+async function checkAndUnlockBadges(studentId) {
+  try {
+    const progress = await getStudentDojoProgress(studentId);
+    if (!progress) return;
+
+    const badges = [
+      { id: 'consistency', condition: progress.longest_streak >= 7 },
+      { id: 'speed-demon', condition: (progress.speed_bonus_count || 0) >= 10 },
+      { id: 'quick-thinker', condition: (progress.qt_correct_count || 0) >= 50 },
+      { id: 'writing-legend', condition: (progress.total_exercise_count || 0) >= 100 }
+    ];
+
+    for (const badge of badges) {
+      if (!badge.condition) continue;
+
+      const { data: existing } = await supabase
+        .from('gamification_student_badges')
+        .select('id')
+        .eq('student_id', studentId)
+        .eq('badge_id', badge.id)
+        .limit(1);
+
+      if (!existing || existing.length === 0) {
+        await supabase
+          .from('gamification_student_badges')
+          .insert({
+            student_id: studentId,
+            badge_id: badge.id,
+            unlocked_at: new Date().toISOString()
+          });
+        console.log(`✅ Badge unlocked: ${badge.id} for ${studentId}`);
+      }
+    }
+  } catch (e) {
+    console.warn('⚠️ Badge check failed:', e.message);
+  }
+}
+
 async function handleSubmitExercise(studentId, exerciseId, body, res) {
   const { exercises } = loadDojoContent();
   const exercise = exercises.find(e => e.exercise_id === exerciseId);
@@ -117,24 +155,35 @@ async function handleSubmitExercise(studentId, exerciseId, body, res) {
   const progress = await getStudentDojoProgress(studentId);
   const streakDays = progress?.current_streak || 0;
   const points = calcExercisePoints(exercise.difficulty, streakDays, timeMs || exercise.time_limit_seconds, exercise.time_limit_seconds);
+  const isSpeedBonus = timeMs <= (exercise.time_limit_seconds * 1000 * 0.5);
 
   try {
+    const totalPoints = (progress?.total_series_points || 0) + points;
+    const speedBonusCount = (progress?.speed_bonus_count || 0) + (isSpeedBonus ? 1 : 0);
+    const exerciseCount = (progress?.total_exercise_count || 0) + 1;
+
     const { error } = await supabase
       .from('gamification_student_dojo_progress')
       .update({
-        total_series_points: (progress?.total_series_points || 0) + points,
+        total_series_points: totalPoints,
+        speed_bonus_count: speedBonusCount,
+        total_exercise_count: exerciseCount,
         updated_at: new Date().toISOString()
       })
       .eq('student_id', studentId);
 
     if (error) throw error;
 
+    // Check badges after update
+    await checkAndUnlockBadges(studentId);
+
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
       status: 'submitted',
       points,
-      totalPoints: (progress?.total_series_points || 0) + points,
-      exercise: exercise.title
+      totalPoints,
+      exercise: exercise.title,
+      speedBonus: isSpeedBonus
     }));
   } catch (e) {
     console.warn('⚠️ Submit exercise failed:', e.message);
@@ -207,6 +256,21 @@ async function handleSubmitQuickThink(studentId, setId, body, res) {
       ]);
 
     if (insertError) throw insertError;
+
+    // Update student progress for badge checking
+    const progress = await getStudentDojoProgress(studentId);
+    const qtCorrectCount = (progress?.qt_correct_count || 0) + correctCount;
+
+    await supabase
+      .from('gamification_student_dojo_progress')
+      .update({
+        qt_correct_count: qtCorrectCount,
+        updated_at: new Date().toISOString()
+      })
+      .eq('student_id', studentId);
+
+    // Check badges
+    await checkAndUnlockBadges(studentId);
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
