@@ -30,8 +30,8 @@
     "semantic_hash": ""
   },
   "api/gamification.js": {
-    "mtime": 1785345764.7944782,
-    "ast_hash": "835b6cacace818fbff00f3088868d1fb",
+    "mtime": 1785347946.578196,
+    "ast_hash": "66d7f5df07c2e9947fe044ba60209b9a",
     "semantic_hash": ""
   },
   "api/lesson-availability.js": {
@@ -915,8 +915,8 @@
     "semantic_hash": ""
   },
   "dojo-exercise.html": {
-    "mtime": 1785321188.9568005,
-    "ast_hash": "7f1d5ef10929bb0aad3cb6bcd2f72ff5",
+    "mtime": 1785347971.3051097,
+    "ast_hash": "e9b47bc539c0b44ee2124c635902def1",
     "semantic_hash": ""
   },
   "dojo-quick-think.html": {
@@ -937,6 +937,11 @@
   "DOJO_DEPLOYMENT.md": {
     "mtime": 1785284506.7143507,
     "ast_hash": "d84c1b7716da3f84122fea0925ab8c6a",
+    "semantic_hash": ""
+  },
+  "lib/dojo-integrity.js": {
+    "mtime": 1785347934.7745326,
+    "ast_hash": "5b3d57c50ec4ad6d7d24b0051d923e9f",
     "semantic_hash": ""
   }
 }
