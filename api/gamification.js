@@ -183,6 +183,82 @@ async function checkAndUnlockBadges(studentId) {
   }
 }
 
+async function updateStreak(studentId) {
+  try {
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+    const todayDate = today.toISOString().split('T')[0];
+
+    const { data: streak, error: fetchError } = await supabase
+      .from('gamification_streaks')
+      .select('*')
+      .eq('student_id', studentId)
+      .maybeSingle();
+
+    if (fetchError) {
+      console.warn('⚠️ Streak fetch failed:', fetchError.message);
+      return;
+    }
+
+    if (!streak) {
+      // First activity: create streak record
+      await supabase
+        .from('gamification_streaks')
+        .insert({
+          student_id: studentId,
+          current_streak: 1,
+          longest_streak: 1,
+          last_activity_date: todayDate,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        });
+      console.log(`✅ Streak initialized: 1 day for ${studentId}`);
+      return;
+    }
+
+    // Calculate streak
+    let newStreak = streak.current_streak || 0;
+    let longestStreak = streak.longest_streak || 0;
+    const lastDate = streak.last_activity_date ? new Date(streak.last_activity_date) : null;
+    lastDate?.setUTCHours(0, 0, 0, 0);
+
+    if (lastDate && lastDate.toISOString().split('T')[0] === todayDate) {
+      // Same day: no change
+      return;
+    }
+
+    if (lastDate) {
+      const daysDiff = Math.floor((today - lastDate) / (1000 * 60 * 60 * 24));
+      if (daysDiff === 1) {
+        // Consecutive day: increment
+        newStreak = (newStreak || 0) + 1;
+      } else if (daysDiff > 1) {
+        // Streak broken: reset
+        newStreak = 1;
+      }
+    } else {
+      newStreak = 1;
+    }
+
+    longestStreak = Math.max(longestStreak || 0, newStreak);
+
+    const { error: updateError } = await supabase
+      .from('gamification_streaks')
+      .update({
+        current_streak: newStreak,
+        longest_streak: longestStreak,
+        last_activity_date: todayDate,
+        updated_at: new Date().toISOString()
+      })
+      .eq('student_id', studentId);
+
+    if (updateError) throw updateError;
+    console.log(`✅ Streak updated: ${newStreak} days for ${studentId}`);
+  } catch (e) {
+    console.error('❌ Streak update failed:', e.message);
+  }
+}
+
 async function handleSubmitExercise(studentId, exerciseId, body, res) {
   const { exercises } = loadDojoContent();
   const exercise = exercises.find(e => e.exercise_id === exerciseId);
@@ -237,8 +313,9 @@ async function handleSubmitExercise(studentId, exerciseId, body, res) {
       if (updateError) throw updateError;
     }
 
-    // Check badges after update
+    // Check badges and update streak after update
     await checkAndUnlockBadges(studentId);
+    await updateStreak(studentId);
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
@@ -349,8 +426,9 @@ async function handleSubmitQuickThink(studentId, setId, body, res) {
         .eq('student_id', studentId);
     }
 
-    // Check badges
+    // Check badges and update streak
     await checkAndUnlockBadges(studentId);
+    await updateStreak(studentId);
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
