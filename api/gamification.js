@@ -379,7 +379,9 @@ async function handleQuickThinkSets(studentId, res) {
     difficulty: set.difficulty,
     time_limit_per_q: set.time_limit_per_q,
     total_questions: set.total_questions,
-    max_score: set.max_score
+    max_score: set.max_score,
+    // Each session draws total_questions at random from this pool
+    pool_size: set.questions.length
   }));
 
   res.writeHead(200, { 'Content-Type': 'application/json' });

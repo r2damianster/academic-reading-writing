@@ -165,13 +165,16 @@
                 return;
             }
 
+            // Show every set — the pool now spans 12 topics
             const { sets = [] } = result;
-            container.innerHTML = sets.slice(0, 3).map(s => `
+            container.innerHTML = sets.map(s => `
                 <div class="series-card" onclick="loadQuickThink('${s.set_id}')">
                     <div class="series-icon">⚡</div>
                     <h3>${s.name}</h3>
                     <p>${s.description}</p>
-                    <small style="color:#999;">${s.total_questions} questions • ${s.time_limit_per_q}s each</small>
+                    <small style="color:#999;">${s.total_questions} questions • ${s.time_limit_per_q}s each${
+                        s.pool_size ? ` • drawn from ${s.pool_size}` : ''
+                    }</small>
                 </div>
             `).join('');
         } catch (e) {

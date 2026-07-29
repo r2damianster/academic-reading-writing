@@ -474,9 +474,26 @@
         ],
         "correct_index": 1,
         "explanation": "All three items must share the same grammatical form (noun phrases)."
+      },
+      {
+        "question_id": "qtg-25",
+        "question": "Which sentence correctly uses the subjunctive?",
+        "question_es": "¿Qué oración usa correctamente el subjuntivo?",
+        "options": [
+          {
+            "text": "The reviewer recommended that the author revises the method.",
+            "text_es": "The reviewer recommended that the author revises the method."
+          },
+          {
+            "text": "The reviewer recommended that the author revise the method.",
+            "text_es": "The reviewer recommended that the author revise the method."
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "After verbs of recommendation, English uses the base form."
       }
     ],
-    "pool_size": 24
+    "pool_size": 25
   },
   {
     "set_id": "qt-citations-basics",
@@ -897,9 +914,114 @@
         ],
         "correct_index": 1,
         "explanation": "Direct quotations require a page (or paragraph) locator."
+      },
+      {
+        "question_id": "qtc-21",
+        "question": "In APA 7, a work with 21 or more authors lists:",
+        "question_es": "En APA 7, una obra con 21 o más autores lista:",
+        "options": [
+          {
+            "text": "The first 19, an ellipsis, then the final author",
+            "text_es": "The first 19, an ellipsis, then the final author"
+          },
+          {
+            "text": "All authors",
+            "text_es": "All authors"
+          },
+          {
+            "text": "The first 3, then et al.",
+            "text_es": "The first 3, then et al."
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "The ellipsis replaces authors 20 through the second-to-last."
+      },
+      {
+        "question_id": "qtc-22",
+        "question": "A secondary citation is formatted as:",
+        "question_es": "Una cita secundaria se formatea como:",
+        "options": [
+          {
+            "text": "(Vygotsky, 1978, as cited in Lee, 2022)",
+            "text_es": "(Vygotsky, 1978, as cited in Lee, 2022)"
+          },
+          {
+            "text": "(Vygotsky, 1978; Lee, 2022)",
+            "text_es": "(Vygotsky, 1978; Lee, 2022)"
+          },
+          {
+            "text": "(Lee, 2022, citing Vygotsky)",
+            "text_es": "(Lee, 2022, citing Vygotsky)"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Only the source you actually read appears in the reference list."
+      },
+      {
+        "question_id": "qtc-23",
+        "question": "When two sources support one claim, the in-text citation is:",
+        "question_es": "Cuando dos fuentes apoyan una afirmación, la cita en texto es:",
+        "options": [
+          {
+            "text": "(Lee, 2022; Ramirez, 2021), ordered alphabetically",
+            "text_es": "(Lee, 2022; Ramirez, 2021), ordered alphabetically"
+          },
+          {
+            "text": "(Ramirez, 2021; Lee, 2022), ordered by date",
+            "text_es": "(Ramirez, 2021; Lee, 2022), ordered by date"
+          },
+          {
+            "text": "Two separate parentheses",
+            "text_es": "Two separate parentheses"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Within one parenthesis, order entries alphabetically and separate with semicolons."
+      },
+      {
+        "question_id": "qtc-24",
+        "question": "Personal communications (e.g. an email) are:",
+        "question_es": "Las comunicaciones personales (p. ej. un correo) son:",
+        "options": [
+          {
+            "text": "Cited in text only, not in the reference list",
+            "text_es": "Cited in text only, not in the reference list"
+          },
+          {
+            "text": "Listed in the reference list",
+            "text_es": "Listed in the reference list"
+          },
+          {
+            "text": "Never citable",
+            "text_es": "Never citable"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "They are not recoverable by readers, so they appear in text only."
+      },
+      {
+        "question_id": "qtc-25",
+        "question": "A URL is unnecessary in an APA reference when:",
+        "question_es": "Un URL es innecesario en una referencia APA cuando:",
+        "options": [
+          {
+            "text": "A DOI is provided",
+            "text_es": "A DOI is provided"
+          },
+          {
+            "text": "The source is recent",
+            "text_es": "The source is recent"
+          },
+          {
+            "text": "The author is known",
+            "text_es": "The author is known"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "The DOI is the stable identifier and supersedes the URL."
       }
     ],
-    "pool_size": 20
+    "pool_size": 25
   },
   {
     "set_id": "qt-sentence-craft",
@@ -3966,6 +4088,2066 @@
         ],
         "correct_index": 0,
         "explanation": "Commentary adds the interpretation a table cannot express."
+      }
+    ]
+  },
+  {
+    "set_id": "qt-punctuation-precision",
+    "name": "Punctuation Precision",
+    "name_es": "Precisión en Puntuación",
+    "description": "Semicolons, colons, dashes, apostrophes and comma logic.",
+    "description_es": "Punto y coma, dos puntos, guiones, apóstrofos y lógica de comas.",
+    "topic_id": "gram-subject-verb",
+    "difficulty": "medium",
+    "time_limit_per_q": 30,
+    "total_questions": 10,
+    "max_score": 50,
+    "pool_size": 25,
+    "questions": [
+      {
+        "question_id": "qpp-1",
+        "question": "Which sentence uses the colon correctly?",
+        "question_es": "¿Qué oración usa correctamente los dos puntos?",
+        "options": [
+          {
+            "text": "The study measured: motivation, anxiety and achievement.",
+            "text_es": "The study measured: motivation, anxiety and achievement."
+          },
+          {
+            "text": "The study measured three constructs: motivation, anxiety and achievement.",
+            "text_es": "The study measured three constructs: motivation, anxiety and achievement."
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "A colon follows a complete independent clause."
+      },
+      {
+        "question_id": "qpp-2",
+        "question": "A semicolon can replace a period when:",
+        "question_es": "El punto y coma puede reemplazar al punto cuando:",
+        "options": [
+          {
+            "text": "The two clauses are closely related and both independent",
+            "text_es": "The two clauses are closely related and both independent"
+          },
+          {
+            "text": "The second clause is a fragment",
+            "text_es": "The second clause is a fragment"
+          },
+          {
+            "text": "A conjunction is present",
+            "text_es": "A conjunction is present"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Both sides of a semicolon must stand alone grammatically."
+      },
+      {
+        "question_id": "qpp-3",
+        "question": "'However' at the start of a clause joining two sentences needs:",
+        "question_es": "'However' al inicio de una cláusula que une dos oraciones requiere:",
+        "options": [
+          {
+            "text": "A comma before it",
+            "text_es": "A comma before it"
+          },
+          {
+            "text": "A semicolon or period before it, and a comma after",
+            "text_es": "A semicolon or period before it, and a comma after"
+          },
+          {
+            "text": "No punctuation",
+            "text_es": "No punctuation"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "'However' is an adverb, not a conjunction; a comma alone creates a splice."
+      },
+      {
+        "question_id": "qpp-4",
+        "question": "Which is correct for a possessive plural?",
+        "question_es": "¿Cuál es correcto para un posesivo plural?",
+        "options": [
+          {
+            "text": "the students' results",
+            "text_es": "the students' results"
+          },
+          {
+            "text": "the students's results",
+            "text_es": "the students's results"
+          },
+          {
+            "text": "the student's results (meaning many students)",
+            "text_es": "the student's results (meaning many students)"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Plural nouns ending in -s take only an apostrophe."
+      },
+      {
+        "question_id": "qpp-5",
+        "question": "The Oxford (serial) comma is:",
+        "question_es": "La coma de Oxford (serial) es:",
+        "options": [
+          {
+            "text": "Required by APA before the final item in a series",
+            "text_es": "Required by APA before the final item in a series"
+          },
+          {
+            "text": "Forbidden by APA",
+            "text_es": "Forbidden by APA"
+          },
+          {
+            "text": "Optional in all styles",
+            "text_es": "Optional in all styles"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "APA requires it: 'motivation, anxiety, and achievement'."
+      },
+      {
+        "question_id": "qpp-6",
+        "question": "An em dash (—) is used to:",
+        "question_es": "Una raya (—) se usa para:",
+        "options": [
+          {
+            "text": "Set off an abrupt break or emphatic aside",
+            "text_es": "Set off an abrupt break or emphatic aside"
+          },
+          {
+            "text": "Join compound adjectives",
+            "text_es": "Join compound adjectives"
+          },
+          {
+            "text": "Indicate a range",
+            "text_es": "Indicate a range"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Hyphens join words; en dashes give ranges; em dashes interrupt."
+      },
+      {
+        "question_id": "qpp-7",
+        "question": "Which needs a hyphen?",
+        "question_es": "¿Cuál necesita guion?",
+        "options": [
+          {
+            "text": "a well known researcher",
+            "text_es": "a well known researcher"
+          },
+          {
+            "text": "a well-known researcher",
+            "text_es": "a well-known researcher"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "Compound modifiers before a noun are hyphenated."
+      },
+      {
+        "question_id": "qpp-8",
+        "question": "'The results, which were unexpected, changed our model.' The commas indicate:",
+        "question_es": "'The results, which were unexpected, changed our model.' Las comas indican:",
+        "options": [
+          {
+            "text": "The clause adds non-essential information",
+            "text_es": "The clause adds non-essential information"
+          },
+          {
+            "text": "The clause defines which results",
+            "text_es": "The clause defines which results"
+          },
+          {
+            "text": "An error",
+            "text_es": "An error"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Non-defining relative clauses are set off by commas."
+      },
+      {
+        "question_id": "qpp-9",
+        "question": "Which is punctuated correctly?",
+        "question_es": "¿Cuál está correctamente puntuado?",
+        "options": [
+          {
+            "text": "In 2019 the policy changed, and enrolment fell.",
+            "text_es": "In 2019 the policy changed, and enrolment fell."
+          },
+          {
+            "text": "In 2019 the policy changed and, enrolment fell.",
+            "text_es": "In 2019 the policy changed and, enrolment fell."
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "The comma precedes the coordinating conjunction joining two clauses."
+      },
+      {
+        "question_id": "qpp-10",
+        "question": "'Its' versus 'it's': which is possessive?",
+        "question_es": "'Its' frente a 'it's': ¿cuál es posesivo?",
+        "options": [
+          {
+            "text": "it's",
+            "text_es": "it's"
+          },
+          {
+            "text": "its",
+            "text_es": "its"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "'It's' is always a contraction of 'it is' or 'it has'."
+      },
+      {
+        "question_id": "qpp-11",
+        "question": "In APA, a quotation ending a sentence places the period:",
+        "question_es": "En APA, una cita que termina la oración coloca el punto:",
+        "options": [
+          {
+            "text": "Before the closing quotation mark, then the citation",
+            "text_es": "Before the closing quotation mark, then the citation"
+          },
+          {
+            "text": "After the parenthetical citation",
+            "text_es": "After the parenthetical citation"
+          },
+          {
+            "text": "Inside the parentheses",
+            "text_es": "Inside the parentheses"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "e.g. ...learning' (Lee, 2022). — the period follows the citation."
+      },
+      {
+        "question_id": "qpp-12",
+        "question": "A comma after a short introductory phrase is:",
+        "question_es": "Una coma tras una frase introductoria breve es:",
+        "options": [
+          {
+            "text": "Generally used, and always used if omission causes misreading",
+            "text_es": "Generally used, and always used if omission causes misreading"
+          },
+          {
+            "text": "Never used",
+            "text_es": "Never used"
+          },
+          {
+            "text": "Required only after five or more words",
+            "text_es": "Required only after five or more words"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Clarity governs: 'After eating, the participants rested.'"
+      },
+      {
+        "question_id": "qpp-13",
+        "question": "Which correctly punctuates a list with internal commas?",
+        "question_es": "¿Cuál puntúa correctamente una lista con comas internas?",
+        "options": [
+          {
+            "text": "We tested three sites: Quito, Ecuador; Lima, Peru; and Bogota, Colombia.",
+            "text_es": "We tested three sites: Quito, Ecuador; Lima, Peru; and Bogota, Colombia."
+          },
+          {
+            "text": "We tested three sites: Quito, Ecuador, Lima, Peru, and Bogota, Colombia.",
+            "text_es": "We tested three sites: Quito, Ecuador, Lima, Peru, and Bogota, Colombia."
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Semicolons separate items that already contain commas."
+      },
+      {
+        "question_id": "qpp-14",
+        "question": "Parentheses inside parentheses in APA become:",
+        "question_es": "Los paréntesis dentro de paréntesis en APA se convierten en:",
+        "options": [
+          {
+            "text": "Square brackets",
+            "text_es": "Square brackets"
+          },
+          {
+            "text": "Double parentheses",
+            "text_es": "Double parentheses"
+          },
+          {
+            "text": "Curly braces",
+            "text_es": "Curly braces"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "e.g. (see Table 2 [column 3])."
+      },
+      {
+        "question_id": "qpp-15",
+        "question": "'e.g.' should be followed by:",
+        "question_es": "'e.g.' debe ir seguido de:",
+        "options": [
+          {
+            "text": "A comma",
+            "text_es": "A comma"
+          },
+          {
+            "text": "A colon",
+            "text_es": "A colon"
+          },
+          {
+            "text": "Nothing",
+            "text_es": "Nothing"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "APA uses 'e.g.,' with a comma, and confines it to parentheses."
+      },
+      {
+        "question_id": "qpp-16",
+        "question": "An apostrophe is NOT used to:",
+        "question_es": "El apóstrofo NO se usa para:",
+        "options": [
+          {
+            "text": "Form the plural of a noun",
+            "text_es": "Form the plural of a noun"
+          },
+          {
+            "text": "Show possession",
+            "text_es": "Show possession"
+          },
+          {
+            "text": "Mark a contraction",
+            "text_es": "Mark a contraction"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "'The 1990s', not 'the 1990's'."
+      },
+      {
+        "question_id": "qpp-17",
+        "question": "Which sentence correctly uses a dash for emphasis?",
+        "question_es": "¿Qué oración usa correctamente la raya para énfasis?",
+        "options": [
+          {
+            "text": "One factor—timing—explained most of the variance.",
+            "text_es": "One factor—timing—explained most of the variance."
+          },
+          {
+            "text": "One factor - timing - explained most of the variance.",
+            "text_es": "One factor - timing - explained most of the variance."
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Em dashes in APA are unspaced."
+      },
+      {
+        "question_id": "qpp-18",
+        "question": "A colon before a list should follow:",
+        "question_es": "Los dos puntos antes de una lista deben seguir a:",
+        "options": [
+          {
+            "text": "A complete clause",
+            "text_es": "A complete clause"
+          },
+          {
+            "text": "A verb",
+            "text_es": "A verb"
+          },
+          {
+            "text": "A preposition",
+            "text_es": "A preposition"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Never separate a verb or preposition from its object with a colon."
+      },
+      {
+        "question_id": "qpp-19",
+        "question": "'i.e.' means:",
+        "question_es": "'i.e.' significa:",
+        "options": [
+          {
+            "text": "that is",
+            "text_es": "that is"
+          },
+          {
+            "text": "for example",
+            "text_es": "for example"
+          },
+          {
+            "text": "and so on",
+            "text_es": "and so on"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "'i.e.' specifies; 'e.g.' exemplifies."
+      },
+      {
+        "question_id": "qpp-20",
+        "question": "Quotation marks around a term you are defining signal:",
+        "question_es": "Las comillas en un término que estás definiendo señalan:",
+        "options": [
+          {
+            "text": "The term is being used as a term, not asserted",
+            "text_es": "The term is being used as a term, not asserted"
+          },
+          {
+            "text": "Sarcasm",
+            "text_es": "Sarcasm"
+          },
+          {
+            "text": "A citation",
+            "text_es": "A citation"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "APA italicises a key term at first use rather than using scare quotes."
+      },
+      {
+        "question_id": "qpp-21",
+        "question": "Which is correct: 'a 5-year-old study' or 'a 5 year old study'?",
+        "question_es": "¿Cuál es correcto: 'a 5-year-old study' o 'a 5 year old study'?",
+        "options": [
+          {
+            "text": "a 5-year-old study",
+            "text_es": "a 5-year-old study"
+          },
+          {
+            "text": "a 5 year old study",
+            "text_es": "a 5 year old study"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Hyphenate the full compound modifier preceding the noun."
+      },
+      {
+        "question_id": "qpp-22",
+        "question": "A comma splice is corrected by all of these EXCEPT:",
+        "question_es": "Un empalme de comas se corrige con todo esto EXCEPTO:",
+        "options": [
+          {
+            "text": "Adding a coordinating conjunction",
+            "text_es": "Adding a coordinating conjunction"
+          },
+          {
+            "text": "Replacing the comma with a semicolon",
+            "text_es": "Replacing the comma with a semicolon"
+          },
+          {
+            "text": "Adding another comma",
+            "text_es": "Adding another comma"
+          }
+        ],
+        "correct_index": 2,
+        "explanation": "More commas cannot join independent clauses."
+      },
+      {
+        "question_id": "qpp-23",
+        "question": "In APA, decimals below one are written as:",
+        "question_es": "En APA, los decimales menores que uno se escriben:",
+        "options": [
+          {
+            "text": "0.05, with a leading zero, except for p values and correlations",
+            "text_es": "0.05, with a leading zero, except for p values and correlations"
+          },
+          {
+            "text": "Always .05 without a leading zero",
+            "text_es": "Always .05 without a leading zero"
+          },
+          {
+            "text": "Always 0.05",
+            "text_es": "Always 0.05"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Statistics that cannot exceed 1 (p, r) omit the leading zero."
+      },
+      {
+        "question_id": "qpp-24",
+        "question": "Which uses the en dash correctly?",
+        "question_es": "¿Cuál usa correctamente el guion medio (en dash)?",
+        "options": [
+          {
+            "text": "pages 45-52",
+            "text_es": "pages 45-52"
+          },
+          {
+            "text": "pages 45—52",
+            "text_es": "pages 45—52"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "En dashes mark ranges; em dashes interrupt sentences."
+      },
+      {
+        "question_id": "qpp-25",
+        "question": "'The team, however, disagreed.' The commas around 'however':",
+        "question_es": "'The team, however, disagreed.' Las comas alrededor de 'however':",
+        "options": [
+          {
+            "text": "Correctly mark it as a parenthetical adverb",
+            "text_es": "Correctly mark it as a parenthetical adverb"
+          },
+          {
+            "text": "Are incorrect",
+            "text_es": "Are incorrect"
+          },
+          {
+            "text": "Should be semicolons",
+            "text_es": "Should be semicolons"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Mid-sentence connective adverbs are enclosed in commas."
+      }
+    ]
+  },
+  {
+    "set_id": "qt-word-choice",
+    "name": "Word Choice & Concision",
+    "name_es": "Elección Léxica y Concisión",
+    "description": "Confusables, collocations, precision and cutting wordiness.",
+    "description_es": "Palabras confundibles, colocaciones, precisión y reducir palabrería.",
+    "topic_id": "gram-pronoun-reference",
+    "difficulty": "easy",
+    "time_limit_per_q": 30,
+    "total_questions": 10,
+    "max_score": 50,
+    "pool_size": 25,
+    "questions": [
+      {
+        "question_id": "qwc-1",
+        "question": "Which verb collocates with 'research'?",
+        "question_es": "¿Qué verbo colocaciona con 'research'?",
+        "options": [
+          {
+            "text": "make research",
+            "text_es": "make research"
+          },
+          {
+            "text": "conduct research",
+            "text_es": "conduct research"
+          },
+          {
+            "text": "do a research",
+            "text_es": "do a research"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "'Conduct research' is the standard academic collocation."
+      },
+      {
+        "question_id": "qwc-2",
+        "question": "'Comprise' is correctly used in:",
+        "question_es": "'Comprise' se usa correctamente en:",
+        "options": [
+          {
+            "text": "The sample comprised 120 students.",
+            "text_es": "The sample comprised 120 students."
+          },
+          {
+            "text": "The sample was comprised of 120 students.",
+            "text_es": "The sample was comprised of 120 students."
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "The whole comprises the parts; 'comprised of' is widely criticised."
+      },
+      {
+        "question_id": "qwc-3",
+        "question": "Which pair is correctly distinguished?",
+        "question_es": "¿Qué par se distingue correctamente?",
+        "options": [
+          {
+            "text": "'Imply' = suggest; 'infer' = conclude",
+            "text_es": "'Imply' = suggest; 'infer' = conclude"
+          },
+          {
+            "text": "'Imply' = conclude; 'infer' = suggest",
+            "text_es": "'Imply' = conclude; 'infer' = suggest"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Writers imply; readers infer."
+      },
+      {
+        "question_id": "qwc-4",
+        "question": "The most concise version of 'in the event that' is:",
+        "question_es": "La versión más concisa de 'in the event that' es:",
+        "options": [
+          {
+            "text": "if",
+            "text_es": "if"
+          },
+          {
+            "text": "when it happens that",
+            "text_es": "when it happens that"
+          },
+          {
+            "text": "should it occur that",
+            "text_es": "should it occur that"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Prefer the shortest form that preserves meaning."
+      },
+      {
+        "question_id": "qwc-5",
+        "question": "'Significant' in a statistical context means:",
+        "question_es": "'Significant' en contexto estadístico significa:",
+        "options": [
+          {
+            "text": "Important",
+            "text_es": "Important"
+          },
+          {
+            "text": "Unlikely to be due to chance alone",
+            "text_es": "Unlikely to be due to chance alone"
+          },
+          {
+            "text": "Large",
+            "text_es": "Large"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "Avoid using 'significant' loosely when reporting statistics."
+      },
+      {
+        "question_id": "qwc-6",
+        "question": "Which is the precise term for the people in your study?",
+        "question_es": "¿Cuál es el término preciso para las personas en tu estudio?",
+        "options": [
+          {
+            "text": "subjects, in most social science reporting today",
+            "text_es": "subjects, in most social science reporting today"
+          },
+          {
+            "text": "participants, which APA prefers",
+            "text_es": "participants, which APA prefers"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "APA prefers 'participants' to acknowledge agency."
+      },
+      {
+        "question_id": "qwc-7",
+        "question": "'Affect' as a noun in psychology means:",
+        "question_es": "'Affect' como sustantivo en psicología significa:",
+        "options": [
+          {
+            "text": "Observable emotion or mood",
+            "text_es": "Observable emotion or mood"
+          },
+          {
+            "text": "A result",
+            "text_es": "A result"
+          },
+          {
+            "text": "An influence",
+            "text_es": "An influence"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "'Flat affect' is a technical usage; otherwise 'effect' is the noun."
+      },
+      {
+        "question_id": "qwc-8",
+        "question": "Which phrase is redundant?",
+        "question_es": "¿Qué frase es redundante?",
+        "options": [
+          {
+            "text": "past history",
+            "text_es": "past history"
+          },
+          {
+            "text": "prior research",
+            "text_es": "prior research"
+          },
+          {
+            "text": "initial results",
+            "text_es": "initial results"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "History is necessarily past."
+      },
+      {
+        "question_id": "qwc-9",
+        "question": "'Utilise' versus 'use':",
+        "question_es": "'Utilise' frente a 'use':",
+        "options": [
+          {
+            "text": "'Utilise' is always more academic",
+            "text_es": "'Utilise' is always more academic"
+          },
+          {
+            "text": "'Use' is preferable unless you mean 'put to a novel purpose'",
+            "text_es": "'Use' is preferable unless you mean 'put to a novel purpose'"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "Longer words are not automatically more scholarly."
+      },
+      {
+        "question_id": "qwc-10",
+        "question": "'Less' or 'fewer' before 'data'?",
+        "question_es": "¿'Less' o 'fewer' antes de 'data'?",
+        "options": [
+          {
+            "text": "fewer data, since data are countable",
+            "text_es": "fewer data, since data are countable"
+          },
+          {
+            "text": "less data",
+            "text_es": "less data"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Treating 'data' as plural gives 'fewer data points'."
+      },
+      {
+        "question_id": "qwc-11",
+        "question": "Which is the correct academic collocation?",
+        "question_es": "¿Cuál es la colocación académica correcta?",
+        "options": [
+          {
+            "text": "draw a conclusion",
+            "text_es": "draw a conclusion"
+          },
+          {
+            "text": "take a conclusion",
+            "text_es": "take a conclusion"
+          },
+          {
+            "text": "do a conclusion",
+            "text_es": "do a conclusion"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Conclusions are drawn; inferences are made."
+      },
+      {
+        "question_id": "qwc-12",
+        "question": "'Principle' versus 'principal':",
+        "question_es": "'Principle' frente a 'principal':",
+        "options": [
+          {
+            "text": "'Principle' = a rule; 'principal' = main or a school head",
+            "text_es": "'Principle' = a rule; 'principal' = main or a school head"
+          },
+          {
+            "text": "They are interchangeable",
+            "text_es": "They are interchangeable"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "A principal investigator follows ethical principles."
+      },
+      {
+        "question_id": "qwc-13",
+        "question": "The clearest revision of 'it is important to note that X' is:",
+        "question_es": "La revisión más clara de 'it is important to note that X' es:",
+        "options": [
+          {
+            "text": "Notably, X",
+            "text_es": "Notably, X"
+          },
+          {
+            "text": "Simply state X",
+            "text_es": "Simply state X"
+          },
+          {
+            "text": "It must be noted that X",
+            "text_es": "It must be noted that X"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "If it were not worth noting, you would not write it."
+      },
+      {
+        "question_id": "qwc-14",
+        "question": "'Amount' or 'number' of participants?",
+        "question_es": "¿'Amount' o 'number' of participants?",
+        "options": [
+          {
+            "text": "amount",
+            "text_es": "amount"
+          },
+          {
+            "text": "number",
+            "text_es": "number"
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "'Number' for countables; 'amount' for masses."
+      },
+      {
+        "question_id": "qwc-15",
+        "question": "'Complement' versus 'compliment':",
+        "question_es": "'Complement' frente a 'compliment':",
+        "options": [
+          {
+            "text": "'Complement' completes; 'compliment' praises",
+            "text_es": "'Complement' completes; 'compliment' praises"
+          },
+          {
+            "text": "'Complement' praises; 'compliment' completes",
+            "text_es": "'Complement' praises; 'compliment' completes"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Qualitative data complement quantitative findings."
+      },
+      {
+        "question_id": "qwc-16",
+        "question": "Which is more precise than 'things'?",
+        "question_es": "¿Qué es más preciso que 'things'?",
+        "options": [
+          {
+            "text": "factors, variables or constructs, as appropriate",
+            "text_es": "factors, variables or constructs, as appropriate"
+          },
+          {
+            "text": "stuff",
+            "text_es": "stuff"
+          },
+          {
+            "text": "elements of things",
+            "text_es": "elements of things"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Name the category you actually mean."
+      },
+      {
+        "question_id": "qwc-17",
+        "question": "'Continual' versus 'continuous':",
+        "question_es": "'Continual' frente a 'continuous':",
+        "options": [
+          {
+            "text": "'Continual' = repeated with breaks; 'continuous' = uninterrupted",
+            "text_es": "'Continual' = repeated with breaks; 'continuous' = uninterrupted"
+          },
+          {
+            "text": "They are synonyms",
+            "text_es": "They are synonyms"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Continuous monitoring never stops; continual interruptions recur."
+      },
+      {
+        "question_id": "qwc-18",
+        "question": "The best replacement for 'a lot of' in formal prose is:",
+        "question_es": "El mejor reemplazo de 'a lot of' en prosa formal es:",
+        "options": [
+          {
+            "text": "many, much or a specific figure",
+            "text_es": "many, much or a specific figure"
+          },
+          {
+            "text": "loads of",
+            "text_es": "loads of"
+          },
+          {
+            "text": "a bunch of",
+            "text_es": "a bunch of"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Quantify wherever possible."
+      },
+      {
+        "question_id": "qwc-19",
+        "question": "'Compared to' versus 'compared with':",
+        "question_es": "'Compared to' frente a 'compared with':",
+        "options": [
+          {
+            "text": "'Compared with' is preferred for measuring differences between like things",
+            "text_es": "'Compared with' is preferred for measuring differences between like things"
+          },
+          {
+            "text": "They are always identical",
+            "text_es": "They are always identical"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "'Compared to' suits metaphor; 'compared with' suits analysis."
+      },
+      {
+        "question_id": "qwc-20",
+        "question": "Which sentence is most concise without losing meaning?",
+        "question_es": "¿Qué oración es más concisa sin perder significado?",
+        "options": [
+          {
+            "text": "Despite the fact that the sample was small, the trend was clear.",
+            "text_es": "Despite the fact that the sample was small, the trend was clear."
+          },
+          {
+            "text": "Although the sample was small, the trend was clear.",
+            "text_es": "Although the sample was small, the trend was clear."
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "'Although' replaces four words with one."
+      },
+      {
+        "question_id": "qwc-21",
+        "question": "'Criteria' is:",
+        "question_es": "'Criteria' es:",
+        "options": [
+          {
+            "text": "Plural; the singular is 'criterion'",
+            "text_es": "Plural; the singular is 'criterion'"
+          },
+          {
+            "text": "Singular",
+            "text_es": "Singular"
+          },
+          {
+            "text": "Both, interchangeably",
+            "text_es": "Both, interchangeably"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "One criterion, several criteria."
+      },
+      {
+        "question_id": "qwc-22",
+        "question": "'Impact' as a verb ('this impacts learning') is:",
+        "question_es": "'Impact' como verbo ('this impacts learning') es:",
+        "options": [
+          {
+            "text": "Often criticised; 'affects' or 'influences' is safer in formal prose",
+            "text_es": "Often criticised; 'affects' or 'influences' is safer in formal prose"
+          },
+          {
+            "text": "Always preferred",
+            "text_es": "Always preferred"
+          },
+          {
+            "text": "Ungrammatical",
+            "text_es": "Ungrammatical"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "It is accepted but overused; precise verbs read better."
+      },
+      {
+        "question_id": "qwc-23",
+        "question": "Which is the correct collocation with 'a hypothesis'?",
+        "question_es": "¿Cuál es la colocación correcta con 'a hypothesis'?",
+        "options": [
+          {
+            "text": "test a hypothesis",
+            "text_es": "test a hypothesis"
+          },
+          {
+            "text": "prove a hypothesis",
+            "text_es": "prove a hypothesis"
+          },
+          {
+            "text": "do a hypothesis",
+            "text_es": "do a hypothesis"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Hypotheses are tested and supported, not proven."
+      },
+      {
+        "question_id": "qwc-24",
+        "question": "'Phenomena' is the plural of:",
+        "question_es": "'Phenomena' es el plural de:",
+        "options": [
+          {
+            "text": "phenomenon",
+            "text_es": "phenomenon"
+          },
+          {
+            "text": "phenomena",
+            "text_es": "phenomena"
+          },
+          {
+            "text": "phenomenae",
+            "text_es": "phenomenae"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Greek-origin -on nouns pluralise in -a."
+      },
+      {
+        "question_id": "qwc-25",
+        "question": "Replacing 'in order to' with 'to' is:",
+        "question_es": "Reemplazar 'in order to' por 'to' es:",
+        "options": [
+          {
+            "text": "Usually an improvement in concision",
+            "text_es": "Usually an improvement in concision"
+          },
+          {
+            "text": "A grammatical error",
+            "text_es": "A grammatical error"
+          },
+          {
+            "text": "Forbidden by APA",
+            "text_es": "Forbidden by APA"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Keep 'in order to' only when it prevents misreading."
+      }
+    ]
+  },
+  {
+    "set_id": "qt-research-language",
+    "name": "Methods & Research Language",
+    "name_es": "Lenguaje de Métodos e Investigación",
+    "description": "Describing design, sampling, limitations and ethics.",
+    "description_es": "Describir diseño, muestreo, limitaciones y ética.",
+    "topic_id": "res-research-planning",
+    "difficulty": "hard",
+    "time_limit_per_q": 40,
+    "total_questions": 10,
+    "max_score": 50,
+    "pool_size": 25,
+    "questions": [
+      {
+        "question_id": "qrl-1",
+        "question": "A convenience sample means participants were:",
+        "question_es": "Una muestra por conveniencia significa que los participantes fueron:",
+        "options": [
+          {
+            "text": "Selected because they were readily available",
+            "text_es": "Selected because they were readily available"
+          },
+          {
+            "text": "Randomly selected",
+            "text_es": "Randomly selected"
+          },
+          {
+            "text": "Matched on key variables",
+            "text_es": "Matched on key variables"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "It limits generalisability and must be acknowledged."
+      },
+      {
+        "question_id": "qrl-2",
+        "question": "Random assignment is what distinguishes:",
+        "question_es": "La asignación aleatoria es lo que distingue:",
+        "options": [
+          {
+            "text": "A true experiment from a quasi-experiment",
+            "text_es": "A true experiment from a quasi-experiment"
+          },
+          {
+            "text": "Qualitative from quantitative work",
+            "text_es": "Qualitative from quantitative work"
+          },
+          {
+            "text": "A survey from an interview",
+            "text_es": "A survey from an interview"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Random sampling concerns who is studied; random assignment concerns who gets the treatment."
+      },
+      {
+        "question_id": "qrl-3",
+        "question": "A research question should be:",
+        "question_es": "Una pregunta de investigación debe ser:",
+        "options": [
+          {
+            "text": "Answerable with the evidence you can realistically collect",
+            "text_es": "Answerable with the evidence you can realistically collect"
+          },
+          {
+            "text": "As broad as possible",
+            "text_es": "As broad as possible"
+          },
+          {
+            "text": "Phrased as a hypothesis",
+            "text_es": "Phrased as a hypothesis"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Scope must match feasible data collection."
+      },
+      {
+        "question_id": "qrl-4",
+        "question": "Internal validity concerns whether:",
+        "question_es": "La validez interna se refiere a si:",
+        "options": [
+          {
+            "text": "The design supports the causal claim within the study",
+            "text_es": "The design supports the causal claim within the study"
+          },
+          {
+            "text": "Results generalise to other settings",
+            "text_es": "Results generalise to other settings"
+          },
+          {
+            "text": "The instrument is reliable",
+            "text_es": "The instrument is reliable"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "External validity is the generalisation question."
+      },
+      {
+        "question_id": "qrl-5",
+        "question": "Reliability refers to:",
+        "question_es": "La fiabilidad se refiere a:",
+        "options": [
+          {
+            "text": "Consistency of measurement",
+            "text_es": "Consistency of measurement"
+          },
+          {
+            "text": "Whether the instrument measures the intended construct",
+            "text_es": "Whether the instrument measures the intended construct"
+          },
+          {
+            "text": "Sample size",
+            "text_es": "Sample size"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Validity is the 'right construct' question; reliability is consistency."
+      },
+      {
+        "question_id": "qrl-6",
+        "question": "Which is the correct tense for the methods section?",
+        "question_es": "¿Qué tiempo es correcto para la sección de métodos?",
+        "options": [
+          {
+            "text": "Past: 'Participants completed a questionnaire.'",
+            "text_es": "Past: 'Participants completed a questionnaire.'"
+          },
+          {
+            "text": "Present: 'Participants complete a questionnaire.'",
+            "text_es": "Present: 'Participants complete a questionnaire.'"
+          },
+          {
+            "text": "Future",
+            "text_es": "Future"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "You describe what you already did."
+      },
+      {
+        "question_id": "qrl-7",
+        "question": "Informed consent must include:",
+        "question_es": "El consentimiento informado debe incluir:",
+        "options": [
+          {
+            "text": "The purpose, risks, and the right to withdraw without penalty",
+            "text_es": "The purpose, risks, and the right to withdraw without penalty"
+          },
+          {
+            "text": "Only the study title",
+            "text_es": "Only the study title"
+          },
+          {
+            "text": "A confidentiality promise alone",
+            "text_es": "A confidentiality promise alone"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Participants must be able to make a free, informed decision."
+      },
+      {
+        "question_id": "qrl-8",
+        "question": "Saturation in qualitative sampling means:",
+        "question_es": "La saturación en muestreo cualitativo significa:",
+        "options": [
+          {
+            "text": "New data stop yielding new themes",
+            "text_es": "New data stop yielding new themes"
+          },
+          {
+            "text": "The sample reached 30 participants",
+            "text_es": "The sample reached 30 participants"
+          },
+          {
+            "text": "All transcripts are coded",
+            "text_es": "All transcripts are coded"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "It is a criterion about information, not a fixed number."
+      },
+      {
+        "question_id": "qrl-9",
+        "question": "Triangulation strengthens a study by:",
+        "question_es": "La triangulación fortalece un estudio al:",
+        "options": [
+          {
+            "text": "Comparing evidence from multiple sources or methods",
+            "text_es": "Comparing evidence from multiple sources or methods"
+          },
+          {
+            "text": "Increasing the sample",
+            "text_es": "Increasing the sample"
+          },
+          {
+            "text": "Using three researchers",
+            "text_es": "Using three researchers"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Convergence across methods reduces the risk of method artefacts."
+      },
+      {
+        "question_id": "qrl-10",
+        "question": "A pilot study is conducted mainly to:",
+        "question_es": "Un estudio piloto se realiza principalmente para:",
+        "options": [
+          {
+            "text": "Test and refine instruments and procedures",
+            "text_es": "Test and refine instruments and procedures"
+          },
+          {
+            "text": "Publish preliminary findings",
+            "text_es": "Publish preliminary findings"
+          },
+          {
+            "text": "Increase the sample",
+            "text_es": "Increase the sample"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Piloting surfaces problems before the main data collection."
+      },
+      {
+        "question_id": "qrl-11",
+        "question": "Which limitation statement is most useful?",
+        "question_es": "¿Qué declaración de limitación es más útil?",
+        "options": [
+          {
+            "text": "The study had limitations.",
+            "text_es": "The study had limitations."
+          },
+          {
+            "text": "Because all data were self-reported, social desirability may have inflated the engagement scores.",
+            "text_es": "Because all data were self-reported, social desirability may have inflated the engagement scores."
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "Name the limitation, its mechanism and its likely direction of bias."
+      },
+      {
+        "question_id": "qrl-12",
+        "question": "Anonymity differs from confidentiality because:",
+        "question_es": "El anonimato difiere de la confidencialidad porque:",
+        "options": [
+          {
+            "text": "Under anonymity, even the researcher cannot link data to identities",
+            "text_es": "Under anonymity, even the researcher cannot link data to identities"
+          },
+          {
+            "text": "They are the same",
+            "text_es": "They are the same"
+          },
+          {
+            "text": "Confidentiality is stronger",
+            "text_es": "Confidentiality is stronger"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Confidentiality means the researcher knows but does not disclose."
+      },
+      {
+        "question_id": "qrl-13",
+        "question": "An operational definition specifies:",
+        "question_es": "Una definición operacional especifica:",
+        "options": [
+          {
+            "text": "How a construct will be measured in this study",
+            "text_es": "How a construct will be measured in this study"
+          },
+          {
+            "text": "The dictionary meaning",
+            "text_es": "The dictionary meaning"
+          },
+          {
+            "text": "The theoretical origin",
+            "text_es": "The theoretical origin"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "e.g. engagement operationalised as weekly platform logins."
+      },
+      {
+        "question_id": "qrl-14",
+        "question": "Which sampling approach best supports generalisation?",
+        "question_es": "¿Qué enfoque de muestreo apoya mejor la generalización?",
+        "options": [
+          {
+            "text": "Probability sampling from the target population",
+            "text_es": "Probability sampling from the target population"
+          },
+          {
+            "text": "Snowball sampling",
+            "text_es": "Snowball sampling"
+          },
+          {
+            "text": "Volunteer sampling",
+            "text_es": "Volunteer sampling"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Known selection probabilities allow inference to the population."
+      },
+      {
+        "question_id": "qrl-15",
+        "question": "A confounding variable is one that:",
+        "question_es": "Una variable de confusión es la que:",
+        "options": [
+          {
+            "text": "Is related to both the independent and dependent variables",
+            "text_es": "Is related to both the independent and dependent variables"
+          },
+          {
+            "text": "Has no effect",
+            "text_es": "Has no effect"
+          },
+          {
+            "text": "Is measured last",
+            "text_es": "Is measured last"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Confounders offer rival explanations for the observed effect."
+      },
+      {
+        "question_id": "qrl-16",
+        "question": "Member checking in qualitative research means:",
+        "question_es": "La validación por participantes (member checking) significa:",
+        "options": [
+          {
+            "text": "Returning interpretations to participants to verify accuracy",
+            "text_es": "Returning interpretations to participants to verify accuracy"
+          },
+          {
+            "text": "Checking membership records",
+            "text_es": "Checking membership records"
+          },
+          {
+            "text": "Peer review",
+            "text_es": "Peer review"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "It strengthens credibility of interpretation."
+      },
+      {
+        "question_id": "qrl-17",
+        "question": "A quasi-experimental design is used when:",
+        "question_es": "Un diseño cuasiexperimental se usa cuando:",
+        "options": [
+          {
+            "text": "Random assignment is impractical or unethical",
+            "text_es": "Random assignment is impractical or unethical"
+          },
+          {
+            "text": "No comparison group exists",
+            "text_es": "No comparison group exists"
+          },
+          {
+            "text": "Only qualitative data are collected",
+            "text_es": "Only qualitative data are collected"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Intact classes are the classic example in education research."
+      },
+      {
+        "question_id": "qrl-18",
+        "question": "The main threat of a pre-test/post-test design without a control group is:",
+        "question_es": "La amenaza principal de un diseño pretest/postest sin grupo control es:",
+        "options": [
+          {
+            "text": "Maturation and other changes over time could explain the gain",
+            "text_es": "Maturation and other changes over time could explain the gain"
+          },
+          {
+            "text": "Too much data",
+            "text_es": "Too much data"
+          },
+          {
+            "text": "Low reliability",
+            "text_es": "Low reliability"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Without a comparison, time-related causes cannot be ruled out."
+      },
+      {
+        "question_id": "qrl-19",
+        "question": "Which describes the sample adequately?",
+        "question_es": "¿Cuál describe adecuadamente la muestra?",
+        "options": [
+          {
+            "text": "Students participated.",
+            "text_es": "Students participated."
+          },
+          {
+            "text": "Participants were 214 undergraduates (M age = 20.3, SD = 1.8; 61% women) at one public university.",
+            "text_es": "Participants were 214 undergraduates (M age = 20.3, SD = 1.8; 61% women) at one public university."
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "Report size, relevant demographics and setting."
+      },
+      {
+        "question_id": "qrl-20",
+        "question": "Ethical approval should be obtained:",
+        "question_es": "La aprobación ética debe obtenerse:",
+        "options": [
+          {
+            "text": "Before any data collection begins",
+            "text_es": "Before any data collection begins"
+          },
+          {
+            "text": "After piloting",
+            "text_es": "After piloting"
+          },
+          {
+            "text": "Before publication",
+            "text_es": "Before publication"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Retrospective approval is generally not possible."
+      },
+      {
+        "question_id": "qrl-21",
+        "question": "Construct validity is threatened when:",
+        "question_es": "La validez de constructo se ve amenazada cuando:",
+        "options": [
+          {
+            "text": "The instrument measures something other than the intended construct",
+            "text_es": "The instrument measures something other than the intended construct"
+          },
+          {
+            "text": "The sample is small",
+            "text_es": "The sample is small"
+          },
+          {
+            "text": "Data are missing",
+            "text_es": "Data are missing"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "A motivation scale that mostly captures anxiety lacks construct validity."
+      },
+      {
+        "question_id": "qrl-22",
+        "question": "'Generalisable to all university students' after studying one faculty is:",
+        "question_es": "'Generalizable a todos los universitarios' tras estudiar una facultad es:",
+        "options": [
+          {
+            "text": "An overreach that should be bounded",
+            "text_es": "An overreach that should be bounded"
+          },
+          {
+            "text": "Standard practice",
+            "text_es": "Standard practice"
+          },
+          {
+            "text": "Required",
+            "text_es": "Required"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Bound generalisation to the sampled population."
+      },
+      {
+        "question_id": "qrl-23",
+        "question": "Inter-rater reliability matters most when:",
+        "question_es": "La fiabilidad interjueces importa más cuando:",
+        "options": [
+          {
+            "text": "Coding or scoring involves human judgement",
+            "text_es": "Coding or scoring involves human judgement"
+          },
+          {
+            "text": "Data are automatically logged",
+            "text_es": "Data are automatically logged"
+          },
+          {
+            "text": "The sample is large",
+            "text_es": "The sample is large"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Report an agreement statistic such as Cohen's kappa."
+      },
+      {
+        "question_id": "qrl-24",
+        "question": "Attrition (dropout) threatens validity because:",
+        "question_es": "La atrición (abandono) amenaza la validez porque:",
+        "options": [
+          {
+            "text": "Those who remain may differ systematically from those who left",
+            "text_es": "Those who remain may differ systematically from those who left"
+          },
+          {
+            "text": "It reduces the sample only",
+            "text_es": "It reduces the sample only"
+          },
+          {
+            "text": "It affects formatting",
+            "text_es": "It affects formatting"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Differential attrition can create the very difference you observe."
+      },
+      {
+        "question_id": "qrl-25",
+        "question": "A well-written research aim uses:",
+        "question_es": "Un objetivo de investigación bien redactado usa:",
+        "options": [
+          {
+            "text": "A precise verb such as examine, compare or model",
+            "text_es": "A precise verb such as examine, compare or model"
+          },
+          {
+            "text": "The verb 'look at'",
+            "text_es": "The verb 'look at'"
+          },
+          {
+            "text": "A question mark",
+            "text_es": "A question mark"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Precise verbs commit you to a specific analytical action."
+      }
+    ]
+  },
+  {
+    "set_id": "qt-abstract-and-intro",
+    "name": "Abstracts & Introductions",
+    "name_es": "Resúmenes e Introducciones",
+    "description": "CARS moves, research gaps, thesis placement and abstract structure.",
+    "description_es": "Movimientos CARS, vacíos de investigación, ubicación de la tesis y estructura del resumen.",
+    "topic_id": "arg-thesis-statements",
+    "difficulty": "hard",
+    "time_limit_per_q": 40,
+    "total_questions": 10,
+    "max_score": 50,
+    "pool_size": 25,
+    "questions": [
+      {
+        "question_id": "qai-1",
+        "question": "In Swales' CARS model, the three moves of an introduction are:",
+        "question_es": "En el modelo CARS de Swales, los tres movimientos de una introducción son:",
+        "options": [
+          {
+            "text": "Establish a territory, establish a niche, occupy the niche",
+            "text_es": "Establish a territory, establish a niche, occupy the niche"
+          },
+          {
+            "text": "Summarise, analyse, conclude",
+            "text_es": "Summarise, analyse, conclude"
+          },
+          {
+            "text": "Hypothesis, method, result",
+            "text_es": "Hypothesis, method, result"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "CARS = Create A Research Space: context, gap, then your contribution."
+      },
+      {
+        "question_id": "qai-2",
+        "question": "'Establishing a niche' means:",
+        "question_es": "'Establecer un nicho' significa:",
+        "options": [
+          {
+            "text": "Identifying a gap, tension or unresolved problem in the literature",
+            "text_es": "Identifying a gap, tension or unresolved problem in the literature"
+          },
+          {
+            "text": "Describing your method",
+            "text_es": "Describing your method"
+          },
+          {
+            "text": "Citing the most recent source",
+            "text_es": "Citing the most recent source"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "The niche is the space your study will fill."
+      },
+      {
+        "question_id": "qai-3",
+        "question": "An APA abstract is typically:",
+        "question_es": "Un resumen APA típicamente es:",
+        "options": [
+          {
+            "text": "150-250 words, unstructured or lightly structured",
+            "text_es": "150-250 words, unstructured or lightly structured"
+          },
+          {
+            "text": "500 words minimum",
+            "text_es": "500 words minimum"
+          },
+          {
+            "text": "One sentence",
+            "text_es": "One sentence"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Journals vary, but APA suggests 250 words or fewer."
+      },
+      {
+        "question_id": "qai-4",
+        "question": "Which element is often missing from weak abstracts?",
+        "question_es": "¿Qué elemento falta a menudo en resúmenes débiles?",
+        "options": [
+          {
+            "text": "The actual findings",
+            "text_es": "The actual findings"
+          },
+          {
+            "text": "The title",
+            "text_es": "The title"
+          },
+          {
+            "text": "The topic",
+            "text_es": "The topic"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Many abstracts promise results without reporting any."
+      },
+      {
+        "question_id": "qai-5",
+        "question": "Citations in an abstract are:",
+        "question_es": "Las citas en un resumen son:",
+        "options": [
+          {
+            "text": "Generally avoided unless the paper responds to one specific work",
+            "text_es": "Generally avoided unless the paper responds to one specific work"
+          },
+          {
+            "text": "Required",
+            "text_es": "Required"
+          },
+          {
+            "text": "Always forbidden",
+            "text_es": "Always forbidden"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Abstracts should be self-contained."
+      },
+      {
+        "question_id": "qai-6",
+        "question": "A research gap is best evidenced by:",
+        "question_es": "Un vacío de investigación se evidencia mejor con:",
+        "options": [
+          {
+            "text": "Showing what prior studies did and did not address",
+            "text_es": "Showing what prior studies did and did not address"
+          },
+          {
+            "text": "Stating that nobody has studied it",
+            "text_es": "Stating that nobody has studied it"
+          },
+          {
+            "text": "Noting that the topic is new",
+            "text_es": "Noting that the topic is new"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "'No research exists' usually means the search was incomplete."
+      },
+      {
+        "question_id": "qai-7",
+        "question": "In an essay, the thesis statement is normally placed:",
+        "question_es": "En un ensayo, la tesis se coloca normalmente:",
+        "options": [
+          {
+            "text": "At the end of the introduction",
+            "text_es": "At the end of the introduction"
+          },
+          {
+            "text": "In the first sentence",
+            "text_es": "In the first sentence"
+          },
+          {
+            "text": "In the conclusion only",
+            "text_es": "In the conclusion only"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Context first, then the claim the essay will defend."
+      },
+      {
+        "question_id": "qai-8",
+        "question": "Which is the strongest opening move for an introduction?",
+        "question_es": "¿Cuál es el mejor movimiento de apertura para una introducción?",
+        "options": [
+          {
+            "text": "Since the dawn of time, humans have communicated.",
+            "text_es": "Since the dawn of time, humans have communicated."
+          },
+          {
+            "text": "Feedback timing shapes learning, yet most studies aggregate feedback across weeks.",
+            "text_es": "Feedback timing shapes learning, yet most studies aggregate feedback across weeks."
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "Avoid universal openers; start where the scholarly conversation is."
+      },
+      {
+        "question_id": "qai-9",
+        "question": "The 'hourglass' shape of a paper refers to:",
+        "question_es": "La forma de 'reloj de arena' de un artículo se refiere a:",
+        "options": [
+          {
+            "text": "Broad introduction, narrow methods and results, broad discussion",
+            "text_es": "Broad introduction, narrow methods and results, broad discussion"
+          },
+          {
+            "text": "Equal-length sections",
+            "text_es": "Equal-length sections"
+          },
+          {
+            "text": "Two-part structure",
+            "text_es": "Two-part structure"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Scope narrows to your study, then widens to implications."
+      },
+      {
+        "question_id": "qai-10",
+        "question": "Which sentence states a contribution clearly?",
+        "question_es": "¿Qué oración enuncia claramente una contribución?",
+        "options": [
+          {
+            "text": "This paper looks at feedback.",
+            "text_es": "This paper looks at feedback."
+          },
+          {
+            "text": "This paper contributes the first classroom-level test of feedback timing in Ecuadorian higher education.",
+            "text_es": "This paper contributes the first classroom-level test of feedback timing in Ecuadorian higher education."
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "Name what is new and where it applies."
+      },
+      {
+        "question_id": "qai-11",
+        "question": "A structured abstract usually labels:",
+        "question_es": "Un resumen estructurado suele etiquetar:",
+        "options": [
+          {
+            "text": "Objective, method, results, conclusion",
+            "text_es": "Objective, method, results, conclusion"
+          },
+          {
+            "text": "Introduction, body, conclusion",
+            "text_es": "Introduction, body, conclusion"
+          },
+          {
+            "text": "Only the results",
+            "text_es": "Only the results"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Common in health and applied sciences."
+      },
+      {
+        "question_id": "qai-12",
+        "question": "'This paper will attempt to try to explore' is weak because:",
+        "question_es": "'This paper will attempt to try to explore' es débil porque:",
+        "options": [
+          {
+            "text": "It stacks tentative verbs and commits to nothing",
+            "text_es": "It stacks tentative verbs and commits to nothing"
+          },
+          {
+            "text": "It uses future tense",
+            "text_es": "It uses future tense"
+          },
+          {
+            "text": "It is too short",
+            "text_es": "It is too short"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "State the aim decisively: 'This paper examines...'"
+      },
+      {
+        "question_id": "qai-13",
+        "question": "In the introduction, prior literature should be:",
+        "question_es": "En la introducción, la literatura previa debe:",
+        "options": [
+          {
+            "text": "Synthesised to build the argument for your study",
+            "text_es": "Synthesised to build the argument for your study"
+          },
+          {
+            "text": "Listed exhaustively",
+            "text_es": "Listed exhaustively"
+          },
+          {
+            "text": "Omitted",
+            "text_es": "Omitted"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "The introduction argues for the study; the review surveys the field."
+      },
+      {
+        "question_id": "qai-14",
+        "question": "Which belongs in an abstract but not usually in an introduction?",
+        "question_es": "¿Qué corresponde a un resumen pero no suele ir en una introducción?",
+        "options": [
+          {
+            "text": "The main numerical result",
+            "text_es": "The main numerical result"
+          },
+          {
+            "text": "The research gap",
+            "text_es": "The research gap"
+          },
+          {
+            "text": "The research aim",
+            "text_es": "The research aim"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Abstracts report the headline finding; introductions set it up."
+      },
+      {
+        "question_id": "qai-15",
+        "question": "Keywords are chosen to:",
+        "question_es": "Las palabras clave se eligen para:",
+        "options": [
+          {
+            "text": "Help others find the paper in databases",
+            "text_es": "Help others find the paper in databases"
+          },
+          {
+            "text": "Repeat the title",
+            "text_es": "Repeat the title"
+          },
+          {
+            "text": "Meet a word count",
+            "text_es": "Meet a word count"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Prefer terms a searcher would actually use."
+      },
+      {
+        "question_id": "qai-16",
+        "question": "'It has been widely studied' without citations is problematic because:",
+        "question_es": "'It has been widely studied' sin citas es problemático porque:",
+        "options": [
+          {
+            "text": "The claim about the literature is itself unsupported",
+            "text_es": "The claim about the literature is itself unsupported"
+          },
+          {
+            "text": "The tense is wrong",
+            "text_es": "The tense is wrong"
+          },
+          {
+            "text": "It is informal",
+            "text_es": "It is informal"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Claims about the state of research need evidence too."
+      },
+      {
+        "question_id": "qai-17",
+        "question": "A good title should:",
+        "question_es": "Un buen título debe:",
+        "options": [
+          {
+            "text": "Name the key variables and the population",
+            "text_es": "Name the key variables and the population"
+          },
+          {
+            "text": "Be a question in all cases",
+            "text_es": "Be a question in all cases"
+          },
+          {
+            "text": "Avoid technical terms",
+            "text_es": "Avoid technical terms"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Searchable specificity beats cleverness."
+      },
+      {
+        "question_id": "qai-18",
+        "question": "Which verb tense states an aim in the introduction?",
+        "question_es": "¿Qué tiempo verbal enuncia un objetivo en la introducción?",
+        "options": [
+          {
+            "text": "Present: 'This study examines...'",
+            "text_es": "Present: 'This study examines...'"
+          },
+          {
+            "text": "Past perfect",
+            "text_es": "Past perfect"
+          },
+          {
+            "text": "Conditional",
+            "text_es": "Conditional"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "The paper does its work in the present."
+      },
+      {
+        "question_id": "qai-19",
+        "question": "Research questions and hypotheses differ because:",
+        "question_es": "Las preguntas de investigación y las hipótesis difieren porque:",
+        "options": [
+          {
+            "text": "A hypothesis predicts a specific, testable relationship",
+            "text_es": "A hypothesis predicts a specific, testable relationship"
+          },
+          {
+            "text": "Questions are always quantitative",
+            "text_es": "Questions are always quantitative"
+          },
+          {
+            "text": "They are the same",
+            "text_es": "They are the same"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Hypotheses commit to a direction; questions may be exploratory."
+      },
+      {
+        "question_id": "qai-20",
+        "question": "Which is an appropriate final sentence for an introduction?",
+        "question_es": "¿Cuál es una oración final apropiada para una introducción?",
+        "options": [
+          {
+            "text": "The remainder of this paper reviews the literature, describes the method, and reports findings.",
+            "text_es": "The remainder of this paper reviews the literature, describes the method, and reports findings."
+          },
+          {
+            "text": "Read on to find out.",
+            "text_es": "Read on to find out."
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "A brief roadmap orients the reader."
+      },
+      {
+        "question_id": "qai-21",
+        "question": "Overlap between the abstract and the introduction should be:",
+        "question_es": "El solapamiento entre resumen e introducción debe ser:",
+        "options": [
+          {
+            "text": "Minimal; they serve different functions",
+            "text_es": "Minimal; they serve different functions"
+          },
+          {
+            "text": "Total",
+            "text_es": "Total"
+          },
+          {
+            "text": "Half the text",
+            "text_es": "Half the text"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "The abstract summarises the whole paper; the introduction argues for it."
+      },
+      {
+        "question_id": "qai-22",
+        "question": "Stating implications in an abstract is:",
+        "question_es": "Enunciar implicaciones en un resumen es:",
+        "options": [
+          {
+            "text": "Appropriate in one closing sentence",
+            "text_es": "Appropriate in one closing sentence"
+          },
+          {
+            "text": "Never appropriate",
+            "text_es": "Never appropriate"
+          },
+          {
+            "text": "The main content",
+            "text_es": "The main content"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "One sentence on 'so what' strengthens an abstract."
+      },
+      {
+        "question_id": "qai-23",
+        "question": "'The gap in the literature is that no one has studied X in Ecuador.' This gap is weak if:",
+        "question_es": "'El vacío es que nadie ha estudiado X en Ecuador.' Este vacío es débil si:",
+        "options": [
+          {
+            "text": "Novelty of setting alone is offered, with no theoretical reason it should differ",
+            "text_es": "Novelty of setting alone is offered, with no theoretical reason it should differ"
+          },
+          {
+            "text": "The setting is specific",
+            "text_es": "The setting is specific"
+          },
+          {
+            "text": "It cites recent work",
+            "text_es": "It cites recent work"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "Explain why the context should change the phenomenon."
+      },
+      {
+        "question_id": "qai-24",
+        "question": "An abstract is written:",
+        "question_es": "Un resumen se escribe:",
+        "options": [
+          {
+            "text": "Last, once the findings are settled",
+            "text_es": "Last, once the findings are settled"
+          },
+          {
+            "text": "First, before data collection",
+            "text_es": "First, before data collection"
+          },
+          {
+            "text": "During analysis",
+            "text_es": "During analysis"
+          }
+        ],
+        "correct_index": 0,
+        "explanation": "You cannot summarise conclusions you have not reached."
+      },
+      {
+        "question_id": "qai-25",
+        "question": "Which introduction sentence best signals significance?",
+        "question_es": "¿Qué oración de introducción señala mejor la relevancia?",
+        "options": [
+          {
+            "text": "This topic is very important and interesting.",
+            "text_es": "This topic is very important and interesting."
+          },
+          {
+            "text": "Because feedback consumes roughly a third of instructor workload, timing decisions carry real institutional cost.",
+            "text_es": "Because feedback consumes roughly a third of instructor workload, timing decisions carry real institutional cost."
+          }
+        ],
+        "correct_index": 1,
+        "explanation": "Show the stakes concretely rather than asserting importance."
       }
     ]
   }
