@@ -125,10 +125,18 @@
     await dojoClient.init();
 
     try {
+        console.log('📖 dojo-series: Loading topics for seriesId:', seriesId);
+        console.log('   studentId:', dojoClient.studentId);
         const result = await dojoClient.getDojoTopic(seriesId);
-        if (result.error) throw result;
+        console.log('📖 Full API response:', JSON.stringify(result, null, 2));
+
+        if (result.error) {
+            console.error('❌ API returned error:', result.error, result.errorDetails);
+            throw result;
+        }
 
         const { topics = [], scoringFormula = {} } = result;
+        console.log('📖 Topics count:', topics.length);
         document.getElementById('seriesTitle').textContent = topics[0]?.series_id || 'Series';
 
         if (!topics.length) {
@@ -180,8 +188,9 @@
         document.getElementById('topicsContainer').innerHTML += formulaHtml;
 
     } catch (e) {
-        console.error('❌ Topics load:', e);
-        document.getElementById('topicsContainer').innerHTML = '<div class="error">Failed to load topics. Try refreshing.</div>';
+        console.error('❌ dojo-series FAILED:', e);
+        const errorMsg = typeof e === 'object' ? (e.error || e.message || JSON.stringify(e)) : e;
+        document.getElementById('topicsContainer').innerHTML = `<div class="error">Failed to load topics: ${errorMsg}. Check browser console for details.</div>`;
     }
 
     window.toggleTopic = function(el) {
