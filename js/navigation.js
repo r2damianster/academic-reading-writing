@@ -25,8 +25,9 @@ function loadPage(url) {
         let versionedUrl = url + (url.includes('?') ? '&' : '?') + "v=" + Date.now();
 
         // 2b. DOJO: Pasar studentId para acceso desde iframe
-        if (url.includes('dojo') && window.currentStudent?.id) {
-            versionedUrl += '&studentId=' + encodeURIComponent(window.currentStudent.id);
+        const studentId = localStorage.getItem('studentId');
+        if (url.includes('dojo') && studentId) {
+            versionedUrl += '&studentId=' + encodeURIComponent(studentId);
         }
 
         frame.src = versionedUrl;
