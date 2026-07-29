@@ -440,8 +440,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1785361487.263058,
-    "ast_hash": "458d152aa0e9465bcb2e11e4165a1200",
+    "mtime": 1785362995.1237397,
+    "ast_hash": "536155c0763556415f578fadb4a776a1",
     "semantic_hash": ""
   },
   "modules/00-fundamentals/body-paragraphs.html": {
@@ -905,13 +905,13 @@
     "semantic_hash": ""
   },
   "js/dojo-client.js": {
-    "mtime": 1785362052.6654418,
-    "ast_hash": "3a1c086d118cdd1c8109390e20298a58",
+    "mtime": 1785362927.5589724,
+    "ast_hash": "a4f9cd19a7fbca86d3c48559e3428f7a",
     "semantic_hash": ""
   },
   "dojo-home.html": {
-    "mtime": 1785362539.8673,
-    "ast_hash": "9af629b0ff6d7c59c6674658ae34b76c",
+    "mtime": 1785362972.98781,
+    "ast_hash": "b4e332e97cc00d234a70ebb590909008",
     "semantic_hash": ""
   },
   "dojo-exercise.html": {
