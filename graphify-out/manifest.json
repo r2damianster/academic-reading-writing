@@ -440,8 +440,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1783130922.3175917,
-    "ast_hash": "5f023cc39828cb7973f33ea6722b6655",
+    "mtime": 1785283136.576578,
+    "ast_hash": "7bc61800f497b475803da08a4f243142",
     "semantic_hash": ""
   },
   "modules/00-fundamentals/body-paragraphs.html": {
@@ -902,6 +902,16 @@
   "graphify-out/converted/Instrucciones Generales del Test_eff289bc.md": {
     "mtime": 1785268621.8711736,
     "ast_hash": "51d5d19e2d26a38fa44b142d3c1099fb",
+    "semantic_hash": ""
+  },
+  "js/dojo-client.js": {
+    "mtime": 1785283089.6409576,
+    "ast_hash": "b833a063b7ef85fd1e44e166a1390d3b",
+    "semantic_hash": ""
+  },
+  "dojo-home.html": {
+    "mtime": 1785283118.0163906,
+    "ast_hash": "f5e05f201f833a116c79efd4cd027b31",
     "semantic_hash": ""
   }
 }

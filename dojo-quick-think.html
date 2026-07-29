@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Think</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; }
+        .qt-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .qt-progress {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .progress-text { font-weight: 600; }
+        .timer {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+        .timer.warning { color: #ff9800; }
+        .timer.danger { color: #f44336; }
+
+        .qt-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+
+        .question-number { font-size: 0.9rem; color: #999; margin-bottom: 8px; }
+        .question-text { font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; line-height: 1.6; }
+
+        .options { display: flex; flex-direction: column; gap: 12px; }
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            padding: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        .option.selected {
+            background: #e8ebff;
+            border-color: #667eea;
+            font-weight: 600;
+        }
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .explanation {
+            background: #f0f4ff;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .explanation.show { display: block; }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .btn-secondary, .btn-primary {
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+        .btn-secondary:hover { background: #d0d0d0; }
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        .btn-primary:hover { background: #5568d3; }
+        .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+
+        .results {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            max-width: 600px;
+            margin: 40px auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: none;
+        }
+        .results.show { display: block; }
+
+        .score-big { font-size: 3rem; font-weight: 700; color: #667eea; margin: 20px 0; }
+        .results-text { font-size: 1.1rem; color: #666; margin-bottom: 20px; }
+
+        .loading { text-align: center; padding: 40px; color: #999; }
+        .error { background: #f8d7da; color: #721c24; padding: 16px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="qt-header">
+    <div class="container">
+        <button onclick="history.back()" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">← Back</button>
+    </div>
+</div>
+
+<div class="container">
+    <div id="qtContainer" class="loading">Loading Quick Think...</div>
+</div>
+
+<script src="js/dojo-client.js?v=1.0"></script>
+
+<script>
+(async function() {
+    const params = new URLSearchParams(window.location.search);
+    const setId = params.get('set');
+
+    if (!setId) {
+        document.getElementById('qtContainer').innerHTML = '<div class="error">Set ID not found.</div>';
+        return;
+    }
+
+    await dojoClient.init();
+
+    let currentQuestionIdx = 0;
+    let answers = [];
+    let questions = [];
+    let timePerQuestion = 30;
+    let timeRemaining = 0;
+    let isAnswered = false;
+    let sessionStartTime = Date.now();
+    let timerInterval = null;
+
+    try {
+        // Load QT sets
+        const result = await dojoClient.getQuickThinkSets();
+        if (result.error) throw result;
+
+        const { sets = [] } = result;
+        const set = sets.find(s => s.set_id === setId);
+
+        if (!set) {
+            document.getElementById('qtContainer').innerHTML = '<div class="error">Quick Think set not found.</div>';
+            return;
+        }
+
+        timePerQuestion = set.time_limit_per_q || 30;
+        document.getElementById('qtContainer').innerHTML = '<div class="loading">Initializing...</div>';
+
+        setTimeout(() => {
+            showQuestion();
+        }, 500);
+
+    } catch (e) {
+        console.error('❌ QT load:', e);
+        document.getElementById('qtContainer').innerHTML = '<div class="error">Failed to load Quick Think. Try refreshing.</div>';
+    }
+
+    function showQuestion() {
+        // Placeholder: will be implemented in FASE 2.2
+        document.getElementById('qtContainer').innerHTML = `
+            <div class="qt-container">
+                <div class="loading">
+                    Question details loading...
+                </div>
+                <p style="text-align: center; color: #999; margin-top: 20px; font-size: 0.9rem;">
+                    (Full Quick Think UI coming in FASE 2.2)
+                </p>
+            </div>
+        `;
+    }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; }
+        .exercise-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .exercise-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            max-width: 900px;
+            margin: 0 auto 40px;
+        }
+
+        .exercise-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 12px; }
+        .exercise-meta { display: flex; gap: 16px; margin-bottom: 24px; font-size: 0.9rem; }
+        .meta-item { display: flex; align-items: center; gap: 6px; }
+        .difficulty-badge {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .difficulty-badge.easy { background: #d4edda; color: #155724; }
+        .difficulty-badge.medium { background: #fff3cd; color: #856404; }
+        .difficulty-badge.hard { background: #f8d7da; color: #721c24; }
+
+        .instructions { background: #f0f4ff; padding: 16px; border-radius: 8px; margin-bottom: 24px; line-height: 1.6; }
+        .prompt { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 24px; font-family: 'Courier New', monospace; white-space: pre-wrap; word-break: break-word; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { font-weight: 600; margin-bottom: 8px; display: block; }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .timer.warning { color: #ff9800; }
+        .timer.danger { color: #f44336; }
+
+        .submit-btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .submit-btn:hover { background: #5568d3; }
+        .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+        .success-message.show { display: block; }
+
+        .loading { text-align: center; padding: 40px; color: #999; }
+        .error { background: #f8d7da; color: #721c24; padding: 16px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="exercise-header">
+    <div class="container">
+        <button class="back-btn" onclick="history.back()">← Back</button>
+    </div>
+</div>
+
+<div class="container">
+    <div id="exerciseContainer" class="loading">Loading exercise...</div>
+</div>
+
+<script src="js/dojo-client.js?v=1.0"></script>
+
+<script>
+(async function() {
+    const params = new URLSearchParams(window.location.search);
+    const exerciseId = params.get('exercise');
+
+    if (!exerciseId) {
+        document.getElementById('exerciseContainer').innerHTML = '<div class="error">Exercise ID not found.</div>';
+        return;
+    }
+
+    await dojoClient.init();
+
+    let startTime = Date.now();
+    let timerInterval = null;
+    let exercise = null;
+
+    try {
+        // Load all dojo content to find exercise
+        const result = await dojoClient.getDojoSeries();
+        if (result.error) throw result;
+
+        // For now, show placeholder (will be fetched from exercises.json in a real impl)
+        document.getElementById('exerciseContainer').innerHTML = `
+            <div class="exercise-container">
+                <div class="loading">Exercise details loading...</div>
+                <p style="text-align: center; color: #999; margin-top: 20px; font-size: 0.9rem;">
+                    (Full exercise view coming in FASE 2.2)
+                </p>
+            </div>
+        `;
+
+    } catch (e) {
+        console.error('❌ Exercise load:', e);
+        document.getElementById('exerciseContainer').innerHTML = '<div class="error">Failed to load exercise. Try refreshing.</div>';
+    }
+})();
+</script>
+
+</body>
+</html>

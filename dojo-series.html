@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dojo Series</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; }
+        .series-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+        }
+        .series-header h1 { font-size: 2rem; font-weight: 700; margin: 0; }
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .back-btn:hover { background: rgba(255,255,255,0.3); color: white; }
+
+        .topic-card {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        .topic-card:hover { box-shadow: 0 8px 16px rgba(0,0,0,0.12); }
+
+        .topic-header {
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+        }
+        .topic-header:hover { background: #f8f9fa; }
+
+        .topic-title { font-weight: 700; font-size: 1.1rem; margin: 0; }
+        .topic-desc { font-size: 0.95rem; color: #666; margin: 8px 0 0; }
+        .topic-meta { font-size: 0.85rem; color: #999; margin-top: 8px; }
+
+        .topic-body { padding: 20px; background: #f8f9fa; display: none; }
+        .topic-body.open { display: block; }
+
+        .exercise-item {
+            background: white;
+            padding: 14px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .exercise-item:hover { background: #e8ebff; border-left: 3px solid #667eea; }
+
+        .exercise-info { flex: 1; }
+        .exercise-title { font-weight: 600; margin-bottom: 4px; }
+        .exercise-difficulty {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        .exercise-difficulty.easy { background: #d4edda; color: #155724; }
+        .exercise-difficulty.medium { background: #fff3cd; color: #856404; }
+        .exercise-difficulty.hard { background: #f8d7da; color: #721c24; }
+
+        .exercise-pts { font-weight: 700; color: #667eea; }
+
+        .unlock-badge {
+            background: #ffc107;
+            color: #333;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        .loading { text-align: center; padding: 40px; color: #999; }
+        .error { background: #f8d7da; color: #721c24; padding: 16px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="series-header">
+    <div class="container">
+        <button class="back-btn" onclick="history.back()">← Back</button>
+        <h1 id="seriesTitle" class="mt-3">Series Title</h1>
+    </div>
+</div>
+
+<div class="container mt-4 mb-5">
+    <div id="topicsContainer" class="loading">Loading topics...</div>
+</div>
+
+<script src="js/dojo-client.js?v=1.0"></script>
+
+<script>
+(async function() {
+    const params = new URLSearchParams(window.location.search);
+    const seriesId = params.get('series');
+
+    if (!seriesId) {
+        document.getElementById('topicsContainer').innerHTML = '<div class="error">Series ID not found.</div>';
+        return;
+    }
+
+    await dojoClient.init();
+
+    try {
+        const result = await dojoClient.getDojoTopic(seriesId);
+        if (result.error) throw result;
+
+        const { topics = [], scoringFormula = {} } = result;
+        document.getElementById('seriesTitle').textContent = topics[0]?.series_id || 'Series';
+
+        if (!topics.length) {
+            document.getElementById('topicsContainer').innerHTML = '<div class="error">No topics found.</div>';
+            return;
+        }
+
+        const html = topics.map(topic => `
+            <div class="topic-card">
+                <div class="topic-header" onclick="toggleTopic(this)">
+                    <h3 class="topic-title">${topic.name}</h3>
+                    <p class="topic-desc">${topic.description}</p>
+                    <div class="topic-meta">
+                        ${topic.exercises_count || 0} exercises •
+                        ${topic.total_points || 0} max points •
+                        ${topic.min_unlock_pct || 60}% to unlock next
+                    </div>
+                </div>
+                <div class="topic-body">
+                    ${(topic.exercises || []).map(ex => `
+                        <div class="exercise-item" onclick="loadExercise('${ex.exercise_id}')">
+                            <div class="exercise-info">
+                                <div class="exercise-title">${ex.title}</div>
+                                <span class="exercise-difficulty ${ex.difficulty}">${ex.difficulty}</span>
+                                <span style="font-size: 0.85rem; color: #999;">${Math.round(ex.time_limit_seconds / 60)}m</span>
+                            </div>
+                            <div class="exercise-pts">${ex.points_base} pts</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('');
+
+        document.getElementById('topicsContainer').innerHTML = html;
+
+        // Add scoring formula info
+        const formulaHtml = `
+            <div style="background: white; padding: 20px; border-radius: 12px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                <h5 style="font-weight: 700; margin-bottom: 16px;">📊 How Scoring Works</h5>
+                <div style="font-size: 0.9rem; color: #666; line-height: 1.8;">
+                    <div><strong>Base Points:</strong> ${scoringFormula.base || '10/25/50 by difficulty'}</div>
+                    <div><strong>Streak Bonus:</strong> ${scoringFormula.streak || '1.0x → 1.2x'}</div>
+                    <div><strong>Speed Bonus:</strong> ${scoringFormula.time || '1.2x (<50%) | 1.0x | 0.8x (>100%)'}</div>
+                </div>
+                <small style="color: #999; display: block; margin-top: 12px;">Example: 25 pts (medium) × 1.1 (10d streak) × 1.2 (fast) = 33 pts</small>
+            </div>
+        `;
+
+        document.getElementById('topicsContainer').innerHTML += formulaHtml;
+
+    } catch (e) {
+        console.error('❌ Topics load:', e);
+        document.getElementById('topicsContainer').innerHTML = '<div class="error">Failed to load topics. Try refreshing.</div>';
+    }
+
+    window.toggleTopic = function(el) {
+        const body = el.nextElementSibling;
+        body.classList.toggle('open');
+    };
+
+    window.loadExercise = function(exerciseId) {
+        window.location.href = 'dojo-exercise.html?exercise=' + encodeURIComponent(exerciseId);
+    };
+})();
+</script>
+
+</body>
+</html>

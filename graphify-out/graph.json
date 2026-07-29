@@ -4,14 +4,224 @@
   "graph": {},
   "nodes": [
     {
+      "label": "dojo-client.js",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "js_dojo_client",
+      "community": 6,
+      "norm_label": "dojo-client.js"
+    },
+    {
+      "label": "DojoClient",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient",
+      "community": 6,
+      "norm_label": "dojoclient"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_constructor",
+      "community": 6,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": ".init()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_init",
+      "community": 6,
+      "norm_label": ".init()"
+    },
+    {
+      "label": ".getDojoSeries()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L20",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_getdojoseries",
+      "community": 8,
+      "norm_label": ".getdojoseries()"
+    },
+    {
+      "label": ".getDojoTopic()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_getdojotopic",
+      "community": 7,
+      "norm_label": ".getdojotopic()"
+    },
+    {
+      "label": ".getExercise()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_getexercise",
+      "community": 8,
+      "norm_label": ".getexercise()"
+    },
+    {
+      "label": ".submitExercise()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_submitexercise",
+      "community": 7,
+      "norm_label": ".submitexercise()"
+    },
+    {
+      "label": ".getQuickThinkSets()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L50",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_getquickthinksets",
+      "community": 7,
+      "norm_label": ".getquickthinksets()"
+    },
+    {
+      "label": ".submitQuickThink()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L54",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_submitquickthink",
+      "community": 7,
+      "norm_label": ".submitquickthink()"
+    },
+    {
+      "label": ".getLeaderboard()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L68",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_getleaderboard",
+      "community": 9,
+      "norm_label": ".getleaderboard()"
+    },
+    {
+      "label": "._apiCall()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L74",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_apicall",
+      "community": 7,
+      "norm_label": "._apicall()"
+    },
+    {
+      "label": "._addToQueue()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L91",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_addtoqueue",
+      "community": 7,
+      "norm_label": "._addtoqueue()"
+    },
+    {
+      "label": ".getPendingQueue()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L97",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_getpendingqueue",
+      "community": 6,
+      "norm_label": ".getpendingqueue()"
+    },
+    {
+      "label": ".clearQueue()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L108",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_clearqueue",
+      "community": 6,
+      "norm_label": ".clearqueue()"
+    },
+    {
+      "label": "._setCache()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L114",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_setcache",
+      "community": 6,
+      "norm_label": "._setcache()"
+    },
+    {
+      "label": "._getCache()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L122",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_getcache",
+      "community": 8,
+      "norm_label": "._getcache()"
+    },
+    {
+      "label": ".clearAllCache()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L135",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_clearallcache",
+      "community": 6,
+      "norm_label": ".clearallcache()"
+    },
+    {
+      "label": ".showLeaderboardIfEligible()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L143",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_showleaderboardifeligible",
+      "community": 9,
+      "norm_label": ".showleaderboardifeligible()"
+    },
+    {
+      "label": ".getLocalStreak()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L159",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_getlocalstreak",
+      "community": 6,
+      "norm_label": ".getlocalstreak()"
+    },
+    {
+      "label": ".recordActivity()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L191",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_recordactivity",
+      "community": 6,
+      "norm_label": ".recordactivity()"
+    },
+    {
       "label": "gamification.js",
       "file_type": "code",
       "source_file": "api/gamification.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "api_gamification",
       "community": 2,
-      "norm_label": "gamification.js"
+      "norm_label": "gamification.js",
+      "id": "api_gamification"
     },
     {
       "label": "fs",
@@ -19,9 +229,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "api_gamification_fs",
       "community": 2,
-      "norm_label": "fs"
+      "norm_label": "fs",
+      "id": "api_gamification_fs"
     },
     {
       "label": "path",
@@ -29,9 +239,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L7",
       "_origin": "ast",
-      "id": "api_gamification_path",
       "community": 2,
-      "norm_label": "path"
+      "norm_label": "path",
+      "id": "api_gamification_path"
     },
     {
       "label": "{ createClient }",
@@ -39,9 +249,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L8",
       "_origin": "ast",
-      "id": "api_gamification_createclient",
       "community": 2,
-      "norm_label": "{ createclient }"
+      "norm_label": "{ createclient }",
+      "id": "api_gamification_createclient"
     },
     {
       "label": "{ calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo }",
@@ -49,9 +259,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L9",
       "_origin": "ast",
-      "id": "api_gamification_calcexercisepoints_calcquickthinkpoints_getstreakstatus_checkbadgeunlock_getleaguerankinfo",
       "community": 2,
-      "norm_label": "{ calcexercisepoints, calcquickthinkpoints, getstreakstatus, checkbadgeunlock, getleaguerankinfo }"
+      "norm_label": "{ calcexercisepoints, calcquickthinkpoints, getstreakstatus, checkbadgeunlock, getleaguerankinfo }",
+      "id": "api_gamification_calcexercisepoints_calcquickthinkpoints_getstreakstatus_checkbadgeunlock_getleaguerankinfo"
     },
     {
       "label": "supabase",
@@ -59,9 +269,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "api_gamification_supabase",
       "community": 2,
-      "norm_label": "supabase"
+      "norm_label": "supabase",
+      "id": "api_gamification_supabase"
     },
     {
       "label": "DOJO_CACHE",
@@ -69,9 +279,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L13",
       "_origin": "ast",
-      "id": "api_gamification_dojo_cache",
       "community": 2,
-      "norm_label": "dojo_cache"
+      "norm_label": "dojo_cache",
+      "id": "api_gamification_dojo_cache"
     },
     {
       "label": "loadDojoContent()",
@@ -79,9 +289,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L15",
       "_origin": "ast",
-      "id": "api_gamification_loaddojocontent",
       "community": 4,
-      "norm_label": "loaddojocontent()"
+      "norm_label": "loaddojocontent()",
+      "id": "api_gamification_loaddojocontent"
     },
     {
       "label": "getStudentDojoProgress()",
@@ -89,9 +299,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L30",
       "_origin": "ast",
-      "id": "api_gamification_getstudentdojoprogress",
       "community": 4,
-      "norm_label": "getstudentdojoprogress()"
+      "norm_label": "getstudentdojoprogress()",
+      "id": "api_gamification_getstudentdojoprogress"
     },
     {
       "label": "handleDojoSeries()",
@@ -99,9 +309,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L44",
       "_origin": "ast",
-      "id": "api_gamification_handledojoseries",
       "community": 4,
-      "norm_label": "handledojoseries()"
+      "norm_label": "handledojoseries()",
+      "id": "api_gamification_handledojoseries"
     },
     {
       "label": "handleDojoTopic()",
@@ -109,9 +319,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L68",
       "_origin": "ast",
-      "id": "api_gamification_handledojotopic",
       "community": 4,
-      "norm_label": "handledojotopic()"
+      "norm_label": "handledojotopic()",
+      "id": "api_gamification_handledojotopic"
     },
     {
       "label": "handleSubmitExercise()",
@@ -119,9 +329,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L102",
       "_origin": "ast",
-      "id": "api_gamification_handlesubmitexercise",
       "community": 4,
-      "norm_label": "handlesubmitexercise()"
+      "norm_label": "handlesubmitexercise()",
+      "id": "api_gamification_handlesubmitexercise"
     },
     {
       "label": "handleQuickThinkSets()",
@@ -129,9 +339,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L146",
       "_origin": "ast",
-      "id": "api_gamification_handlequickthinksets",
       "community": 4,
-      "norm_label": "handlequickthinksets()"
+      "norm_label": "handlequickthinksets()",
+      "id": "api_gamification_handlequickthinksets"
     },
     {
       "label": "handleSubmitQuickThink()",
@@ -139,9 +349,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L168",
       "_origin": "ast",
-      "id": "api_gamification_handlesubmitquickthink",
       "community": 5,
-      "norm_label": "handlesubmitquickthink()"
+      "norm_label": "handlesubmitquickthink()",
+      "id": "api_gamification_handlesubmitquickthink"
     },
     {
       "label": "handleGetLeaderboard()",
@@ -149,9 +359,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L226",
       "_origin": "ast",
-      "id": "api_gamification_handlegetleaderboard",
       "community": 2,
-      "norm_label": "handlegetleaderboard()"
+      "norm_label": "handlegetleaderboard()",
+      "id": "api_gamification_handlegetleaderboard"
     },
     {
       "label": "scoring-engine.js",
@@ -159,9 +369,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "lib_scoring_engine",
       "community": 1,
-      "norm_label": "scoring-engine.js"
+      "norm_label": "scoring-engine.js",
+      "id": "lib_scoring_engine"
     },
     {
       "label": "getStreakMultiplier()",
@@ -169,9 +379,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L5",
       "_origin": "ast",
-      "id": "lib_scoring_engine_getstreakmultiplier",
       "community": 1,
-      "norm_label": "getstreakmultiplier()"
+      "norm_label": "getstreakmultiplier()",
+      "id": "lib_scoring_engine_getstreakmultiplier"
     },
     {
       "label": "getTimeMultiplier()",
@@ -179,9 +389,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "lib_scoring_engine_gettimemultiplier",
       "community": 1,
-      "norm_label": "gettimemultiplier()"
+      "norm_label": "gettimemultiplier()",
+      "id": "lib_scoring_engine_gettimemultiplier"
     },
     {
       "label": "calcExercisePoints()",
@@ -189,9 +399,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L17",
       "_origin": "ast",
-      "id": "lib_scoring_engine_calcexercisepoints",
       "community": 1,
-      "norm_label": "calcexercisepoints()"
+      "norm_label": "calcexercisepoints()",
+      "id": "lib_scoring_engine_calcexercisepoints"
     },
     {
       "label": "calcQuickThinkPoints()",
@@ -199,9 +409,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L25",
       "_origin": "ast",
-      "id": "lib_scoring_engine_calcquickthinkpoints",
       "community": 5,
-      "norm_label": "calcquickthinkpoints()"
+      "norm_label": "calcquickthinkpoints()",
+      "id": "lib_scoring_engine_calcquickthinkpoints"
     },
     {
       "label": "getStreakStatus()",
@@ -209,9 +419,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L29",
       "_origin": "ast",
-      "id": "lib_scoring_engine_getstreakstatus",
       "community": 1,
-      "norm_label": "getstreakstatus()"
+      "norm_label": "getstreakstatus()",
+      "id": "lib_scoring_engine_getstreakstatus"
     },
     {
       "label": "checkBadgeUnlock()",
@@ -219,9 +429,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L45",
       "_origin": "ast",
-      "id": "lib_scoring_engine_checkbadgeunlock",
       "community": 1,
-      "norm_label": "checkbadgeunlock()"
+      "norm_label": "checkbadgeunlock()",
+      "id": "lib_scoring_engine_checkbadgeunlock"
     },
     {
       "label": "getLeagueRankInfo()",
@@ -229,9 +439,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L66",
       "_origin": "ast",
-      "id": "lib_scoring_engine_getleaguerankinfo",
       "community": 1,
-      "norm_label": "getleaguerankinfo()"
+      "norm_label": "getleaguerankinfo()",
+      "id": "lib_scoring_engine_getleaguerankinfo"
     },
     {
       "label": "calcLeaguePointsFromActivities()",
@@ -239,9 +449,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L74",
       "_origin": "ast",
-      "id": "lib_scoring_engine_calcleaguepointsfromactivities",
       "community": 1,
-      "norm_label": "calcleaguepointsfromactivities()"
+      "norm_label": "calcleaguepointsfromactivities()",
+      "id": "lib_scoring_engine_calcleaguepointsfromactivities"
     },
     {
       "label": "getLeagueTier()",
@@ -249,9 +459,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L78",
       "_origin": "ast",
-      "id": "lib_scoring_engine_getleaguetier",
       "community": 1,
-      "norm_label": "getleaguetier()"
+      "norm_label": "getleaguetier()",
+      "id": "lib_scoring_engine_getleaguetier"
     },
     {
       "label": "server.js",
@@ -259,9 +469,9 @@
       "source_file": "server.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "server",
       "community": 3,
-      "norm_label": "server.js"
+      "norm_label": "server.js",
+      "id": "server"
     },
     {
       "label": "http",
@@ -269,9 +479,9 @@
       "source_file": "server.js",
       "source_location": "L2",
       "_origin": "ast",
-      "id": "server_http",
       "community": 3,
-      "norm_label": "http"
+      "norm_label": "http",
+      "id": "server_http"
     },
     {
       "label": "fs",
@@ -279,9 +489,9 @@
       "source_file": "server.js",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "server_fs",
       "community": 3,
-      "norm_label": "fs"
+      "norm_label": "fs",
+      "id": "server_fs"
     },
     {
       "label": "path",
@@ -289,9 +499,9 @@
       "source_file": "server.js",
       "source_location": "L4",
       "_origin": "ast",
-      "id": "server_path",
       "community": 3,
-      "norm_label": "path"
+      "norm_label": "path",
+      "id": "server_path"
     },
     {
       "label": "{ createClient }",
@@ -299,9 +509,9 @@
       "source_file": "server.js",
       "source_location": "L5",
       "_origin": "ast",
-      "id": "server_createclient",
       "community": 3,
-      "norm_label": "{ createclient }"
+      "norm_label": "{ createclient }",
+      "id": "server_createclient"
     },
     {
       "label": "supabase",
@@ -309,9 +519,9 @@
       "source_file": "server.js",
       "source_location": "L8",
       "_origin": "ast",
-      "id": "server_supabase",
       "community": 3,
-      "norm_label": "supabase"
+      "norm_label": "supabase",
+      "id": "server_supabase"
     },
     {
       "label": "MIME",
@@ -319,9 +529,9 @@
       "source_file": "server.js",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "server_mime",
       "community": 3,
-      "norm_label": "mime"
+      "norm_label": "mime",
+      "id": "server_mime"
     },
     {
       "label": "server",
@@ -329,9 +539,9 @@
       "source_file": "server.js",
       "source_location": "L21",
       "_origin": "ast",
-      "id": "server_server",
       "community": 3,
-      "norm_label": "server"
+      "norm_label": "server",
+      "id": "server_server"
     },
     {
       "label": "vercel.json",
@@ -368,12 +578,333 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "js_dojo_client",
+      "target": "js_dojo_client_dojoclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_addtoqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_apicall",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L135",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_clearallcache",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L108",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_clearqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L122",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getcache",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getdojoseries",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getdojotopic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getexercise",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getleaderboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L159",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getlocalstreak",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getpendingqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getquickthinksets",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L191",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_recordactivity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L114",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_setcache",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L143",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_showleaderboardifeligible",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_submitexercise",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_submitquickthink",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient_getdojoseries",
+      "target": "js_dojo_client_dojoclient_apicall",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient_getexercise",
+      "target": "js_dojo_client_dojoclient_getdojoseries",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient_getdojotopic",
+      "target": "js_dojo_client_dojoclient_apicall",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient_getexercise",
+      "target": "js_dojo_client_dojoclient_getcache",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient_submitexercise",
+      "target": "js_dojo_client_dojoclient_addtoqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient_submitexercise",
+      "target": "js_dojo_client_dojoclient_apicall",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient_getquickthinksets",
+      "target": "js_dojo_client_dojoclient_apicall",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient_submitquickthink",
+      "target": "js_dojo_client_dojoclient_addtoqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient_submitquickthink",
+      "target": "js_dojo_client_dojoclient_apicall",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L69",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient_getleaderboard",
+      "target": "js_dojo_client_dojoclient_apicall",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L150",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient_showleaderboardifeligible",
+      "target": "js_dojo_client_dojoclient_getleaderboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "api/gamification.js",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "api_gamification_calcexercisepoints_calcquickthinkpoints_getstreakstatus_checkbadgeunlock_getleaguerankinfo",
-      "confidence_score": 1.0
+      "target": "api_gamification_calcexercisepoints_calcquickthinkpoints_getstreakstatus_checkbadgeunlock_getleaguerankinfo"
     },
     {
       "relation": "contains",
@@ -381,9 +912,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "api_gamification_createclient",
-      "confidence_score": 1.0
+      "target": "api_gamification_createclient"
     },
     {
       "relation": "contains",
@@ -391,9 +922,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "api_gamification_dojo_cache",
-      "confidence_score": 1.0
+      "target": "api_gamification_dojo_cache"
     },
     {
       "relation": "contains",
@@ -401,9 +932,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "api_gamification_fs",
-      "confidence_score": 1.0
+      "target": "api_gamification_fs"
     },
     {
       "relation": "contains",
@@ -411,9 +942,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L30",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "api_gamification_getstudentdojoprogress",
-      "confidence_score": 1.0
+      "target": "api_gamification_getstudentdojoprogress"
     },
     {
       "relation": "contains",
@@ -421,9 +952,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L44",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "api_gamification_handledojoseries",
-      "confidence_score": 1.0
+      "target": "api_gamification_handledojoseries"
     },
     {
       "relation": "contains",
@@ -431,9 +962,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L68",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "api_gamification_handledojotopic",
-      "confidence_score": 1.0
+      "target": "api_gamification_handledojotopic"
     },
     {
       "relation": "contains",
@@ -441,9 +972,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L226",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "api_gamification_handlegetleaderboard",
-      "confidence_score": 1.0
+      "target": "api_gamification_handlegetleaderboard"
     },
     {
       "relation": "contains",
@@ -451,9 +982,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L146",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "api_gamification_handlequickthinksets",
-      "confidence_score": 1.0
+      "target": "api_gamification_handlequickthinksets"
     },
     {
       "relation": "contains",
@@ -461,9 +992,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L102",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "api_gamification_handlesubmitexercise",
-      "confidence_score": 1.0
+      "target": "api_gamification_handlesubmitexercise"
     },
     {
       "relation": "contains",
@@ -471,9 +1002,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L168",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "api_gamification_handlesubmitquickthink",
-      "confidence_score": 1.0
+      "target": "api_gamification_handlesubmitquickthink"
     },
     {
       "relation": "contains",
@@ -481,9 +1012,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "api_gamification_loaddojocontent",
-      "confidence_score": 1.0
+      "target": "api_gamification_loaddojocontent"
     },
     {
       "relation": "contains",
@@ -491,9 +1022,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "api_gamification_path",
-      "confidence_score": 1.0
+      "target": "api_gamification_path"
     },
     {
       "relation": "contains",
@@ -501,9 +1032,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "api_gamification_supabase",
-      "confidence_score": 1.0
+      "target": "api_gamification_supabase"
     },
     {
       "relation": "imports_from",
@@ -512,9 +1043,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "lib_scoring_engine",
-      "confidence_score": 1.0
+      "target": "lib_scoring_engine"
     },
     {
       "relation": "imports",
@@ -523,9 +1054,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "lib_scoring_engine_calcexercisepoints",
-      "confidence_score": 1.0
+      "target": "lib_scoring_engine_calcexercisepoints"
     },
     {
       "relation": "imports",
@@ -534,9 +1065,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "lib_scoring_engine_calcquickthinkpoints",
-      "confidence_score": 1.0
+      "target": "lib_scoring_engine_calcquickthinkpoints"
     },
     {
       "relation": "imports",
@@ -545,9 +1076,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "lib_scoring_engine_checkbadgeunlock",
-      "confidence_score": 1.0
+      "target": "lib_scoring_engine_checkbadgeunlock"
     },
     {
       "relation": "imports",
@@ -556,9 +1087,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "lib_scoring_engine_getleaguerankinfo",
-      "confidence_score": 1.0
+      "target": "lib_scoring_engine_getleaguerankinfo"
     },
     {
       "relation": "imports",
@@ -567,9 +1098,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification",
-      "target": "lib_scoring_engine_getstreakstatus",
-      "confidence_score": 1.0
+      "target": "lib_scoring_engine_getstreakstatus"
     },
     {
       "relation": "calls",
@@ -578,9 +1109,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L45",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification_handledojoseries",
-      "target": "api_gamification_loaddojocontent",
-      "confidence_score": 1.0
+      "target": "api_gamification_loaddojocontent"
     },
     {
       "relation": "calls",
@@ -589,9 +1120,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L69",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification_handledojotopic",
-      "target": "api_gamification_loaddojocontent",
-      "confidence_score": 1.0
+      "target": "api_gamification_loaddojocontent"
     },
     {
       "relation": "calls",
@@ -600,9 +1131,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L147",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification_handlequickthinksets",
-      "target": "api_gamification_loaddojocontent",
-      "confidence_score": 1.0
+      "target": "api_gamification_loaddojocontent"
     },
     {
       "relation": "calls",
@@ -611,9 +1142,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L103",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification_handlesubmitexercise",
-      "target": "api_gamification_loaddojocontent",
-      "confidence_score": 1.0
+      "target": "api_gamification_loaddojocontent"
     },
     {
       "relation": "calls",
@@ -622,9 +1153,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L169",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification_handlesubmitquickthink",
-      "target": "api_gamification_loaddojocontent",
-      "confidence_score": 1.0
+      "target": "api_gamification_loaddojocontent"
     },
     {
       "relation": "calls",
@@ -633,9 +1164,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L47",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification_handledojoseries",
-      "target": "api_gamification_getstudentdojoprogress",
-      "confidence_score": 1.0
+      "target": "api_gamification_getstudentdojoprogress"
     },
     {
       "relation": "calls",
@@ -644,9 +1175,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L117",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification_handlesubmitexercise",
-      "target": "api_gamification_getstudentdojoprogress",
-      "confidence_score": 1.0
+      "target": "api_gamification_getstudentdojoprogress"
     },
     {
       "relation": "calls",
@@ -676,9 +1207,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_scoring_engine",
-      "target": "lib_scoring_engine_calcexercisepoints",
-      "confidence_score": 1.0
+      "target": "lib_scoring_engine_calcexercisepoints"
     },
     {
       "relation": "contains",
@@ -686,9 +1217,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L74",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_scoring_engine",
-      "target": "lib_scoring_engine_calcleaguepointsfromactivities",
-      "confidence_score": 1.0
+      "target": "lib_scoring_engine_calcleaguepointsfromactivities"
     },
     {
       "relation": "contains",
@@ -696,9 +1227,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_scoring_engine",
-      "target": "lib_scoring_engine_calcquickthinkpoints",
-      "confidence_score": 1.0
+      "target": "lib_scoring_engine_calcquickthinkpoints"
     },
     {
       "relation": "contains",
@@ -706,9 +1237,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L45",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_scoring_engine",
-      "target": "lib_scoring_engine_checkbadgeunlock",
-      "confidence_score": 1.0
+      "target": "lib_scoring_engine_checkbadgeunlock"
     },
     {
       "relation": "contains",
@@ -716,9 +1247,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L66",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_scoring_engine",
-      "target": "lib_scoring_engine_getleaguerankinfo",
-      "confidence_score": 1.0
+      "target": "lib_scoring_engine_getleaguerankinfo"
     },
     {
       "relation": "contains",
@@ -726,9 +1257,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L78",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_scoring_engine",
-      "target": "lib_scoring_engine_getleaguetier",
-      "confidence_score": 1.0
+      "target": "lib_scoring_engine_getleaguetier"
     },
     {
       "relation": "contains",
@@ -736,9 +1267,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_scoring_engine",
-      "target": "lib_scoring_engine_getstreakmultiplier",
-      "confidence_score": 1.0
+      "target": "lib_scoring_engine_getstreakmultiplier"
     },
     {
       "relation": "contains",
@@ -746,9 +1277,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L29",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_scoring_engine",
-      "target": "lib_scoring_engine_getstreakstatus",
-      "confidence_score": 1.0
+      "target": "lib_scoring_engine_getstreakstatus"
     },
     {
       "relation": "contains",
@@ -756,9 +1287,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_scoring_engine",
-      "target": "lib_scoring_engine_gettimemultiplier",
-      "confidence_score": 1.0
+      "target": "lib_scoring_engine_gettimemultiplier"
     },
     {
       "relation": "calls",
@@ -767,9 +1298,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_scoring_engine_calcexercisepoints",
-      "target": "lib_scoring_engine_getstreakmultiplier",
-      "confidence_score": 1.0
+      "target": "lib_scoring_engine_getstreakmultiplier"
     },
     {
       "relation": "calls",
@@ -778,9 +1309,9 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_scoring_engine_calcexercisepoints",
-      "target": "lib_scoring_engine_gettimemultiplier",
-      "confidence_score": 1.0
+      "target": "lib_scoring_engine_gettimemultiplier"
     },
     {
       "relation": "contains",
@@ -788,9 +1319,9 @@
       "source_file": "server.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "server",
-      "target": "server_createclient",
-      "confidence_score": 1.0
+      "target": "server_createclient"
     },
     {
       "relation": "contains",
@@ -798,9 +1329,9 @@
       "source_file": "server.js",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "server",
-      "target": "server_fs",
-      "confidence_score": 1.0
+      "target": "server_fs"
     },
     {
       "relation": "contains",
@@ -808,9 +1339,9 @@
       "source_file": "server.js",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "server",
-      "target": "server_http",
-      "confidence_score": 1.0
+      "target": "server_http"
     },
     {
       "relation": "contains",
@@ -818,9 +1349,9 @@
       "source_file": "server.js",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "server",
-      "target": "server_mime",
-      "confidence_score": 1.0
+      "target": "server_mime"
     },
     {
       "relation": "contains",
@@ -828,9 +1359,9 @@
       "source_file": "server.js",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "server",
-      "target": "server_path",
-      "confidence_score": 1.0
+      "target": "server_path"
     },
     {
       "relation": "contains",
@@ -838,9 +1369,9 @@
       "source_file": "server.js",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "server",
-      "target": "server_server",
-      "confidence_score": 1.0
+      "target": "server_server"
     },
     {
       "relation": "contains",
@@ -848,9 +1379,9 @@
       "source_file": "server.js",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "server",
-      "target": "server_supabase",
-      "confidence_score": 1.0
+      "target": "server_supabase"
     },
     {
       "relation": "contains",
@@ -874,5 +1405,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "418d3d3b1a5ed222fccf2a9c9f44fc98eda41210"
+  "built_at_commit": "738c7aa403395867b366278115cc8dff843f24c9"
 }

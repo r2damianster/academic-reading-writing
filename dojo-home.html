@@ -246,8 +246,7 @@
 
     // ─── Global function for series click ───
     window.loadSeriesTopics = function(seriesId) {
-        console.log('Loading series:', seriesId);
-        alert('Series topics view coming in FASE 2.1');
+        window.location.href = 'dojo-series.html?series=' + encodeURIComponent(seriesId);
     };
 
     // ─── Init ───
