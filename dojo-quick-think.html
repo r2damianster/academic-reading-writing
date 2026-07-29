@@ -172,6 +172,11 @@ async function loadQTSetsMap() {
 }
 
 (async function() {
+    // Get studentId from parent window or direct
+    if (!window.currentStudent && window.parent && window.parent.currentStudent) {
+        window.currentStudent = window.parent.currentStudent;
+    }
+
     const params = new URLSearchParams(window.location.search);
     const setId = params.get('set');
 

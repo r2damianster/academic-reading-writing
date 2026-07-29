@@ -1,16 +1,16 @@
-# Graph Report - Academic_reading_and_writing  (2026-07-28)
+# Graph Report - Academic_reading_and_writing  (2026-07-29)
 
 ## Corpus Check
-- 103 files · ~223,710 words
+- 103 files · ~223,760 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 76 nodes · 102 edges · 10 communities (8 shown, 2 thin omitted)
+- 79 nodes · 104 edges · 11 communities (8 shown, 3 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `997d90f6`
+- Built from commit: `e0ff610b`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -22,6 +22,7 @@
 - [[_COMMUNITY_Community 4|Community 4]]
 - [[_COMMUNITY_Community 5|Community 5]]
 - [[_COMMUNITY_Community 6|Community 6]]
+- [[_COMMUNITY_Community 10|Community 10]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `DojoClient` - 20 edges
@@ -44,15 +45,15 @@
 ## Import Cycles
 - None detected.
 
-## Communities (10 total, 2 thin omitted)
+## Communities (11 total, 3 thin omitted)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.28
-Nodes (6): calcExercisePoints(), checkBadgeUnlock(), getLeagueRankInfo(), getStreakMultiplier(), getStreakStatus(), getTimeMultiplier()
+Cohesion: 0.24
+Nodes (7): calcExercisePoints(), calcQuickThinkPoints(), checkBadgeUnlock(), getLeagueRankInfo(), getStreakMultiplier(), getStreakStatus(), getTimeMultiplier()
 
 ### Community 2 - "Community 2"
-Cohesion: 0.21
-Nodes (15): { calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo }, checkAndUnlockBadges(), { createClient }, DOJO_CACHE, fs, getStudentDojoProgress(), handleDojoSeries(), handleDojoTopic() (+7 more)
+Cohesion: 0.22
+Nodes (14): { calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo }, checkAndUnlockBadges(), { createClient }, DOJO_CACHE, fs, getStudentDojoProgress(), handleDojoSeries(), handleDojoTopic() (+6 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.25
@@ -67,18 +68,18 @@ Cohesion: 0.40
 Nodes (5): 1. Apply Supabase RLS Policies, 2. Seed Initial Data (Optional), 3. Deploy to Vercel, 4. Monitor (Post-Deploy), Deployment Checklist
 
 ## Knowledge Gaps
-- **29 isolated node(s):** `Overview`, `Frontend (Client)`, `Backend (Server)`, `Database (Supabase)`, `1. Apply Supabase RLS Policies` (+24 more)
+- **30 isolated node(s):** `MENU`, `Overview`, `Frontend (Client)`, `Backend (Server)`, `Database (Supabase)` (+25 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **3 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `DojoClient` connect `Community 6` to `Community 8`, `Community 9`, `Community 7`?**
-  _High betweenness centrality (0.061) - this node is a cross-community bridge._
+  _High betweenness centrality (0.056) - this node is a cross-community bridge._
 - **Why does `Dojo Académico — Deployment & Operations Guide` connect `Community 4` to `Community 5`?**
-  _High betweenness centrality (0.043) - this node is a cross-community bridge._
+  _High betweenness centrality (0.040) - this node is a cross-community bridge._
 - **Why does `Deployment Checklist` connect `Community 5` to `Community 4`?**
-  _High betweenness centrality (0.021) - this node is a cross-community bridge._
-- **What connects `Overview`, `Frontend (Client)`, `Backend (Server)` to the rest of the system?**
-  _29 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _High betweenness centrality (0.019) - this node is a cross-community bridge._
+- **What connects `MENU`, `Overview`, `Frontend (Client)` to the rest of the system?**
+  _30 weakly-connected nodes found - possible documentation gaps or missing edges._
