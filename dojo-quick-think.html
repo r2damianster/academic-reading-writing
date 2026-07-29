@@ -180,9 +180,19 @@ function shuffleArray(arr) {
     return copy;
 }
 
+function deepCopySet(set) {
+    return {
+        ...set,
+        questions: set.questions.map(q => ({
+            ...q,
+            options: [...q.options]
+        }))
+    };
+}
+
 function shuffleQuestionsAndOptions(set) {
-    const shuffled = { ...set };
-    shuffled.questions = shuffleArray(set.questions).map(q => {
+    const shuffled = deepCopySet(set);
+    shuffled.questions = shuffleArray(shuffled.questions).map(q => {
         const options = q.options.map((opt, idx) => ({ text: opt, originalIdx: idx }));
         const shuffledOpts = shuffleArray(options);
         const newCorrectIdx = shuffledOpts.findIndex(opt => opt.originalIdx === q.correct_index);
