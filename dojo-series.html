@@ -199,11 +199,19 @@
     };
 
     window.loadExercise = function(exerciseId) {
-        window.location.href = 'dojo-exercise.html?exercise=' + encodeURIComponent(exerciseId);
+        const sid = dojoClient.studentId || localStorage.getItem('studentId');
+        const url = 'dojo-exercise.html?exercise=' + encodeURIComponent(exerciseId) +
+                    '&studentId=' + encodeURIComponent(sid);
+        console.log('🔗 Navigating to exercise:', url);
+        window.location.href = url;
     };
 
     window.loadQuickThink = function(setId) {
-        window.location.href = 'dojo-quick-think.html?set=' + encodeURIComponent(setId);
+        const sid = dojoClient.studentId || localStorage.getItem('studentId');
+        const url = 'dojo-quick-think.html?set=' + encodeURIComponent(setId) +
+                    '&studentId=' + encodeURIComponent(sid);
+        console.log('🔗 Navigating to QuickThink:', url);
+        window.location.href = url;
     };
 })();
 </script>
