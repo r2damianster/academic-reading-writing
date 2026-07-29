@@ -137,7 +137,7 @@
       "label": "handleQuickThinkSets()",
       "file_type": "code",
       "source_file": "api/gamification.js",
-      "source_location": "L241",
+      "source_location": "L258",
       "_origin": "ast",
       "id": "api_gamification_handlequickthinksets",
       "community": 2,
@@ -147,7 +147,7 @@
       "label": "handleSubmitQuickThink()",
       "file_type": "code",
       "source_file": "api/gamification.js",
-      "source_location": "L263",
+      "source_location": "L280",
       "_origin": "ast",
       "id": "api_gamification_handlesubmitquickthink",
       "community": 2,
@@ -157,7 +157,7 @@
       "label": "handleGetLeaderboard()",
       "file_type": "code",
       "source_file": "api/gamification.js",
-      "source_location": "L336",
+      "source_location": "L370",
       "_origin": "ast",
       "id": "api_gamification_handlegetleaderboard",
       "community": 2,
@@ -1930,5 +1930,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "4e3e02208cd76aecd50013aba023f37279d09fca"
+  "built_at_commit": "a1d462f969d4112164cae21e58c4dc3c2ba29e58"
 }
