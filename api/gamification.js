@@ -15,14 +15,31 @@ let DOJO_CACHE = { series: null, topics: null, exercises: null, quickThink: null
 function loadDojoContent() {
   try {
     if (!DOJO_CACHE.series) {
-      DOJO_CACHE.series = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/dojo/series.json'), 'utf8'));
-      DOJO_CACHE.topics = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/dojo/topics.json'), 'utf8'));
-      DOJO_CACHE.exercises = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/dojo/exercises.json'), 'utf8'));
-      DOJO_CACHE.quickThink = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/dojo/quick-think.json'), 'utf8'));
+      console.log('📚 Loading Dojo content from JSON files...');
+      const seriesPath = path.join(__dirname, '../data/dojo/series.json');
+      const topicsPath = path.join(__dirname, '../data/dojo/topics.json');
+      const exercisesPath = path.join(__dirname, '../data/dojo/exercises.json');
+      const qtPath = path.join(__dirname, '../data/dojo/quick-think.json');
+
+      console.log('  series:', seriesPath);
+      console.log('  topics:', topicsPath);
+      console.log('  exercises:', exercisesPath);
+      console.log('  quick-think:', qtPath);
+
+      DOJO_CACHE.series = JSON.parse(fs.readFileSync(seriesPath, 'utf8'));
+      DOJO_CACHE.topics = JSON.parse(fs.readFileSync(topicsPath, 'utf8'));
+      DOJO_CACHE.exercises = JSON.parse(fs.readFileSync(exercisesPath, 'utf8'));
+      DOJO_CACHE.quickThink = JSON.parse(fs.readFileSync(qtPath, 'utf8'));
+
+      console.log('✅ Dojo content loaded: ' +
+        DOJO_CACHE.series.length + ' series, ' +
+        DOJO_CACHE.topics.length + ' topics, ' +
+        DOJO_CACHE.exercises.length + ' exercises, ' +
+        DOJO_CACHE.quickThink.length + ' QT sets');
     }
     return DOJO_CACHE;
   } catch (e) {
-    console.warn('⚠️ Dojo content load failed:', e.message);
+    console.error('❌ Dojo content load FAILED:', e.message, e.code);
     return { series: [], topics: [], exercises: [], quickThink: [] };
   }
 }
