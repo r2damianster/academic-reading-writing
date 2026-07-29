@@ -160,7 +160,7 @@
       "source_location": "L290",
       "_origin": "ast",
       "id": "api_gamification_handlesubmitexercise",
-      "community": 5,
+      "community": 9,
       "norm_label": "handlesubmitexercise()"
     },
     {
@@ -197,11 +197,21 @@
       "label": "handleGetStreak()",
       "file_type": "code",
       "source_file": "api/gamification.js",
-      "source_location": "L556",
+      "source_location": "L560",
       "_origin": "ast",
       "id": "api_gamification_handlegetstreak",
       "community": 7,
       "norm_label": "handlegetstreak()"
+    },
+    {
+      "label": "handleGetBadges()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L574",
+      "_origin": "ast",
+      "id": "api_gamification_handlegetbadges",
+      "community": 7,
+      "norm_label": "handlegetbadges()"
     },
     {
       "label": "dojo-client.js",
@@ -209,9 +219,9 @@
       "source_file": "js/dojo-client.js",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "js_dojo_client",
       "community": 6,
-      "norm_label": "dojo-client.js",
-      "id": "js_dojo_client"
+      "norm_label": "dojo-client.js"
     },
     {
       "label": "DojoClient",
@@ -219,9 +229,9 @@
       "source_file": "js/dojo-client.js",
       "source_location": "L5",
       "_origin": "ast",
+      "id": "js_dojo_client_dojoclient",
       "community": 6,
-      "norm_label": "dojoclient",
-      "id": "js_dojo_client_dojoclient"
+      "norm_label": "dojoclient"
     },
     {
       "label": ".constructor()",
@@ -229,9 +239,9 @@
       "source_file": "js/dojo-client.js",
       "source_location": "L6",
       "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_constructor",
       "community": 6,
-      "norm_label": ".constructor()",
-      "id": "js_dojo_client_dojoclient_constructor"
+      "norm_label": ".constructor()"
     },
     {
       "label": ".init()",
@@ -239,189 +249,199 @@
       "source_file": "js/dojo-client.js",
       "source_location": "L12",
       "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_init",
       "community": 6,
-      "norm_label": ".init()",
-      "id": "js_dojo_client_dojoclient_init"
+      "norm_label": ".init()"
     },
     {
       "label": ".getDojoSeries()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L47",
+      "source_location": "L64",
       "_origin": "ast",
-      "community": 6,
-      "norm_label": ".getdojoseries()",
-      "id": "js_dojo_client_dojoclient_getdojoseries"
+      "id": "js_dojo_client_dojoclient_getdojoseries",
+      "community": 12,
+      "norm_label": ".getdojoseries()"
     },
     {
       "label": ".getDojoTopic()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L51",
+      "source_location": "L68",
       "_origin": "ast",
-      "community": 6,
-      "norm_label": ".getdojotopic()",
-      "id": "js_dojo_client_dojoclient_getdojotopic"
+      "id": "js_dojo_client_dojoclient_getdojotopic",
+      "community": 8,
+      "norm_label": ".getdojotopic()"
     },
     {
       "label": ".getExercise()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L55",
+      "source_location": "L72",
       "_origin": "ast",
-      "community": 6,
-      "norm_label": ".getexercise()",
-      "id": "js_dojo_client_dojoclient_getexercise"
+      "id": "js_dojo_client_dojoclient_getexercise",
+      "community": 12,
+      "norm_label": ".getexercise()"
     },
     {
       "label": ".submitExercise()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L63",
+      "source_location": "L80",
       "_origin": "ast",
-      "community": 6,
-      "norm_label": ".submitexercise()",
-      "id": "js_dojo_client_dojoclient_submitexercise"
+      "id": "js_dojo_client_dojoclient_submitexercise",
+      "community": 8,
+      "norm_label": ".submitexercise()"
     },
     {
       "label": ".getQuickThinkSets()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L77",
+      "source_location": "L94",
       "_origin": "ast",
-      "community": 6,
-      "norm_label": ".getquickthinksets()",
-      "id": "js_dojo_client_dojoclient_getquickthinksets"
+      "id": "js_dojo_client_dojoclient_getquickthinksets",
+      "community": 8,
+      "norm_label": ".getquickthinksets()"
     },
     {
       "label": ".submitQuickThink()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L81",
+      "source_location": "L98",
       "_origin": "ast",
-      "community": 6,
-      "norm_label": ".submitquickthink()",
-      "id": "js_dojo_client_dojoclient_submitquickthink"
+      "id": "js_dojo_client_dojoclient_submitquickthink",
+      "community": 8,
+      "norm_label": ".submitquickthink()"
     },
     {
       "label": ".getLeaderboard()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L95",
+      "source_location": "L112",
       "_origin": "ast",
-      "community": 6,
-      "norm_label": ".getleaderboard()",
-      "id": "js_dojo_client_dojoclient_getleaderboard"
+      "id": "js_dojo_client_dojoclient_getleaderboard",
+      "community": 13,
+      "norm_label": ".getleaderboard()"
     },
     {
       "label": ".getStreak()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L99",
+      "source_location": "L116",
       "_origin": "ast",
-      "community": 6,
-      "norm_label": ".getstreak()",
-      "id": "js_dojo_client_dojoclient_getstreak"
+      "id": "js_dojo_client_dojoclient_getstreak",
+      "community": 14,
+      "norm_label": ".getstreak()"
+    },
+    {
+      "label": ".getBadges()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L120",
+      "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_getbadges",
+      "community": 8,
+      "norm_label": ".getbadges()"
     },
     {
       "label": "._apiCall()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L105",
+      "source_location": "L126",
       "_origin": "ast",
-      "community": 6,
-      "norm_label": "._apicall()",
-      "id": "js_dojo_client_dojoclient_apicall"
+      "id": "js_dojo_client_dojoclient_apicall",
+      "community": 8,
+      "norm_label": "._apicall()"
     },
     {
       "label": "._addToQueue()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L132",
+      "source_location": "L153",
       "_origin": "ast",
-      "community": 6,
-      "norm_label": "._addtoqueue()",
-      "id": "js_dojo_client_dojoclient_addtoqueue"
+      "id": "js_dojo_client_dojoclient_addtoqueue",
+      "community": 8,
+      "norm_label": "._addtoqueue()"
     },
     {
       "label": ".getPendingQueue()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L138",
+      "source_location": "L159",
       "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_getpendingqueue",
       "community": 6,
-      "norm_label": ".getpendingqueue()",
-      "id": "js_dojo_client_dojoclient_getpendingqueue"
+      "norm_label": ".getpendingqueue()"
     },
     {
       "label": ".clearQueue()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L149",
+      "source_location": "L170",
       "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_clearqueue",
       "community": 6,
-      "norm_label": ".clearqueue()",
-      "id": "js_dojo_client_dojoclient_clearqueue"
+      "norm_label": ".clearqueue()"
     },
     {
       "label": "._setCache()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L155",
+      "source_location": "L176",
       "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_setcache",
       "community": 6,
-      "norm_label": "._setcache()",
-      "id": "js_dojo_client_dojoclient_setcache"
+      "norm_label": "._setcache()"
     },
     {
       "label": "._getCache()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L163",
+      "source_location": "L184",
       "_origin": "ast",
-      "community": 6,
-      "norm_label": "._getcache()",
-      "id": "js_dojo_client_dojoclient_getcache"
+      "id": "js_dojo_client_dojoclient_getcache",
+      "community": 12,
+      "norm_label": "._getcache()"
     },
     {
       "label": ".clearAllCache()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L176",
+      "source_location": "L197",
       "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_clearallcache",
       "community": 6,
-      "norm_label": ".clearallcache()",
-      "id": "js_dojo_client_dojoclient_clearallcache"
+      "norm_label": ".clearallcache()"
     },
     {
       "label": ".showLeaderboardIfEligible()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L184",
+      "source_location": "L205",
       "_origin": "ast",
-      "community": 6,
-      "norm_label": ".showleaderboardifeligible()",
-      "id": "js_dojo_client_dojoclient_showleaderboardifeligible"
+      "id": "js_dojo_client_dojoclient_showleaderboardifeligible",
+      "community": 13,
+      "norm_label": ".showleaderboardifeligible()"
     },
     {
       "label": ".recordActivity()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L202",
+      "source_location": "L223",
       "_origin": "ast",
+      "id": "js_dojo_client_dojoclient_recordactivity",
       "community": 6,
-      "norm_label": ".recordactivity()",
-      "id": "js_dojo_client_dojoclient_recordactivity"
+      "norm_label": ".recordactivity()"
     },
     {
       "label": ".updateStreakBadge()",
       "file_type": "code",
       "source_file": "js/dojo-client.js",
-      "source_location": "L208",
+      "source_location": "L229",
       "_origin": "ast",
-      "community": 6,
-      "norm_label": ".updatestreakbadge()",
-      "id": "js_dojo_client_dojoclient_updatestreakbadge"
+      "id": "js_dojo_client_dojoclient_updatestreakbadge",
+      "community": 14,
+      "norm_label": ".updatestreakbadge()"
     },
     {
       "label": "dojo-integrity.js",
@@ -429,7 +449,7 @@
       "source_file": "lib/dojo-integrity.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 9,
       "norm_label": "dojo-integrity.js",
       "id": "lib_dojo_integrity"
     },
@@ -439,7 +459,7 @@
       "source_file": "lib/dojo-integrity.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 2,
+      "community": 9,
       "norm_label": "validateexerciseanswer()",
       "id": "lib_dojo_integrity_validateexerciseanswer"
     },
@@ -729,7 +749,7 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L25",
       "_origin": "ast",
-      "community": 5,
+      "community": 1,
       "norm_label": "calcquickthinkpoints()",
       "id": "lib_scoring_engine_calcquickthinkpoints"
     },
@@ -984,6 +1004,16 @@
       "confidence_score": 1.0,
       "source": "api_gamification",
       "target": "api_gamification_handledojotopic"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L574",
+      "weight": 1.0,
+      "source": "api_gamification",
+      "target": "api_gamification_handlegetbadges",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -1279,9 +1309,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L171",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_gamification_checkandunlockbadges",
-      "target": "api_gamification_getstudentstreak",
-      "confidence_score": 1.0
+      "target": "api_gamification_getstudentstreak"
     },
     {
       "relation": "calls",
@@ -1304,6 +1334,17 @@
       "confidence_score": 1.0,
       "source": "api_gamification_handlegetstreak",
       "target": "api_gamification_getstudentstreak"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/gamification.js",
+      "source_location": "L576",
+      "weight": 1.0,
+      "source": "api_gamification_handlegetbadges",
+      "target": "api_gamification_checkandunlockbadges",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -1441,6 +1482,16 @@
       "confidence_score": 1.0,
       "source": "js_dojo_client_dojoclient",
       "target": "js_dojo_client_dojoclient_constructor"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L120",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getbadges",
+      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -1734,6 +1785,17 @@
       "confidence_score": 1.0,
       "source": "js_dojo_client_dojoclient_updatestreakbadge",
       "target": "js_dojo_client_dojoclient_getstreak"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L121",
+      "weight": 1.0,
+      "source": "js_dojo_client_dojoclient_getbadges",
+      "target": "js_dojo_client_dojoclient_apicall",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -2170,5 +2232,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "53ab25e015f5940136a44453039a9409f7b900d7"
+  "built_at_commit": "c08fc4b498e1eb3f4cb8c35549ee18a9d32b4fbc"
 }

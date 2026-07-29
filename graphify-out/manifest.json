@@ -30,8 +30,8 @@
     "semantic_hash": ""
   },
   "api/gamification.js": {
-    "mtime": 1785361565.4858854,
-    "ast_hash": "e4d7e56e1e9bd819931c67ce69902f06",
+    "mtime": 1785362078.3203654,
+    "ast_hash": "138e69cc40f0ca4abfe2b229064b2316",
     "semantic_hash": ""
   },
   "api/lesson-availability.js": {
@@ -810,8 +810,8 @@
     "semantic_hash": ""
   },
   "my-progress.html": {
-    "mtime": 1785361487.3371284,
-    "ast_hash": "4ca9b63d875ebd18f4d354641587497e",
+    "mtime": 1785362143.550449,
+    "ast_hash": "a0fbc9061f36e47e470881e290a954f4",
     "semantic_hash": ""
   },
   "teacher-helper.html": {
@@ -840,8 +840,8 @@
     "semantic_hash": ""
   },
   "data/dojo/quick-think.json": {
-    "mtime": 1785361378.8636217,
-    "ast_hash": "a0d558ad2e27aa90f9b859bfc9dda075",
+    "mtime": 1785362304.4773335,
+    "ast_hash": "4de8094856f98f9bc4ae90bb36612799",
     "semantic_hash": ""
   },
   "data/dojo/series.json": {
@@ -905,28 +905,28 @@
     "semantic_hash": ""
   },
   "js/dojo-client.js": {
-    "mtime": 1785360524.5302238,
-    "ast_hash": "37d882541727662164c79e10d638eb5b",
+    "mtime": 1785362052.6654418,
+    "ast_hash": "3a1c086d118cdd1c8109390e20298a58",
     "semantic_hash": ""
   },
   "dojo-home.html": {
-    "mtime": 1785361487.0128129,
-    "ast_hash": "b31cf5e451aa7dc49dd4e411ab0b81ac",
+    "mtime": 1785362215.0508027,
+    "ast_hash": "bf9ce51e2c21daeb01f53fc74ac7fad7",
     "semantic_hash": ""
   },
   "dojo-exercise.html": {
-    "mtime": 1785361486.9449291,
-    "ast_hash": "c5b618986f8316fa5867e5b340cd3140",
+    "mtime": 1785362215.040947,
+    "ast_hash": "a7c11662b53876ca1ba53b16800e0587",
     "semantic_hash": ""
   },
   "dojo-quick-think.html": {
-    "mtime": 1785361487.123407,
-    "ast_hash": "e5b851c031b135b2168b01103d6d2d42",
+    "mtime": 1785362215.060169,
+    "ast_hash": "de4456525c94f21a8072164a6da71bf8",
     "semantic_hash": ""
   },
   "dojo-series.html": {
-    "mtime": 1785361487.2025323,
-    "ast_hash": "450016853c5d46d7feff8418a8e05903",
+    "mtime": 1785362215.0674677,
+    "ast_hash": "e01ee1ceeaf72c38253dcd70376bac48",
     "semantic_hash": ""
   },
   "supabase-dojo-rls.sql": {
