@@ -234,6 +234,19 @@ class DojoClient {
     today.setHours(0, 0, 0, 0);
     localStorage.setItem('dojo_last_activity_date', today.toISOString());
   }
+
+  async updateStreakBadge() {
+    try {
+      const streakData = await this.getStreak();
+      const badge = document.getElementById('dojoStreakBadge');
+      if (badge && streakData?.currentStreak > 0) {
+        badge.textContent = '⚡ ' + streakData.currentStreak + ' días';
+        badge.style.display = 'flex';
+      }
+    } catch (e) {
+      console.warn('⚠️ Streak badge update failed:', e.message);
+    }
+  }
 }
 
 window.dojoClient = new DojoClient();

@@ -380,6 +380,7 @@ function shuffleQuestionsAndOptions(set) {
             document.getElementById('resultsContainer').innerHTML = resultsHtml;
 
             dojoClient.recordActivity();
+            await dojoClient.updateStreakBadge();
 
         } catch (e) {
             console.error('❌ Submit failed:', e);

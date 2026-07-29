@@ -326,6 +326,7 @@ async function loadExercisesMap() {
             `;
 
             dojoClient.recordActivity();
+            await dojoClient.updateStreakBadge();
 
             setTimeout(() => {
                 history.back();
