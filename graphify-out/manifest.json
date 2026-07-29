@@ -95,8 +95,8 @@
     "semantic_hash": ""
   },
   "js/navigation.js": {
-    "mtime": 1774281859.562894,
-    "ast_hash": "b41961687943daca6b1002962edb20a3",
+    "mtime": 1785321677.732677,
+    "ast_hash": "8d92bd322992dd6efaa57cb7db2cf231",
     "semantic_hash": ""
   },
   "js/pdf-annotator.js": {
@@ -905,8 +905,8 @@
     "semantic_hash": ""
   },
   "js/dojo-client.js": {
-    "mtime": 1785321358.4228625,
-    "ast_hash": "3c4a7bd2c85555066dde80572b0d7f9e",
+    "mtime": 1785321652.2513185,
+    "ast_hash": "f54da187884bc7f5bfe28a72d60fdf27",
     "semantic_hash": ""
   },
   "dojo-home.html": {
