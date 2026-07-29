@@ -10,8 +10,17 @@ class DojoClient {
   }
 
   async init() {
-    await window.configReady;
-    this.studentId = window.currentStudent?.id;
+    // Wait for config if available (in main window)
+    if (typeof window.configReady !== 'undefined') {
+      try {
+        await window.configReady;
+      } catch (e) {
+        console.warn('⚠️ configReady failed:', e);
+      }
+    }
+
+    // Get student from parent or self
+    this.studentId = window.currentStudent?.id || window.parent?.currentStudent?.id;
     if (!this.studentId) console.warn('⚠️ DojoClient: no studentId');
   }
 

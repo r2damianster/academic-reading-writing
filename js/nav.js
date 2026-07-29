@@ -7,6 +7,11 @@ const MENU = [
     label: 'Main',
     path: 'welcome-content.html'
   },
+  {
+    label: 'Dojo',
+    path: 'dojo-home.html',
+    description: 'Master writing through exercises, challenges, and competitions.'
+  },
   // ... dentro de MENU en nav.js
   {
     label: '00. Fundamentals',
