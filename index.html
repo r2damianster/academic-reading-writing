@@ -258,12 +258,14 @@
     <script>
         (async function() {
             await dojoClient.init();
-            const streak = dojoClient.getLocalStreak();
-            if (streak.current > 0) {
-                document.getElementById('dojoStreakBadge').textContent = '⚡ ' + streak.current;
-                document.getElementById('dojoStreakBadge').style.display = 'flex';
-            } else {
-                document.getElementById('dojoStreakBadge').style.display = 'none';
+            if (dojoClient.studentId) {
+                const streakData = await dojoClient.getStreak();
+                if (streakData?.currentStreak > 0) {
+                    document.getElementById('dojoStreakBadge').textContent = '⚡ ' + streakData.currentStreak + ' días';
+                    document.getElementById('dojoStreakBadge').style.display = 'flex';
+                } else {
+                    document.getElementById('dojoStreakBadge').style.display = 'none';
+                }
             }
         })();
     </script>
