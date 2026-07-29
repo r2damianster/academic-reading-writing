@@ -183,9 +183,12 @@
     async function loadSeries() {
         const container = document.getElementById('seriesContainer');
         try {
+            console.log('📚 Loading series. StudentID:', dojoClient.studentId);
             const result = await dojoClient.getDojoSeries();
+            console.log('📚 Series result:', result);
             if (result.error) {
-                container.innerHTML = '<div class="error">Failed to load series. Try refreshing.</div>';
+                console.error('❌ Series error:', result.error);
+                container.innerHTML = `<div class="error">Failed to load series: ${result.error}. Try refreshing.</div>`;
                 return;
             }
 

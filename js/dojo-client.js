@@ -81,19 +81,29 @@ class DojoClient {
   // ─── OFFLINE-FIRST + SYNC ───────────────────────────────────────────────
 
   _apiCall(action, body) {
+    const payload = {
+      action,
+      studentId: this.studentId,
+      ...body
+    };
+    console.log(`📡 DojoClient.${action}() call:`, payload);
+
     return fetch(this.baseUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action,
-        studentId: this.studentId,
-        ...body
-      })
+      body: JSON.stringify(payload)
     })
-      .then(r => r.json())
+      .then(r => {
+        console.log(`📡 Response status ${r.status} for ${action}`);
+        return r.json();
+      })
+      .then(data => {
+        console.log(`📡 Response data for ${action}:`, data);
+        return data;
+      })
       .catch(e => {
-        console.warn(`⚠️ DojoClient ${action} offline:`, e.message);
-        return { error: 'offline', action };
+        console.warn(`⚠️ DojoClient ${action} error:`, e.message);
+        return { error: 'offline', action, errorDetails: e.message };
       });
   }
 
