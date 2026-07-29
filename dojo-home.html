@@ -155,8 +155,8 @@
 
     await dojoClient.init();
 
-    // ─── Load QuickThink Sets ───
-    async function loadQuickThink() {
+    // ─── Load QuickThink Sets (internal) ───
+    async function _loadQuickThinkSets() {
         const container = document.getElementById('quickThinkContainer');
         try {
             const result = await dojoClient.getQuickThinkSets();
@@ -283,13 +283,25 @@
         }).join('');
     }
 
-    // ─── Global function for series click ───
+    // ─── Global functions for navigation ───
     window.loadSeriesTopics = function(seriesId) {
-        window.location.href = 'dojo-series.html?series=' + encodeURIComponent(seriesId);
+        const sid = dojoClient.studentId || localStorage.getItem('studentId');
+        const url = 'dojo-series.html?series=' + encodeURIComponent(seriesId) +
+                    '&studentId=' + encodeURIComponent(sid);
+        console.log('🔗 Navigating to series:', url);
+        window.location.href = url;
+    };
+
+    window.loadQuickThink = function(setId) {
+        const sid = dojoClient.studentId || localStorage.getItem('studentId');
+        const url = 'dojo-quick-think.html?set=' + encodeURIComponent(setId) +
+                    '&studentId=' + encodeURIComponent(sid);
+        console.log('🔗 Navigating to QuickThink:', url);
+        window.location.href = url;
     };
 
     // ─── Init ───
-    await loadQuickThink();
+    await _loadQuickThinkSets();
     await loadSeries();
     await checkLeaderboard();
 })();
