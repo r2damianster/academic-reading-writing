@@ -910,8 +910,23 @@
     "semantic_hash": ""
   },
   "dojo-home.html": {
-    "mtime": 1785283118.0163906,
-    "ast_hash": "f5e05f201f833a116c79efd4cd027b31",
+    "mtime": 1785283256.3857167,
+    "ast_hash": "cdffed9e9448442a82c806db9bc51118",
+    "semantic_hash": ""
+  },
+  "dojo-exercise.html": {
+    "mtime": 1785283232.4983606,
+    "ast_hash": "f530170c355790a83314c9d7090b26b5",
+    "semantic_hash": ""
+  },
+  "dojo-quick-think.html": {
+    "mtime": 1785283251.1882522,
+    "ast_hash": "24c5a873ed4671470e46c521e7219d4a",
+    "semantic_hash": ""
+  },
+  "dojo-series.html": {
+    "mtime": 1785283215.4249058,
+    "ast_hash": "3073c733963ad1ac40e3cc5555f90cf3",
     "semantic_hash": ""
   }
 }
