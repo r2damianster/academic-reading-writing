@@ -16,16 +16,45 @@ function loadDojoContent() {
   try {
     if (!DOJO_CACHE.series) {
       console.log('📚 Loading Dojo content from JSON files...');
-      const seriesPath = path.join(__dirname, '../data/dojo/series.json');
-      const topicsPath = path.join(__dirname, '../data/dojo/topics.json');
-      const exercisesPath = path.join(__dirname, '../data/dojo/exercises.json');
-      const qtPath = path.join(__dirname, '../data/dojo/quick-think.json');
+      console.log('  __dirname:', __dirname);
 
-      console.log('  series:', seriesPath);
-      console.log('  topics:', topicsPath);
-      console.log('  exercises:', exercisesPath);
-      console.log('  quick-think:', qtPath);
+      // Try two paths: relative and absolute from project root
+      const relPaths = {
+        series: path.join(__dirname, '../data/dojo/series.json'),
+        topics: path.join(__dirname, '../data/dojo/topics.json'),
+        exercises: path.join(__dirname, '../data/dojo/exercises.json'),
+        quickThink: path.join(__dirname, '../data/dojo/quick-think.json')
+      };
 
+      // Try absolute path if relative fails
+      const absBasePath = path.join(__dirname, '..');
+      const absPaths = {
+        series: path.join(absBasePath, 'data/dojo/series.json'),
+        topics: path.join(absBasePath, 'data/dojo/topics.json'),
+        exercises: path.join(absBasePath, 'data/dojo/exercises.json'),
+        quickThink: path.join(absBasePath, 'data/dojo/quick-think.json')
+      };
+
+      let seriesPath, topicsPath, exercisesPath, qtPath;
+
+      // Use relative path if files exist, else try absolute
+      if (fs.existsSync(relPaths.series)) {
+        seriesPath = relPaths.series;
+        topicsPath = relPaths.topics;
+        exercisesPath = relPaths.exercises;
+        qtPath = relPaths.quickThink;
+        console.log('  ✓ Using relative paths');
+      } else if (fs.existsSync(absPaths.series)) {
+        seriesPath = absPaths.series;
+        topicsPath = absPaths.topics;
+        exercisesPath = absPaths.exercises;
+        qtPath = absPaths.quickThink;
+        console.log('  ✓ Using absolute paths');
+      } else {
+        throw new Error('Dojo JSON files not found at: ' + relPaths.series + ' or ' + absPaths.series);
+      }
+
+      console.log('  Reading:', seriesPath);
       DOJO_CACHE.series = JSON.parse(fs.readFileSync(seriesPath, 'utf8'));
       DOJO_CACHE.topics = JSON.parse(fs.readFileSync(topicsPath, 'utf8'));
       DOJO_CACHE.exercises = JSON.parse(fs.readFileSync(exercisesPath, 'utf8'));
@@ -39,7 +68,7 @@ function loadDojoContent() {
     }
     return DOJO_CACHE;
   } catch (e) {
-    console.error('❌ Dojo content load FAILED:', e.message, e.code);
+    console.error('❌ Dojo content load FAILED:', e.message);
     return { series: [], topics: [], exercises: [], quickThink: [] };
   }
 }
