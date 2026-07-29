@@ -7,6 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 const { calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo } = require('../lib/scoring-engine');
+const { validateExerciseAnswer } = require('../lib/dojo-integrity');
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
@@ -272,6 +273,14 @@ async function handleSubmitExercise(studentId, exerciseId, body, res) {
   if (!answer) {
     res.writeHead(400, { 'Content-Type': 'application/json' });
     return res.end(JSON.stringify({ error: 'Answer required' }));
+  }
+
+  // Validate answer integrity
+  const validation = validateExerciseAnswer(answer);
+  if (!validation.valid) {
+    console.warn(`⚠️ Exercise integrity check failed (${validation.reason}):`, exerciseId, 'student:', studentId);
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ error: 'Validation failed', reason: validation.reason, message: validation.message }));
   }
 
   const progress = await getStudentDojoProgress(studentId);

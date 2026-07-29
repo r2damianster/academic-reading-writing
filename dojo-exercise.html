@@ -235,6 +235,11 @@ async function loadExercisesMap() {
                 <div class="form-group">
                     <label for="answerInput">Your Answer:</label>
                     <textarea id="answerInput" placeholder="Type your response here..." required></textarea>
+                    <div style="font-size: 0.85rem; color: #999; margin-top: 6px; display: flex; justify-content: space-between;">
+                        <span id="charCount">0 characters</span>
+                        <span id="wordCount">0 words</span>
+                    </div>
+                    <div id="answerValidation" style="font-size: 0.85rem; margin-top: 8px; padding: 8px; border-radius: 4px; display: none;"></div>
                 </div>
 
                 <button type="submit" class="submit-btn" id="submitBtn">Submit Answer</button>
@@ -247,6 +252,43 @@ async function loadExercisesMap() {
 
     document.getElementById('exerciseContainer').innerHTML = html;
     startTimer();
+
+    // Real-time counter + validation
+    const answerInput = document.getElementById('answerInput');
+    const charCount = document.getElementById('charCount');
+    const wordCount = document.getElementById('wordCount');
+    const validationMsg = document.getElementById('answerValidation');
+
+    function updateCounter() {
+        const text = answerInput.value.trim();
+        const chars = text.length;
+        const words = text.split(/\s+/).filter(w => w.length > 0).length;
+
+        charCount.textContent = chars + ' character' + (chars === 1 ? '' : 's');
+        wordCount.textContent = words + ' word' + (words === 1 ? '' : 's');
+
+        // Show validation feedback
+        if (chars > 0 && chars < 50) {
+            validationMsg.style.display = 'block';
+            validationMsg.style.background = '#fff3cd';
+            validationMsg.style.color = '#856404';
+            validationMsg.textContent = '⚠️ Minimum 50 characters required (' + chars + '/50)';
+        } else if (words > 0 && words < 10) {
+            validationMsg.style.display = 'block';
+            validationMsg.style.background = '#fff3cd';
+            validationMsg.style.color = '#856404';
+            validationMsg.textContent = '⚠️ Minimum 10 words required (' + words + '/10)';
+        } else if (chars >= 50 && words >= 10) {
+            validationMsg.style.display = 'block';
+            validationMsg.style.background = '#d4edda';
+            validationMsg.style.color = '#155724';
+            validationMsg.textContent = '✅ Answer meets requirements';
+        } else {
+            validationMsg.style.display = 'none';
+        }
+    }
+
+    answerInput.addEventListener('input', updateCounter);
 
     document.getElementById('exerciseForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -292,13 +334,21 @@ async function loadExercisesMap() {
         } catch (e) {
             console.error('❌ Submit failed:', e);
 
+            let errorMsg = 'Try again or contact support.';
+            if (e.message === 'Validation failed') {
+                errorMsg = e.message + ': ' + (e.message || 'Answer does not meet requirements.');
+            } else if (e.offline) {
+                errorMsg = 'Saved offline. Will sync when online.';
+            }
+
             document.getElementById('resultsMessage').className = 'results-message show error';
             document.getElementById('resultsMessage').innerHTML = `
                 ⚠️ <strong>Submission failed.</strong><br>
-                ${e.offline ? 'Saved offline. Will sync when online.' : 'Try again or contact support.'}
+                ${errorMsg}
             `;
 
             document.getElementById('submitBtn').disabled = false;
+            submitted = false;
         }
 
         clearInterval(timerInterval);
