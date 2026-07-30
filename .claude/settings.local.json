@@ -27,7 +27,8 @@
       "Bash(git -C \"c:/Users/Arturo/Documents/programas/academic-reading-writing\" commit -m \"docs: actualizar documentacion con dashboard admin y bug pendiente del boton sidebar\")",
       "mcp__claude_ai_Vercel__get_project",
       "mcp__claude_ai_Vercel__list_teams",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit *)"
     ]
   }
 }
