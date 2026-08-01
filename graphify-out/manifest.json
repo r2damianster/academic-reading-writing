@@ -440,8 +440,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1785374301.8863332,
-    "ast_hash": "821dac47376ed46aa4cd8a8d096900c4",
+    "mtime": 1785578005.8803828,
+    "ast_hash": "73f9ac93026d165cce3c7820c68b4dd9",
     "semantic_hash": ""
   },
   "modules/00-fundamentals/body-paragraphs.html": {
@@ -810,8 +810,8 @@
     "semantic_hash": ""
   },
   "my-progress.html": {
-    "mtime": 1785362143.550449,
-    "ast_hash": "a0fbc9061f36e47e470881e290a954f4",
+    "mtime": 1785578014.4123058,
+    "ast_hash": "d15798e620ba52620d1b3deaa27fb462",
     "semantic_hash": ""
   },
   "teacher-helper.html": {
@@ -820,8 +820,8 @@
     "semantic_hash": ""
   },
   "welcome-content.html": {
-    "mtime": 1773705805.25602,
-    "ast_hash": "cae1cdb5b42b2485476424a755c43d16",
+    "mtime": 1785578314.6434417,
+    "ast_hash": "506ed7ad5f9cd8dd7c44dd24ad002d42",
     "semantic_hash": ""
   },
   "Informal logic and fallacies in the field of history.pdf": {
@@ -947,6 +947,11 @@
   "supabase-dojo-badges-seed.sql": {
     "mtime": 1785361577.5066602,
     "ast_hash": "7ba22cf1f4e6b3ed9336fba6821fdb51",
+    "semantic_hash": ""
+  },
+  "css/foto-optimized.jpg": {
+    "mtime": 1785578305.1131485,
+    "ast_hash": "835326af5b75e50dc8c3ec7d48c69434",
     "semantic_hash": ""
   }
 }
