@@ -145,6 +145,23 @@ tbody tr:hover td { background:var(--snow); }
   display:inline-block; width:7px; height:7px; border-radius:50%;
   background:var(--red); margin-right:5px; vertical-align:middle;
 }
+.badge-archived { background:var(--cloud); color:var(--steel); }
+tr.row-archived td { opacity:.55; }
+
+/* ── Toolbar extras ──────────────────────────────── */
+.toolbar-left { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+.archived-toggle {
+  display:flex; align-items:center; gap:6px;
+  font-size:0.83rem; color:var(--steel); cursor:pointer; user-select:none;
+}
+.archive-course-btn {
+  padding:9px 14px; background:var(--white); color:var(--amber);
+  border:1px solid var(--amber-lt); border-radius:8px; font-size:0.83rem; font-weight:600;
+  cursor:pointer; font-family:inherit; transition:all .2s;
+}
+.archive-course-btn:hover { background:var(--amber-lt); }
+.archive-btn { background:var(--amber); color:#fff; }
+.archive-btn:hover { background:#b45309; }
 
 /* ── Modal overlay ───────────────────────────────── */
 .modal-overlay {
@@ -277,11 +294,18 @@ tbody tr:hover td { background:var(--snow); }
 
   <!-- Toolbar -->
   <div class="toolbar">
-    <input class="search-input" id="searchInput" type="search"
-           placeholder="Search by name or email…"
-           autocomplete="off" autocorrect="off" autocapitalize="off"
-           oninput="renderTable()">
+    <div class="toolbar-left">
+      <input class="search-input" id="searchInput" type="search"
+             placeholder="Search by name or email…"
+             autocomplete="off" autocorrect="off" autocapitalize="off"
+             oninput="renderTable()">
+      <label class="archived-toggle">
+        <input type="checkbox" id="showArchivedToggle" onchange="loadStudents()">
+        Show archived (previous semesters)
+      </label>
+    </div>
     <div class="toolbar-right">
+      <button class="archive-course-btn" onclick="archiveCoursePrompt()">🗄 Archive a course…</button>
       <button class="refresh-btn" onclick="loadStudents()">↻ Refresh</button>
       <button class="csv-btn" onclick="downloadCSV()">
         ↓ Export CSV
@@ -297,6 +321,7 @@ tbody tr:hover td { background:var(--snow); }
           <tr>
             <th>Student</th>
             <th>Course</th>
+            <th>Status</th>
             <th>Essays</th>
             <th>Avg Integrity</th>
             <th>Alerts</th>
@@ -307,7 +332,7 @@ tbody tr:hover td { background:var(--snow); }
           </tr>
         </thead>
         <tbody id="tableBody">
-          <tr><td colspan="9" class="state-msg"><span class="spin">⟳</span> Loading students…</td></tr>
+          <tr><td colspan="10" class="state-msg"><span class="spin">⟳</span> Loading students…</td></tr>
         </tbody>
       </table>
     </div>
@@ -374,6 +399,7 @@ tbody tr:hover td { background:var(--snow); }
 
     <div class="modal-footer">
       <button class="csv-btn" onclick="downloadStudentCSV()">↓ Export Student CSV</button>
+      <button class="csv-btn archive-btn" id="archiveToggleBtn" onclick="toggleArchiveStudent()">🗄 Archive</button>
       <button class="csv-btn" style="background:var(--red);color:#fff" onclick="deleteStudent()">🗑 Delete Student</button>
     </div>
   </div>
@@ -418,17 +444,18 @@ window.onload = function() {
 /* ── Load students ─────────────────────────────── */
 async function loadStudents() {
     document.getElementById('tableBody').innerHTML =
-        '<tr><td colspan="7" class="state-msg"><span class="spin">⟳</span> Loading…</td></tr>';
+        '<tr><td colspan="10" class="state-msg"><span class="spin">⟳</span> Loading…</td></tr>';
     try {
-        const r = await fetch('/api/admin-students');
+        const includeArchived = document.getElementById('showArchivedToggle').checked;
+        const url = '/api/admin-students' + (includeArchived ? '?includeArchived=1' : '');
+        const r = await fetch(url);
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         allStudents = await r.json();
-        document.getElementById('searchInput').value = '';
         updateStats();
         renderTable();
     } catch(e) {
         document.getElementById('tableBody').innerHTML =
-            `<tr><td colspan="7" class="state-msg" style="color:var(--red)">Error loading students: ${e.message}</td></tr>`;
+            `<tr><td colspan="10" class="state-msg" style="color:var(--red)">Error loading students: ${e.message}</td></tr>`;
     }
 }
 
@@ -459,7 +486,7 @@ function renderTable() {
 
     if (filtered.length === 0) {
         document.getElementById('tableBody').innerHTML =
-            '<tr><td colspan="9" class="state-msg">No students found.</td></tr>';
+            '<tr><td colspan="10" class="state-msg">No students found.</td></tr>';
         return;
     }
 
@@ -478,12 +505,17 @@ function renderTable() {
               + (s.avg_reading_score !== null ? `<br><span style="font-size:.72rem;color:#27ae60">${s.avg_reading_score}% avg</span>` : '')
             : '<span style="color:var(--mist)">—</span>';
 
-        return `<tr onclick="openDetail('${s.id}')">
+        const statusBadge = s.is_active
+            ? '<span class="badge badge-good">Active</span>'
+            : '<span class="badge badge-archived">Archived</span>';
+
+        return `<tr onclick="openDetail('${s.id}')" class="${s.is_active ? '' : 'row-archived'}">
             <td>
               <div style="font-weight:600">${esc(s.name)}</div>
               <div style="font-size:.75rem;color:var(--mist)">${esc(s.email)}</div>
             </td>
             <td>${esc(s.course || '—')}</td>
+            <td>${statusBadge}</td>
             <td style="text-align:center">${s.essays_submitted || 0}</td>
             <td>${intBadge}</td>
             <td>${alertCell}</td>
@@ -512,7 +544,10 @@ async function openDetail(studentId) {
     if (!currentStudent) return;
 
     document.getElementById('modalName').textContent = currentStudent.name;
-    document.getElementById('modalSub').textContent = currentStudent.email + ' · ' + (currentStudent.course || 'No course');
+    document.getElementById('modalSub').textContent = currentStudent.email + ' · ' + (currentStudent.course || 'No course')
+        + (currentStudent.is_active ? '' : ' · Archived');
+    const archiveBtn = document.getElementById('archiveToggleBtn');
+    archiveBtn.textContent = currentStudent.is_active ? '🗄 Archive' : '↺ Reactivate';
     document.getElementById('activityBody').innerHTML = '<tr><td colspan="3" class="state-msg"><span class="spin">⟳</span></td></tr>';
     document.getElementById('essaysBody').innerHTML   = '<tr><td colspan="7" class="state-msg"><span class="spin">⟳</span></td></tr>';
     document.getElementById('readingBody').innerHTML  = '<tr><td colspan="4" class="state-msg"><span class="spin">⟳</span></td></tr>';
@@ -557,6 +592,59 @@ async function deleteStudent() {
         updateStats();
     } catch (e) {
         alert('Error deleting student: ' + e.message);
+    }
+}
+
+async function toggleArchiveStudent() {
+    if (!currentStudent) return;
+    const nextActive = !currentStudent.is_active;
+    try {
+        const r = await fetch(`/api/admin-student-detail?studentId=${currentStudent.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ is_active: nextActive })
+        });
+        if (!r.ok) {
+            const err = await r.json().catch(() => ({}));
+            throw new Error(err.error || `HTTP ${r.status}`);
+        }
+        currentStudent.is_active = nextActive;
+        const listed = allStudents.find(s => s.id === currentStudent.id);
+        if (listed) listed.is_active = nextActive;
+
+        const showArchived = document.getElementById('showArchivedToggle').checked;
+        if (!nextActive && !showArchived) {
+            allStudents = allStudents.filter(s => s.id !== currentStudent.id);
+            closeModal();
+        } else {
+            document.getElementById('archiveToggleBtn').textContent = nextActive ? '🗄 Archive' : '↺ Reactivate';
+        }
+        renderTable();
+        updateStats();
+    } catch (e) {
+        alert('Error updating student status: ' + e.message);
+    }
+}
+
+async function archiveCoursePrompt() {
+    const courseId = prompt(
+        'Archive ALL students in a course (end of semester).\n\nEnter the exact course_id to archive (see the Course column, or the course selector in the Instructor Panel):'
+    );
+    if (!courseId) return;
+    if (!confirm(`Archive every student with course_id "${courseId}"? They will keep login access but disappear from the leaderboard and active lists.`)) return;
+
+    try {
+        const r = await fetch('/api/admin-archive-course', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ courseId, isActive: false })
+        });
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+        alert(`Archived ${data.affected} student(s) in course_id "${courseId}".`);
+        loadStudents();
+    } catch (e) {
+        alert('Error archiving course: ' + e.message);
     }
 }
 
@@ -645,9 +733,9 @@ function closeModalOnBg(e) {
 
 /* ── CSV export ────────────────────────────────── */
 function downloadCSV() {
-    const headers = ['Name','Email','Course','Major','Essays','Avg Integrity','Alerts','Last Activity','Last Activity Date'];
+    const headers = ['Name','Email','Course','Status','Major','Essays','Avg Integrity','Alerts','Last Activity','Last Activity Date'];
     const rows = allStudents.map(s => [
-        s.name, s.email, s.course || '', s.major || '',
+        s.name, s.email, s.course || '', s.is_active ? 'Active' : 'Archived', s.major || '',
         s.essays_submitted || 0,
         s.avg_integrity !== null ? s.avg_integrity : '',
         s.low_integrity_count || 0,

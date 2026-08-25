@@ -510,7 +510,8 @@ async function handleGetLeaderboard(studentId, res) {
   const { data: courseStudents, error: courseError } = await supabase
     .from('students')
     .select('id')
-    .eq('course_id', courseId);
+    .eq('course_id', courseId)
+    .eq('is_active', true);
 
   if (courseError || !courseStudents) {
     res.writeHead(500, { 'Content-Type': 'application/json' });

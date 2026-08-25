@@ -81,6 +81,31 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
+    // ─── 2g. ADMIN: ARCHIVAR/REACTIVAR ESTUDIANTE (individual y por curso) ──────
+    if (req.method === 'PATCH' && req.url.startsWith('/api/admin-student-detail')) {
+        const url = new URL(req.url, 'http://localhost');
+        req.query = Object.fromEntries(url.searchParams);
+        let body = '';
+        req.on('data', chunk => { body += chunk.toString(); });
+        req.on('end', () => {
+            try { req.body = body ? JSON.parse(body) : {}; } catch { req.body = {}; }
+            const adminStudentDetail = require('./api/admin-student-detail');
+            adminStudentDetail(req, res);
+        });
+        return;
+    }
+
+    if (req.method === 'POST' && req.url.startsWith('/api/admin-archive-course')) {
+        let body = '';
+        req.on('data', chunk => { body += chunk.toString(); });
+        req.on('end', () => {
+            try { req.body = body ? JSON.parse(body) : {}; } catch { req.body = {}; }
+            const adminArchiveCourse = require('./api/admin-archive-course');
+            adminArchiveCourse(req, res);
+        });
+        return;
+    }
+
     // ─── 3. RUTA DE LA API ───────────────────────────────────────────────────────
     if (req.method === 'POST' && req.url === '/api/validate-student') {
         let body = '';

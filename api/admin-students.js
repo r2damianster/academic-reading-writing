@@ -21,15 +21,19 @@ module.exports = async (req, res) => {
     }
 
     const supabase = createClient(sbUrl, sbKey);
+    const includeArchived = req.query && (req.query.includeArchived === '1' || req.query.includeArchived === 'true');
 
     try {
+        let studentsQuery = supabase.from('students').select('id,name,email,course,course_id,major,is_active').order('name');
+        if (!includeArchived) studentsQuery = studentsQuery.eq('is_active', true);
+
         const [
             { data: students, error: e1 },
             { data: essays,   error: e2 },
             { data: activities, error: e3 },
             { data: reading,  error: e4 }
         ] = await Promise.all([
-            supabase.from('students').select('id,name,email,course,major').order('name'),
+            studentsQuery,
             supabase.from('essay_submissions').select('student_id,integrity_score,created_at').order('created_at', { ascending: false }).limit(5000),
             supabase.from('activity_logs').select('student_id,activity,created_at').order('created_at', { ascending: false }).limit(5000),
             supabase.from('reading_progress').select('student_id,lesson_name,score,completed_at').eq('slide_id', -1).order('completed_at', { ascending: false }).limit(5000)
@@ -75,7 +79,8 @@ module.exports = async (req, res) => {
                 : null;
             return {
                 id: s.id, name: s.name, email: s.email,
-                course: s.course || '', major: s.major || '',
+                course: s.course || '', course_id: s.course_id || '', major: s.major || '',
+                is_active: s.is_active !== false,
                 essays_submitted: em.count, avg_integrity: avgEssay,
                 low_integrity_count: em.alerts,
                 activity_count: am?.count || 0,

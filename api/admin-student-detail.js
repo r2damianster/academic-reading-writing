@@ -1,6 +1,7 @@
 /* api/admin-student-detail.js
  * Historial completo de un estudiante para el admin dashboard.
  * GET    /api/admin-student-detail?studentId=<uuid>  → historial
+ * PATCH  /api/admin-student-detail?studentId=<uuid>  → { is_active } archiva o reactiva
  * DELETE /api/admin-student-detail?studentId=<uuid>  → borra estudiante y todos sus datos
  */
 require('dotenv').config();
@@ -19,10 +20,10 @@ const CHILD_TABLES = [
 
 module.exports = async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, PATCH, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     if (req.method === 'OPTIONS') return res.status(200).end();
-    if (req.method !== 'GET' && req.method !== 'DELETE') {
+    if (req.method !== 'GET' && req.method !== 'PATCH' && req.method !== 'DELETE') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
@@ -39,6 +40,21 @@ module.exports = async (req, res) => {
     }
 
     const supabase = createClient(sbUrl, sbKey);
+
+    if (req.method === 'PATCH') {
+        const isActive = req.body && req.body.is_active;
+        if (typeof isActive !== 'boolean') {
+            return res.status(400).json({ error: 'Body must include boolean is_active' });
+        }
+        try {
+            const { error } = await supabase.from('students').update({ is_active: isActive }).eq('id', studentId);
+            if (error) return res.status(500).json({ error: 'students: ' + error.message });
+            return res.status(200).json({ success: true, is_active: isActive });
+        } catch (e) {
+            console.error('🔥 admin-student-detail PATCH:', e.message);
+            return res.status(500).json({ error: e.message });
+        }
+    }
 
     if (req.method === 'DELETE') {
         try {
