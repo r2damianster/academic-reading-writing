@@ -627,11 +627,34 @@ async function toggleArchiveStudent() {
 }
 
 async function archiveCoursePrompt() {
-    const courseId = prompt(
-        'Archive ALL students in a course (end of semester).\n\nEnter the exact course_id to archive (see the Course column, or the course selector in the Instructor Panel):'
+    // course_id is a uuid FK (see courses table) — never ask the admin to type it.
+    // Build the pick list from the course names already visible in allStudents.
+    const courseCounts = new Map(); // course_id -> { name, count }
+    allStudents.forEach(s => {
+        if (!s.course_id) return;
+        const entry = courseCounts.get(s.course_id) || { name: s.course || s.course_id, count: 0 };
+        entry.count++;
+        courseCounts.set(s.course_id, entry);
+    });
+
+    if (courseCounts.size === 0) {
+        alert('No students with a course_id assigned were found in the current list.');
+        return;
+    }
+
+    const entries = [...courseCounts.entries()];
+    const listText = entries.map(([, e], i) => `${i + 1}. ${e.name} (${e.count} students)`).join('\n');
+    const choice = prompt(
+        `Archive ALL students in a course (end of semester).\n\nType the number of the course to archive:\n\n${listText}`
     );
-    if (!courseId) return;
-    if (!confirm(`Archive every student with course_id "${courseId}"? They will keep login access but disappear from the leaderboard and active lists.`)) return;
+    if (!choice) return;
+    const idx = parseInt(choice, 10) - 1;
+    if (isNaN(idx) || !entries[idx]) {
+        alert('Invalid selection.');
+        return;
+    }
+    const [courseId, { name, count }] = entries[idx];
+    if (!confirm(`Archive all ${count} student(s) in "${name}"? They keep login access but disappear from the leaderboard and active lists.`)) return;
 
     try {
         const r = await fetch('/api/admin-archive-course', {
@@ -641,7 +664,7 @@ async function archiveCoursePrompt() {
         });
         const data = await r.json().catch(() => ({}));
         if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
-        alert(`Archived ${data.affected} student(s) in course_id "${courseId}".`);
+        alert(`Archived ${data.affected} student(s) in "${name}".`);
         loadStudents();
     } catch (e) {
         alert('Error archiving course: ' + e.message);

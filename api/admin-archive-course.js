@@ -19,8 +19,8 @@ module.exports = async (req, res) => {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
     const { courseId, isActive } = req.body || {};
-    if (!courseId || typeof courseId !== 'string') {
-        return res.status(400).json({ error: 'courseId is required' });
+    if (!courseId || typeof courseId !== 'string' || !/^[0-9a-f-]{36}$/i.test(courseId)) {
+        return res.status(400).json({ error: 'Valid courseId (uuid) is required' });
     }
     if (typeof isActive !== 'boolean') {
         return res.status(400).json({ error: 'Body must include boolean isActive' });
