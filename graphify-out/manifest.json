@@ -955,8 +955,8 @@
     "semantic_hash": ""
   },
   "api/admin-archive-course.js": {
-    "mtime": 1787650246.841666,
-    "ast_hash": "3db9cc0e3cddfb01348ceade746cf282",
+    "mtime": 1787651512.5882957,
+    "ast_hash": "a77718caa4726a2b63668815e9ee3b36",
     "semantic_hash": ""
   },
   "scripts/sql/students_is_active.sql": {
