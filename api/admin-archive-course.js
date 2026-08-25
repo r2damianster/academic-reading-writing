@@ -6,6 +6,11 @@ require('dotenv').config();
 
 const { createClient } = require('@supabase/supabase-js');
 
+// El profesor puede tener su propia fila en `students` (vista de estudiante /
+// demos) con el course_id del curso vigente. Nunca debe quedar archivado
+// junto con el resto al cerrar semestre.
+const ADMIN_EMAIL = 'arturo.rodriguez@uleam.edu.ec';
+
 module.exports = async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -35,6 +40,7 @@ module.exports = async (req, res) => {
             .from('students')
             .update({ is_active: isActive })
             .eq('course_id', courseId)
+            .not('email', 'ilike', ADMIN_EMAIL)
             .select('id');
 
         if (error) return res.status(500).json({ error: 'students: ' + error.message });
