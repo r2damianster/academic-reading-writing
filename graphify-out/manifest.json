@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "server.js": {
-    "mtime": 1787650287.842526,
-    "ast_hash": "e0502c03a6887f3969b85c906265bd6c",
+    "mtime": 1787667286.695224,
+    "ast_hash": "66ab8e19f1b9c44fe85d1002ba741043",
     "semantic_hash": ""
   },
   "supabase-agents-schema.sql": {
@@ -425,8 +425,8 @@
     "semantic_hash": ""
   },
   "admin-students.html": {
-    "mtime": 1787651745.8961456,
-    "ast_hash": "b6476b68a83cfbc06c20ffe82386c4cd",
+    "mtime": 1787667332.8745782,
+    "ast_hash": "c66ae19a97f8cc22094b0310192a9e58",
     "semantic_hash": ""
   },
   "admin.html": {
@@ -962,6 +962,11 @@
   "scripts/sql/students_is_active.sql": {
     "mtime": 1787650197.6662674,
     "ast_hash": "f9c710804e8e4fa471c0c063d10807dd",
+    "semantic_hash": ""
+  },
+  "api/admin-reenroll-student.js": {
+    "mtime": 1787667279.2531586,
+    "ast_hash": "be67f9c0aa4285e2461f559b5c7a0bfd",
     "semantic_hash": ""
   }
 }

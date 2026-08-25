@@ -1,16 +1,16 @@
 # Graph Report - Academic_reading_and_writing  (2026-08-25)
 
 ## Corpus Check
-- 107 files · ~249,478 words
+- 108 files · ~250,181 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 98 nodes · 131 edges · 11 communities (4 shown, 7 thin omitted)
+- 100 nodes · 132 edges · 12 communities (4 shown, 8 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2d5bbba1`
+- Built from commit: `62f19ca1`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -24,6 +24,7 @@
 - [[_COMMUNITY_Community 6|Community 6]]
 - [[_COMMUNITY_Community 7|Community 7]]
 - [[_COMMUNITY_Community 8|Community 8]]
+- [[_COMMUNITY_Community 9|Community 9]]
 - [[_COMMUNITY_Community 10|Community 10]]
 - [[_COMMUNITY_Community 11|Community 11]]
 
@@ -50,7 +51,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (11 total, 7 thin omitted)
+## Communities (12 total, 8 thin omitted)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.28
@@ -69,15 +70,15 @@ Cohesion: 0.11
 Nodes (17): 1. Apply Supabase RLS Policies, 2. Seed Initial Data (Optional), 3. Deploy to Vercel, 4. Monitor (Post-Deploy), Architecture, Backend (Server), Badge Criteria (Auto-Unlock), Database (Supabase) (+9 more)
 
 ## Knowledge Gaps
-- **35 isolated node(s):** `{ createClient }`, `{ createClient }`, `CHILD_TABLES`, `{ createClient }`, `fs` (+30 more)
+- **36 isolated node(s):** `{ createClient }`, `http`, `fs`, `path`, `{ createClient }` (+31 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **8 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **What connects `{ createClient }`, `{ createClient }`, `CHILD_TABLES` to the rest of the system?**
-  _35 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `{ createClient }`, `http`, `fs` to the rest of the system?**
+  _36 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 4` be split into smaller, more focused modules?**
   _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._
 - **Should `Community 6` be split into smaller, more focused modules?**

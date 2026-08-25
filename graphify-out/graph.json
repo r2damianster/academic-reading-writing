@@ -4,284 +4,24 @@
   "graph": {},
   "nodes": [
     {
-      "label": "admin-archive-course.js",
+      "label": "admin-reenroll-student.js",
       "file_type": "code",
-      "source_file": "api/admin-archive-course.js",
+      "source_file": "api/admin-reenroll-student.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "api_admin_archive_course",
-      "community": 7,
-      "norm_label": "admin-archive-course.js"
+      "id": "api_admin_reenroll_student",
+      "community": 9,
+      "norm_label": "admin-reenroll-student.js"
     },
     {
       "label": "{ createClient }",
       "file_type": "code",
-      "source_file": "api/admin-archive-course.js",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "api_admin_archive_course_createclient",
-      "community": 7,
-      "norm_label": "{ createclient }"
-    },
-    {
-      "label": "admin-student-detail.js",
-      "file_type": "code",
-      "source_file": "api/admin-student-detail.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "api_admin_student_detail",
-      "community": 5,
-      "norm_label": "admin-student-detail.js"
-    },
-    {
-      "label": "{ createClient }",
-      "file_type": "code",
-      "source_file": "api/admin-student-detail.js",
-      "source_location": "L9",
-      "_origin": "ast",
-      "id": "api_admin_student_detail_createclient",
-      "community": 5,
-      "norm_label": "{ createclient }"
-    },
-    {
-      "label": "CHILD_TABLES",
-      "file_type": "code",
-      "source_file": "api/admin-student-detail.js",
+      "source_file": "api/admin-reenroll-student.js",
       "source_location": "L12",
       "_origin": "ast",
-      "id": "api_admin_student_detail_child_tables",
-      "community": 5,
-      "norm_label": "child_tables"
-    },
-    {
-      "label": "admin-students.js",
-      "file_type": "code",
-      "source_file": "api/admin-students.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "api_admin_students",
-      "community": 8,
-      "norm_label": "admin-students.js"
-    },
-    {
-      "label": "{ createClient }",
-      "file_type": "code",
-      "source_file": "api/admin-students.js",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "api_admin_students_createclient",
-      "community": 8,
+      "id": "api_admin_reenroll_student_createclient",
+      "community": 9,
       "norm_label": "{ createclient }"
-    },
-    {
-      "label": "gamification.js",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "api_gamification",
-      "community": 2,
-      "norm_label": "gamification.js"
-    },
-    {
-      "label": "fs",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L6",
-      "_origin": "ast",
-      "id": "api_gamification_fs",
-      "community": 2,
-      "norm_label": "fs"
-    },
-    {
-      "label": "path",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "api_gamification_path",
-      "community": 2,
-      "norm_label": "path"
-    },
-    {
-      "label": "{ createClient }",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L8",
-      "_origin": "ast",
-      "id": "api_gamification_createclient",
-      "community": 2,
-      "norm_label": "{ createclient }"
-    },
-    {
-      "label": "{ calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo }",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L9",
-      "_origin": "ast",
-      "id": "api_gamification_calcexercisepoints_calcquickthinkpoints_getstreakstatus_checkbadgeunlock_getleaguerankinfo",
-      "community": 2,
-      "norm_label": "{ calcexercisepoints, calcquickthinkpoints, getstreakstatus, checkbadgeunlock, getleaguerankinfo }"
-    },
-    {
-      "label": "{ validateExerciseAnswer }",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L10",
-      "_origin": "ast",
-      "id": "api_gamification_validateexerciseanswer",
-      "community": 2,
-      "norm_label": "{ validateexerciseanswer }"
-    },
-    {
-      "label": "supabase",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L12",
-      "_origin": "ast",
-      "id": "api_gamification_supabase",
-      "community": 2,
-      "norm_label": "supabase"
-    },
-    {
-      "label": "DOJO_CACHE",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L14",
-      "_origin": "ast",
-      "id": "api_gamification_dojo_cache",
-      "community": 2,
-      "norm_label": "dojo_cache"
-    },
-    {
-      "label": "loadDojoContent()",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L16",
-      "_origin": "ast",
-      "id": "api_gamification_loaddojocontent",
-      "community": 2,
-      "norm_label": "loaddojocontent()"
-    },
-    {
-      "label": "getStudentDojoProgress()",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L77",
-      "_origin": "ast",
-      "id": "api_gamification_getstudentdojoprogress",
-      "community": 2,
-      "norm_label": "getstudentdojoprogress()"
-    },
-    {
-      "label": "getStudentStreak()",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L91",
-      "_origin": "ast",
-      "id": "api_gamification_getstudentstreak",
-      "community": 2,
-      "norm_label": "getstudentstreak()"
-    },
-    {
-      "label": "handleDojoSeries()",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L105",
-      "_origin": "ast",
-      "id": "api_gamification_handledojoseries",
-      "community": 2,
-      "norm_label": "handledojoseries()"
-    },
-    {
-      "label": "handleDojoTopic()",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L131",
-      "_origin": "ast",
-      "id": "api_gamification_handledojotopic",
-      "community": 2,
-      "norm_label": "handledojotopic()"
-    },
-    {
-      "label": "checkAndUnlockBadges()",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L165",
-      "_origin": "ast",
-      "id": "api_gamification_checkandunlockbadges",
-      "community": 2,
-      "norm_label": "checkandunlockbadges()"
-    },
-    {
-      "label": "updateStreak()",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L214",
-      "_origin": "ast",
-      "id": "api_gamification_updatestreak",
-      "community": 2,
-      "norm_label": "updatestreak()"
-    },
-    {
-      "label": "handleSubmitExercise()",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L290",
-      "_origin": "ast",
-      "id": "api_gamification_handlesubmitexercise",
-      "community": 2,
-      "norm_label": "handlesubmitexercise()"
-    },
-    {
-      "label": "handleQuickThinkSets()",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L371",
-      "_origin": "ast",
-      "id": "api_gamification_handlequickthinksets",
-      "community": 2,
-      "norm_label": "handlequickthinksets()"
-    },
-    {
-      "label": "handleSubmitQuickThink()",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L395",
-      "_origin": "ast",
-      "id": "api_gamification_handlesubmitquickthink",
-      "community": 2,
-      "norm_label": "handlesubmitquickthink()"
-    },
-    {
-      "label": "handleGetLeaderboard()",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L497",
-      "_origin": "ast",
-      "id": "api_gamification_handlegetleaderboard",
-      "community": 2,
-      "norm_label": "handlegetleaderboard()"
-    },
-    {
-      "label": "handleGetStreak()",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L563",
-      "_origin": "ast",
-      "id": "api_gamification_handlegetstreak",
-      "community": 2,
-      "norm_label": "handlegetstreak()"
-    },
-    {
-      "label": "handleGetBadges()",
-      "file_type": "code",
-      "source_file": "api/gamification.js",
-      "source_location": "L577",
-      "_origin": "ast",
-      "id": "api_gamification_handlegetbadges",
-      "community": 2,
-      "norm_label": "handlegetbadges()"
     },
     {
       "label": "server.js",
@@ -362,6 +102,286 @@
       "id": "server_server",
       "community": 3,
       "norm_label": "server"
+    },
+    {
+      "label": "admin-archive-course.js",
+      "file_type": "code",
+      "source_file": "api/admin-archive-course.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "admin-archive-course.js",
+      "id": "api_admin_archive_course"
+    },
+    {
+      "label": "{ createClient }",
+      "file_type": "code",
+      "source_file": "api/admin-archive-course.js",
+      "source_location": "L7",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "{ createclient }",
+      "id": "api_admin_archive_course_createclient"
+    },
+    {
+      "label": "admin-student-detail.js",
+      "file_type": "code",
+      "source_file": "api/admin-student-detail.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "admin-student-detail.js",
+      "id": "api_admin_student_detail"
+    },
+    {
+      "label": "{ createClient }",
+      "file_type": "code",
+      "source_file": "api/admin-student-detail.js",
+      "source_location": "L9",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "{ createclient }",
+      "id": "api_admin_student_detail_createclient"
+    },
+    {
+      "label": "CHILD_TABLES",
+      "file_type": "code",
+      "source_file": "api/admin-student-detail.js",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "child_tables",
+      "id": "api_admin_student_detail_child_tables"
+    },
+    {
+      "label": "admin-students.js",
+      "file_type": "code",
+      "source_file": "api/admin-students.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": "admin-students.js",
+      "id": "api_admin_students"
+    },
+    {
+      "label": "{ createClient }",
+      "file_type": "code",
+      "source_file": "api/admin-students.js",
+      "source_location": "L7",
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": "{ createclient }",
+      "id": "api_admin_students_createclient"
+    },
+    {
+      "label": "gamification.js",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "gamification.js",
+      "id": "api_gamification"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L6",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "fs",
+      "id": "api_gamification_fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L7",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "path",
+      "id": "api_gamification_path"
+    },
+    {
+      "label": "{ createClient }",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L8",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "{ createclient }",
+      "id": "api_gamification_createclient"
+    },
+    {
+      "label": "{ calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo }",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L9",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "{ calcexercisepoints, calcquickthinkpoints, getstreakstatus, checkbadgeunlock, getleaguerankinfo }",
+      "id": "api_gamification_calcexercisepoints_calcquickthinkpoints_getstreakstatus_checkbadgeunlock_getleaguerankinfo"
+    },
+    {
+      "label": "{ validateExerciseAnswer }",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L10",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "{ validateexerciseanswer }",
+      "id": "api_gamification_validateexerciseanswer"
+    },
+    {
+      "label": "supabase",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "supabase",
+      "id": "api_gamification_supabase"
+    },
+    {
+      "label": "DOJO_CACHE",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L14",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "dojo_cache",
+      "id": "api_gamification_dojo_cache"
+    },
+    {
+      "label": "loadDojoContent()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L16",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "loaddojocontent()",
+      "id": "api_gamification_loaddojocontent"
+    },
+    {
+      "label": "getStudentDojoProgress()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L77",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "getstudentdojoprogress()",
+      "id": "api_gamification_getstudentdojoprogress"
+    },
+    {
+      "label": "getStudentStreak()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L91",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "getstudentstreak()",
+      "id": "api_gamification_getstudentstreak"
+    },
+    {
+      "label": "handleDojoSeries()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L105",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "handledojoseries()",
+      "id": "api_gamification_handledojoseries"
+    },
+    {
+      "label": "handleDojoTopic()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L131",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "handledojotopic()",
+      "id": "api_gamification_handledojotopic"
+    },
+    {
+      "label": "checkAndUnlockBadges()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L165",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "checkandunlockbadges()",
+      "id": "api_gamification_checkandunlockbadges"
+    },
+    {
+      "label": "updateStreak()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L214",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "updatestreak()",
+      "id": "api_gamification_updatestreak"
+    },
+    {
+      "label": "handleSubmitExercise()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L290",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "handlesubmitexercise()",
+      "id": "api_gamification_handlesubmitexercise"
+    },
+    {
+      "label": "handleQuickThinkSets()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L371",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "handlequickthinksets()",
+      "id": "api_gamification_handlequickthinksets"
+    },
+    {
+      "label": "handleSubmitQuickThink()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L395",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "handlesubmitquickthink()",
+      "id": "api_gamification_handlesubmitquickthink"
+    },
+    {
+      "label": "handleGetLeaderboard()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L497",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "handlegetleaderboard()",
+      "id": "api_gamification_handlegetleaderboard"
+    },
+    {
+      "label": "handleGetStreak()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L563",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "handlegetstreak()",
+      "id": "api_gamification_handlegetstreak"
+    },
+    {
+      "label": "handleGetBadges()",
+      "file_type": "code",
+      "source_file": "api/gamification.js",
+      "source_location": "L577",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "handlegetbadges()",
+      "id": "api_gamification_handlegetbadges"
     },
     {
       "label": "dojo-client.js",
@@ -988,12 +1008,92 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "api/admin-reenroll-student.js",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "api_admin_reenroll_student",
+      "target": "api_admin_reenroll_student_createclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server",
+      "target": "server_createclient"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server",
+      "target": "server_fs"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server",
+      "target": "server_http"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server",
+      "target": "server_mime"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server",
+      "target": "server_path"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server",
+      "target": "server_server"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server",
+      "target": "server_supabase"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "api/admin-archive-course.js",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_admin_archive_course",
-      "target": "api_admin_archive_course_createclient",
-      "confidence_score": 1.0
+      "target": "api_admin_archive_course_createclient"
     },
     {
       "relation": "contains",
@@ -1001,9 +1101,9 @@
       "source_file": "api/admin-student-detail.js",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_admin_student_detail",
-      "target": "api_admin_student_detail_child_tables",
-      "confidence_score": 1.0
+      "target": "api_admin_student_detail_child_tables"
     },
     {
       "relation": "contains",
@@ -1011,9 +1111,9 @@
       "source_file": "api/admin-student-detail.js",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_admin_student_detail",
-      "target": "api_admin_student_detail_createclient",
-      "confidence_score": 1.0
+      "target": "api_admin_student_detail_createclient"
     },
     {
       "relation": "contains",
@@ -1021,9 +1121,9 @@
       "source_file": "api/admin-students.js",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_admin_students",
-      "target": "api_admin_students_createclient",
-      "confidence_score": 1.0
+      "target": "api_admin_students_createclient"
     },
     {
       "relation": "contains",
@@ -1532,76 +1632,6 @@
       "weight": 1.0,
       "source": "api_gamification_handlesubmitquickthink",
       "target": "lib_scoring_engine_calcquickthinkpoints"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "server",
-      "target": "server_createclient"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "server",
-      "target": "server_fs"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "server",
-      "target": "server_http"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server.js",
-      "source_location": "L10",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "server",
-      "target": "server_mime"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server.js",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "server",
-      "target": "server_path"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server.js",
-      "source_location": "L21",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "server",
-      "target": "server_server"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server.js",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "server",
-      "target": "server_supabase"
     },
     {
       "relation": "contains",
@@ -2342,5 +2372,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "2d5bbba15f03886a1250faa529cad85800c791e9"
+  "built_at_commit": "62f19ca198bc207299e1bcb48e86cfc2e6b948b0"
 }
