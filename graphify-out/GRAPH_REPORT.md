@@ -1,16 +1,16 @@
-# Graph Report - Academic_reading_and_writing  (2026-07-29)
+# Graph Report - Academic_reading_and_writing  (2026-08-25)
 
 ## Corpus Check
-- 105 files · ~248,178 words
+- 107 files · ~249,478 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 91 nodes · 127 edges · 15 communities (10 shown, 5 thin omitted)
+- 98 nodes · 131 edges · 11 communities (4 shown, 7 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3d2a4eb2`
+- Built from commit: `2d5bbba1`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -23,7 +23,7 @@
 - [[_COMMUNITY_Community 5|Community 5]]
 - [[_COMMUNITY_Community 6|Community 6]]
 - [[_COMMUNITY_Community 7|Community 7]]
-- [[_COMMUNITY_Community 9|Community 9]]
+- [[_COMMUNITY_Community 8|Community 8]]
 - [[_COMMUNITY_Community 10|Community 10]]
 - [[_COMMUNITY_Community 11|Community 11]]
 
@@ -42,23 +42,23 @@
 ## Surprising Connections (you probably didn't know these)
 - `handleSubmitExercise()` --calls--> `calcExercisePoints()`  [EXTRACTED]
   api/gamification.js → lib/scoring-engine.js
-- `handleSubmitQuickThink()` --calls--> `calcQuickThinkPoints()`  [EXTRACTED]
-  api/gamification.js → lib/scoring-engine.js
 - `handleSubmitExercise()` --calls--> `validateExerciseAnswer()`  [EXTRACTED]
   api/gamification.js → lib/dojo-integrity.js
+- `handleSubmitQuickThink()` --calls--> `calcQuickThinkPoints()`  [EXTRACTED]
+  api/gamification.js → lib/scoring-engine.js
 
 ## Import Cycles
 - None detected.
 
-## Communities (15 total, 5 thin omitted)
+## Communities (11 total, 7 thin omitted)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.24
-Nodes (7): calcExercisePoints(), calcQuickThinkPoints(), checkBadgeUnlock(), getLeagueRankInfo(), getStreakMultiplier(), getStreakStatus(), getTimeMultiplier()
+Cohesion: 0.28
+Nodes (6): calcExercisePoints(), checkBadgeUnlock(), getLeagueRankInfo(), getStreakMultiplier(), getStreakStatus(), getTimeMultiplier()
 
 ### Community 2 - "Community 2"
-Cohesion: 0.22
-Nodes (7): { calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo }, { createClient }, DOJO_CACHE, fs, path, supabase, { validateExerciseAnswer }
+Cohesion: 0.16
+Nodes (21): { calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo }, checkAndUnlockBadges(), { createClient }, DOJO_CACHE, fs, getStudentDojoProgress(), getStudentStreak(), handleDojoSeries() (+13 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.25
@@ -68,25 +68,17 @@ Nodes (7): { createClient }, fs, http, MIME, path, server, supabase
 Cohesion: 0.11
 Nodes (17): 1. Apply Supabase RLS Policies, 2. Seed Initial Data (Optional), 3. Deploy to Vercel, 4. Monitor (Post-Deploy), Architecture, Backend (Server), Badge Criteria (Auto-Unlock), Database (Supabase) (+9 more)
 
-### Community 5 - "Community 5"
-Cohesion: 0.40
-Nodes (5): handleDojoTopic(), handleQuickThinkSets(), handleSubmitQuickThink(), loadDojoContent(), updateStreak()
-
-### Community 7 - "Community 7"
-Cohesion: 0.40
-Nodes (6): checkAndUnlockBadges(), getStudentDojoProgress(), getStudentStreak(), handleDojoSeries(), handleGetBadges(), handleGetStreak()
-
 ## Knowledge Gaps
-- **31 isolated node(s):** `fs`, `path`, `{ createClient }`, `{ calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo }`, `{ validateExerciseAnswer }` (+26 more)
+- **35 isolated node(s):** `{ createClient }`, `{ createClient }`, `CHILD_TABLES`, `{ createClient }`, `fs` (+30 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `DojoClient` connect `Community 6` to `Community 8`, `Community 12`, `Community 13`, `Community 14`?**
-  _High betweenness centrality (0.050) - this node is a cross-community bridge._
-- **What connects `fs`, `path`, `{ createClient }` to the rest of the system?**
-  _31 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `{ createClient }`, `{ createClient }`, `CHILD_TABLES` to the rest of the system?**
+  _35 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 4` be split into smaller, more focused modules?**
   _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._
+- **Should `Community 6` be split into smaller, more focused modules?**
+  _Cohesion score 0.1422924901185771 - nodes in this community are weakly interconnected._

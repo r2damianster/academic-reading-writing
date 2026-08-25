@@ -4,234 +4,74 @@
   "graph": {},
   "nodes": [
     {
-      "label": "dojo-client.js",
+      "label": "admin-archive-course.js",
       "file_type": "code",
-      "source_file": "js/dojo-client.js",
+      "source_file": "api/admin-archive-course.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "js_dojo_client",
-      "community": 6,
-      "norm_label": "dojo-client.js"
+      "id": "api_admin_archive_course",
+      "community": 7,
+      "norm_label": "admin-archive-course.js"
     },
     {
-      "label": "DojoClient",
+      "label": "{ createClient }",
       "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L5",
+      "source_file": "api/admin-archive-course.js",
+      "source_location": "L7",
       "_origin": "ast",
-      "id": "js_dojo_client_dojoclient",
-      "community": 6,
-      "norm_label": "dojoclient"
+      "id": "api_admin_archive_course_createclient",
+      "community": 7,
+      "norm_label": "{ createclient }"
     },
     {
-      "label": ".constructor()",
+      "label": "admin-student-detail.js",
       "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L6",
+      "source_file": "api/admin-student-detail.js",
+      "source_location": "L1",
       "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_constructor",
-      "community": 6,
-      "norm_label": ".constructor()"
+      "id": "api_admin_student_detail",
+      "community": 5,
+      "norm_label": "admin-student-detail.js"
     },
     {
-      "label": ".init()",
+      "label": "{ createClient }",
       "file_type": "code",
-      "source_file": "js/dojo-client.js",
+      "source_file": "api/admin-student-detail.js",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "api_admin_student_detail_createclient",
+      "community": 5,
+      "norm_label": "{ createclient }"
+    },
+    {
+      "label": "CHILD_TABLES",
+      "file_type": "code",
+      "source_file": "api/admin-student-detail.js",
       "source_location": "L12",
       "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_init",
-      "community": 6,
-      "norm_label": ".init()"
+      "id": "api_admin_student_detail_child_tables",
+      "community": 5,
+      "norm_label": "child_tables"
     },
     {
-      "label": ".getDojoSeries()",
+      "label": "admin-students.js",
       "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L64",
+      "source_file": "api/admin-students.js",
+      "source_location": "L1",
       "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_getdojoseries",
-      "community": 12,
-      "norm_label": ".getdojoseries()"
-    },
-    {
-      "label": ".getDojoTopic()",
-      "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L68",
-      "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_getdojotopic",
+      "id": "api_admin_students",
       "community": 8,
-      "norm_label": ".getdojotopic()"
+      "norm_label": "admin-students.js"
     },
     {
-      "label": ".getExercise()",
+      "label": "{ createClient }",
       "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L72",
+      "source_file": "api/admin-students.js",
+      "source_location": "L7",
       "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_getexercise",
-      "community": 12,
-      "norm_label": ".getexercise()"
-    },
-    {
-      "label": ".submitExercise()",
-      "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L80",
-      "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_submitexercise",
+      "id": "api_admin_students_createclient",
       "community": 8,
-      "norm_label": ".submitexercise()"
-    },
-    {
-      "label": ".getQuickThinkSets()",
-      "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L94",
-      "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_getquickthinksets",
-      "community": 8,
-      "norm_label": ".getquickthinksets()"
-    },
-    {
-      "label": ".submitQuickThink()",
-      "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L98",
-      "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_submitquickthink",
-      "community": 8,
-      "norm_label": ".submitquickthink()"
-    },
-    {
-      "label": ".getLeaderboard()",
-      "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L112",
-      "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_getleaderboard",
-      "community": 13,
-      "norm_label": ".getleaderboard()"
-    },
-    {
-      "label": ".getStreak()",
-      "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L116",
-      "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_getstreak",
-      "community": 14,
-      "norm_label": ".getstreak()"
-    },
-    {
-      "label": ".getBadges()",
-      "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L120",
-      "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_getbadges",
-      "community": 8,
-      "norm_label": ".getbadges()"
-    },
-    {
-      "label": "._apiCall()",
-      "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L126",
-      "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_apicall",
-      "community": 8,
-      "norm_label": "._apicall()"
-    },
-    {
-      "label": "._addToQueue()",
-      "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L153",
-      "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_addtoqueue",
-      "community": 8,
-      "norm_label": "._addtoqueue()"
-    },
-    {
-      "label": ".getPendingQueue()",
-      "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L159",
-      "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_getpendingqueue",
-      "community": 6,
-      "norm_label": ".getpendingqueue()"
-    },
-    {
-      "label": ".clearQueue()",
-      "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L170",
-      "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_clearqueue",
-      "community": 6,
-      "norm_label": ".clearqueue()"
-    },
-    {
-      "label": "._setCache()",
-      "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L176",
-      "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_setcache",
-      "community": 6,
-      "norm_label": "._setcache()"
-    },
-    {
-      "label": "._getCache()",
-      "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L184",
-      "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_getcache",
-      "community": 12,
-      "norm_label": "._getcache()"
-    },
-    {
-      "label": ".clearAllCache()",
-      "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L197",
-      "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_clearallcache",
-      "community": 6,
-      "norm_label": ".clearallcache()"
-    },
-    {
-      "label": ".showLeaderboardIfEligible()",
-      "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L207",
-      "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_showleaderboardifeligible",
-      "community": 13,
-      "norm_label": ".showleaderboardifeligible()"
-    },
-    {
-      "label": ".recordActivity()",
-      "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L225",
-      "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_recordactivity",
-      "community": 6,
-      "norm_label": ".recordactivity()"
-    },
-    {
-      "label": ".updateStreakBadge()",
-      "file_type": "code",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L231",
-      "_origin": "ast",
-      "id": "js_dojo_client_dojoclient_updatestreakbadge",
-      "community": 14,
-      "norm_label": ".updatestreakbadge()"
+      "norm_label": "{ createclient }"
     },
     {
       "label": "gamification.js",
@@ -239,9 +79,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "api_gamification",
       "community": 2,
-      "norm_label": "gamification.js",
-      "id": "api_gamification"
+      "norm_label": "gamification.js"
     },
     {
       "label": "fs",
@@ -249,9 +89,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L6",
       "_origin": "ast",
+      "id": "api_gamification_fs",
       "community": 2,
-      "norm_label": "fs",
-      "id": "api_gamification_fs"
+      "norm_label": "fs"
     },
     {
       "label": "path",
@@ -259,9 +99,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L7",
       "_origin": "ast",
+      "id": "api_gamification_path",
       "community": 2,
-      "norm_label": "path",
-      "id": "api_gamification_path"
+      "norm_label": "path"
     },
     {
       "label": "{ createClient }",
@@ -269,9 +109,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L8",
       "_origin": "ast",
+      "id": "api_gamification_createclient",
       "community": 2,
-      "norm_label": "{ createclient }",
-      "id": "api_gamification_createclient"
+      "norm_label": "{ createclient }"
     },
     {
       "label": "{ calcExercisePoints, calcQuickThinkPoints, getStreakStatus, checkBadgeUnlock, getLeagueRankInfo }",
@@ -279,9 +119,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L9",
       "_origin": "ast",
+      "id": "api_gamification_calcexercisepoints_calcquickthinkpoints_getstreakstatus_checkbadgeunlock_getleaguerankinfo",
       "community": 2,
-      "norm_label": "{ calcexercisepoints, calcquickthinkpoints, getstreakstatus, checkbadgeunlock, getleaguerankinfo }",
-      "id": "api_gamification_calcexercisepoints_calcquickthinkpoints_getstreakstatus_checkbadgeunlock_getleaguerankinfo"
+      "norm_label": "{ calcexercisepoints, calcquickthinkpoints, getstreakstatus, checkbadgeunlock, getleaguerankinfo }"
     },
     {
       "label": "{ validateExerciseAnswer }",
@@ -289,9 +129,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L10",
       "_origin": "ast",
+      "id": "api_gamification_validateexerciseanswer",
       "community": 2,
-      "norm_label": "{ validateexerciseanswer }",
-      "id": "api_gamification_validateexerciseanswer"
+      "norm_label": "{ validateexerciseanswer }"
     },
     {
       "label": "supabase",
@@ -299,9 +139,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L12",
       "_origin": "ast",
+      "id": "api_gamification_supabase",
       "community": 2,
-      "norm_label": "supabase",
-      "id": "api_gamification_supabase"
+      "norm_label": "supabase"
     },
     {
       "label": "DOJO_CACHE",
@@ -309,9 +149,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L14",
       "_origin": "ast",
+      "id": "api_gamification_dojo_cache",
       "community": 2,
-      "norm_label": "dojo_cache",
-      "id": "api_gamification_dojo_cache"
+      "norm_label": "dojo_cache"
     },
     {
       "label": "loadDojoContent()",
@@ -319,9 +159,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 5,
-      "norm_label": "loaddojocontent()",
-      "id": "api_gamification_loaddojocontent"
+      "id": "api_gamification_loaddojocontent",
+      "community": 2,
+      "norm_label": "loaddojocontent()"
     },
     {
       "label": "getStudentDojoProgress()",
@@ -329,9 +169,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L77",
       "_origin": "ast",
-      "community": 7,
-      "norm_label": "getstudentdojoprogress()",
-      "id": "api_gamification_getstudentdojoprogress"
+      "id": "api_gamification_getstudentdojoprogress",
+      "community": 2,
+      "norm_label": "getstudentdojoprogress()"
     },
     {
       "label": "getStudentStreak()",
@@ -339,9 +179,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L91",
       "_origin": "ast",
-      "community": 7,
-      "norm_label": "getstudentstreak()",
-      "id": "api_gamification_getstudentstreak"
+      "id": "api_gamification_getstudentstreak",
+      "community": 2,
+      "norm_label": "getstudentstreak()"
     },
     {
       "label": "handleDojoSeries()",
@@ -349,9 +189,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L105",
       "_origin": "ast",
-      "community": 7,
-      "norm_label": "handledojoseries()",
-      "id": "api_gamification_handledojoseries"
+      "id": "api_gamification_handledojoseries",
+      "community": 2,
+      "norm_label": "handledojoseries()"
     },
     {
       "label": "handleDojoTopic()",
@@ -359,9 +199,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L131",
       "_origin": "ast",
-      "community": 5,
-      "norm_label": "handledojotopic()",
-      "id": "api_gamification_handledojotopic"
+      "id": "api_gamification_handledojotopic",
+      "community": 2,
+      "norm_label": "handledojotopic()"
     },
     {
       "label": "checkAndUnlockBadges()",
@@ -369,9 +209,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L165",
       "_origin": "ast",
-      "community": 7,
-      "norm_label": "checkandunlockbadges()",
-      "id": "api_gamification_checkandunlockbadges"
+      "id": "api_gamification_checkandunlockbadges",
+      "community": 2,
+      "norm_label": "checkandunlockbadges()"
     },
     {
       "label": "updateStreak()",
@@ -379,9 +219,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L214",
       "_origin": "ast",
-      "community": 5,
-      "norm_label": "updatestreak()",
-      "id": "api_gamification_updatestreak"
+      "id": "api_gamification_updatestreak",
+      "community": 2,
+      "norm_label": "updatestreak()"
     },
     {
       "label": "handleSubmitExercise()",
@@ -389,9 +229,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L290",
       "_origin": "ast",
-      "community": 9,
-      "norm_label": "handlesubmitexercise()",
-      "id": "api_gamification_handlesubmitexercise"
+      "id": "api_gamification_handlesubmitexercise",
+      "community": 2,
+      "norm_label": "handlesubmitexercise()"
     },
     {
       "label": "handleQuickThinkSets()",
@@ -399,9 +239,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L371",
       "_origin": "ast",
-      "community": 5,
-      "norm_label": "handlequickthinksets()",
-      "id": "api_gamification_handlequickthinksets"
+      "id": "api_gamification_handlequickthinksets",
+      "community": 2,
+      "norm_label": "handlequickthinksets()"
     },
     {
       "label": "handleSubmitQuickThink()",
@@ -409,9 +249,9 @@
       "source_file": "api/gamification.js",
       "source_location": "L395",
       "_origin": "ast",
-      "community": 5,
-      "norm_label": "handlesubmitquickthink()",
-      "id": "api_gamification_handlesubmitquickthink"
+      "id": "api_gamification_handlesubmitquickthink",
+      "community": 2,
+      "norm_label": "handlesubmitquickthink()"
     },
     {
       "label": "handleGetLeaderboard()",
@@ -419,29 +259,339 @@
       "source_file": "api/gamification.js",
       "source_location": "L497",
       "_origin": "ast",
+      "id": "api_gamification_handlegetleaderboard",
       "community": 2,
-      "norm_label": "handlegetleaderboard()",
-      "id": "api_gamification_handlegetleaderboard"
+      "norm_label": "handlegetleaderboard()"
     },
     {
       "label": "handleGetStreak()",
       "file_type": "code",
       "source_file": "api/gamification.js",
-      "source_location": "L562",
+      "source_location": "L563",
       "_origin": "ast",
-      "community": 7,
-      "norm_label": "handlegetstreak()",
-      "id": "api_gamification_handlegetstreak"
+      "id": "api_gamification_handlegetstreak",
+      "community": 2,
+      "norm_label": "handlegetstreak()"
     },
     {
       "label": "handleGetBadges()",
       "file_type": "code",
       "source_file": "api/gamification.js",
-      "source_location": "L576",
+      "source_location": "L577",
       "_origin": "ast",
-      "community": 7,
-      "norm_label": "handlegetbadges()",
-      "id": "api_gamification_handlegetbadges"
+      "id": "api_gamification_handlegetbadges",
+      "community": 2,
+      "norm_label": "handlegetbadges()"
+    },
+    {
+      "label": "server.js",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "server",
+      "community": 3,
+      "norm_label": "server.js"
+    },
+    {
+      "label": "http",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "server_http",
+      "community": 3,
+      "norm_label": "http"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "server_fs",
+      "community": 3,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "server_path",
+      "community": 3,
+      "norm_label": "path"
+    },
+    {
+      "label": "{ createClient }",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "server_createclient",
+      "community": 3,
+      "norm_label": "{ createclient }"
+    },
+    {
+      "label": "supabase",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "server_supabase",
+      "community": 3,
+      "norm_label": "supabase"
+    },
+    {
+      "label": "MIME",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "server_mime",
+      "community": 3,
+      "norm_label": "mime"
+    },
+    {
+      "label": "server",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "server_server",
+      "community": 3,
+      "norm_label": "server"
+    },
+    {
+      "label": "dojo-client.js",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": "dojo-client.js",
+      "id": "js_dojo_client"
+    },
+    {
+      "label": "DojoClient",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": "dojoclient",
+      "id": "js_dojo_client_dojoclient"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L6",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".constructor()",
+      "id": "js_dojo_client_dojoclient_constructor"
+    },
+    {
+      "label": ".init()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".init()",
+      "id": "js_dojo_client_dojoclient_init"
+    },
+    {
+      "label": ".getDojoSeries()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L64",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".getdojoseries()",
+      "id": "js_dojo_client_dojoclient_getdojoseries"
+    },
+    {
+      "label": ".getDojoTopic()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L68",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".getdojotopic()",
+      "id": "js_dojo_client_dojoclient_getdojotopic"
+    },
+    {
+      "label": ".getExercise()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L72",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".getexercise()",
+      "id": "js_dojo_client_dojoclient_getexercise"
+    },
+    {
+      "label": ".submitExercise()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L80",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".submitexercise()",
+      "id": "js_dojo_client_dojoclient_submitexercise"
+    },
+    {
+      "label": ".getQuickThinkSets()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L94",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".getquickthinksets()",
+      "id": "js_dojo_client_dojoclient_getquickthinksets"
+    },
+    {
+      "label": ".submitQuickThink()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L98",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".submitquickthink()",
+      "id": "js_dojo_client_dojoclient_submitquickthink"
+    },
+    {
+      "label": ".getLeaderboard()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L112",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".getleaderboard()",
+      "id": "js_dojo_client_dojoclient_getleaderboard"
+    },
+    {
+      "label": ".getStreak()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L116",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".getstreak()",
+      "id": "js_dojo_client_dojoclient_getstreak"
+    },
+    {
+      "label": ".getBadges()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L120",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".getbadges()",
+      "id": "js_dojo_client_dojoclient_getbadges"
+    },
+    {
+      "label": "._apiCall()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L126",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": "._apicall()",
+      "id": "js_dojo_client_dojoclient_apicall"
+    },
+    {
+      "label": "._addToQueue()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L153",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": "._addtoqueue()",
+      "id": "js_dojo_client_dojoclient_addtoqueue"
+    },
+    {
+      "label": ".getPendingQueue()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L159",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".getpendingqueue()",
+      "id": "js_dojo_client_dojoclient_getpendingqueue"
+    },
+    {
+      "label": ".clearQueue()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L170",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".clearqueue()",
+      "id": "js_dojo_client_dojoclient_clearqueue"
+    },
+    {
+      "label": "._setCache()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L176",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": "._setcache()",
+      "id": "js_dojo_client_dojoclient_setcache"
+    },
+    {
+      "label": "._getCache()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L184",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": "._getcache()",
+      "id": "js_dojo_client_dojoclient_getcache"
+    },
+    {
+      "label": ".clearAllCache()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L197",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".clearallcache()",
+      "id": "js_dojo_client_dojoclient_clearallcache"
+    },
+    {
+      "label": ".showLeaderboardIfEligible()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L207",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".showleaderboardifeligible()",
+      "id": "js_dojo_client_dojoclient_showleaderboardifeligible"
+    },
+    {
+      "label": ".recordActivity()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L225",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".recordactivity()",
+      "id": "js_dojo_client_dojoclient_recordactivity"
+    },
+    {
+      "label": ".updateStreakBadge()",
+      "file_type": "code",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L231",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".updatestreakbadge()",
+      "id": "js_dojo_client_dojoclient_updatestreakbadge"
     },
     {
       "label": "dojo-integrity.js",
@@ -449,7 +599,7 @@
       "source_file": "lib/dojo-integrity.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 9,
+      "community": 2,
       "norm_label": "dojo-integrity.js",
       "id": "lib_dojo_integrity"
     },
@@ -459,7 +609,7 @@
       "source_file": "lib/dojo-integrity.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 9,
+      "community": 2,
       "norm_label": "validateexerciseanswer()",
       "id": "lib_dojo_integrity_validateexerciseanswer"
     },
@@ -749,7 +899,7 @@
       "source_file": "lib/scoring-engine.js",
       "source_location": "L25",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "norm_label": "calcquickthinkpoints()",
       "id": "lib_scoring_engine_calcquickthinkpoints"
     },
@@ -804,86 +954,6 @@
       "id": "lib_scoring_engine_getleaguetier"
     },
     {
-      "label": "server.js",
-      "file_type": "code",
-      "source_file": "server.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 3,
-      "norm_label": "server.js",
-      "id": "server"
-    },
-    {
-      "label": "http",
-      "file_type": "code",
-      "source_file": "server.js",
-      "source_location": "L2",
-      "_origin": "ast",
-      "community": 3,
-      "norm_label": "http",
-      "id": "server_http"
-    },
-    {
-      "label": "fs",
-      "file_type": "code",
-      "source_file": "server.js",
-      "source_location": "L3",
-      "_origin": "ast",
-      "community": 3,
-      "norm_label": "fs",
-      "id": "server_fs"
-    },
-    {
-      "label": "path",
-      "file_type": "code",
-      "source_file": "server.js",
-      "source_location": "L4",
-      "_origin": "ast",
-      "community": 3,
-      "norm_label": "path",
-      "id": "server_path"
-    },
-    {
-      "label": "{ createClient }",
-      "file_type": "code",
-      "source_file": "server.js",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 3,
-      "norm_label": "{ createclient }",
-      "id": "server_createclient"
-    },
-    {
-      "label": "supabase",
-      "file_type": "code",
-      "source_file": "server.js",
-      "source_location": "L8",
-      "_origin": "ast",
-      "community": 3,
-      "norm_label": "supabase",
-      "id": "server_supabase"
-    },
-    {
-      "label": "MIME",
-      "file_type": "code",
-      "source_file": "server.js",
-      "source_location": "L10",
-      "_origin": "ast",
-      "community": 3,
-      "norm_label": "mime",
-      "id": "server_mime"
-    },
-    {
-      "label": "server",
-      "file_type": "code",
-      "source_file": "server.js",
-      "source_location": "L21",
-      "_origin": "ast",
-      "community": 3,
-      "norm_label": "server",
-      "id": "server_server"
-    },
-    {
       "label": "vercel.json",
       "file_type": "code",
       "source_file": "vercel.json",
@@ -918,376 +988,42 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L5",
+      "source_file": "api/admin-archive-course.js",
+      "source_location": "L7",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client",
-      "target": "js_dojo_client_dojoclient"
+      "source": "api_admin_archive_course",
+      "target": "api_admin_archive_course_createclient",
+      "confidence_score": 1.0
     },
     {
-      "relation": "method",
+      "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L91",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_addtoqueue"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L74",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_apicall"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L135",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_clearallcache"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L108",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_clearqueue"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_constructor"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L120",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_getbadges"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L122",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_getcache"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L20",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_getdojoseries"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L24",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_getdojotopic"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L28",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_getexercise"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L68",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_getleaderboard"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L97",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_getpendingqueue"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L50",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_getquickthinksets"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L99",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_getstreak"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
+      "source_file": "api/admin-student-detail.js",
       "source_location": "L12",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_init"
+      "source": "api_admin_student_detail",
+      "target": "api_admin_student_detail_child_tables",
+      "confidence_score": 1.0
     },
     {
-      "relation": "method",
+      "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L191",
+      "source_file": "api/admin-student-detail.js",
+      "source_location": "L9",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_recordactivity"
+      "source": "api_admin_student_detail",
+      "target": "api_admin_student_detail_createclient",
+      "confidence_score": 1.0
     },
     {
-      "relation": "method",
+      "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L114",
+      "source_file": "api/admin-students.js",
+      "source_location": "L7",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_setcache"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L143",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_showleaderboardifeligible"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L36",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_submitexercise"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L54",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_submitquickthink"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L238",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient",
-      "target": "js_dojo_client_dojoclient_updatestreakbadge"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L21",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient_getdojoseries",
-      "target": "js_dojo_client_dojoclient_apicall"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L32",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient_getexercise",
-      "target": "js_dojo_client_dojoclient_getdojoseries"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L25",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient_getdojotopic",
-      "target": "js_dojo_client_dojoclient_apicall"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L29",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient_getexercise",
-      "target": "js_dojo_client_dojoclient_getcache"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L44",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient_submitexercise",
-      "target": "js_dojo_client_dojoclient_addtoqueue"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L37",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient_submitexercise",
-      "target": "js_dojo_client_dojoclient_apicall"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L51",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient_getquickthinksets",
-      "target": "js_dojo_client_dojoclient_apicall"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L62",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient_submitquickthink",
-      "target": "js_dojo_client_dojoclient_addtoqueue"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L55",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient_submitquickthink",
-      "target": "js_dojo_client_dojoclient_apicall"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L69",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient_getleaderboard",
-      "target": "js_dojo_client_dojoclient_apicall"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L150",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient_showleaderboardifeligible",
-      "target": "js_dojo_client_dojoclient_getleaderboard"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L100",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient_getstreak",
-      "target": "js_dojo_client_dojoclient_apicall"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L240",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient_updatestreakbadge",
-      "target": "js_dojo_client_dojoclient_getstreak"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/dojo-client.js",
-      "source_location": "L121",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_dojo_client_dojoclient_getbadges",
-      "target": "js_dojo_client_dojoclient_apicall"
+      "source": "api_admin_students",
+      "target": "api_admin_students_createclient",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -1800,6 +1536,450 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server",
+      "target": "server_createclient"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server",
+      "target": "server_fs"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server",
+      "target": "server_http"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server",
+      "target": "server_mime"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server",
+      "target": "server_path"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server",
+      "target": "server_server"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server",
+      "target": "server_supabase"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client",
+      "target": "js_dojo_client_dojoclient"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L91",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_addtoqueue"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L74",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_apicall"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L135",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_clearallcache"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L108",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_clearqueue"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_constructor"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L120",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getbadges"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L122",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getcache"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getdojoseries"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L24",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getdojotopic"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L28",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getexercise"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L68",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getleaderboard"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L97",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getpendingqueue"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L50",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getquickthinksets"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L99",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_getstreak"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L12",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_init"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L191",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_recordactivity"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L114",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_setcache"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L143",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_showleaderboardifeligible"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L36",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_submitexercise"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L54",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_submitquickthink"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L238",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient",
+      "target": "js_dojo_client_dojoclient_updatestreakbadge"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient_getdojoseries",
+      "target": "js_dojo_client_dojoclient_apicall"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L32",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient_getexercise",
+      "target": "js_dojo_client_dojoclient_getdojoseries"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L25",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient_getdojotopic",
+      "target": "js_dojo_client_dojoclient_apicall"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L29",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient_getexercise",
+      "target": "js_dojo_client_dojoclient_getcache"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L44",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient_submitexercise",
+      "target": "js_dojo_client_dojoclient_addtoqueue"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L37",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient_submitexercise",
+      "target": "js_dojo_client_dojoclient_apicall"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L51",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient_getquickthinksets",
+      "target": "js_dojo_client_dojoclient_apicall"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L62",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient_submitquickthink",
+      "target": "js_dojo_client_dojoclient_addtoqueue"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L55",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient_submitquickthink",
+      "target": "js_dojo_client_dojoclient_apicall"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L69",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient_getleaderboard",
+      "target": "js_dojo_client_dojoclient_apicall"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L150",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient_showleaderboardifeligible",
+      "target": "js_dojo_client_dojoclient_getleaderboard"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L100",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient_getstreak",
+      "target": "js_dojo_client_dojoclient_apicall"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L240",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient_updatestreakbadge",
+      "target": "js_dojo_client_dojoclient_getstreak"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dojo-client.js",
+      "source_location": "L121",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_dojo_client_dojoclient_getbadges",
+      "target": "js_dojo_client_dojoclient_apicall"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "lib/dojo-integrity.js",
       "source_location": "L5",
       "weight": 1.0,
@@ -2143,76 +2323,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "server.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "server",
-      "target": "server_createclient"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "server",
-      "target": "server_fs"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "server",
-      "target": "server_http"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server.js",
-      "source_location": "L10",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "server",
-      "target": "server_mime"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server.js",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "server",
-      "target": "server_path"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server.js",
-      "source_location": "L21",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "server",
-      "target": "server_server"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "server.js",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "server",
-      "target": "server_supabase"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "vercel.json",
       "source_location": "L5",
       "weight": 1.0,
@@ -2232,5 +2342,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "3d2a4eb25da2672bc07f76a82d27f1910e667130"
+  "built_at_commit": "2d5bbba15f03886a1250faa529cad85800c791e9"
 }

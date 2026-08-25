@@ -10,13 +10,13 @@
     "semantic_hash": ""
   },
   "api/admin-student-detail.js": {
-    "mtime": 1783093647.6221902,
-    "ast_hash": "2a42a16968e3b142a1f2722300cb0684",
+    "mtime": 1787650238.4543784,
+    "ast_hash": "cc3c377003afd217c4ee501dc37d3001",
     "semantic_hash": ""
   },
   "api/admin-students.js": {
-    "mtime": 1777162234.3076634,
-    "ast_hash": "4ca0631c61f3492a5724cece5074241e",
+    "mtime": 1787650208.3751297,
+    "ast_hash": "2c7f7b04a316dbe46df037fa72e62f3a",
     "semantic_hash": ""
   },
   "api/config.js": {
@@ -30,8 +30,8 @@
     "semantic_hash": ""
   },
   "api/gamification.js": {
-    "mtime": 1785362546.604814,
-    "ast_hash": "3ab88f5b9f7bb7d3a472fb135155b6ca",
+    "mtime": 1787650213.14308,
+    "ast_hash": "229736d254768b140a1cfd6436ff6a3b",
     "semantic_hash": ""
   },
   "api/lesson-availability.js": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "server.js": {
-    "mtime": 1785282831.4530804,
-    "ast_hash": "7569b4331e6b59647d2cda7300defc15",
+    "mtime": 1787650287.842526,
+    "ast_hash": "e0502c03a6887f3969b85c906265bd6c",
     "semantic_hash": ""
   },
   "supabase-agents-schema.sql": {
@@ -425,8 +425,8 @@
     "semantic_hash": ""
   },
   "admin-students.html": {
-    "mtime": 1783093662.4085813,
-    "ast_hash": "647ae60b29cf457382448d20d4f1972f",
+    "mtime": 1787650392.436989,
+    "ast_hash": "26412121e2ef1832773ddca819a45652",
     "semantic_hash": ""
   },
   "admin.html": {
@@ -952,6 +952,16 @@
   "css/foto-optimized.jpg": {
     "mtime": 1785578305.1131485,
     "ast_hash": "835326af5b75e50dc8c3ec7d48c69434",
+    "semantic_hash": ""
+  },
+  "api/admin-archive-course.js": {
+    "mtime": 1787650246.841666,
+    "ast_hash": "3db9cc0e3cddfb01348ceade746cf282",
+    "semantic_hash": ""
+  },
+  "scripts/sql/students_is_active.sql": {
+    "mtime": 1787650197.6662674,
+    "ast_hash": "f9c710804e8e4fa471c0c063d10807dd",
     "semantic_hash": ""
   }
 }
