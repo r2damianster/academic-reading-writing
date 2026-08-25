@@ -425,8 +425,8 @@
     "semantic_hash": ""
   },
   "admin-students.html": {
-    "mtime": 1787650392.436989,
-    "ast_hash": "26412121e2ef1832773ddca819a45652",
+    "mtime": 1787651745.8961456,
+    "ast_hash": "b6476b68a83cfbc06c20ffe82386c4cd",
     "semantic_hash": ""
   },
   "admin.html": {
@@ -955,8 +955,8 @@
     "semantic_hash": ""
   },
   "api/admin-archive-course.js": {
-    "mtime": 1787651512.5882957,
-    "ast_hash": "a77718caa4726a2b63668815e9ee3b36",
+    "mtime": 1787651755.670272,
+    "ast_hash": "482b1481acd3ff9495b830de44b73e84",
     "semantic_hash": ""
   },
   "scripts/sql/students_is_active.sql": {

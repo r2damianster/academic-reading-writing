@@ -400,6 +400,7 @@ tr.row-archived td { opacity:.55; }
     <div class="modal-footer">
       <button class="csv-btn" onclick="downloadStudentCSV()">↓ Export Student CSV</button>
       <button class="csv-btn archive-btn" id="archiveToggleBtn" onclick="toggleArchiveStudent()">🗄 Archive</button>
+      <button class="csv-btn" style="background:var(--teal);color:#fff" onclick="reenrollStudentPrompt()">↺ Re-enroll in course…</button>
       <button class="csv-btn" style="background:var(--red);color:#fff" onclick="deleteStudent()">🗑 Delete Student</button>
     </div>
   </div>
@@ -626,9 +627,10 @@ async function toggleArchiveStudent() {
     }
 }
 
-async function archiveCoursePrompt() {
-    // course_id is a uuid FK (see courses table) — never ask the admin to type it.
-    // Build the pick list from the course names already visible in allStudents.
+// course_id is a uuid FK (see courses table) — never ask the admin to type it.
+// Builds a numbered pick list from the course names already visible in allStudents
+// and lets them choose by number. Returns { courseId, name, count } or null if cancelled.
+function pickCourse(promptTitle) {
     const courseCounts = new Map(); // course_id -> { name, count }
     allStudents.forEach(s => {
         if (!s.course_id) return;
@@ -639,21 +641,26 @@ async function archiveCoursePrompt() {
 
     if (courseCounts.size === 0) {
         alert('No students with a course_id assigned were found in the current list.');
-        return;
+        return null;
     }
 
     const entries = [...courseCounts.entries()];
     const listText = entries.map(([, e], i) => `${i + 1}. ${e.name} (${e.count} students)`).join('\n');
-    const choice = prompt(
-        `Archive ALL students in a course (end of semester).\n\nType the number of the course to archive:\n\n${listText}`
-    );
-    if (!choice) return;
+    const choice = prompt(`${promptTitle}\n\nType the number of the course:\n\n${listText}`);
+    if (!choice) return null;
     const idx = parseInt(choice, 10) - 1;
     if (isNaN(idx) || !entries[idx]) {
         alert('Invalid selection.');
-        return;
+        return null;
     }
     const [courseId, { name, count }] = entries[idx];
+    return { courseId, name, count };
+}
+
+async function archiveCoursePrompt() {
+    const picked = pickCourse('Archive ALL students in a course (end of semester).');
+    if (!picked) return;
+    const { courseId, name, count } = picked;
     if (!confirm(`Archive all ${count} student(s) in "${name}"? They keep login access but disappear from the leaderboard and active lists.`)) return;
 
     try {
@@ -668,6 +675,40 @@ async function archiveCoursePrompt() {
         loadStudents();
     } catch (e) {
         alert('Error archiving course: ' + e.message);
+    }
+}
+
+async function reenrollStudentPrompt() {
+    if (!currentStudent) return;
+    const picked = pickCourse(`Re-enroll ${currentStudent.name} in a course.`);
+    if (!picked) return;
+    const { courseId, name } = picked;
+    if (!confirm(
+        `Re-enroll ${currentStudent.name} in "${name}"?\n\n` +
+        `This reactivates them and resets their dojo points, streak, and badges ` +
+        `so the new course starts clean. Past essays and reading progress are kept as history.`
+    )) return;
+
+    try {
+        const r = await fetch('/api/admin-reenroll-student', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ studentId: currentStudent.id, courseId, courseName: name })
+        });
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+
+        currentStudent.is_active = true;
+        currentStudent.course_id = courseId;
+        currentStudent.course = name;
+        const listed = allStudents.find(s => s.id === currentStudent.id);
+        if (listed) { listed.is_active = true; listed.course_id = courseId; listed.course = name; }
+
+        alert(`${currentStudent.name} re-enrolled in "${name}" with a clean dojo slate.`);
+        closeModal();
+        loadStudents();
+    } catch (e) {
+        alert('Error re-enrolling student: ' + e.message);
     }
 }
 

@@ -106,6 +106,17 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
+    if (req.method === 'POST' && req.url.startsWith('/api/admin-reenroll-student')) {
+        let body = '';
+        req.on('data', chunk => { body += chunk.toString(); });
+        req.on('end', () => {
+            try { req.body = body ? JSON.parse(body) : {}; } catch { req.body = {}; }
+            const adminReenrollStudent = require('./api/admin-reenroll-student');
+            adminReenrollStudent(req, res);
+        });
+        return;
+    }
+
     // ─── 3. RUTA DE LA API ───────────────────────────────────────────────────────
     if (req.method === 'POST' && req.url === '/api/validate-student') {
         let body = '';
