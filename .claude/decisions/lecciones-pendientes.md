@@ -1,7 +1,7 @@
 ---
 owner: Arturo Rodríguez Zambrano
 domain: decisions
-last_updated: 2026-04-19
+last_updated: 2026-09-01
 status: active
 ---
 
@@ -9,15 +9,12 @@ status: active
 
 Módulos con HTML vacío o lógica ausente. Origen: DEUDA_TECNICA.md v2.3 (migrado 2026-04-19).
 
-## Lecciones críticas — sin contenido
+## Lecciones críticas — RESUELTO
 
-| ID | Lección | Ruta | Prioridad |
+| ID | Lección | Ruta | Estado |
 |---|---|---|---|
-| L-001 | Argumentative Essay | `modules/01-core-syllabus/unit1-essays/` | 🔴 CRÍTICO |
-| L-002 | Chain Essay | `modules/01-core-syllabus/unit1-essays/` | 🔴 CRÍTICO |
-
-**L-001 y L-002** son el corazón del Track 01. Sin ellas el curso queda incompleto para el objetivo principal del programa.  
-Generarlas con el **Content Gen Agent** (`agent: "contentGen"`, `outputFormat: "generate_content"`).
+| L-001 | Argumentative Essay | `modules/01-core-syllabus/unit1-essays/argumentative-essay.html` | ✅ 275 líneas, 11 slides — ya no está vacía |
+| L-002 | Chain Essay | `modules/01-core-syllabus/unit1-essays/chain-essay.html` | ✅ 284 líneas, 9 slides — ya no está vacía |
 
 ## Tests sin scoring
 
@@ -40,6 +37,7 @@ L-006 y L-007 necesitan conectar con el **Peer Review Agent** (`agent: "peer-rev
 
 ## Orden de implementación sugerido
 
-1. L-001 y L-002 — desbloquean el track principal
-2. L-006 y L-007 — peer review es prerequisito antes de los tests finales
-3. L-003, L-004, L-005 — requieren definir rúbricas de scoring primero
+1. L-006 y L-007 — peer review es prerequisito antes de los tests finales
+2. L-003, L-004, L-005 — requieren definir rúbricas de scoring primero
+
+**Nota de numeración:** los IDs `L-00X` de este archivo son un namespace de *lecciones* independiente del namespace `L-00X` de `DEUDA_TECNICA.md` (ítems generales de deuda técnica) — no representan lo mismo pese a coincidir en número (ej. `L-003` aquí es "Test 2: Essays"; en `DEUDA_TECNICA.md` es "Instructor Mode").

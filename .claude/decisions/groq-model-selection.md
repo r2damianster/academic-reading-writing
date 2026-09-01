@@ -33,4 +33,4 @@ Ver detalle completo en [api/orchestrator.md](../api/orchestrator.md#token-optim
 
 ## Alternativas consideradas
 - **Anthropic Claude**: más caro pero con prompt caching real — considerar si Groq tiene downtime frecuente
-- **Qwen DashScope**: contexto hasta 1M tokens — útil si los ensayos son muy largos. Ver `QWEN.md`
+- **Qwen DashScope**: contexto hasta 1M tokens — útil si los ensayos son muy largos. Documentado en `CLAUDE.md`, no implementado (`lib/qwen-client.js` no existe)

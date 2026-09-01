@@ -30,8 +30,8 @@ Cache-Control: public, max-age=3600
 ## Cómo consume el frontend
 ```js
 const { supabaseUrl, supabaseKey } = await window.configReady;
-// window.configReady se resuelve en config-loader.js
 ```
+**Nota (2026-09-01):** `window.configReady` NO existe como singleton global — cada motor (`reading-engine.js`, `slide-engine.js`, `dojo-client.js`) define su propia constante local `_configReady` con el mismo `fetch('/api/config')` duplicado 3x. Existía un `js/config-loader.js` pensado como singleton pero nunca se incluía con `<script>`; se eliminó por código muerto. Ver DT-007 en `DEUDA_TECNICA.md`.
 
 ## Seguridad crítica
 `SUPABASE_SERVICE_KEY` **nunca** debe aparecer en este endpoint. Si Claude detecta que se está exponiendo la service key aquí, debe bloquearlo y reportar en `DEUDA_TECNICA.md`.

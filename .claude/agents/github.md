@@ -1,7 +1,7 @@
 ---
 owner: Arturo Rodríguez Zambrano
 domain: agents
-last_updated: 2026-04-19
+last_updated: 2026-09-01
 status: active
 ---
 
@@ -11,10 +11,10 @@ status: active
 Arturo Rodríguez Zambrano — seguridad y calidad de código.
 
 ## Propósito
-Asistente de desarrollo especializado en el codebase. Se ejecuta automáticamente via hook `PostToolUse` en Claude Code cuando se editan archivos críticos. Audita seguridad antes de cada commit.
+Asistente de desarrollo especializado en el codebase. Audita seguridad de archivos críticos.
 
 ## Activación
-- **Hook automático**: se dispara al editar archivos en `api/`, `lib/`, `js/`
+- **Hook automático**: NO configurado — `.claude/settings.json` no tiene sección `hooks`. Documentado como diseño previsto, pendiente de implementar.
 - **Manual**: `POST /api/orchestrator` con `agent: "github"`
 
 ## Qué busca en cada revisión

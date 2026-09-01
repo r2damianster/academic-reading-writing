@@ -41,7 +41,9 @@ El orquestador llama a `groqChat()` de `lib/groq-client.js`. Para cambiar:
 
 ## Anthropic Claude (disponible, no activo en producción)
 `@anthropic-ai/sdk` instalado. Usar para análisis de alta complejidad o prompt caching real.
-Ver [QWEN.md](../../QWEN.md) para instrucciones de Qwen como alternativa.
+
+## Qwen via DashScope (documentado, no implementado)
+No existe `QWEN.md` ni `lib/qwen-client.js` en el repo — la config está descrita en `CLAUDE.md` pero requiere crear el cliente antes de poder usarse.
 
 ## Aliases de compatibilidad en groq-client.js
 ```js

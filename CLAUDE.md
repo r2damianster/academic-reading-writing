@@ -9,7 +9,7 @@ Instrucciones para **Claude Code** cuando trabaja en este proyecto.
 Sistema de aprendizaje de escritura académica en inglés para ~200 estudiantes de ULEAM (Manta, Ecuador). Incluye 72 lecciones en 5 tracks, 8 agentes de IA en Groq (Llama 3) y auditoría de integridad académica en tiempo real.
 
 **Stack:**
-- Node.js 24.x + Vercel serverless (5 endpoints en `api/`)
+- Node.js 24.x + Vercel serverless (11 endpoints en `api/`, bajo el límite de 12)
 - Supabase (PostgreSQL con RLS)
 - Groq API — Llama 3.1-8b-instant + Llama 3.3-70b-versatile (gratis)
 - Vanilla JS + Bootstrap 5 (sin frameworks frontend)
@@ -34,7 +34,7 @@ export default myFunction;
 
 ### Límite de funciones Vercel
 
-El plan Hobby de Vercel permite máximo 12 serverless functions. Actualmente hay 5 en `api/`.
+El plan Hobby de Vercel permite máximo 12 serverless functions. Actualmente hay 11 en `api/`: `admin-archive-course.js`, `admin-reenroll-student.js`, `admin-student-detail.js`, `admin-students.js`, `config.js`, `gamification.js`, `lesson-availability.js`, `orchestrator.js`, `sync-reading.js`, `validate-student.js`, y `cron/compress-profiles.js`.
 
 - **`api/`** → solo endpoints (cuentan como funciones Vercel)
 - **`lib/`** → módulos de soporte, helpers, agentes (no cuentan)
@@ -95,7 +95,7 @@ El orquestador llama a `groqChat()`. Para cambiar de proveedor, solo hay que:
 2. Cambiar el `require` en `api/orchestrator.js`
 3. Ajustar los nombres de modelos en `selectModel()`
 
-Ver [QWEN.md](QWEN.md) para instrucciones específicas de Qwen.
+Qwen via DashScope está documentado abajo como alternativa, pero `lib/qwen-client.js` no existe todavía — hay que crearlo antes de poder cambiar el proveedor.
 
 ---
 
@@ -122,7 +122,7 @@ También disponibles en Groq (no configurados por defecto):
 QWEN_API_KEY=sk-...
 ```
 
-Ver [QWEN.md](QWEN.md) para configuración completa. Ofrece contexto de hasta 1M tokens.
+Ofrece contexto de hasta 1M tokens. No hay `QWEN.md` ni `lib/qwen-client.js` implementados aún — este proveedor está documentado pero no activo.
 
 ### Anthropic Claude (desarrollo y mantenimiento)
 
@@ -185,14 +185,14 @@ const { supabaseUrl, supabaseKey } = await window.configReady;
 
 ## Guía del GitHub Agent
 
-El **GitHub Agent** (`lib/agents/github.js`) se ejecuta automáticamente via hook `PostToolUse` en Claude Code cuando se editan archivos críticos. Busca:
+El **GitHub Agent** (`lib/agents/github.js`) audita seguridad del codebase. **Nota:** el hook `PostToolUse` que lo dispararía automáticamente en Claude Code NO está configurado en `.claude/settings.json` — hoy es invocación manual, no automática. Busca:
 
 1. **Credenciales hardcodeadas** — `SUPABASE_SERVICE_KEY`, `GROQ_TOKEN`, `ADMIN_PASSWORD` en archivos JS
 2. **PII en logs** — `console.log` con `studentId`, email, o contraseñas
 3. **CDNs externas no autorizadas** — scripts de terceros sin `integrity` hash
 4. **Funciones ES module** — `import`/`export` en archivos `.js` de `api/` o `lib/`
 
-Si el hook detecta problemas, los reporta en `DEUDA_TECNICA.md` antes de completar el commit.
+Si se detectan problemas, reportarlos en `DEUDA_TECNICA.md`.
 
 ---
 
@@ -202,13 +202,13 @@ Ver `DEUDA_TECNICA.md` para el estado completo. Items pendientes de mayor impact
 
 | ID | Prioridad | Descripción |
 |----|-----------|------------|
-| DT-002 | 🟡 MEDIO | `slide-engine.js` (2482 líneas) mezcla UI + sync Supabase |
-| DT-003 | 🟡 MEDIO | `_calcIntegrityFallback` duplicada en `report.js` y `essay-handler.js` |
+| DT-002 | 🟡 MEDIO | `slide-engine.js` (~3373 líneas) mezcla UI + sync Supabase |
+| DT-003 | 🟡 MEDIO | Fetch de config de Supabase duplicado: `_calcIntegrityScore` (`essay-handler.js`) vs `_calcIntegrity` (`slide-engine.js`) |
 | DT-004 | 🟠 ALTO | Eliminar `READING_COMMENT` (actividades de producción) de lecciones `reading-engine` |
 | DT-006 | 🟢 NUEVO | Teacher Helper Mode: Inline annotations via `data-teacher-note` and `?teacher=1` |
-| L-001 | 🔴 CRÍTICO | Argumentative Essay (HTML vacío, coming soon) |
-| L-002 | 🔴 CRÍTICO | Chain Essay (HTML vacío, coming soon) |
-| L-003 | 🟢 NUEVO | Instructor Mode: Manual Toggle implemented (real-time sync) |
+| DT-007 | 🟢 NUEVO | `_configReady` (fetch a `/api/config`) duplicado 3x — `reading-engine.js`, `slide-engine.js`, `dojo-client.js`. Existía un singleton `js/config-loader.js` que nunca se incluyó con `<script>` (eliminado por código muerto); considerar consolidar la lógica real en un módulo compartido |
+
+Ítems completados: L-001 (Argumentative Essay), L-002 (Chain Essay), L-003 (Instructor Mode Manual Toggle) — ver `DEUDA_TECNICA.md`.
 
 ---
 
@@ -243,6 +243,6 @@ npm start 2>&1 | ollama run llama3.2 "Summarize errors only. Be concise."
 ## Notas para Claude Code
 
 - Este proyecto tiene ~200 estudiantes activos en producción. Los cambios en `api/` afectan directamente la experiencia del estudiante.
-- El `slide-engine.js` tiene ~3000 líneas — leer solo las secciones relevantes.
+- El `slide-engine.js` tiene ~3373 líneas — leer solo las secciones relevantes.
 - **Teacher Helper**: Al agregar notas, usar el atributo `data-teacher-note="Texto de la nota"`. Las notas deben explicar el *porqué* pedagógico y proveer citas exactas en español.
 - **READING_COMMENT**: No usar en `reading-engine`. Si se encuentra uno, reportarlo para conversión a QUIZ o FILL.

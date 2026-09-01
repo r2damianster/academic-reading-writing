@@ -1,7 +1,7 @@
 ---
 owner: Arturo Rodríguez Zambrano
 domain: decisions
-last_updated: 2026-04-19
+last_updated: 2026-09-01
 status: active
 ---
 
@@ -11,7 +11,7 @@ status: active
 Plan Hobby de Vercel permite máximo 12 serverless functions. Los archivos en `api/` son funciones — los de `lib/` no.
 
 ## Estado actual
-5 funciones activas de 12 disponibles.
+11 funciones activas de 12 disponibles (`admin-archive-course.js`, `admin-reenroll-student.js`, `admin-student-detail.js`, `admin-students.js`, `config.js`, `gamification.js`, `lesson-availability.js`, `orchestrator.js`, `sync-reading.js`, `validate-student.js`, `cron/compress-profiles.js`). Solo 1 función libre — pensar dos veces antes de agregar un endpoint nuevo.
 
 ## Regla de arquitectura
 ```

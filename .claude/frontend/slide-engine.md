@@ -11,7 +11,7 @@ status: active
 Arturo Rodríguez Zambrano — motor core de todas las lecciones.
 
 ## Advertencia
-**2482 líneas.** Nunca leer el archivo completo — solicitar solo la sección relevante con `Read` y `offset`/`limit`.
+**~3373 líneas.** Nunca leer el archivo completo — solicitar solo la sección relevante con `Read` y `offset`/`limit`.
 
 ## Propósito
 Motor de presentación de slides para las 72 lecciones. Gestiona navegación, interactividad, evaluación y sincronización con Supabase.

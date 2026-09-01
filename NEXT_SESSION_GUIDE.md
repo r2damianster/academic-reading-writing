@@ -12,7 +12,9 @@
 
 ---
 
-## 🔴 Bug Crítico Pendiente: Error 500 en `/api/admin-students`
+## 🔴 Bug Crítico Pendiente (¿RESUELTO?): Error 500 en `/api/admin-students`
+
+**Nota 2026-09-01:** `api/admin-students.js` hoy incluye lógica adicional (`includeArchived`, `course_id`, `is_active`) que no existía cuando se diagnosticó este bug el 2026-04-21 — sugiere que se reescribió y probablemente se resolvió desde entonces. No confirmado en navegador durante esta pasada de limpieza; verificar antes de retomar el diagnóstico de abajo.
 
 ### Síntoma
 Al entrar a `admin-students.html` con la clave `instructor2025`, la tabla de estudiantes muestra:
@@ -103,8 +105,8 @@ Una vez resuelto el 500, hacer un recorrido completo del panel siguiendo `GUIA_I
 - Ordenamiento por columnas en la tabla
 
 ### Otras features del roadmap
-- Argumentative Essay lesson (L-001 — HTML vacío, pendiente)
-- Chain Essay lesson (L-002 — HTML vacío, pendiente)
+- ~~Argumentative Essay lesson (L-001)~~ — ✅ hecho, ver `DEUDA_TECNICA.md`
+- ~~Chain Essay lesson (L-002)~~ — ✅ hecho, ver `DEUDA_TECNICA.md`
 
 ---
 

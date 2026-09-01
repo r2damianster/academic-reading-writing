@@ -1,7 +1,7 @@
 ---
 type: index
 domain: frontend
-last_updated: 2026-04-19
+last_updated: 2026-09-01
 owner: Arturo Rodríguez Zambrano
 ---
 
@@ -13,17 +13,16 @@ Stack: Vanilla JS + Bootstrap 5 en el lado del diseño visual. Sin frameworks JS
 
 | Archivo | Líneas | Responsabilidad | Riesgo |
 |---|---|---|---|
-| `js/slide-engine.js` | ~2482 | Motor de slides — core de las 72 lecciones | 🔴 CRÍTICO |
+| `js/slide-engine.js` | ~3373 | Motor de slides — core de las 72 lecciones | 🔴 CRÍTICO |
 | `js/reading-engine.js` | — | Motor de lectura PDF | 🔴 CRÍTICO |
 | `js/essay-handler.js` | — | Captura telemetría de escritura | 🔴 CRÍTICO |
 | `js/auth.js` | — | Login y gestión de sesión (4h) | 🟡 |
 | `js/agent-client.js` | — | Clientes frontend para cada agente | 🟡 |
 | `js/activity-tracker.js` | — | Registro de actividades en Supabase | 🟡 |
-| `js/config-loader.js` | — | Carga config desde `/api/config`, expone `window.configReady` | 🟡 |
+| `js/dojo-client.js` | — | Cliente Dojo (gamificación) — API calls + offline-first localStorage sync | 🟡 |
+| `js/lesson-access.js` | — | Control de disponibilidad de lecciones | 🟢 |
 | `js/nav.js` / `js/navigation.js` | — | Navegación entre módulos | 🟢 |
 | `js/report.js` | — | Reporte de integridad académica | 🟡 |
-| `js/pdf-annotator.js` | — | Anotaciones en PDF | 🟢 |
-| `js/pdf-proxy.js` | — | Proxy para carga de PDFs | 🟢 |
 
 ## Archivos CSS
 
@@ -43,7 +42,7 @@ Stack: Vanilla JS + Bootstrap 5 en el lado del diseño visual. Sin frameworks JS
 - [GUIA_CREACION_LECCIONES.md](../../GUIA_CREACION_LECCIONES.md) — (NUEVO) Cómo crear nuevas lecciones HTML
 
 ## Reglas de modificación
-1. `slide-engine.js` — leer solo la sección necesaria (2482 líneas)
+1. `slide-engine.js` — leer solo la sección necesaria (~3373 líneas)
 2. `essay-handler.js` — no perder ningún punto de captura de telemetría
 3. No agregar frameworks ni dependencias externas
 4. No modificar motores críticos para cambios solo visuales
@@ -57,9 +56,4 @@ Stack: Vanilla JS + Bootstrap 5 en el lado del diseño visual. Sin frameworks JS
 
 ## Deuda técnica activa (frontend)
 
-| ID | Prioridad | Descripción |
-|---|---|---|
-| DT-002 | 🟡 MEDIO | `slide-engine.js` mezcla UI + sync Supabase |
-| DT-003 | 🟡 MEDIO | `_calcIntegrityFallback` duplicada en `report.js` y `essay-handler.js` |
-| DT-005 | 🟡 MEDIO | `admin.html` no verifica `isAdmin` desde localStorage |
-| DT-006 | 🔴 CRÍTICO | Botón admin en sidebar (`#adminMenuBtn`) no aparece en producción — ver NEXT_SESSION_GUIDE |
+Ver tabla canónica en `DEUDA_TECNICA.md` (raíz del proyecto) — no duplicar IDs aquí para evitar que diverjan. Ítems de frontend relevantes hoy: DT-002 (`slide-engine.js` mezcla UI + sync Supabase), DT-003 (cálculo de integridad duplicado entre `essay-handler.js` y `slide-engine.js`), DT-007 (`_configReady` duplicado 3x).

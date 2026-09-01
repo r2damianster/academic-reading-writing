@@ -1,6 +1,6 @@
 ---
 type: master-index
-last_updated: 2026-04-19
+last_updated: 2026-09-01
 owner: Arturo Rodríguez Zambrano
 ---
 
@@ -16,22 +16,21 @@ Plataforma de aprendizaje de escritura académica en inglés para ~200 estudiant
 | Componente | Estado | Notas |
 |---|---|---|
 | Producción | ✅ Live en Vercel | ~200 estudiantes activos |
-| Funciones Vercel | 5 / 12 máximo | `api/` — no superar límite |
+| Funciones Vercel | 11 / 12 máximo | `api/` — no superar límite, queda 1 función libre |
 | Proveedor IA | Groq (gratuito) | llama-3.1-8b + llama-3.3-70b |
 | Base de datos | Supabase PostgreSQL | RLS activo |
 | Auth | Email lookup + admin password | ✅ Robustness fix applied (auto-fill safe) |
-23: 
-24: ---
-25: 
-26: ## Novedades Recientes (Abril 2026)
-27: 1. **Reportes Avanzados**: Descarga de PDF con estructura resumida + apéndice de ensayos (todos los intentos).
-28: 2. **Modos de Reporte**: Opción "Diario" (solo hoy) vs "General" (todo el curso).
-29: 3. **Consolidación UI**: Navegación de reportes movida íntegramente a `my-progress.html`.
-30: 4. **Student Progress Dashboard** (`admin-students.html`): tabla de estudiantes con integridad, alertas, última actividad, modal de detalle, CSV export.
-31: 5. **Endpoints admin** (`api/admin-students.js`, `api/admin-student-detail.js`): usan SERVICE_KEY. Funciones Vercel: 7/12.
-32: 6. **Admin dropdown en sidebar**: `#adminMenuBtn` como hijo directo de sidebar-footer + `#adminMenu` en body con position:fixed. **BUG ACTIVO**: botón no aparece en producción — ver NEXT_SESSION_GUIDE.
-33: 
-34: ---
+---
+
+## Novedades Recientes (Abril 2026)
+1. **Reportes Avanzados**: Descarga de PDF con estructura resumida + apéndice de ensayos (todos los intentos).
+2. **Modos de Reporte**: Opción "Diario" (solo hoy) vs "General" (todo el curso).
+3. **Consolidación UI**: Navegación de reportes movida íntegramente a `my-progress.html`.
+4. **Student Progress Dashboard** (`admin-students.html`): tabla de estudiantes con integridad, alertas, última actividad, modal de detalle, CSV export.
+5. **Endpoints admin** (`api/admin-students.js`, `api/admin-student-detail.js`, `api/admin-archive-course.js`, `api/admin-reenroll-student.js`): usan SERVICE_KEY.
+6. **Admin dropdown en sidebar**: `#adminMenuBtn` como hijo directo de sidebar-footer + `#adminMenu` en body con position:fixed. ✅ Resuelto — `NEXT_SESSION_GUIDE.md` confirma que funciona en producción.
+
+---
 
 ---
 
@@ -41,7 +40,7 @@ Plataforma de aprendizaje de escritura académica en inglés para ~200 estudiant
 2. **Límite 12 funciones Vercel** — solo archivos en `api/` cuentan; helpers van en `lib/`
 3. **`SUPABASE_SERVICE_KEY` nunca al browser** — solo endpoints de servidor
 4. **No commitear sin instrucción explícita** de Arturo
-5. **`slide-engine.js` tiene 2482 líneas** — leer solo la sección relevante
+5. **`slide-engine.js` tiene ~3373 líneas** — leer solo la sección relevante
 6. **Los módulos HTML son generados** — no editar manualmente; usar Content Gen Agent
 
 ---

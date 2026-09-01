@@ -9,11 +9,11 @@ Sistema de aprendizaje y auditoría académica desarrollado por el **Dr. Arturo 
 | Capa | Tecnología | Propósito |
 |------|-----------|-----------|
 | **Frontend** | HTML5, Bootstrap 5, Vanilla JS | 72 módulos de lección, slides interactivos |
-| **Backend (local)** | Node.js 24.x · `server.js` | Servidor HTTP + 5 endpoints API |
+| **Backend (local)** | Node.js 24.x · `server.js` | Servidor HTTP + 11 endpoints API |
 | **Backend (producción)** | Vercel serverless | Deploy automático desde `main` |
 | **Base de datos** | Supabase (PostgreSQL) | Perfiles, ensayos, auditoría, agentes |
 | **IA — LLM primario** | Groq API (Llama 3.1/3.3) | Todos los agentes (gratuito) |
-| **IA — alternativa** | Qwen (DashScope / Groq) | Ver [QWEN.md](QWEN.md) |
+| **IA — alternativa** | Qwen (DashScope / Groq) | Documentado en `CLAUDE.md`, no implementado aún (`lib/qwen-client.js` no existe) |
 | **IA — Claude Code** | Anthropic Claude | Desarrollo y mantenimiento del proyecto |
 | **PDF** | jsPDF | Reportes de progreso estudiantil |
 
@@ -45,8 +45,10 @@ Frontend (AgentClient.call)
 | **Content Gen** | `lib/agents/content-gen.js` | Admin: "Generate Lesson Slides" |
 | **DB Admin** | *(prompt en _prompts.js)* | Admin: consola de base de datos con IA |
 | **Frontend** | `lib/agents/frontend.js` | Diagnóstico de componentes UI |
-| **GitHub** | `lib/agents/github.js` | Hook PostToolUse en Claude Code |
+| **GitHub** | `lib/agents/github.js` | Auditoría de seguridad — hoy invocación manual (el hook `PostToolUse` no está configurado) |
 | **Memory** | `lib/agents/memory.js` | Interno — comprime perfiles nocturnamente |
+| **Report Analyst** | `lib/agents/report-analyst.js` | Tab "🤖 AI Insights" en `my-progress.html` — análisis multi-intento para el instructor |
+| **Test Grader** | `lib/agents/test-grader.js` | Envío de tests en `modules/04-tests/` — evalúa contra rúbrica de 8 indicadores |
 
 ### Diseño de prompts (3 segmentos)
 
@@ -72,18 +74,24 @@ El score de complejidad (0-100) determina el modelo:
 
 ```
 Academic_reading_and_writing/
-├── api/                          # 5 endpoints Vercel (bajo el límite de 12)
+├── api/                          # 11 endpoints Vercel (bajo el límite de 12)
 │   ├── config.js                 # GET  /api/config         — credenciales Supabase al browser
 │   ├── orchestrator.js           # POST /api/orchestrator   — router de todos los agentes
 │   ├── validate-student.js       # POST /api/validate-student — auth (admin + estudiantes)
 │   ├── sync-reading.js           # POST /api/sync-reading   — progreso de lectura → Supabase
+│   ├── gamification.js           # Dojo — ligas, racha, insignias
+│   ├── lesson-availability.js    # Disponibilidad de lecciones por fecha
+│   ├── admin-students.js         # Admin: listado/gestión de estudiantes
+│   ├── admin-student-detail.js   # Admin: detalle de un estudiante
+│   ├── admin-archive-course.js   # Admin: archivar curso completo
+│   ├── admin-reenroll-student.js # Admin: re-matricular estudiante
 │   └── cron/
 │       └── compress-profiles.js  # Cron diario 03:00 UTC    — compresión de perfiles
 │
 ├── lib/                          # Módulos de soporte (no cuentan como funciones Vercel)
 │   ├── groq-client.js            # Cliente Groq (fetch nativo, sin SDK extra)
 │   └── agents/
-│       ├── _prompts.js           # 8 system prompts cacheados
+│       ├── _prompts.js           # System prompts cacheados
 │       ├── memory.js             # Memory Agent (getProfile, buildContextString, saveSessionCache)
 │       ├── writing.js            # Writing Agent
 │       ├── reading.js            # Reading Agent
@@ -91,16 +99,20 @@ Academic_reading_and_writing/
 │       ├── peer-review.js        # Peer Review Agent (2 modos)
 │       ├── content-gen.js        # Content Generator Agent
 │       ├── frontend.js           # Frontend Diagnostic Agent
-│       └── github.js             # GitHub Agent (hook en Claude Code)
+│       ├── report-analyst.js     # Report Analyst Agent
+│       ├── test-grader.js        # Test Grader Agent
+│       └── github.js             # GitHub Agent (auditoría de seguridad, invocación manual)
 │
 ├── js/                           # Scripts del cliente
-│   ├── config-loader.js          # Singleton window.configReady (BUG-001 fix)
 │   ├── agent-client.js           # AgentClient.call() — wrapper para el orquestador
 │   ├── auth.js                   # Login, localStorage, sesión 24h
-│   ├── slide-engine.js           # Motor de slides (2482 líneas, 12 tipos de slide)
+│   ├── slide-engine.js           # Motor de slides (~3373 líneas, 12 tipos de slide)
 │   ├── reading-engine.js         # Lector PDF + panel AI
 │   ├── essay-handler.js          # Envío de ensayos + métricas de integridad
 │   ├── report.js                 # Generación de PDF de progreso
+│   ├── dojo-client.js            # Cliente Dojo — API calls + offline-first localStorage sync
+│   ├── lesson-access.js          # Control de disponibilidad de lecciones
+│   ├── nav.js / navigation.js    # Navegación entre módulos/lecciones
 │   └── activity-tracker.js      # Auditoría de keystrokes, pastes, tab switches
 │
 ├── modules/                      # 72 lecciones en 5 tracks
@@ -117,8 +129,6 @@ Academic_reading_and_writing/
 ├── vercel.json                   # Config de deploy + cron diario
 ├── supabase-agents-schema.sql    # Schema SQL para tablas de agentes
 ├── CLAUDE.md                     # Instrucciones para Claude Code
-├── QWEN.md                       # Guía para usar Qwen como alternativa a Llama
-├── CHANGELOG.md                  # Historial de versiones
 └── DEUDA_TECNICA.md              # Bugs, deuda técnica e infraestructura pendiente
 ```
 
@@ -201,7 +211,7 @@ El proyecto se despliega automáticamente al hacer push a `main`.
 - `SUPABASE_URL`, `SUPABASE_KEY`, `SUPABASE_SERVICE_KEY`
 - `ADMIN_PASSWORD`, `CRON_SECRET`
 
-**Límite de funciones:** Vercel Hobby plan = 12 serverless functions. El proyecto usa 5 (`api/`). Los módulos de agentes están en `lib/` (no cuentan).
+**Límite de funciones:** Vercel Hobby plan = 12 serverless functions. El proyecto usa 11 (`api/`). Los módulos de agentes están en `lib/` (no cuentan).
 
 **Cron:** `/api/cron/compress-profiles` se ejecuta cada día a las 03:00 UTC (22:00 Ecuador).
 
@@ -238,9 +248,7 @@ El proyecto se despliega automáticamente al hacer push a `main`.
 Este proyecto está diseñado para ser **agnóstico al proveedor de LLM**. El cliente en `lib/groq-client.js` usa la API de Groq (compatible con OpenAI), lo que facilita cambiar de proveedor:
 
 - **Groq + Llama 3** — Activo por defecto (gratuito)
-- **Groq + Qwen** — Ver [QWEN.md](QWEN.md) (1 variable de entorno)
-- **DashScope + Qwen** — Ver [QWEN.md](QWEN.md) (máximo contexto, mayor capacidad)
-- **Ollama local** — Para desarrollo offline, ver [QWEN.md](QWEN.md)
+- **Groq + Qwen** / **DashScope + Qwen** — Documentado en `CLAUDE.md`, no implementado (`lib/qwen-client.js` no existe)
 - **Anthropic Claude** — `@anthropic-ai/sdk` ya instalado, ver [CLAUDE.md](CLAUDE.md)
 
 ---

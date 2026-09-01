@@ -1,6 +1,6 @@
 # DEUDA TÉCNICA
 
-Estado al 2026-04-23.
+Estado al 2026-09-01.
 
 ---
 
@@ -8,11 +8,11 @@ Estado al 2026-04-23.
 
 | ID | Prioridad | Descripción |
 |----|-----------|------------|
-| DT-002 | 🟡 MEDIO | `slide-engine.js` (2482 líneas) mezcla UI + sync Supabase |
-| DT-003 | 🟡 MEDIO | `_calcIntegrityFallback` duplicada en `report.js` y `essay-handler.js` |
-| DT-004 | 🟠 ALTO | Eliminar `READING_COMMENT` de lecciones tipo `reading-engine` |
-| L-001 | 🔴 CRÍTICO | Argumentative Essay (HTML vacío, coming soon) |
-| L-002 | 🔴 CRÍTICO | Chain Essay (HTML vacío, coming soon) |
+| DT-002 | 🟡 MEDIO | `slide-engine.js` (~3373 líneas) mezcla UI + sync Supabase |
+| DT-003 | 🟡 MEDIO | Cálculo de integridad duplicado: `_calcIntegrityScore` (`js/essay-handler.js:107`) vs `_calcIntegrity` (`js/slide-engine.js:1973`) |
+| DT-004 | 🟠 ALTO | Eliminar `READING_COMMENT` de lecciones tipo `reading-engine` (Paso 3 del plan abajo sigue sin aplicarse) |
+| DT-006 | 🟢 NUEVO | Teacher Helper Mode: inline annotations vía `data-teacher-note` y `?teacher=1` |
+| DT-007 | 🟢 NUEVO | `_configReady` (fetch a `/api/config`) duplicado 3x en `reading-engine.js`, `slide-engine.js`, `dojo-client.js` — consolidar en un módulo compartido real (el singleton `js/config-loader.js` nunca se usó, se eliminó por código muerto) |
 
 ---
 
@@ -21,6 +21,8 @@ Estado al 2026-04-23.
 | ID | Descripción |
 |----|------------|
 | DT-005 | `index.html` implementa `isAdmin` check y manual toggle |
+| L-001 | Argumentative Essay — `modules/01-core-syllabus/unit1-essays/argumentative-essay.html` (275 líneas, 11 slides) |
+| L-002 | Chain Essay — `modules/01-core-syllabus/unit1-essays/chain-essay.html` (284 líneas, 9 slides) |
 | L-003 | Instructor Mode: Manual Toggle implementado (real-time sync) |
 
 ---
