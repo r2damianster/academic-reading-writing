@@ -203,11 +203,12 @@ Ver `DEUDA_TECNICA.md` para el estado completo. Items pendientes de mayor impact
 | ID | Prioridad | Descripción |
 |----|-----------|------------|
 | DT-002 | 🟡 MEDIO | `slide-engine.js` (~3373 líneas) mezcla UI + sync Supabase |
-| DT-003 | 🟡 MEDIO | Fetch de config de Supabase duplicado: `_calcIntegrityScore` (`essay-handler.js`) vs `_calcIntegrity` (`slide-engine.js`) |
+| DT-003 | 🟡 MEDIO | Cálculo de integridad duplicado: `_calcIntegrityScore` (`essay-handler.js`) vs `_calcIntegrity` (`slide-engine.js`) |
 | DT-006 | 🟢 NUEVO | Teacher Helper Mode: Inline annotations via `data-teacher-note` and `?teacher=1` |
-| DT-007 | 🟢 NUEVO | `_configReady` (fetch a `/api/config`) duplicado 3x — `reading-engine.js`, `slide-engine.js`, `dojo-client.js`. Sin resolver: consolidarlo requeriría agregar un `<script>` compartido en decenas de lecciones HTML en producción — alto blast radius, pendiente de decisión explícita |
 
 Ítems completados: DT-004 (READING_COMMENT deshabilitado en el motor; auditoría no encontró usos reales en `modules/`), L-001 (Argumentative Essay), L-002 (Chain Essay), L-003 (Instructor Mode Manual Toggle) — ver `DEUDA_TECNICA.md`.
+
+**DT-007 (WONTFIX):** `_configReady` duplicado en `reading-engine.js`/`slide-engine.js` — investigado y descartado, no es bug funcional (ningún HTML carga ambos motores a la vez). Ver detalle en `DEUDA_TECNICA.md`.
 
 ---
 

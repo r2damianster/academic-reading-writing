@@ -11,7 +11,7 @@ Estado al 2026-09-01.
 | DT-002 | 🟡 MEDIO | `slide-engine.js` (~3373 líneas) mezcla UI + sync Supabase |
 | DT-003 | 🟡 MEDIO | Cálculo de integridad duplicado: `_calcIntegrityScore` (`js/essay-handler.js:107`) vs `_calcIntegrity` (`js/slide-engine.js:1973`) |
 | DT-006 | 🟢 NUEVO | Teacher Helper Mode: inline annotations vía `data-teacher-note` y `?teacher=1` |
-| DT-007 | 🟢 NUEVO | `_configReady` (fetch a `/api/config`) duplicado 3x en `reading-engine.js`, `slide-engine.js`, `dojo-client.js` — consolidar en un módulo compartido real (el singleton `js/config-loader.js` nunca se usó, se eliminó por código muerto) |
+| DT-007 | ⚪ WONTFIX | `_configReady` duplicado en `reading-engine.js` y `slide-engine.js` (~10 líneas c/u). **Investigado 2026-09-01: no es bug funcional** — ningún HTML carga ambos motores a la vez, cero doble-fetch en producción. `dojo-client.js` no hace fetch propio (solo espera `window.configReady` si existe, sin usarlo). Arreglo real requeriría agregar `<script>` compartido en 70+ lecciones HTML (`activity-tracker.js`, el único script casi-universal, falta en 27/72 páginas). Decisión explícita de Arturo: no tocar, riesgo no justifica el beneficio cosmético |
 
 ---
 
