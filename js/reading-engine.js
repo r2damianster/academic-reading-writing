@@ -151,7 +151,9 @@ const ReadingEngine = (function () {
                 case 'CONTENT':           ReadingTypes.CONTENT.mount(slide, i);          break;
                 case 'READING_FOCUS':     ReadingTypes.READING_FOCUS.mount(slide, i);    break;
                 case 'READING_HIGHLIGHT': ReadingTypes.READING_HIGHLIGHT.mount(slide, i); break;
-                case 'READING_COMMENT':   ReadingTypes.READING_COMMENT.mount(slide, i);  break;
+                case 'READING_COMMENT':
+                    console.warn('⚠️ ReadingEngine: READING_COMMENT está deshabilitado en lecciones de lectura. Usa slide-engine para actividades de producción.');
+                    break;
                 case 'READING_WARNING':   ReadingTypes.READING_WARNING.mount(slide, i);  break;
                 case 'READING_ESSAY':     ReadingTypes.READING_ESSAY.mount(slide, i);    break;
                 case 'READING_QUIZ':      ReadingTypes.READING_QUIZ.mount(slide, i);     break;

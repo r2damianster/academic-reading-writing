@@ -10,7 +10,6 @@ Estado al 2026-09-01.
 |----|-----------|------------|
 | DT-002 | 🟡 MEDIO | `slide-engine.js` (~3373 líneas) mezcla UI + sync Supabase |
 | DT-003 | 🟡 MEDIO | Cálculo de integridad duplicado: `_calcIntegrityScore` (`js/essay-handler.js:107`) vs `_calcIntegrity` (`js/slide-engine.js:1973`) |
-| DT-004 | 🟠 ALTO | Eliminar `READING_COMMENT` de lecciones tipo `reading-engine` (Paso 3 del plan abajo sigue sin aplicarse) |
 | DT-006 | 🟢 NUEVO | Teacher Helper Mode: inline annotations vía `data-teacher-note` y `?teacher=1` |
 | DT-007 | 🟢 NUEVO | `_configReady` (fetch a `/api/config`) duplicado 3x en `reading-engine.js`, `slide-engine.js`, `dojo-client.js` — consolidar en un módulo compartido real (el singleton `js/config-loader.js` nunca se usó, se eliminó por código muerto) |
 
@@ -20,6 +19,7 @@ Estado al 2026-09-01.
 
 | ID | Descripción |
 |----|------------|
+| DT-004 | `READING_COMMENT` deshabilitado en `reading-engine.js` (Paso 3); auditoría (Paso 1) no encontró usos reales en `modules/` — solo un comentario HTML obsoleto en `chain-essay.html` corregido |
 | DT-005 | `index.html` implementa `isAdmin` check y manual toggle |
 | L-001 | Argumentative Essay — `modules/01-core-syllabus/unit1-essays/argumentative-essay.html` (275 líneas, 11 slides) |
 | L-002 | Chain Essay — `modules/01-core-syllabus/unit1-essays/chain-essay.html` (284 líneas, 9 slides) |
@@ -27,7 +27,7 @@ Estado al 2026-09-01.
 
 ---
 
-## DT-004 — Eliminar actividades de producción en reading-engine
+## DT-004 — Eliminar actividades de producción en reading-engine (✅ RESUELTO 2026-09-01)
 
 **Problema:** Las lecciones basadas en `reading-engine.js` se vuelven demasiado largas cuando incluyen slides de tipo `READING_COMMENT` (textarea libre, mínimo de palabras). Este tipo de actividad pertenece conceptualmente a lecciones de escritura (`slide-engine`), no de lectura.
 
@@ -50,51 +50,33 @@ Estado al 2026-09-01.
 
 ### Plan de implementación
 
-#### Paso 1 — Auditar módulos HTML existentes
+#### Paso 1 — Auditar módulos HTML existentes ✅
 
-Buscar todos los slides `data-type="READING_COMMENT"` en los archivos de módulos:
+`grep -rl 'data-type="READING_COMMENT"' modules/` → **cero resultados.** Ninguna lección usa `READING_COMMENT` como `data-type` real hoy. Único rastro: un comentario HTML obsoleto en `chain-essay.html` (el slide ya estaba migrado a `READING_QUIZ`) — corregido.
 
-```bash
-grep -rl 'data-type="READING_COMMENT"' modules/
-```
+#### Paso 2 — Reemplazar cada READING_COMMENT ✅
 
-Anotar qué lecciones los usan y cuántos hay por lección.
+No había ninguno pendiente de reemplazar (ver Paso 1).
 
-#### Paso 2 — Reemplazar cada READING_COMMENT
+#### Paso 3 — Deshabilitar el tipo en el motor ✅
 
-Para cada slide encontrado, convertirlo a la alternativa más apropiada:
-
-- Si la pregunta tiene respuesta objetiva → `READING_QUIZ` o `READING_FILL`
-- Si es comparar ideas → `READING_TFNG`
-- Si es conectar conceptos → `READING_MATCH`
-- Si solo requiere reflexión breve → `READING_QUIZ` con opciones descriptivas
-
-La lógica concreta del reemplazo la decide el instructor al revisar cada slide.
-
-#### Paso 3 — Deshabilitar el tipo en el motor
-
-En `js/reading-engine.js`, línea ~150, cambiar el case de `READING_COMMENT` para mostrar un error de consola en lugar de montar el componente:
+`js/reading-engine.js` línea ~154, case de `READING_COMMENT` ahora hace `console.warn` en vez de montar el componente:
 
 ```js
-// ANTES
-case 'READING_COMMENT':   ReadingTypes.READING_COMMENT.mount(slide, i);  break;
-
-// DESPUÉS
 case 'READING_COMMENT':
     console.warn('⚠️ ReadingEngine: READING_COMMENT está deshabilitado en lecciones de lectura. Usa slide-engine para actividades de producción.');
     break;
 ```
 
-Esto hace que slides `READING_COMMENT` que queden por error queden silenciosamente vacíos (no bloquean la lección) y dejen traza en consola para detectarlos.
+#### Paso 4 — Actualizar GUIA_CREACION_LECCIONES.md ✅
 
-#### Paso 4 — Actualizar GUIA_CREACION_LECCIONES.md
-
-Agregar una nota explícita en la sección de `reading-engine` indicando que `READING_COMMENT` no debe usarse, y referenciar este item.
+Nota agregada antes del checklist de publicación.
 
 #### Paso 5 — Verificación
 
-- Recorrer manualmente cada lección `reading-engine` afectada y confirmar que avanza sin bloqueos.
-- Confirmar que las lecciones `slide-engine` no se ven afectadas (el cambio es solo en `reading-engine.js`).
+- Cambio de bajo riesgo: no había slides reales usando `READING_COMMENT` (Paso 1), así que no hay lecciones que revisar manualmente por bloqueos.
+- `slide-engine.js` no se tocó — el cambio es solo en `reading-engine.js`.
+- Pendiente: confirmar en el navegador que no aparece el `console.warn` en ninguna lección en producción (confirmaría que el audit del Paso 1 fue completo).
 
 ---
 

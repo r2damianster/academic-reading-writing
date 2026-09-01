@@ -79,6 +79,9 @@ Copia este código para iniciar cualquier lección:
 | `DRAG_DROP` | `data-se-drag`, `data-se-drop-accepts` | Emparejamiento |
 | `ESSAY` | `data-se-role`, `data-se-lesson` | Escritura con telemetría |
 
+> [!WARNING]
+> Esta guía cubre lecciones `slide-engine.js`. Para lecciones `reading-engine.js` (PDF + sidebar), **no uses `READING_COMMENT`** — quedó deshabilitado en el motor (DT-004, `DEUDA_TECNICA.md`). Las actividades de producción (escritura libre) solo van en `slide-engine` con tipo `ESSAY`; en `reading-engine` usa `READING_QUIZ`, `READING_FILL`, `READING_TFNG` o `READING_MATCH`.
+
 ## 3. Checklist de Publicación
 1. [ ] El `lessonID` en el script `init` coincide con el nombre de la lección.
 2. [ ] Todas las imágenes/video tienen rutas relativas correctas (`../../img/`).

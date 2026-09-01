@@ -204,11 +204,10 @@ Ver `DEUDA_TECNICA.md` para el estado completo. Items pendientes de mayor impact
 |----|-----------|------------|
 | DT-002 | 🟡 MEDIO | `slide-engine.js` (~3373 líneas) mezcla UI + sync Supabase |
 | DT-003 | 🟡 MEDIO | Fetch de config de Supabase duplicado: `_calcIntegrityScore` (`essay-handler.js`) vs `_calcIntegrity` (`slide-engine.js`) |
-| DT-004 | 🟠 ALTO | Eliminar `READING_COMMENT` (actividades de producción) de lecciones `reading-engine` |
 | DT-006 | 🟢 NUEVO | Teacher Helper Mode: Inline annotations via `data-teacher-note` and `?teacher=1` |
-| DT-007 | 🟢 NUEVO | `_configReady` (fetch a `/api/config`) duplicado 3x — `reading-engine.js`, `slide-engine.js`, `dojo-client.js`. Existía un singleton `js/config-loader.js` que nunca se incluyó con `<script>` (eliminado por código muerto); considerar consolidar la lógica real en un módulo compartido |
+| DT-007 | 🟢 NUEVO | `_configReady` (fetch a `/api/config`) duplicado 3x — `reading-engine.js`, `slide-engine.js`, `dojo-client.js`. Sin resolver: consolidarlo requeriría agregar un `<script>` compartido en decenas de lecciones HTML en producción — alto blast radius, pendiente de decisión explícita |
 
-Ítems completados: L-001 (Argumentative Essay), L-002 (Chain Essay), L-003 (Instructor Mode Manual Toggle) — ver `DEUDA_TECNICA.md`.
+Ítems completados: DT-004 (READING_COMMENT deshabilitado en el motor; auditoría no encontró usos reales en `modules/`), L-001 (Argumentative Essay), L-002 (Chain Essay), L-003 (Instructor Mode Manual Toggle) — ver `DEUDA_TECNICA.md`.
 
 ---
 
