@@ -58,8 +58,8 @@
                 <input type="email" id="inputEmail" placeholder="user@uleam.edu.ec  OR  user@live.uleam.edu.ec"
                        style="width:100%;padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:8px;"
                        oninput="onEmailInput(this.value)" onchange="onEmailInput(this.value)" onblur="onEmailInput(this.value)">
-                <div id="adminPasswordField" style="display:none;margin-bottom:10px;">
-                    <input type="password" id="inputAdminPassword" placeholder="Administrator password"
+                <div id="adminPasswordField" style="margin-bottom:10px;">
+                    <input type="password" id="inputAdminPassword" placeholder="Password (if provided by your instructor)"
                            style="width:100%;padding:12px;border:2px solid #e67e22;border-radius:8px;box-sizing:border-box;">
                 </div>
                 <p id="step1Error" style="color:#e74c3c;font-size:0.82rem;margin-top:8px;min-height:18px;text-align:center;"></p>
@@ -144,7 +144,9 @@
 
         function onEmailInput(value) {
             var isAdmin = value.trim().toLowerCase() === ADMIN_EMAIL;
-            document.getElementById('adminPasswordField').style.display = isAdmin ? 'block' : 'none';
+            document.getElementById('inputAdminPassword').placeholder = isAdmin
+                ? 'Administrator password'
+                : 'Password (if provided by your instructor)';
         }
 
         function goToStep2() {

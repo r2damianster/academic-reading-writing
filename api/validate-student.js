@@ -1,4 +1,5 @@
 const { createClient } = require('@supabase/supabase-js');
+const bcrypt = require('bcryptjs');
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
@@ -56,8 +57,22 @@ module.exports = async (req, res) => {
       return res.status(404).json({ message: 'Student not found in database.' });
     }
 
-    console.log(`✅ Validado: ${data[0].name}`);
-    return res.status(200).json({ ...data[0], role: 'student' });
+    const student = data[0];
+
+    // ── Estudiante con clave asignada: exigir contraseña ────────────────────
+    if (student.password_hash) {
+      if (!password) {
+        return res.status(401).json({ message: 'Password is required.' });
+      }
+      if (!bcrypt.compareSync(password, student.password_hash)) {
+        console.log(`⛔ Student login failed: wrong password`);
+        return res.status(401).json({ message: 'Invalid password.' });
+      }
+    }
+
+    console.log(`✅ Validado: ${student.name}`);
+    const { password_hash, ...studentSafe } = student;
+    return res.status(200).json({ ...studentSafe, role: 'student' });
 
   } catch (e) {
     console.error('🔥 Error:', e);

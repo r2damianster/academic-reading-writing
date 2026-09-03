@@ -66,10 +66,14 @@ async function checkStudentStatus() {
     }
 
     try {
+        const storedPassword = localStorage.getItem('studentPassword');
+        const revalidateBody = { email: email };
+        if (storedPassword) revalidateBody.password = storedPassword;
+
         const response = await fetch('/api/validate-student', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: email })
+            body: JSON.stringify(revalidateBody)
         });
 
         if (!response.ok) {
@@ -174,6 +178,8 @@ async function saveAndStart() {
         localStorage.setItem('isAdmin', serverResult.role === 'admin' ? 'true' : 'false');
         if (serverResult.id) localStorage.setItem('studentId', serverResult.id);
         if (serverResult.role === 'admin') sessionStorage.setItem('adminPwd', adminPassword);
+        if (adminPassword) localStorage.setItem('studentPassword', adminPassword);
+        else localStorage.removeItem('studentPassword');
         
         // Reset manual toggle on new fresh login
         localStorage.setItem('adminUnlocked', 'false');
