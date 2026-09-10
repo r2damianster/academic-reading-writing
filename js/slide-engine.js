@@ -143,6 +143,17 @@ const SlideEngine = (function () {
         _updateProgress();
         _flushRetryQueue();
 
+        // ── Resume directo al ensayo si el estudiante lo saltó antes ──────────
+        // Evita rehacer todo el quiz solo para volver a preEssaySlide.
+        if (!_isAdmin && document.getElementById('preEssaySlide')) {
+            _checkPendingEssay(_lessonName).then(pending => {
+                if (!pending) return;
+                _scoreAlreadySaved = true; // el quiz ya quedó registrado la primera vez
+                goTo('preEssaySlide');
+                _showResumeBanner();
+            });
+        }
+
         // Teacher mode — activate if ?teacher=1 in URL
         if (new URLSearchParams(window.location.search).get('teacher') === '1') {
             await _activateTeacherMode();
@@ -372,6 +383,15 @@ const SlideEngine = (function () {
         });
     }
 
+    // ── Banner de retomar ensayo ─────────────────────────────────────────────────
+    function _showResumeBanner() {
+        const banner = document.createElement('div');
+        banner.style.cssText = 'position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:99998;background:#2c3e50;color:#fff;padding:10px 18px;border-radius:8px;font-size:0.9rem;box-shadow:0 4px 16px rgba(0,0,0,0.25);';
+        banner.textContent = '📝 Retomando donde lo dejaste — completa tu ensayo.';
+        document.body.appendChild(banner);
+        setTimeout(() => banner.remove(), 4000);
+    }
+
     // ── Guardar en localStorage ───────────────────────────────────────────────────
     function _saveToLocalStorage(lessonName, entry) {
         let progress = JSON.parse(localStorage.getItem('course_progress')) || [];
@@ -440,6 +460,32 @@ const SlideEngine = (function () {
         return null;
     }
 
+    // ── Ensayo pendiente (skip previo) ───────────────────────────────────────────
+    // Revisa la última fila de essay_submissions para esta lección + estudiante.
+    // Si fue un skip (skipped=true) y no hay un intento real posterior, el estudiante
+    // puede retomar directo en el ensayo sin rehacer el quiz. Consulta contra
+    // Supabase (no localStorage) para que funcione entre dispositivos distintos.
+    async function _checkPendingEssay(lessonName) {
+        await _configReady;
+        const studentId = await _resolveStudentId();
+        if (!studentId || !SUPABASE_URL) return false;
+
+        try {
+            const res = await fetch(
+                `${SUPABASE_URL}/rest/v1/essay_submissions` +
+                `?activity=eq.${encodeURIComponent(lessonName)}&student_id=eq.${studentId}` +
+                `&select=skipped&order=created_at.desc&limit=1`,
+                { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+            );
+            if (!res.ok) return false;
+            const rows = await res.json();
+            return rows.length > 0 && rows[0].skipped === true;
+        } catch (e) {
+            console.warn('⚠️ _checkPendingEssay falló:', e);
+            return false;
+        }
+    }
+
     // ── Registro de actividad — solo quiz ────────────────────────────────────────
     // activity_logs registra ÚNICAMENTE el resultado del quiz (score, errores).
     // Las métricas de escritura van exclusivamente en essay_submissions.
@@ -482,7 +528,8 @@ const SlideEngine = (function () {
             writing_duration:  a.writingDuration != null ? Number(a.writingDuration) : null,
             chars_typed_ratio: a.charsTypedRatio != null ? Number(a.charsTypedRatio) : null,
             integrity_score:   a.integrityScore  != null ? Number(a.integrityScore)  : null,
-            is_update:         false   // columna verificada: existe en el schema con DEFAULT false
+            is_update:         false,  // columna verificada: existe en el schema con DEFAULT false
+            skipped:           !!a.skipped   // distingue skip de intento real — ver _countAttempts en lesson-access.js
         };
 
         // INSERT en essay_submissions con Prefer: return=representation para obtener el UUID

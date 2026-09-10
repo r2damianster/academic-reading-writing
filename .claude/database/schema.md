@@ -46,6 +46,7 @@ essay_submissions(
   writing_duration    integer,   -- segundos
   chars_typed_ratio   numeric,   -- porcentaje 0-100
   integrity_score     numeric,   -- 0-100
+  skipped             boolean DEFAULT false,  -- true = estudiante saltó el ensayo (no cuenta como intento, ver lesson-access.js _countAttempts)
   created_at          timestamptz DEFAULT now()
 )
 ```

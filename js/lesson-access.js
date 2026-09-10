@@ -79,7 +79,7 @@ const LessonAccess = {
         try {
             const r = await fetch(
                 `${this._config.supabaseUrl}/rest/v1/essay_submissions` +
-                `?activity=eq.${encodeURIComponent(activityKey)}&student_id=eq.${studentId}&select=id`,
+                `?activity=eq.${encodeURIComponent(activityKey)}&student_id=eq.${studentId}&skipped=eq.false&select=id`,
                 {
                     headers: {
                         'apikey':        this._config.supabaseKey,
