@@ -152,6 +152,10 @@ const SlideEngine = (function () {
                 goTo('preEssaySlide');
                 _showResumeBanner();
             });
+
+            // Atajo siempre visible desde el inicio: permite ir directo al ensayo
+            // sin haber hecho el quiz. No marca el quiz como completado.
+            _mountDirectEssayButton();
         }
 
         // Teacher mode — activate if ?teacher=1 in URL
@@ -381,6 +385,24 @@ const SlideEngine = (function () {
             overlay.remove();
             finishLessonWithEssay(lessonName, '[USER SKIPPED ESSAY]', { skipped: true });
         });
+    }
+
+    // ── Atajo permanente: ir directo al ensayo ───────────────────────────────────
+    // Visible desde la primera slide, sin requerir haber completado el quiz.
+    // No llama a finishLesson() — no existe score de quiz que registrar.
+    function _mountDirectEssayButton() {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = '✍️ Go directly to the essay';
+        btn.style.cssText = 'position:fixed;top:12px;right:12px;z-index:99997;background:#fff;' +
+            'color:#2c3e50;border:1px solid #ccc;border-radius:20px;padding:8px 16px;' +
+            'font-size:0.85rem;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);';
+        btn.addEventListener('click', () => {
+            _scoreAlreadySaved = true; // sin quiz hecho, no hay score que guardar
+            goTo('preEssaySlide');
+            btn.remove();
+        });
+        document.body.appendChild(btn);
     }
 
     // ── Banner de retomar ensayo ─────────────────────────────────────────────────
