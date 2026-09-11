@@ -16,3 +16,5 @@ Thumbs.db
 # Salida generada por herramientas de análisis (graphify, code-review-graph)
 graphify-out/
 .code-review-graph/
+.vercel
+.env*
