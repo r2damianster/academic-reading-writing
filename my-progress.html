@@ -490,8 +490,9 @@ td.lesson-name { font-weight: 600; color: var(--ink); }
 
     <!-- Summary cards -->
     <div class="cards-grid" id="ov-cards">
-      <div class="card c-navy"><div class="card-value" id="ov-done">—</div><div class="card-label">Activities done</div></div>
+      <div class="card c-navy"><div class="card-value" id="ov-done">—</div><div class="card-label">Lessons started</div></div>
       <div class="card c-blue"><div class="card-value c-blue" id="ov-cov">—</div><div class="card-label">Course coverage</div></div>
+      <div class="card c-amber"><div class="card-value c-amber" id="ov-essays">—</div><div class="card-label">Essays submitted</div></div>
       <div class="card c-green"><div class="card-value c-green" id="ov-score">—</div><div class="card-label">Avg quiz score</div></div>
       <div class="card c-amber"><div class="card-value c-amber" id="ov-int">—</div><div class="card-label">Avg integrity</div></div>
       <div class="card c-purple"><div class="card-value c-purple" id="ov-reading">—</div><div class="card-label">Readings done</div></div>
@@ -510,6 +511,9 @@ td.lesson-name { font-weight: 600; color: var(--ink); }
 
     <!-- All-lessons table -->
     <div class="section-head">All lessons</div>
+    <div style="font-size:.72rem;color:var(--mist);margin-bottom:10px;">
+      ✓ Complete = practice + essay both done &nbsp;·&nbsp; ✍️ Essay pending = practice done, essay not submitted yet &nbsp;·&nbsp; ○ Not started
+    </div>
     <div id="ov-table"><div class="state-msg">Loading…</div></div>
   </div>
 
@@ -521,7 +525,8 @@ td.lesson-name { font-weight: 600; color: var(--ink); }
 
     <!-- Writing cards -->
     <div class="cards-grid" id="wr-cards">
-      <div class="card c-blue"><div class="card-value c-blue" id="wr-done">—</div><div class="card-label">Lessons done</div></div>
+      <div class="card c-blue"><div class="card-value c-blue" id="wr-done">—</div><div class="card-label">Lessons started</div></div>
+      <div class="card c-amber"><div class="card-value c-amber" id="wr-essays">—</div><div class="card-label">Essays submitted</div></div>
       <div class="card c-green"><div class="card-value c-green" id="wr-score">—</div><div class="card-label">Avg quiz score</div></div>
       <div class="card c-amber"><div class="card-value c-amber" id="wr-int">—</div><div class="card-label">Avg integrity</div></div>
       <div class="card c-navy"><div class="card-value" id="wr-words">—</div><div class="card-label">Words written</div></div>
@@ -1009,8 +1014,11 @@ function renderOverview(st, quizMap, essayMap, writingActs, readingMap) {
     return s + Math.round((100 - best) / 5);
   }, 0);
 
+  const essaysSubmitted = Object.keys(essayMap).length;
+
   document.getElementById('ov-done').textContent    = `${totalDone}/${TOTAL_ALL}`;
   document.getElementById('ov-cov').textContent     = `${TOTAL_ALL > 0 ? Math.round(totalDone/TOTAL_ALL*100) : 0}%`;
+  document.getElementById('ov-essays').textContent  = `${essaysSubmitted}/${TOTAL_WRITING}`;
   document.getElementById('ov-score').textContent   = avgScore != null ? `${avgScore}%` : '—';
   document.getElementById('ov-int').textContent     = avgInt   != null ? `${avgInt}%`   : '—';
   document.getElementById('ov-reading').textContent = `${readingDone}`;
@@ -1050,9 +1058,9 @@ function renderOverview(st, quizMap, essayMap, writingActs, readingMap) {
     } else {
       const hasQ = !!q, hasE = !!e;
       badge = hasQ && hasE ? '<span class="badge b-done">✓ Complete</span>'
-            : hasQ        ? '<span class="badge b-quiz">Quiz</span>'
-            : hasE        ? '<span class="badge b-essay">Essay</span>'
-            : '<span class="badge b-pending">Pending</span>';
+            : hasQ        ? '<span class="badge b-quiz">✍️ Essay pending</span>'
+            : hasE        ? '<span class="badge b-essay">📝 Practice pending</span>'
+            : '<span class="badge b-pending">○ Not started</span>';
       const avgQ = q && q.scores.length ? Math.round(q.scores.reduce((a,b)=>a+b,0)/q.scores.length) : null;
       scoreTd = avgQ != null ? pill(avgQ) : '<span class="p-none">—</span>';
       dateTd  = (q?.date || e?.created_at || '').slice(0,10);
@@ -1099,6 +1107,7 @@ function renderWriting(quizMap, essayMap, compMap, writingActs) {
   const avgComp     = compScores.length ? Math.round(compScores.reduce((a,b)=>a+b,0)/compScores.length) : null;
 
   document.getElementById('wr-done').textContent   = writingActs.length;
+  document.getElementById('wr-essays').textContent = `${essays.length}/${TOTAL_WRITING}`;
   document.getElementById('wr-score').textContent  = avgScore != null ? `${avgScore}%` : '—';
   document.getElementById('wr-int').textContent    = avgInt   != null ? `${avgInt}%`   : '—';
   document.getElementById('wr-words').textContent  = totalWords.toLocaleString();
@@ -1120,7 +1129,7 @@ function renderWriting(quizMap, essayMap, compMap, writingActs) {
     return `<tr>
       <td class="lesson-name">${a}</td>
       <td>${inlineBar(avgQ, avgQ>=85?'bf-green':avgQ>=60?'bf-amber':'bf-teal')}${attempts>1?` <span style="font-size:.65rem;color:var(--mist)">${attempts}x</span>`:''}</td>
-      <td>${e ? inlineBar(e.integrity_score, 'bf-amber') : '<span class="p-none">—</span>'}</td>
+      <td>${e ? inlineBar(e.integrity_score, 'bf-amber') : '<span style="color:var(--amber);font-size:.72rem;font-weight:600">Not submitted</span>'}</td>
       <td>${c ? pill(c.compliance_pct) : '<span class="p-none">—</span>'}</td>
       <td style="color:var(--steel)">${e ? (e.words||0) : '—'}</td>
       <td style="color:var(--mist);font-size:.72rem">${date||'—'}</td>
