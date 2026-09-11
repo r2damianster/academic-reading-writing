@@ -406,12 +406,30 @@ const SlideEngine = (function () {
     }
 
     // ── Banner de retomar ensayo ─────────────────────────────────────────────────
+    // Incluye botón para repetir las preguntas por decisión propia del
+    // estudiante (no solo saltar al ensayo). Resetea _scoreAlreadySaved para
+    // que el nuevo intento de quiz sí se registre al volver a preEssaySlide.
     function _showResumeBanner() {
         const banner = document.createElement('div');
-        banner.style.cssText = 'position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:99998;background:#2c3e50;color:#fff;padding:10px 18px;border-radius:8px;font-size:0.9rem;box-shadow:0 4px 16px rgba(0,0,0,0.25);';
-        banner.textContent = '📝 Retomando donde lo dejaste — completa tu ensayo.';
+        banner.style.cssText = 'position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:99998;background:#2c3e50;color:#fff;padding:10px 18px;border-radius:8px;font-size:0.9rem;box-shadow:0 4px 16px rgba(0,0,0,0.25);display:flex;align-items:center;gap:12px;';
+
+        const text = document.createElement('span');
+        text.textContent = '📝 Retomando donde lo dejaste — completa tu ensayo.';
+        banner.appendChild(text);
+
+        const repeatBtn = document.createElement('button');
+        repeatBtn.type = 'button';
+        repeatBtn.textContent = '🔄 Repetir preguntas';
+        repeatBtn.style.cssText = 'background:#fff;color:#2c3e50;border:none;border-radius:14px;padding:5px 12px;font-size:0.8rem;font-weight:600;cursor:pointer;white-space:nowrap;';
+        repeatBtn.addEventListener('click', () => {
+            _scoreAlreadySaved = false;
+            banner.remove();
+            goTo(0);
+        });
+        banner.appendChild(repeatBtn);
+
         document.body.appendChild(banner);
-        setTimeout(() => banner.remove(), 4000);
+        setTimeout(() => banner.remove(), 10000);
     }
 
     // ── Guardar en localStorage ───────────────────────────────────────────────────
