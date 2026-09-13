@@ -54,6 +54,7 @@ const SlideEngine = (function () {
 
     let _currentIndex      = 0;
     let _mistakes          = 0;
+    let _appliedTaskScore  = null; // 0-100, seteado por APPLIED_TASK vía _gradeAppliedTask()
     let _lessonName        = '';
     let _slides            = [];
     let _scoreAlreadySaved = false;
@@ -95,6 +96,7 @@ const SlideEngine = (function () {
         _slides            = Array.from(document.querySelectorAll('.slide'));
 
         _mistakes          = 0;
+        _appliedTaskScore  = null;
         _scoreAlreadySaved = false;
         
         _isAdmin = isInstructor;
@@ -113,6 +115,7 @@ const SlideEngine = (function () {
         window.finishLesson           = finishLesson;
         window.finishLessonWithEssay  = finishLessonWithEssay;
         window.skipLessonWithData     = skipLessonWithData;
+        window._gradeAppliedTask      = _gradeAppliedTask;
         // Compatibilidad con cualquier archivo externo que aún llame _sendToSheetBeacon
         window._sendToSheetBeacon     = (progress) => {
             const last = [...progress].reverse().find(i => i.result && i.result !== 'Visited');
@@ -130,6 +133,7 @@ const SlideEngine = (function () {
                 case 'DRAG_DROP':  SlideTypes.DRAG_DROP.mount(slide, index);  break;
                 case 'FILL_BLANK':      SlideTypes.FILL_BLANK.mount(slide, index);      break;
                 case 'ESSAY':          SlideTypes.ESSAY.mount(slide, index, lessonName); break;
+                case 'APPLIED_TASK':   SlideTypes.APPLIED_TASK.mount(slide, index, _lessonName); break;
                 case 'SORT_PARAGRAPH': SlideTypes.SORT_PARAGRAPH.mount(slide, index);   break;
                 case 'HIGHLIGHT':      SlideTypes.HIGHLIGHT.mount(slide, index);        break;
                 case 'MATCH':           SlideTypes.MATCH.mount(slide, index);                     break;
@@ -314,10 +318,23 @@ const SlideEngine = (function () {
     // ── Cierre de lección (con quiz) ─────────────────────────────────────────────
     function finishLesson(lessonName) {
         lessonName = lessonName.toLowerCase().replace(/-/g, ' ').replace(/  +/g, ' ').trim();
-        let score = Math.max(0, 100 - (_mistakes * 5));
+        // BUG FIX: los tipos de drill agregados después de QUIZ (CATEGORIZE, MATCH,
+        // WORD_BANK, HIGHLIGHT, CHOOSE_CONTEXT...) solo incrementan window.mistakes,
+        // nunca la _mistakes interna — usar window.mistakes captura todos los tipos.
+        const totalMistakes = window.mistakes || 0;
+        const drillScore    = Math.max(0, 100 - (totalMistakes * 5));
+
+        let score      = drillScore;
+        let resultText = `Score: ${score}% (Errors: ${totalMistakes})`;
+
+        if (_appliedTaskScore != null) {
+            score      = Math.round(drillScore * 0.5 + _appliedTaskScore * 0.5);
+            resultText = `Score: ${score}% (Drills: ${drillScore}%, Applied Task: ${_appliedTaskScore}%)`;
+        }
+
         const entry = {
             module:    lessonName,
-            result:    `Score: ${score}% (Errors: ${_mistakes})`,
+            result:    resultText,
             timestamp: new Date().toLocaleString()
         };
 
@@ -944,6 +961,57 @@ const SlideEngine = (function () {
         } catch (e) {
             console.warn('⚠️ SlideEngine: _renderTestRubric failed (non-critical):', e.message);
         }
+    }
+
+    // ── APPLIED_TASK: calificación liviana por rúbrica declarada en el propio slide ──
+    // A diferencia de _renderTestRubric (que lee la rúbrica de test_rubrics), aquí la
+    // rúbrica viene directo del HTML (data-se-rubric-item). Reusa el mismo agente
+    // 'test-grader' y la misma tabla test_evaluations, con test_id prefijado "applied:"
+    // para no mezclarse con las evaluaciones de tests reales (rubric_id queda null).
+    // El resultado (0-100) se guarda en _appliedTaskScore para que finishLesson() lo
+    // combine con el score de drills. Expuesta como window._gradeAppliedTask porque
+    // SlideTypes.APPLIED_TASK vive fuera de este closure (ver SECCIÓN 3).
+    async function _gradeAppliedTask(lessonName, indicators, responseText) {
+        const maxPoints = indicators.reduce((sum, item) => sum + (item.points || 0), 0) || 1;
+
+        let aiRes;
+        try {
+            aiRes = await _callOrchestrator(
+                'test-grader', '',
+                { lesson: lessonName, essay: (responseText || '').slice(0, 3000), rubric: indicators },
+                'json'
+            );
+        } catch (e) {
+            console.warn('⚠️ SlideEngine: _gradeAppliedTask orchestrator call failed:', e.message);
+            return null;
+        }
+
+        let evaluation = null;
+        try {
+            const raw = (aiRes?.response || '').trim();
+            evaluation = JSON.parse(raw.startsWith('{') ? raw : raw.replace(/^```json?\n?/, '').replace(/```$/, ''));
+        } catch (e) {
+            console.warn('⚠️ SlideEngine: applied-task JSON parse failed:', e.message);
+            return null;
+        }
+        if (!evaluation) return null;
+
+        const studentId = await _resolveStudentId();
+        _insertToSupabase('test_evaluations', {
+            student_id:       studentId,
+            test_id:          'applied:' + lessonName,
+            rubric_id:        null,
+            attempt_number:   1,
+            total_score:      evaluation.total_score ?? null,
+            indicator_scores: evaluation.indicator_scores || [],
+            overall_feedback: evaluation.overall_feedback || '',
+            model_used:       aiRes?.model || null
+        }, `APPLIED_TASK_EVAL "${lessonName}"`);
+
+        const pct = Math.max(0, Math.min(100, Math.round(((evaluation.total_score || 0) / maxPoints) * 100)));
+        _appliedTaskScore = pct;
+
+        return { pct, evaluation };
     }
 
     // Activa el botón "Continue →" en el panel de feedback
@@ -3362,6 +3430,126 @@ SlideTypes.CHOOSE_CONTEXT = {
         fb.id    = feedbackId;
         fb.style.cssText = 'display:none; margin-top:14px; padding:10px; border-radius:5px; font-weight:bold;';
         slide.appendChild(fb);
+
+        _appendNextButton(slide, { hidden: true });
+    }
+};
+
+
+/* -----------------------------------------------------------------------------
+   TIPO: APPLIED_TASK
+   Tarea corta de aplicación real: el estudiante lee un texto auténtico y
+   responde 1-2 preguntas que exigen una acción concreta, no análisis abstracto.
+   Se califica con una rúbrica declarada en el propio slide (data-se-rubric-item)
+   vía el agente 'test-grader' — el score (0-100) se combina con el score de
+   drills de la lección en finishLesson(). Sin tracking de integridad (EssayHandler):
+   es una respuesta corta, no un ensayo monitoreado.
+
+   USO EN HTML:
+   ─────────────────────────────────────────────────────────────────────────────
+   <div class="slide" data-type="APPLIED_TASK">
+     <h2>Apply It</h2>
+     <div data-se-source>...texto auténtico (abstract/email/artículo real)...</div>
+     <div data-se-applied-prompt>...1-2 preguntas que piden una acción real...</div>
+     <div data-se-rubric>
+       <div data-se-rubric-item data-se-points="5">Criterio 1...</div>
+       <div data-se-rubric-item data-se-points="5">Criterio 2...</div>
+     </div>
+   </div>
+   ─────────────────────────────────────────────────────────────────────────────
+----------------------------------------------------------------------------- */
+function _appliedFeedbackText(text) {
+    if (!text) return '';
+    return String(text)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/\n/g, '<br>');
+}
+
+SlideTypes.APPLIED_TASK = {
+    mount(slide, index, lessonName) {
+        const promptEl = slide.querySelector('[data-se-applied-prompt]');
+        const rubricEl = slide.querySelector('[data-se-rubric]');
+        if (!promptEl || !rubricEl) return;
+
+        const indicators = Array.from(rubricEl.querySelectorAll('[data-se-rubric-item]')).map(el => ({
+            title:  el.textContent.trim(),
+            points: parseFloat(el.dataset.sePoints) || 1
+        }));
+        rubricEl.remove(); // la rúbrica es solo para calificar — no se muestra al estudiante
+
+        const minWords  = 20;
+        const taId       = `applied-ta-${index}`;
+        const wcId       = `applied-wc-${index}`;
+        const fbId       = `applied-fb-${index}`;
+        const submitId   = `applied-submit-${index}`;
+
+        const workspace = document.createElement('div');
+        workspace.className   = 'applied-task-workspace';
+        workspace.style.cssText = 'margin-top:14px;';
+        workspace.innerHTML = `
+            <textarea id="${taId}"
+                placeholder="Write your response here (min. ${minWords} words)..."
+                style="width:100%; height:130px; padding:14px; border-radius:8px;
+                       border:1px solid #ccc; font-family:'Georgia',serif;
+                       line-height:1.6; font-size:15px; box-sizing:border-box;
+                       resize:vertical;"></textarea>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+                <span style="font-size:0.82rem; color:#666;">
+                    <span id="${wcId}">0</span> / ${minWords} words
+                </span>
+                <button id="${submitId}" style="display:none; padding:9px 20px; background:#2c3e50;
+                        color:white; border:none; border-radius:8px; cursor:pointer;
+                        font-size:0.9rem; font-weight:600;">
+                    Get Feedback
+                </button>
+            </div>
+            <div id="${fbId}" style="display:none; margin-top:14px; border-radius:10px;
+                 overflow:hidden; border:1px solid #dee2e6;">
+                <div style="background:#2c3e50; color:white; padding:10px 14px;
+                            font-size:0.85rem; font-weight:600;">
+                    &#x1F916; Feedback
+                </div>
+                <div class="applied-fb-body" style="padding:14px; background:#fff;
+                     font-size:0.86rem; line-height:1.7; color:#333;"></div>
+            </div>`;
+        slide.appendChild(workspace);
+
+        const ta        = workspace.querySelector(`#${taId}`);
+        const wc         = workspace.querySelector(`#${wcId}`);
+        const submitBtn  = workspace.querySelector(`#${submitId}`);
+        const fbPanel    = workspace.querySelector(`#${fbId}`);
+        const fbBody     = fbPanel.querySelector('.applied-fb-body');
+
+        ta.addEventListener('input', () => {
+            const words = ta.value.trim().split(/\s+/).filter(Boolean).length;
+            wc.textContent = words;
+            submitBtn.style.display = words >= minWords ? 'inline-block' : 'none';
+        });
+
+        submitBtn.addEventListener('click', async () => {
+            submitBtn.disabled    = true;
+            submitBtn.textContent = 'Grading…';
+
+            const result = await window._gradeAppliedTask(lessonName, indicators, ta.value);
+
+            if (result) {
+                const comments = (result.evaluation.indicator_scores || [])
+                    .map((s, i) => `<li><strong>${(indicators[i] || {}).title || ''}:</strong> ${_appliedFeedbackText(s.comment)}</li>`)
+                    .join('');
+                fbBody.innerHTML = `
+                    <p style="margin:0 0 10px;">${_appliedFeedbackText(result.evaluation.overall_feedback)}</p>
+                    ${comments ? `<ul style="margin:0; padding-left:18px;">${comments}</ul>` : ''}`;
+            } else {
+                fbBody.innerHTML = `<p style="color:#999;">Feedback unavailable right now — you can still continue.</p>`;
+            }
+
+            fbPanel.style.display   = 'block';
+            submitBtn.style.display = 'none';
+            ta.disabled = true;
+
+            const nextBtn = slide.querySelector('.btn-next');
+            if (nextBtn) nextBtn.style.display = 'block';
+        });
 
         _appendNextButton(slide, { hidden: true });
     }

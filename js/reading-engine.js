@@ -59,6 +59,7 @@ const ReadingEngine = (function () {
     let _startTime     = null;   // timestamp de inicio de lección
     let _totalMistakes = 0;
     let _slideResults  = [];     // snapshot ligero de cada slide completado
+    let _appliedTaskScore = null; // 0-100, seteado por READING_APPLIED vía _gradeAppliedTask()
     let _isAdmin       = false;
     let _helperWindow  = null;
 
@@ -156,6 +157,7 @@ const ReadingEngine = (function () {
                     break;
                 case 'READING_WARNING':   ReadingTypes.READING_WARNING.mount(slide, i);  break;
                 case 'READING_ESSAY':     ReadingTypes.READING_ESSAY.mount(slide, i);    break;
+                case 'READING_APPLIED':   ReadingTypes.READING_APPLIED.mount(slide, i);  break;
                 case 'READING_QUIZ':      ReadingTypes.READING_QUIZ.mount(slide, i);     break;
                 case 'READING_DRAGDROP':  ReadingTypes.READING_DRAGDROP.mount(slide, i); break;
                 case 'READING_FILL':      ReadingTypes.READING_FILL.mount(slide, i);     break;
@@ -418,7 +420,7 @@ const ReadingEngine = (function () {
     }
 
     // Inserta UNA fila en activity_logs al terminar la lección (igual que slide-engine)
-    async function _persistLessonResult(score) {
+    async function _persistLessonResult(score, drillScore) {
         await _configReady; // BUG-001: garantizar credenciales antes de cualquier INSERT
         if (!SUPABASE_URL) return;
 
@@ -430,7 +432,9 @@ const ReadingEngine = (function () {
 
         const durationSec = _startTime ? Math.round((Date.now() - _startTime) / 1000) : null;
         const errors      = _totalMistakes;
-        const result      = `Score: ${score}% (Errors: ${errors})`;
+        const result      = _appliedTaskScore != null
+            ? `Score: ${score}% (Drills: ${drillScore}%, Applied Task: ${_appliedTaskScore}%)`
+            : `Score: ${score}% (Errors: ${errors})`;
 
         // 1. Insertar en activity_logs (vincula la lección al estudiante)
         const logRecord = {
@@ -513,9 +517,88 @@ const ReadingEngine = (function () {
         return Math.max(0, 100 - (_totalMistakes * 5));
     }
 
+    // ── APPLIED_TASK (reading track): calificación por rúbrica declarada en el slide ──
+    // Mismo agente/tabla que slide-engine.js (_gradeAppliedTask): 'test-grader' +
+    // test_evaluations con test_id 'applied:'+lessonName, rubric_id null. El resultado
+    // (0-100) queda en _appliedTaskScore para que _finishLesson() lo combine con el
+    // score de drills. Expuesta en el return público porque ReadingTypes.READING_APPLIED
+    // vive fuera de este closure.
+    async function _gradeAppliedTask(indicators, responseText) {
+        const maxPoints = indicators.reduce((sum, item) => sum + (item.points || 0), 0) || 1;
+        const studentId = localStorage.getItem('studentId') || null;
+
+        let aiRes;
+        try {
+            const res = await fetch('/api/orchestrator', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    agent: 'test-grader',
+                    studentId,
+                    task: '',
+                    payload: { lesson: _lessonName, essay: (responseText || '').slice(0, 3000), rubric: indicators },
+                    outputFormat: 'json',
+                    needsHistoryDepth: 1
+                })
+            });
+            aiRes = await res.json();
+        } catch (e) {
+            console.warn('ReadingEngine: _gradeAppliedTask orchestrator call failed:', e);
+            return null;
+        }
+
+        let evaluation = null;
+        try {
+            const raw = (aiRes?.response || '').trim();
+            evaluation = JSON.parse(raw.startsWith('{') ? raw : raw.replace(/^```json?\n?/, '').replace(/```$/, ''));
+        } catch (e) {
+            console.warn('ReadingEngine: applied-task JSON parse failed:', e);
+            return null;
+        }
+        if (!evaluation) return null;
+
+        await _configReady;
+        if (!_studentId) {
+            const email = localStorage.getItem('studentEmail');
+            if (email) await _resolveStudentId(email);
+        }
+
+        try {
+            await fetch(`${SUPABASE_URL}/rest/v1/test_evaluations`, {
+                method:  'POST',
+                headers: {
+                    'Content-Type':  'application/json',
+                    'apikey':         SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Prefer':        'return=minimal'
+                },
+                body: JSON.stringify({
+                    student_id:       _studentId || null,
+                    test_id:          'applied:' + _lessonName,
+                    rubric_id:        null,
+                    attempt_number:   1,
+                    total_score:      evaluation.total_score ?? null,
+                    indicator_scores: evaluation.indicator_scores || [],
+                    overall_feedback: evaluation.overall_feedback || '',
+                    model_used:       aiRes?.model || null
+                }),
+                credentials: 'omit'
+            });
+        } catch (e) {
+            console.warn('ReadingEngine: test_evaluations insert falló:', e);
+        }
+
+        const pct = Math.max(0, Math.min(100, Math.round(((evaluation.total_score || 0) / maxPoints) * 100)));
+        _appliedTaskScore = pct;
+        return { pct, evaluation };
+    }
+
     function _finishLesson() {
-        const score = _calcScore();
-        _persistLessonResult(score);
+        const drillScore = _calcScore();
+        const score = _appliedTaskScore != null
+            ? Math.round(drillScore * 0.5 + _appliedTaskScore * 0.5)
+            : drillScore;
+        _persistLessonResult(score, drillScore);
 
         // Mostrar pantalla de finalización
         const done = document.getElementById('readingDoneScreen');
@@ -1051,6 +1134,7 @@ const ReadingEngine = (function () {
        API PÚBLICA
     ────────────────────────────────────────────────────────────────────────── */
     return { init, next, _unlockNext, _appendNextBtn, _renderPage, _renderWithControls, _saveProgress,
+             _gradeAppliedTask,
              _getPdfDoc: _getPdf,
              get currentIndex() { return _current; },
              get studentName() { return _studentName; },
@@ -2161,6 +2245,152 @@ ReadingTypes.READING_ESSAY = {
         skipBtn?.addEventListener('click', () => {
             ReadingEngine._saveProgress(index, 'essay', { skipped: true });
             ReadingEngine.next();
+        });
+    }
+};
+
+
+/* -----------------------------------------------------------------------------
+   TIPO: READING_APPLIED
+   Reemplazo liviano de READING_ESSAY: en vez de un ensayo largo sobre el PDF,
+   1-2 preguntas que piden una acción real con lo leído. Se califica con una
+   rúbrica declarada en el propio slide (data-re-rubric-item) vía el agente
+   'test-grader' (mismo mecanismo que APPLIED_TASK en slide-engine.js) — el
+   score se combina con el de los drills en _finishLesson().
+
+   USO EN HTML:
+   ─────────────────────────────────────────────────────────────────────────────
+   <div class="reading-slide" data-type="READING_APPLIED"
+        data-re-pdf="..." data-re-page="N" data-re-min-words="40"
+        data-re-label="Apply It" data-re-task="...(1-2 preguntas)...">
+     <div data-re-rubric>
+       <div data-re-rubric-item data-re-points="5">Criterio 1...</div>
+       <div data-re-rubric-item data-re-points="5">Criterio 2...</div>
+     </div>
+   </div>
+   ─────────────────────────────────────────────────────────────────────────────
+----------------------------------------------------------------------------- */
+ReadingTypes.READING_APPLIED = {
+    mount(slide, index) {
+        slide.dataset.reIndex = index;
+        const url      = slide.dataset.rePdf      || '';
+        const page     = parseInt(slide.dataset.rePage) || 1;
+        const task     = slide.dataset.reTask     || 'Answer below.';
+        const label    = slide.dataset.reLabel    || 'Apply It';
+        const minWords = parseInt(slide.dataset.reMinWords) || 40;
+
+        // Leer la rúbrica ANTES de sobrescribir innerHTML — no se muestra al estudiante
+        const rubricEl  = slide.querySelector('[data-re-rubric]');
+        const indicators = rubricEl
+            ? Array.from(rubricEl.querySelectorAll('[data-re-rubric-item]')).map(el => ({
+                  title:  el.textContent.trim(),
+                  points: parseFloat(el.dataset.rePoints) || 1
+              }))
+            : [];
+
+        const taId     = `applied-ta-${index}`;
+        const wcId     = `applied-wc-${index}`;
+        const fbId     = `applied-fb-${index}`;
+        const renderId = `re-render-applied-${index}`;
+
+        slide.innerHTML = `
+            <div class="re-essay-layout">
+                <div class="re-essay-tabs">
+                    <button class="re-essay-tab active" data-tab="write">&#x270D;&#xFE0F; Write</button>
+                    <button class="re-essay-tab" data-tab="article">&#x1F4C4; Article</button>
+                </div>
+
+                <div class="re-essay-panel" data-panel="write">
+                    <div class="re-essay-prompt">
+                        <strong>${label}</strong>
+                        <p>${task}</p>
+                    </div>
+                    <textarea id="${taId}" class="re-essay-textarea"
+                        placeholder="Write at least ${minWords} words&#x2026;"></textarea>
+                    <div class="re-essay-footer">
+                        <span id="${wcId}" class="re-word-count">0 / ${minWords} words</span>
+                        <div id="${fbId}" class="reading-feedback" style="display:none;"></div>
+                        <button class="btn-next-slide re-essay-submit" style="display:none;">
+                            Get Feedback
+                        </button>
+                    </div>
+                </div>
+
+                <div class="re-essay-panel" data-panel="article" style="display:none;">
+                    <div id="${renderId}" class="pdf-render-zone" style="min-height:420px;">
+                        <p style="color:#888; padding:24px; text-align:center;">Loading article&#x2026;</p>
+                    </div>
+                    <div class="pdf-controls">
+                        <button class="pdf-btn-prev">&#8592;</button>
+                        <span>Page <strong class="pdf-page-current">1</strong> of <strong class="pdf-page-total">?</strong></span>
+                        <button class="pdf-btn-next">&#8594;</button>
+                        <button class="pdf-fs-btn" title="Full screen">&#x26F6;</button>
+                    </div>
+                </div>
+            </div>`;
+
+        const tabs    = slide.querySelectorAll('.re-essay-tab');
+        const panels  = slide.querySelectorAll('.re-essay-panel');
+        let pdfLoaded = false;
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const target = tab.dataset.tab;
+                panels.forEach(p => p.style.display = p.dataset.panel === target ? '' : 'none');
+
+                if (target === 'article' && !pdfLoaded && url) {
+                    pdfLoaded = true;
+                    ReadingEngine._renderWithControls(slide, renderId, null, url, page);
+                    const fsBtn = slide.querySelector('.pdf-fs-btn');
+                    if (fsBtn) fsBtn.addEventListener('click', () => _openFullscreen(slide, renderId));
+                }
+            });
+        });
+
+        const ta  = slide.querySelector(`#${taId}`);
+        const wc  = slide.querySelector(`#${wcId}`);
+        const fb  = slide.querySelector(`#${fbId}`);
+        const btn = slide.querySelector('.re-essay-submit');
+        let graded = false;
+
+        ta?.addEventListener('input', () => {
+            if (graded) return;
+            const words = ta.value.trim().split(/\s+/).filter(Boolean).length;
+            if (wc) wc.textContent = `${words} / ${minWords} words`;
+            if (btn) btn.style.display = words >= minWords ? 'inline-block' : 'none';
+        });
+
+        btn?.addEventListener('click', async () => {
+            if (!graded) {
+                btn.disabled    = true;
+                btn.textContent = 'Grading…';
+
+                const result = await ReadingEngine._gradeAppliedTask(indicators, ta?.value || '');
+
+                if (fb) {
+                    if (result) {
+                        const comments = (result.evaluation.indicator_scores || [])
+                            .map((s, i) => `<li><strong>${(indicators[i] || {}).title || ''}:</strong> ${s.comment || ''}</li>`)
+                            .join('');
+                        fb.innerHTML = `<p style="margin:0 0 8px;">${result.evaluation.overall_feedback || ''}</p>` +
+                            (comments ? `<ul style="margin:0;padding-left:18px;">${comments}</ul>` : '');
+                    } else {
+                        fb.innerHTML = 'Feedback unavailable right now — you can still continue.';
+                    }
+                    fb.className = 'reading-feedback success';
+                    fb.style.display = 'block';
+                }
+
+                if (ta) ta.disabled = true;
+                graded = true;
+                btn.disabled    = false;
+                btn.textContent = 'Continue →';
+            } else {
+                ReadingEngine._saveProgress(index, 'applied', { text: ta?.value || '' });
+                ReadingEngine.next();
+            }
         });
     }
 };
