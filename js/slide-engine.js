@@ -404,8 +404,13 @@ const SlideEngine = (function () {
 
     // ── Skip essay ───────────────────────────────────────────────────────────────
     function skipLessonWithData(lessonName) {
+        // Doble clic en "Skip Writing" apilaba 2 overlays idénticos; confirmar solo
+        // quitaba el de arriba y el de abajo tapaba la pantalla (parecía "no responder").
+        if (document.getElementById('se-skip-overlay')) return;
+
         // confirm() is unreliable on mobile (Samsung Internet, Android) — use inline modal
         const overlay = document.createElement('div');
+        overlay.id = 'se-skip-overlay';
         overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;';
         overlay.innerHTML = `
             <div style="background:#fff;border-radius:12px;padding:24px;max-width:340px;width:100%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.25);">
