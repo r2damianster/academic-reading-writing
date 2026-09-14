@@ -509,7 +509,7 @@ async function handleGetLeaderboard(studentId, res) {
   const courseId = student.course_id;
   const { data: courseStudents, error: courseError } = await supabase
     .from('students')
-    .select('id')
+    .select('id, name')
     .eq('course_id', courseId)
     .eq('is_active', true);
 
@@ -519,6 +519,8 @@ async function handleGetLeaderboard(studentId, res) {
   }
 
   const studentIds = courseStudents.map(s => s.id);
+  const nameByStudent = {};
+  courseStudents.forEach(s => { nameByStudent[s.id] = s.name; });
   const { data: progressRows, error: progressError } = await supabase
     .from('gamification_student_dojo_progress')
     .select('student_id, total_series_points')
@@ -540,6 +542,7 @@ async function handleGetLeaderboard(studentId, res) {
 
   const progressList = (progressRows || []).map(row => ({
     ...row,
+    name: nameByStudent[row.student_id] || 'Student',
     current_streak: streakByStudent[row.student_id] || 0
   }));
 

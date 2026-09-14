@@ -254,7 +254,7 @@
                             <div class="leaderboard-rank">
                                 <div class="rank-pos ${posClass}">${i + 1}</div>
                                 <div class="rank-info">
-                                    <div class="rank-name">Student ${s.student_id?.slice(0, 8)}...</div>
+                                    <div class="rank-name">${s.name || 'Student'}</div>
                                     <div style="font-size: 0.85rem; color: #999;">Streak: ${s.current_streak || 0}d</div>
                                 </div>
                                 <div class="rank-points">${s.total_series_points || 0} pts</div>
@@ -277,7 +277,7 @@
             return `
                 <div style="padding: 12px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <div style="font-weight: 700; font-size: 1.1rem;">${medal} Rank #${i + 1}</div>
+                        <div style="font-weight: 700; font-size: 1.1rem;">${medal} ${s.name || 'Student'}</div>
                         <small style="color: #999;">Streak: ${s.current_streak || 0} days</small>
                     </div>
                     <div style="font-weight: 700; color: #667eea; font-size: 1.2rem;">${s.total_series_points || 0}</div>
