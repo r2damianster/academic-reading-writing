@@ -60,6 +60,8 @@ const SlideEngine = (function () {
     let _scoreAlreadySaved = false;
     let _isAdmin           = false;
     let _helperWindow      = null;
+    let _attemptNumber     = 1;    // 1 = primera vez (solo avanzar), >1 = repetición (nav libre)
+    let _lastQuizScore     = null; // score % del último finishLesson(), para mostrarlo si se salta el essay
 
     // ── Inicialización ──────────────────────────────────────────────────────────
     // Llama esto en window.onload de cada lección.
@@ -98,12 +100,24 @@ const SlideEngine = (function () {
         _mistakes          = 0;
         _appliedTaskScore  = null;
         _scoreAlreadySaved = false;
-        
+
         _isAdmin = isInstructor;
         console.log('shield SlideEngine: Instructor mode check:', _isAdmin);
 
+        // ── Número de intento de esta lección (1 = primera vez, >1 = repetición) ──
+        // Cuenta filas previas en activity_logs para este estudiante + lección.
+        // Determina si la navegación es solo-adelante o libre (ver goTo/prev).
+        if (!_isAdmin) {
+            const studentId = await _resolveStudentId();
+            _attemptNumber = studentId ? (await _countLessonAttempts(_lessonName, studentId)) + 1 : 1;
+        }
+
         if (_isAdmin) {
             _mountInstructorUI();
+        }
+
+        if (!_isAdmin && _attemptNumber > 1) {
+            _mountRepeatModeControls();
         }
 
 
@@ -149,7 +163,12 @@ const SlideEngine = (function () {
 
         // ── Resume directo al ensayo si el estudiante lo saltó antes ──────────
         // Evita rehacer todo el quiz solo para volver a preEssaySlide.
-        if (!_isAdmin && document.getElementById('preEssaySlide')) {
+        // Se omite si esta carga viene de _resetLesson() (reinicio explícito):
+        // el estudiante debe arrancar en el slide 0, no volver al ensayo pendiente.
+        const forcedRestart = sessionStorage.getItem('se_force_restart') === '1';
+        if (forcedRestart) sessionStorage.removeItem('se_force_restart');
+
+        if (!_isAdmin && !forcedRestart && document.getElementById('preEssaySlide')) {
             _checkPendingEssay(_lessonName).then(pending => {
                 if (!pending) return;
                 _scoreAlreadySaved = true; // el quiz ya quedó registrado la primera vez
@@ -159,6 +178,8 @@ const SlideEngine = (function () {
 
             // Atajo siempre visible desde el inicio: permite ir directo al ensayo
             // sin haber hecho el quiz. No marca el quiz como completado.
+            _mountDirectEssayButton();
+        } else if (!_isAdmin && document.getElementById('preEssaySlide')) {
             _mountDirectEssayButton();
         }
 
@@ -188,11 +209,15 @@ const SlideEngine = (function () {
                 nextEl = _slides[_currentIndex];
             }
         } else if (typeof target === 'number') {
+            // 1er intento: solo se puede avanzar, nunca saltar a un índice anterior.
+            if (target < _currentIndex && !_isAdmin && _attemptNumber === 1) return;
             _currentIndex = target;
             nextEl = _slides[target];
         } else {
-            nextEl = document.getElementById(target);
-            const idx = _slides.indexOf(nextEl);
+            const candidate = document.getElementById(target);
+            const idx = _slides.indexOf(candidate);
+            if (idx !== -1 && idx < _currentIndex && !_isAdmin && _attemptNumber === 1) return;
+            nextEl = candidate;
             if (idx !== -1) _currentIndex = idx;
         }
 
@@ -221,6 +246,8 @@ const SlideEngine = (function () {
     }
 
     function prev() {
+        // 1er intento: sin retroceso para el estudiante (solo avanzar).
+        if (!_isAdmin && _attemptNumber === 1) return;
         if (_currentIndex > 0) {
             goTo(_currentIndex - 1);
         } else if (_isAdmin) {
@@ -250,10 +277,11 @@ const SlideEngine = (function () {
             bar.style.width = `${(_currentIndex / (_slides.length - 1)) * 100}%`;
         }
 
-        if (_isAdmin && container && !container.dataset.adminInited) {
+        const canJump = _isAdmin || (!_isAdmin && _attemptNumber > 1);
+        if (canJump && container && !container.dataset.adminInited) {
             container.dataset.adminInited = 'true';
             container.style.cursor = 'pointer';
-            container.title = 'Click to jump to slide (Instructor Only)';
+            container.title = _isAdmin ? 'Click to jump to slide (Instructor Only)' : 'Click to jump to slide';
             container.addEventListener('click', (e) => {
                 const rect = container.getBoundingClientRect();
                 const pct  = (e.clientX - rect.left) / rect.width;
@@ -270,6 +298,10 @@ const SlideEngine = (function () {
         const parentSlide = btn.closest('.slide');
         const nextBtn     = parentSlide.querySelector('.btn-next');
 
+        // Un solo intento: ignora clics tras la primera respuesta.
+        if (parentSlide.dataset.seLocked === 'true') return;
+        parentSlide.dataset.seLocked = 'true';
+
         if (feedback) feedback.style.display = 'block';
 
         if (isCorrect) {
@@ -280,39 +312,25 @@ const SlideEngine = (function () {
                 feedback.innerHTML  = '✅ Correct! Well done.';
                 feedback.style.color = '#27ae60';
             }
-            if (nextBtn) nextBtn.style.display = 'block';
         } else {
-            const attempts = (parseInt(parentSlide.dataset.seAttempts || '0', 10)) + 1;
-            parentSlide.dataset.seAttempts = attempts;
-
             btn.style.backgroundColor = '#e74c3c';
             btn.style.color           = 'white';
             _mistakes++;
             window.mistakes = _mistakes;
 
-            if (attempts >= 3) {
-                parentSlide.querySelectorAll('.quiz-option').forEach(b => {
-                    b.disabled = true;
-                    if (b.dataset.seCorrect === 'true') {
-                        b.style.backgroundColor = '#f39c12';
-                        b.style.color = 'white';
-                    }
-                });
-                _mistakes += 2;
-                window.mistakes = _mistakes;
-                if (feedback) {
-                    feedback.innerHTML  = '⚠️ Answer revealed after 3 attempts. Review and continue.';
-                    feedback.style.color = '#e67e22';
+            parentSlide.querySelectorAll('.quiz-option').forEach(b => {
+                b.disabled = true;
+                if (b.dataset.seCorrect === 'true') {
+                    b.style.backgroundColor = '#f39c12';
+                    b.style.color = 'white';
                 }
-                if (nextBtn) nextBtn.style.display = 'block';
-            } else {
-                const left = 3 - attempts;
-                if (feedback) {
-                    feedback.innerHTML  = `❌ Not quite. Try again! (${left} attempt${left !== 1 ? 's' : ''} left)`;
-                    feedback.style.color = '#c0392b';
-                }
+            });
+            if (feedback) {
+                feedback.innerHTML  = '❌ Not quite — here\'s the correct answer. Review and continue.';
+                feedback.style.color = '#e67e22';
             }
         }
+        if (nextBtn) nextBtn.style.display = 'block';
     }
 
     // ── Cierre de lección (con quiz) ─────────────────────────────────────────────
@@ -331,6 +349,8 @@ const SlideEngine = (function () {
             score      = Math.round(drillScore * 0.5 + _appliedTaskScore * 0.5);
             resultText = `Score: ${score}% (Drills: ${drillScore}%, Applied Task: ${_appliedTaskScore}%)`;
         }
+
+        _lastQuizScore = score;
 
         const entry = {
             module:    lessonName,
@@ -404,6 +424,67 @@ const SlideEngine = (function () {
         });
     }
 
+    // ── Modal de confirmación genérico ──────────────────────────────────────────
+    // confirm() no es confiable en móvil (Samsung Internet, Android) — mismo
+    // patrón inline que skipLessonWithData(), reutilizable para otras acciones.
+    function _showConfirmModal(message, confirmLabel, onConfirm) {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;';
+        overlay.innerHTML = `
+            <div style="background:#fff;border-radius:12px;padding:24px;max-width:340px;width:100%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.25);">
+                <p style="margin:0 0 20px;font-size:0.95rem;color:#2c3e50;font-weight:600;">${message}</p>
+                <div style="display:flex;gap:10px;">
+                    <button id="_confirm-cancel" style="flex:1;padding:11px;border:1px solid #ccc;border-radius:8px;background:#f8f9fa;cursor:pointer;font-size:0.95rem;">Cancel</button>
+                    <button id="_confirm-ok" style="flex:1;padding:11px;border:none;border-radius:8px;background:#e67e22;color:#fff;cursor:pointer;font-size:0.95rem;font-weight:600;">${confirmLabel}</button>
+                </div>
+            </div>`;
+        document.body.appendChild(overlay);
+        overlay.querySelector('#_confirm-cancel').addEventListener('click', () => overlay.remove());
+        overlay.querySelector('#_confirm-ok').addEventListener('click', () => {
+            overlay.remove();
+            onConfirm();
+        });
+    }
+
+    // ── Reinicio completo de la lección ─────────────────────────────────────────
+    // Usa recarga de página: es la única forma confiable de limpiar el estado
+    // de los 9 tipos de slide (dataset.seLocked, controles deshabilitados,
+    // colores de feedback) sin reimplementar un reset manual por tipo.
+    function _resetLesson() {
+        sessionStorage.setItem('se_force_restart', '1');
+        location.reload();
+    }
+
+    // ── Controles de modo repetición (intento >1) ───────────────────────────────
+    // Botones "Back" y "Restart lesson" — solo visibles desde la 2ª vez que el
+    // estudiante hace la lección, cuando la navegación libre ya está habilitada.
+    function _mountRepeatModeControls() {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'position:fixed;top:12px;left:12px;z-index:99997;display:flex;gap:8px;';
+
+        const backBtn = document.createElement('button');
+        backBtn.type = 'button';
+        backBtn.textContent = '◀ Back';
+        backBtn.style.cssText = 'background:#fff;color:#2c3e50;border:1px solid #ccc;border-radius:20px;padding:8px 16px;font-size:0.85rem;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);';
+        backBtn.addEventListener('click', () => prev());
+        wrap.appendChild(backBtn);
+
+        const restartBtn = document.createElement('button');
+        restartBtn.type = 'button';
+        restartBtn.textContent = '🔄 Restart lesson';
+        restartBtn.style.cssText = 'background:#fff;color:#e67e22;border:1px solid #ccc;border-radius:20px;padding:8px 16px;font-size:0.85rem;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);';
+        restartBtn.addEventListener('click', () => {
+            _showConfirmModal(
+                'Restart this lesson? All your answers in this attempt will be cleared.',
+                'Yes, restart',
+                _resetLesson
+            );
+        });
+        wrap.appendChild(restartBtn);
+
+        document.body.appendChild(wrap);
+    }
+
     // ── Atajo permanente: ir directo al ensayo ───────────────────────────────────
     // Visible desde la primera slide, sin requerir haber completado el quiz.
     // No llama a finishLesson() — no existe score de quiz que registrar.
@@ -439,9 +520,8 @@ const SlideEngine = (function () {
         repeatBtn.textContent = '🔄 Repetir preguntas';
         repeatBtn.style.cssText = 'background:#fff;color:#2c3e50;border:none;border-radius:14px;padding:5px 12px;font-size:0.8rem;font-weight:600;cursor:pointer;white-space:nowrap;';
         repeatBtn.addEventListener('click', () => {
-            _scoreAlreadySaved = false;
             banner.remove();
-            goTo(0);
+            _resetLesson();
         });
         banner.appendChild(repeatBtn);
 
@@ -540,6 +620,30 @@ const SlideEngine = (function () {
         } catch (e) {
             console.warn('⚠️ _checkPendingEssay falló:', e);
             return false;
+        }
+    }
+
+    // ── Conteo de intentos previos de la lección ─────────────────────────────────
+    // Cuenta filas en activity_logs para este estudiante + lección (una fila por
+    // cada vez que llegó a preEssaySlide, ver finishLesson()). Determina si esta
+    // carga es la 1ª vez (navegación solo-adelante) o una repetición (nav libre).
+    async function _countLessonAttempts(lessonName, studentId) {
+        await _configReady;
+        if (!studentId || !SUPABASE_URL) return 0;
+
+        try {
+            const res = await fetch(
+                `${SUPABASE_URL}/rest/v1/activity_logs` +
+                `?activity=eq.${encodeURIComponent(lessonName)}&student_id=eq.${studentId}` +
+                `&select=id`,
+                { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+            );
+            if (!res.ok) return 0;
+            const rows = await res.json();
+            return Array.isArray(rows) ? rows.length : 0;
+        } catch (e) {
+            console.warn('⚠️ _countLessonAttempts falló:', e);
+            return 0;
         }
     }
 
@@ -1046,12 +1150,21 @@ const SlideEngine = (function () {
             finalBtn.style.cursor     = 'default';
         }
 
-        // Essay saltado — sin feedback
+        // Essay saltado — sin feedback, pero muestra el score del quiz + opción de repetir
         if (audit && audit.skipped) {
             const loading = document.getElementById('se-feedback-loading');
             const content = document.getElementById('se-feedback-content');
             if (loading) loading.style.display = 'none';
-            if (content) { content.style.display = 'block'; content.innerHTML = '<p style="color:#999;font-style:italic;">Writing exercise was skipped.</p>'; }
+            if (content) {
+                content.style.display = 'block';
+                const scoreLine = _lastQuizScore != null
+                    ? `<p style="font-weight:700;color:#2c3e50;margin:10px 0 0;">Your quiz score: ${_lastQuizScore}%</p>`
+                    : '';
+                content.innerHTML = `<p style="color:#999;font-style:italic;margin:0;">Writing exercise was skipped.</p>${scoreLine}` +
+                    `<button id="se-repeat-lesson" type="button" style="margin-top:14px;padding:9px 18px;background:#3498db;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">🔄 Repeat this lesson</button>`;
+                const repeatBtn = document.getElementById('se-repeat-lesson');
+                if (repeatBtn) repeatBtn.addEventListener('click', _resetLesson);
+            }
             _activateContinueButton(redirectDest);
             return;
         }
@@ -1810,6 +1923,10 @@ SlideTypes.FILL_BLANK = {
     },
 
     _validate(slide, index, feedbackId) {
+        // Un solo intento: ignora clics tras la primera respuesta.
+        if (slide.dataset.seLocked === 'true') return;
+        slide.dataset.seLocked = 'true';
+
         const inputs    = Array.from(slide.querySelectorAll(`input[id^="se-blank-${index}-"]`));
         const feedback  = document.getElementById(feedbackId);
         let allCorrect  = true;
@@ -1819,9 +1936,11 @@ SlideTypes.FILL_BLANK = {
             const given    = input.value.toLowerCase().trim();
             const correct  = given !== '' && (given === expected || given.includes(expected) || expected.includes(given));
 
+            input.dataset.seCorrect       = correct ? 'true' : 'false';
             input.style.borderBottomColor = correct ? '#2ecc71' : '#e74c3c';
             input.style.color             = correct ? '#27ae60' : '#c0392b';
             if (!correct) allCorrect = false;
+            input.disabled = true;
         });
 
         if (feedback) {
@@ -1829,45 +1948,20 @@ SlideTypes.FILL_BLANK = {
             if (allCorrect) {
                 feedback.innerHTML  = '✅ All correct! Well done.';
                 feedback.style.color = '#27ae60';
-                const nextBtn = slide.querySelector('.btn-next');
-                if (nextBtn) nextBtn.style.display = 'block';
             } else {
-                const attempts = (parseInt(slide.dataset.seAttempts || '0', 10)) + 1;
-                slide.dataset.seAttempts = attempts;
-
-                const penalty = Math.min(attempts, 3);
-                for (let p = 0; p < penalty; p++) window.mistakes++;
-
-                let msg = '❌ Some answers need revision. Try again!';
-                if (attempts === 2) {
-                    msg += ' <em style="font-size:0.9em;color:#888"> Tip: check word count and spelling.</em>';
-                }
-                if (attempts >= 3 && !slide.querySelector('.btn-show-answer')) {
-                    const showBtn = document.createElement('button');
-                    showBtn.className = 'btn-show-answer';
-                    showBtn.textContent = 'Show Answers (−5 pts)';
-                    showBtn.style.cssText = 'margin-top:8px; margin-left:8px; padding:8px 16px; background:#95a5a6; color:white; border:none; border-radius:6px; cursor:pointer; font-size:0.9rem;';
-                    showBtn.addEventListener('click', () => {
-                        inputs.forEach(input => {
-                            if (!input.dataset.seAnswer) return;
-                            input.value = input.dataset.seAnswer;
-                            input.style.borderBottomColor = '#f39c12';
-                            input.style.color = '#e67e22';
-                        });
-                        window.mistakes++;
-                        showBtn.disabled = true;
-                        showBtn.style.opacity = '0.5';
-                        feedback.innerHTML = '⚠️ Answers revealed. Review and continue.';
-                        feedback.style.color = '#e67e22';
-                        const nextBtn = slide.querySelector('.btn-next');
-                        if (nextBtn) nextBtn.style.display = 'block';
-                    });
-                    feedback.insertAdjacentElement('afterend', showBtn);
-                }
-
-                feedback.innerHTML  = msg;
-                feedback.style.color = '#c0392b';
+                // Sin más intentos: revelar de inmediato las respuestas correctas.
+                inputs.forEach(input => {
+                    if (!input.dataset.seAnswer || input.dataset.seCorrect === 'true') return;
+                    input.value = input.dataset.seAnswer;
+                    input.style.borderBottomColor = '#f39c12';
+                    input.style.color = '#e67e22';
+                });
+                window.mistakes++;
+                feedback.innerHTML  = '❌ Some answers were incorrect — correct answers shown above. Review and continue.';
+                feedback.style.color = '#e67e22';
             }
+            const nextBtn = slide.querySelector('.btn-next');
+            if (nextBtn) nextBtn.style.display = 'block';
         }
     }
 };
@@ -2594,8 +2688,12 @@ SlideTypes.SORT_PARAGRAPH = {
     },
 
     _validate(slide, containerId, feedbackId, correctOrder) {
+        // Un solo intento: ignora clics tras la primera verificación.
+        if (slide.dataset.seLocked === 'true') return;
+        slide.dataset.seLocked = 'true';
+
         const container   = document.getElementById(containerId);
-        const feedback    = document.getElementById(feedbackId);
+        const feedback     = document.getElementById(feedbackId);
         const currentOrder = Array.from(container.querySelectorAll('.se-sort-item'))
             .map(el => el.dataset.seText);
 
@@ -2606,31 +2704,25 @@ SlideTypes.SORT_PARAGRAPH = {
             el.style.borderColor = (el.dataset.seText === correctOrder[i])
                 ? '#2ecc71'
                 : '#e74c3c';
+            el.draggable = false;
+            el.style.cursor = 'default';
         });
+
+        const checkBtn = slide.querySelector('.se-sort-check-btn');
+        if (checkBtn) { checkBtn.disabled = true; checkBtn.style.opacity = '0.5'; }
 
         if (feedback) {
             feedback.style.display = 'block';
             if (isCorrect) {
                 feedback.innerHTML  = '✅ Perfect order! The paragraph is coherent.';
                 feedback.style.color = '#27ae60';
-                const nextBtn = slide.querySelector('.btn-next');
-                if (nextBtn) nextBtn.style.display = 'block';
             } else {
-                feedback.innerHTML  = '❌ Not quite. Some sentences are out of order — try again!';
+                feedback.innerHTML  = '❌ Some sentences were out of order — see highlights above. Review and continue.';
                 feedback.style.color = '#c0392b';
                 window.mistakes++;
-                const checkBtn = slide.querySelector('.se-sort-check-btn');
-                if (checkBtn && !checkBtn.disabled) {
-                    checkBtn.disabled = true;
-                    checkBtn.textContent = 'Wait 5s…';
-                    checkBtn.style.opacity = '0.5';
-                    setTimeout(() => {
-                        checkBtn.disabled = false;
-                        checkBtn.textContent = 'Check Order';
-                        checkBtn.style.opacity = '1';
-                    }, 5000);
-                }
             }
+            const nextBtn = slide.querySelector('.btn-next');
+            if (nextBtn) nextBtn.style.display = 'block';
         }
     }
 };
@@ -2692,50 +2784,46 @@ SlideTypes.HIGHLIGHT = {
             });
 
             el.addEventListener('click', () => {
-                // Bloquear si ya se respondió correctamente
-                if (slide.dataset.seHighlightDone) return;
+                // Un solo intento para toda la slide: ignora clics tras el primero.
+                if (slide.dataset.seLocked === 'true') return;
+                slide.dataset.seLocked = 'true';
 
                 const isCorrect = el.hasAttribute('data-se-highlight-correct');
                 const feedback  = document.getElementById(feedbackId);
 
-                el.dataset.seAnswered = 'true';
+                sentences.forEach(s => { s.style.cursor = 'default'; s.dataset.seAnswered = 'true'; });
 
                 if (isCorrect) {
-                    // Marcar la correcta en verde y bloquear todas
                     el.style.background   = '#d4edda';
                     el.style.borderColor  = '#28a745';
                     el.style.color        = '#155724';
-                    slide.dataset.seHighlightDone = 'true';
-
-                    sentences.forEach(s => { s.style.cursor = 'default'; });
 
                     if (feedback) {
                         feedback.innerHTML  = '✅ Correct! That sentence breaks the focus of the paragraph.';
                         feedback.style.color = '#27ae60';
                         feedback.style.display = 'block';
                     }
-                    const nextBtn = slide.querySelector('.btn-next');
-                    if (nextBtn) nextBtn.style.display = 'block';
                 } else {
-                    // Marcar el intento fallido en rojo, luego limpiar
+                    // Marcar el intento fallido en rojo y revelar la correcta en ámbar.
                     el.style.background  = '#f8d7da';
                     el.style.borderColor = '#dc3545';
                     el.style.color       = '#721c24';
 
+                    const correctEl = sentences.find(s => s.hasAttribute('data-se-highlight-correct'));
+                    if (correctEl) {
+                        correctEl.style.background  = '#fff3cd';
+                        correctEl.style.borderColor = '#f39c12';
+                    }
+
                     if (feedback) {
-                        feedback.innerHTML  = '❌ That\'s not the one — look more carefully!';
+                        feedback.innerHTML  = '❌ Not quite — the correct sentence is highlighted in amber. Review and continue.';
                         feedback.style.color = '#c0392b';
                         feedback.style.display = 'block';
                     }
                     window.mistakes++;
-
-                    setTimeout(() => {
-                        el.style.background  = '#fff';
-                        el.style.borderColor = '#dee2e6';
-                        el.style.color       = '';
-                        delete el.dataset.seAnswered;
-                    }, 900);
                 }
+                const nextBtn = slide.querySelector('.btn-next');
+                if (nextBtn) nextBtn.style.display = 'block';
             });
         });
 
@@ -3071,6 +3159,7 @@ SlideTypes.WORD_BANK = {
 
         const checkBtn = document.createElement('button');
         checkBtn.textContent  = 'Check Answers';
+        checkBtn.className    = 'se-wb-check-btn';
         checkBtn.style.cssText = `margin-top:14px; padding:10px 24px; background:#3498db;
                                    color:white; border:none; border-radius:8px;
                                    cursor:pointer; font-size:1rem; display:block;`;
@@ -3094,6 +3183,10 @@ SlideTypes.WORD_BANK = {
     },
 
     _validate(slide, index, feedbackId, zones) {
+        // Un solo intento: ignora clics tras la primera verificación.
+        if (slide.dataset.seLocked === 'true') return;
+        slide.dataset.seLocked = 'true';
+
         const fb = document.getElementById(feedbackId);
         let allCorrect = true;
 
@@ -3104,21 +3197,28 @@ SlideTypes.WORD_BANK = {
             zone.style.borderColor = correct ? '#2ecc71' : '#e74c3c';
             zone.style.background  = correct ? '#d4edda' : '#f8d7da';
             zone.style.color       = correct ? '#155724' : '#721c24';
-            if (!correct) allCorrect = false;
+            zone.style.pointerEvents = 'none';
+            if (!correct) {
+                allCorrect = false;
+                zone.textContent = zone.dataset.seAnswer; // revelar la respuesta correcta
+            }
         });
+        slide.querySelectorAll('[data-se-word]').forEach(w => { w.style.pointerEvents = 'none'; w.style.opacity = '0.5'; });
+        const checkBtn = slide.querySelector('.se-wb-check-btn');
+        if (checkBtn) { checkBtn.disabled = true; checkBtn.style.opacity = '0.5'; }
 
         if (fb) {
             fb.style.display = 'block';
             if (allCorrect) {
                 fb.innerHTML  = '✅ All correct! Well done.';
                 fb.style.color = '#27ae60';
-                const nextBtn = slide.querySelector('.btn-next');
-                if (nextBtn) nextBtn.style.display = 'block';
             } else {
-                fb.innerHTML  = '❌ Some connectors are not right — try again!';
+                fb.innerHTML  = '❌ Some connectors were incorrect — correct answers shown above. Review and continue.';
                 fb.style.color = '#c0392b';
                 window.mistakes++;
             }
+            const nextBtn = slide.querySelector('.btn-next');
+            if (nextBtn) nextBtn.style.display = 'block';
         }
     }
 };
@@ -3255,6 +3355,7 @@ SlideTypes.CATEGORIZE = {
 
         const checkBtn = document.createElement('button');
         checkBtn.textContent  = 'Check Categories';
+        checkBtn.className    = 'se-cat-check-btn';
         checkBtn.style.cssText = `margin-top:14px; padding:10px 24px; background:#3498db;
                                    color:white; border:none; border-radius:8px;
                                    cursor:pointer; font-size:1rem; display:block;`;
@@ -3272,6 +3373,10 @@ SlideTypes.CATEGORIZE = {
     },
 
     _validate(slide, feedbackId, items) {
+        // Un solo intento: ignora clics tras la primera verificación.
+        if (slide.dataset.seLocked === 'true') return;
+        slide.dataset.seLocked = 'true';
+
         const fb = document.getElementById(feedbackId);
         let correct = 0;
 
@@ -3279,8 +3384,13 @@ SlideTypes.CATEGORIZE = {
             const pz        = item.closest('[data-se-category-zone]');
             const isCorrect = pz && pz.dataset.seAccepts === item.dataset.seCategory;
             item.style.background = isCorrect ? '#2ecc71' : '#e74c3c';
+            item.setAttribute('draggable', 'false');
+            item.style.cursor = 'default';
             if (isCorrect) correct++;
         });
+        slide.querySelectorAll('[data-se-category-zone]').forEach(z => { z.style.pointerEvents = 'none'; });
+        const checkBtn = slide.querySelector('.se-cat-check-btn');
+        if (checkBtn) { checkBtn.disabled = true; checkBtn.style.opacity = '0.5'; }
 
         const allCorrect = correct === items.length;
         if (fb) {
@@ -3288,21 +3398,13 @@ SlideTypes.CATEGORIZE = {
             if (allCorrect) {
                 fb.innerHTML  = `✅ Perfect! All ${items.length} connectors correctly categorised.`;
                 fb.style.color = '#27ae60';
-                const nextBtn = slide.querySelector('.btn-next');
-                if (nextBtn) nextBtn.style.display = 'block';
             } else {
-                fb.innerHTML  = `❌ ${correct} of ${items.length} correct — fix the red ones and try again.`;
+                fb.innerHTML  = `❌ ${correct} of ${items.length} correct — red items were misplaced. Review and continue.`;
                 fb.style.color = '#c0392b';
                 window.mistakes++;
-                setTimeout(() => {
-                    items.forEach(item => {
-                        const pz = item.closest('[data-se-category-zone]');
-                        if (!(pz && pz.dataset.seAccepts === item.dataset.seCategory)) {
-                            item.style.background = '#2c3e50';
-                        }
-                    });
-                }, 1500);
             }
+            const nextBtn = slide.querySelector('.btn-next');
+            if (nextBtn) nextBtn.style.display = 'block';
         }
     }
 };
@@ -3349,8 +3451,8 @@ SlideTypes.CHOOSE_CONTEXT = {
         const feedbackId = `se-cc-feedback-${index}`;
         if (sentences.length === 0) return;
 
-        let solvedCount = 0;
-        const total     = sentences.length;
+        let answeredCount = 0;
+        const total       = sentences.length;
 
         sentences.forEach(sentence => {
             const choiceEl = sentence.querySelector('[data-se-choice]');
@@ -3374,8 +3476,12 @@ SlideTypes.CHOOSE_CONTEXT = {
                 btn.addEventListener('mouseleave', () => { if (!btn.disabled) btn.style.background = '#eaf6ff'; });
 
                 btn.addEventListener('click', () => {
-                    if (btn.disabled) return;
+                    // Un solo intento por oración: ignora clics tras el primero.
+                    if (wrapper.dataset.seLocked === 'true') return;
+                    wrapper.dataset.seLocked = 'true';
+
                     const fb = document.getElementById(feedbackId);
+                    answeredCount++;
 
                     if (isCorrect) {
                         btn.style.background  = '#2ecc71';
@@ -3390,33 +3496,38 @@ SlideTypes.CHOOSE_CONTEXT = {
                                 b.style.color       = '#adb5bd';
                             }
                         });
-                        solvedCount++;
                         if (fb) {
                             fb.style.display = 'block';
-                            fb.innerHTML  = solvedCount === total
-                                ? '✅ All correct! Great choices.'
-                                : `✅ Correct! (${solvedCount}/${total} done)`;
+                            fb.innerHTML  = answeredCount === total
+                                ? '✅ Done! Review your choices above.'
+                                : `✅ Correct! (${answeredCount}/${total} done)`;
                             fb.style.color = '#27ae60';
-                        }
-                        if (solvedCount === total) {
-                            const nextBtn = slide.querySelector('.btn-next');
-                            if (nextBtn) nextBtn.style.display = 'block';
                         }
                     } else {
                         btn.style.background  = '#e74c3c';
                         btn.style.borderColor = '#c0392b';
                         btn.style.color       = 'white';
                         window.mistakes++;
+                        wrapper.querySelectorAll('button').forEach(b => {
+                            b.disabled = true;
+                            if (b.dataset.seCorrect === 'true') {
+                                b.style.background  = '#2ecc71';
+                                b.style.borderColor = '#27ae60';
+                                b.style.color       = 'white';
+                            }
+                        });
                         if (fb) {
-                            fb.innerHTML  = '❌ Not quite — try the other option!';
+                            fb.innerHTML  = answeredCount === total
+                                ? '❌ Some were incorrect — correct answers shown above.'
+                                : `❌ Not quite — correct answer shown. (${answeredCount}/${total} done)`;
                             fb.style.color = '#c0392b';
                             fb.style.display = 'block';
                         }
-                        setTimeout(() => {
-                            btn.style.background  = '#eaf6ff';
-                            btn.style.borderColor = '#3498db';
-                            btn.style.color       = '#2c3e50';
-                        }, 800);
+                    }
+
+                    if (answeredCount === total) {
+                        const nextBtn = slide.querySelector('.btn-next');
+                        if (nextBtn) nextBtn.style.display = 'block';
                     }
                 });
 
