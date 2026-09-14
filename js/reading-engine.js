@@ -2371,11 +2371,21 @@ ReadingTypes.READING_APPLIED = {
 
                 if (fb) {
                     if (result) {
-                        const comments = (result.evaluation.indicator_scores || [])
-                            .map((s, i) => `<li><strong>${(indicators[i] || {}).title || ''}:</strong> ${s.comment || ''}</li>`)
-                            .join('');
-                        fb.innerHTML = `<p style="margin:0 0 8px;">${result.evaluation.overall_feedback || ''}</p>` +
-                            (comments ? `<ul style="margin:0;padding-left:18px;">${comments}</ul>` : '');
+                        const scores = result.evaluation.indicator_scores || [];
+                        const met     = [];
+                        const improve = [];
+                        scores.forEach((s, i) => {
+                            const maxPoints = (indicators[i] || {}).points ?? null;
+                            const title     = (indicators[i] || {}).title || '';
+                            const item = `<li><strong>${title}:</strong> ${s.comment || ''}` +
+                                (s.suggested_example ? `<br><em style="color:#555;">Ej. mejorable (EN): "${s.suggested_example}"</em>` : '') +
+                                `</li>`;
+                            if (maxPoints !== null && s.points >= maxPoints) met.push(item);
+                            else improve.push(item);
+                        });
+                        const metBlock = met.length ? `<p style="margin:12px 0 4px;font-weight:600;color:#2e7d32;">&#x2705; Lo correcto</p><ul style="margin:0;padding-left:18px;">${met.join('')}</ul>` : '';
+                        const improveBlock = improve.length ? `<p style="margin:12px 0 4px;font-weight:600;color:#c0392b;">&#x26A0;&#xFE0F; Por mejorar</p><ul style="margin:0;padding-left:18px;">${improve.join('')}</ul>` : '';
+                        fb.innerHTML = `<p style="margin:0 0 8px;">${result.evaluation.overall_feedback || ''}</p>${metBlock}${improveBlock}`;
                     } else {
                         fb.innerHTML = 'Feedback unavailable right now — you can still continue.';
                     }

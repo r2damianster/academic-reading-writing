@@ -3644,12 +3644,27 @@ SlideTypes.APPLIED_TASK = {
             const result = await window._gradeAppliedTask(lessonName, indicators, ta.value);
 
             if (result) {
-                const comments = (result.evaluation.indicator_scores || [])
-                    .map((s, i) => `<li><strong>${(indicators[i] || {}).title || ''}:</strong> ${_appliedFeedbackText(s.comment)}</li>`)
-                    .join('');
+                const scores = result.evaluation.indicator_scores || [];
+                const met      = [];
+                const improve  = [];
+                scores.forEach((s, i) => {
+                    const maxPoints = (indicators[i] || {}).points ?? null;
+                    const title     = (indicators[i] || {}).title || '';
+                    const item      = `<li><strong>${title}:</strong> ${_appliedFeedbackText(s.comment)}` +
+                        (s.suggested_example ? `<br><em style="color:#555;">Ej. mejorable (EN): "${_appliedFeedbackText(s.suggested_example)}"</em>` : '') +
+                        `</li>`;
+                    if (maxPoints !== null && s.points >= maxPoints) met.push(item);
+                    else improve.push(item);
+                });
+                const metBlock = met.length ? `
+                    <p style="margin:14px 0 4px; font-weight:600; color:#2e7d32;">&#x2705; Lo correcto</p>
+                    <ul style="margin:0; padding-left:18px;">${met.join('')}</ul>` : '';
+                const improveBlock = improve.length ? `
+                    <p style="margin:14px 0 4px; font-weight:600; color:#c0392b;">&#x26A0;&#xFE0F; Por mejorar</p>
+                    <ul style="margin:0; padding-left:18px;">${improve.join('')}</ul>` : '';
                 fbBody.innerHTML = `
                     <p style="margin:0 0 10px;">${_appliedFeedbackText(result.evaluation.overall_feedback)}</p>
-                    ${comments ? `<ul style="margin:0; padding-left:18px;">${comments}</ul>` : ''}`;
+                    ${metBlock}${improveBlock}`;
             } else {
                 fbBody.innerHTML = `<p style="color:#999;">Feedback unavailable right now — you can still continue.</p>`;
             }
