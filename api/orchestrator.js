@@ -83,7 +83,12 @@ function scoreComplexity(req) {
 // ── Selección de modelo según score ─────────────────────────────────────────
 
 function selectModel(score) {
-    if (score <= 30) return { model: 'llama-3.1-8b-instant',    maxTokens: 300  };
+    // maxTokens es un techo, no un gasto obligatorio — 300 se quedaba corto para
+    // salidas JSON estructuradas (ej. test-grader con rubric de criterios largos):
+    // el modelo se cortaba a mitad de un campo (finish_reason:"length"), dejando
+    // JSON inválido. 700 da margen real (confirmado: ~380 tokens típicos) sin
+    // acercarse al techo del tier medio.
+    if (score <= 30) return { model: 'llama-3.1-8b-instant',    maxTokens: 700  };
     if (score <= 65) return { model: 'llama-3.3-70b-versatile', maxTokens: 800  };
     return             { model: 'llama-3.3-70b-versatile', maxTokens: 2000 };
 }
