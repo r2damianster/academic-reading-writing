@@ -1215,15 +1215,18 @@ const SlideEngine = (function () {
     /* ──────────────────────────────────────────────────────────────────────────
        SECCIÓN 1.1 — HELPERS PARA INSTRUCTOR (SlideEngine)
     ────────────────────────────────────────────────────────────────────────── */
-    // ── Botón flotante para maximizar/reducir la presentación (Fullscreen API) ──
+    // ── Botón flotante para maximizar/reducir la presentación ──────────────────
+    // No depende de la Fullscreen API del navegador (falla/bloqueada en webviews
+    // embebidos, ej. previews de VS Code). En su lugar, quita el max-width:700px
+    // de .lesson-container vía clase CSS — eso es lo que hace ver "pequeñito" el
+    // contenido aunque el navegador ya esté maximizado o en fullscreen real.
     function _mountFullscreenToggle() {
         if (document.getElementById('se-fullscreen-toggle')) return;
-        if (!document.documentElement.requestFullscreen && !document.documentElement.webkitRequestFullscreen) return;
 
         const style = document.createElement('style');
         style.textContent = `
             #se-fullscreen-toggle {
-                position: fixed; bottom: 20px; right: 20px; z-index: 999998;
+                position: fixed; bottom: 20px; right: 20px; z-index: 999999;
                 width: 44px; height: 44px; border-radius: 50%; border: none;
                 background: rgba(15, 31, 56, 0.85); color: #fff; cursor: pointer;
                 display: flex; align-items: center; justify-content: center;
@@ -1231,6 +1234,15 @@ const SlideEngine = (function () {
                 transition: background 0.2s, transform 0.2s;
             }
             #se-fullscreen-toggle:hover { background: rgba(8, 145, 178, 0.95); transform: scale(1.08); }
+
+            html.se-presenting body { overflow: hidden; }
+            html.se-presenting .lesson-container {
+                position: fixed; inset: 0; z-index: 999998;
+                max-width: none; width: 100vw; height: 100vh;
+                margin: 0; border-radius: 0; overflow-y: auto;
+                padding: 40px 8vw;
+                box-sizing: border-box;
+            }
         `;
         document.head.appendChild(style);
 
@@ -1243,27 +1255,35 @@ const SlideEngine = (function () {
         btn.onclick = _toggleFullscreen;
         document.body.appendChild(btn);
 
-        document.addEventListener('fullscreenchange', _syncFullscreenToggleIcon);
-        document.addEventListener('webkitfullscreenchange', _syncFullscreenToggleIcon);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.documentElement.classList.contains('se-presenting')) {
+                _toggleFullscreen();
+            }
+        });
     }
 
     function _toggleFullscreen() {
-        const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
-        if (!isFullscreen) {
-            const el = document.documentElement;
-            (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
-        } else {
-            (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-        }
-    }
+        const html = document.documentElement;
+        html.classList.toggle('se-presenting');
+        const isPresenting = html.classList.contains('se-presenting');
 
-    function _syncFullscreenToggleIcon() {
+        // Best-effort: si la Fullscreen API real está disponible, úsala también
+        // (oculta la barra del navegador). Si falla o no existe, no importa —
+        // el toggle CSS ya resuelve el problema de tamaño por sí solo.
+        try {
+            if (isPresenting && (html.requestFullscreen || html.webkitRequestFullscreen)) {
+                (html.requestFullscreen || html.webkitRequestFullscreen).call(html);
+            } else if (!isPresenting && (document.exitFullscreen || document.webkitExitFullscreen) && (document.fullscreenElement || document.webkitFullscreenElement)) {
+                (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+            }
+        } catch (e) { /* Fullscreen API no disponible en este contexto — ignorar */ }
+
         const btn = document.getElementById('se-fullscreen-toggle');
-        if (!btn) return;
-        const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
-        btn.innerHTML = isFullscreen ? '🗗' : '⛶';
-        btn.title = isFullscreen ? 'Reducir presentación' : 'Maximizar presentación';
-        btn.setAttribute('aria-label', btn.title);
+        if (btn) {
+            btn.innerHTML = isPresenting ? '🗗' : '⛶';
+            btn.title = isPresenting ? 'Reducir presentación' : 'Maximizar presentación';
+            btn.setAttribute('aria-label', btn.title);
+        }
     }
 
     function _mountInstructorUI() {
