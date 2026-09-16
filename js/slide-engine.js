@@ -101,6 +101,8 @@ const SlideEngine = (function () {
         _appliedTaskScore  = null;
         _scoreAlreadySaved = false;
 
+        _mountFullscreenToggle();
+
         _isAdmin = isInstructor;
         console.log('shield SlideEngine: Instructor mode check:', _isAdmin);
 
@@ -1213,6 +1215,57 @@ const SlideEngine = (function () {
     /* ──────────────────────────────────────────────────────────────────────────
        SECCIÓN 1.1 — HELPERS PARA INSTRUCTOR (SlideEngine)
     ────────────────────────────────────────────────────────────────────────── */
+    // ── Botón flotante para maximizar/reducir la presentación (Fullscreen API) ──
+    function _mountFullscreenToggle() {
+        if (document.getElementById('se-fullscreen-toggle')) return;
+        if (!document.documentElement.requestFullscreen && !document.documentElement.webkitRequestFullscreen) return;
+
+        const style = document.createElement('style');
+        style.textContent = `
+            #se-fullscreen-toggle {
+                position: fixed; bottom: 20px; right: 20px; z-index: 999998;
+                width: 44px; height: 44px; border-radius: 50%; border: none;
+                background: rgba(15, 31, 56, 0.85); color: #fff; cursor: pointer;
+                display: flex; align-items: center; justify-content: center;
+                font-size: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+                transition: background 0.2s, transform 0.2s;
+            }
+            #se-fullscreen-toggle:hover { background: rgba(8, 145, 178, 0.95); transform: scale(1.08); }
+        `;
+        document.head.appendChild(style);
+
+        const btn = document.createElement('button');
+        btn.id    = 'se-fullscreen-toggle';
+        btn.type  = 'button';
+        btn.title = 'Maximizar presentación';
+        btn.setAttribute('aria-label', 'Maximizar presentación');
+        btn.innerHTML = '⛶';
+        btn.onclick = _toggleFullscreen;
+        document.body.appendChild(btn);
+
+        document.addEventListener('fullscreenchange', _syncFullscreenToggleIcon);
+        document.addEventListener('webkitfullscreenchange', _syncFullscreenToggleIcon);
+    }
+
+    function _toggleFullscreen() {
+        const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+        if (!isFullscreen) {
+            const el = document.documentElement;
+            (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+        } else {
+            (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+        }
+    }
+
+    function _syncFullscreenToggleIcon() {
+        const btn = document.getElementById('se-fullscreen-toggle');
+        if (!btn) return;
+        const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+        btn.innerHTML = isFullscreen ? '🗗' : '⛶';
+        btn.title = isFullscreen ? 'Reducir presentación' : 'Maximizar presentación';
+        btn.setAttribute('aria-label', btn.title);
+    }
+
     function _mountInstructorUI() {
         if (document.getElementById('instructor-controls-bar')) return;
         _isAdmin = true;
