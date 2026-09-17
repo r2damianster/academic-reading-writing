@@ -12,11 +12,6 @@ const MENU = [
     path: 'dojo-home.html',
     description: 'Master writing through exercises, challenges, and competitions.'
   },
-  {
-    label: 'Peer Review (live)',
-    path: 'peer-review.html',
-    description: 'Live in-class peer review session: timed writing, anonymous assignment, dual AI + peer evaluation.'
-  },
   // ... dentro de MENU en nav.js
   {
     label: '00. Fundamentals',
@@ -135,7 +130,8 @@ const MENU = [
       { label: 'How to Give Feedback',     path: 'modules/03-peer-review/how-to-give-feedback.html' },
       { label: 'How to Receive Feedback',  path: 'modules/03-peer-review/how-to-receive-feedback.html' },
       { label: 'Peer Review Form',         path: 'modules/03-peer-review/peer-review-form.html' },
-      { label: 'Self-Assessment Rubric',   path: 'modules/03-peer-review/self-assessment-rubric.html' }
+      { label: 'Self-Assessment Rubric',   path: 'modules/03-peer-review/self-assessment-rubric.html' },
+      { label: 'Live Peer Review Session', path: 'modules/03-peer-review/live-session.html' }
     ]
   },
   {
