@@ -22,7 +22,7 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SER
 const ADMIN_EMAIL   = 'arturo.rodriguez@uleam.edu.ec';
 const GRADING_MODEL = 'llama-3.3-70b-versatile'; // -> gpt-oss-120b en Groq
 
-const ESSAY_CRITERIA  = ['argument', 'evidence', 'structure', 'language', 'conventions'];
+const ESSAY_CRITERIA  = ['peel_rigor', 'hedging', 'nominalization'];
 const REVIEW_CRITERIA = ['specific', 'actionable', 'balanced'];
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -80,12 +80,16 @@ async function gradeWithGroq(criteria, systemPrompt, userContent) {
 function gradeEssay(essayText) {
     return gradeWithGroq(
         ESSAY_CRITERIA,
-        'You are an objective academic writing evaluator. Score the essay below on exactly these ' +
-        '5 criteria, 1-4 each (1=Unsatisfactory, 2=In Progress, 3=Satisfactory, 4=Excellent): ' +
-        'argument (thesis + paragraph coherence), evidence (relevance + analysis), ' +
-        'structure (intro/body/conclusion + transitions), language (academic register + grammar), ' +
-        'conventions (APA 7 citations). Respond ONLY with JSON: ' +
-        '{"argument":n,"evidence":n,"structure":n,"language":n,"conventions":n,' +
+        'You are an objective academic writing evaluator. The essay below is 3 argument paragraphs ' +
+        'that must each follow the P.E.E.L. model (Point, Evidence, Explain, Link — Link connects the ' +
+        "paragraph back to the thesis) and deliberately use hedging language and nominalizations. " +
+        'Score 1-4 on exactly these 3 criteria (1=Unsatisfactory, 2=In Progress, 3=Satisfactory, 4=Excellent): ' +
+        'peel_rigor (all 3 paragraphs execute Point→Evidence→Explain→Link in order, Link ties back to the thesis), ' +
+        'hedging (modal verbs / approximators / distancing verbs / reporting structures used in each paragraph, ' +
+        'calibrated to the strength of the claim — not overclaiming or underclaiming), ' +
+        'nominalization (at least 2 natural nominalizations per paragraph, e.g. implementation/development/assumption, ' +
+        'not just plain verbs). Respond ONLY with JSON: ' +
+        '{"peel_rigor":n,"hedging":n,"nominalization":n,' +
         '"rationale":"1-2 sentences in Spanish explaining the overall score"}',
         essayText || '(ensayo vacío — el estudiante no entregó texto)'
     );
@@ -110,7 +114,7 @@ function gradeReviewQuality(comments) {
 
 async function actionOpen(payload) {
     if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
-    const { lessonName, writingMinutes = 20, reviewMinutes = 15, reviewersPerEssay = 3 } = payload;
+    const { lessonName, writingMinutes = 20, reviewMinutes = 15, reviewersPerEssay = 3, instructions = '' } = payload;
     if (!lessonName) return { status: 400, body: { error: 'lessonName requerido.' } };
 
     const { data, error } = await supabase.from('peer_review_sessions').insert({
@@ -119,7 +123,8 @@ async function actionOpen(payload) {
         status:               'open',
         writing_minutes:      writingMinutes,
         review_minutes:       reviewMinutes,
-        reviewers_per_essay:  reviewersPerEssay
+        reviewers_per_essay:  reviewersPerEssay,
+        instructions:         String(instructions).slice(0, 4000)
     }).select().single();
 
     if (error) return { status: 500, body: { error: error.message } };
@@ -175,6 +180,7 @@ async function actionRoster(sessionId) {
         status: 200,
         body: {
             sessionStatus:   session.status,
+            instructions:    session.instructions || '',
             writingDeadline: session.writing_deadline,
             reviewDeadline:  session.review_deadline,
             connected:       participants.length,

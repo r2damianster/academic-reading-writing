@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS peer_review_sessions (
     review_minutes       INTEGER     NOT NULL DEFAULT 15,
     review_deadline      TIMESTAMPTZ,
     reviewers_per_essay  INTEGER     NOT NULL DEFAULT 3,
+    instructions         TEXT,                 -- consigna/thesis mostrada a los estudiantes durante la escritura
     created_at           TIMESTAMPTZ DEFAULT NOW()
 );
 

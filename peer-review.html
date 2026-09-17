@@ -66,7 +66,18 @@ code.session-id { background: var(--cloud); padding: 3px 8px; border-radius: 6px
     <span class="badge badge-teal">Docente</span>
     <div id="teacherSetup">
       <label>Nombre de la actividad</label>
-      <input type="text" id="lessonNameInput" placeholder="ej. Argumentative Essay — Peer Review Ciclo 1">
+      <input type="text" id="lessonNameInput" placeholder="ej. Argumentative Essay — Peer Review Ciclo 1" value="Peer Review — PEEL, Hedging &amp; Nominalization">
+      <label>Consigna (thesis + instrucciones, se muestra a los estudiantes mientras escriben)</label>
+      <textarea id="instructionsInput" style="min-height:180px;">THESIS: "While artificial intelligence tools are increasingly capable of generating written text, their unsupervised use in university coursework undermines the development of students' own critical thinking and academic writing competence."
+
+Write 3 argument paragraphs supporting this thesis. Each paragraph must follow the P.E.E.L. model strictly:
+Point -> Evidence -> Explain -> Link (Link must connect explicitly back to the thesis).
+
+In EACH paragraph, use at least:
+- 2 nominalizations (e.g. implementation, development, assumption — not just implement/develop/assume)
+- 1 hedging expression (modal verb, approximator, distancing verb, or reporting structure — e.g. may suggest, tends to, it has been argued that)
+
+Formal academic register. No introduction or conclusion needed — only the 3 argument paragraphs. No informal language or contractions.</textarea>
       <div class="row">
         <div><label>Minutos para escribir</label><input type="number" id="writingMinutesInput" value="20"></div>
         <div><label>Minutos para revisar</label><input type="number" id="reviewMinutesInput" value="15"></div>
@@ -111,6 +122,7 @@ code.session-id { background: var(--cloud); padding: 3px 8px; border-radius: 6px
 
     <div id="writingView" class="hidden">
       <div class="timer" id="writingTimer">--:--</div>
+      <div class="essay-box" id="writingInstructions" style="white-space:pre-wrap;"></div>
       <textarea id="essayTextarea" placeholder="Escribe tu ensayo aquí. Se está midiendo integridad académica: pegado de texto, cambios de pestaña y velocidad de escritura."></textarea>
       <p class="hint"><span id="wordCount">0</span> palabras</p>
       <button id="btnFinishEarly">Terminé — enviar ahora</button>
@@ -159,8 +171,7 @@ code.session-id { background: var(--cloud); padding: 3px 8px; border-radius: 6px
 <script>
 (function () {
     const RUBRIC_LABELS = {
-        argument: 'Argumento', evidence: 'Evidencia', structure: 'Estructura',
-        language: 'Lenguaje', conventions: 'Convenciones APA'
+        peel_rigor: 'PEEL (Point-Evidence-Explain-Link)', hedging: 'Hedging', nominalization: 'Nominalización'
     };
     const REVIEW_LABELS = { specific: 'Específico', actionable: 'Accionable', balanced: 'Balanceado' };
 
@@ -193,7 +204,8 @@ code.session-id { background: var(--cloud); padding: 3px 8px; border-radius: 6px
                         lessonName,
                         writingMinutes: Number(document.getElementById('writingMinutesInput').value) || 20,
                         reviewMinutes: Number(document.getElementById('reviewMinutesInput').value) || 15,
-                        reviewersPerEssay: Number(document.getElementById('reviewersPerEssayInput').value) || 3
+                        reviewersPerEssay: Number(document.getElementById('reviewersPerEssayInput').value) || 3,
+                        instructions: document.getElementById('instructionsInput').value.trim()
                     })
                 });
                 PeerReview.setSessionId(session.id);
@@ -280,6 +292,7 @@ code.session-id { background: var(--cloud); padding: 3px 8px; border-radius: 6px
 
         if (r.sessionStatus === 'writing') {
             const textarea = document.getElementById('essayTextarea');
+            document.getElementById('writingInstructions').textContent = r.instructions || '';
             if (prevStatus !== 'writing' && !textarea.dataset.tracked) {
                 PeerReview.initWritingTracker(textarea);
                 PeerReview.startAutosave(textarea);
