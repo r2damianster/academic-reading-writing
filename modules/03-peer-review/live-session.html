@@ -40,6 +40,13 @@ button.danger { background: var(--red); }
 button:disabled { opacity: .5; cursor: not-allowed; }
 .row { display: flex; gap: 14px; flex-wrap: wrap; }
 .row > * { flex: 1; min-width: 140px; }
+#rosterTable td { padding: 6px 4px; border-top: 1px solid var(--cloud); }
+#rosterTable tr.not-connected td { color: var(--mist); }
+#rosterTable tr.flagged td { background: var(--red-lt); }
+.status-pill { display:inline-block; padding:2px 8px; border-radius:12px; font-size:.72rem; font-weight:700; background:var(--cloud); color:var(--ink); }
+.status-pill.st-connected, .status-pill.st-writing { background:var(--teal-lt); color:var(--teal); }
+.status-pill.st-waiting, .status-pill.st-reviewing { background:var(--amber-lt); color:var(--amber); }
+.status-pill.st-done { background:var(--green-lt); color:var(--green); }
 .stat { font-size: 1.6rem; font-weight: 700; color: var(--navy); }
 .stat-label { font-size: .75rem; color: var(--mist); text-transform: uppercase; letter-spacing: .04em; }
 .timer { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--teal); }
@@ -83,6 +90,8 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
         <div><label>Minutos para revisar</label><input type="number" id="reviewMinutesInput" value="15"></div>
         <div><label>Revisores por ensayo</label><input type="number" id="reviewersPerEssayInput" value="3"></div>
       </div>
+      <label>Course ID (filtra el roster nominal — deja el valor por defecto si es el curso activo)</label>
+      <input type="text" id="courseIdInput" value="3f28057a-1836-4512-8d8b-bc13bd3526b8">
       <label>Contraseña de docente</label>
       <input type="password" id="teacherPasswordInput" placeholder="ADMIN_PASSWORD">
       <button id="btnOpenSession">Abrir sesión</button>
@@ -96,6 +105,7 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
         <div><div class="stat" id="statReviewDone">–</div><div class="stat-label">Revisiones listas</div></div>
         <div><span class="badge badge-amber" id="sessionStatusBadge">open</span></div>
       </div>
+      <div class="timer" id="teacherTimer" style="margin-top:10px;"></div>
       <div style="margin-top:14px;">
         <button id="btnStartWriting">Iniciar escritura</button>
         <button id="btnForceCloseWriting" class="secondary">Cerrar escritura y asignar revisiones</button>
@@ -103,6 +113,18 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
         <button id="btnReleaseFeedback">Liberar resultados (IA + pares)</button>
       </div>
       <p class="hint" id="releaseProgress"></p>
+
+      <h4 style="margin-top:18px; font-size:.85rem; color:var(--steel); text-transform:uppercase; letter-spacing:.04em;">Roster del curso</h4>
+      <table id="rosterTable" style="width:100%; border-collapse:collapse; margin-top:8px; font-size:.85rem;">
+        <thead>
+          <tr style="text-align:left; color:var(--mist); font-size:.72rem; text-transform:uppercase;">
+            <th style="padding:6px 4px;">Estudiante</th>
+            <th style="padding:6px 4px;">Estado</th>
+            <th style="padding:6px 4px;">Integridad</th>
+          </tr>
+        </thead>
+        <tbody id="rosterTableBody"></tbody>
+      </table>
     </div>
   </div>
 
@@ -176,6 +198,7 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
     const REVIEW_LABELS = { specific: 'Específico', actionable: 'Accionable', balanced: 'Balanceado' };
 
     let writingDeadline = null;
+    let teacherDeadline = null;
     let currentSessionStatus = null;
     let reviewingLoaded = false;
     let resultsLoaded = false;
@@ -205,7 +228,8 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
                         writingMinutes: Number(document.getElementById('writingMinutesInput').value) || 20,
                         reviewMinutes: Number(document.getElementById('reviewMinutesInput').value) || 15,
                         reviewersPerEssay: Number(document.getElementById('reviewersPerEssayInput').value) || 3,
-                        instructions: document.getElementById('instructionsInput').value.trim()
+                        instructions: document.getElementById('instructionsInput').value.trim(),
+                        courseId: document.getElementById('courseIdInput').value.trim() || null
                     })
                 });
                 PeerReview.setSessionId(session.id);
@@ -213,6 +237,9 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
                 document.getElementById('teacherSetup').classList.add('hidden');
                 document.getElementById('teacherControls').classList.remove('hidden');
                 PeerReview.startPolling(renderTeacherRoster);
+                startCountdown(() => teacherDeadline, 'teacherTimer');
+                pollRosterDetail();
+                setInterval(pollRosterDetail, 6000);
             } catch (e) { alert(e.message); }
         };
 
@@ -252,6 +279,32 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
         document.getElementById('statConnected').textContent = r.connected;
         document.getElementById('statSubmitted').textContent = (r.byStatus.waiting || 0) + (r.byStatus.reviewing || 0) + (r.byStatus.done || 0);
         document.getElementById('statReviewDone').textContent = r.reviewProgress ? `${r.reviewProgress.done}/${r.reviewProgress.total}` : '–';
+        teacherDeadline = r.sessionStatus === 'writing'  ? r.writingDeadline
+                        : r.sessionStatus === 'reviewing' ? r.reviewDeadline
+                        : null;
+    }
+
+    const STATUS_LABELS = {
+        not_connected: 'No conectado', connected: 'Conectado', writing: 'Escribiendo',
+        waiting: 'Esperando', reviewing: 'Revisando', done: 'Listo'
+    };
+
+    async function pollRosterDetail() {
+        try {
+            const { roster } = await PeerReview.call('roster_detail', { payload: PeerReview.teacherPayload() });
+            const tbody = document.getElementById('rosterTableBody');
+            tbody.innerHTML = roster.map(s => {
+                const rowClass = s.flagged ? 'flagged' : (s.connected ? '' : 'not-connected');
+                const integrityText = s.integrityScore != null
+                    ? (s.flagged ? `⚠️ ${s.integrityScore}/100 — revisar` : `${s.integrityScore}/100`)
+                    : '—';
+                return `<tr class="${rowClass}">
+                    <td>${escapeHtml(s.name)}</td>
+                    <td><span class="status-pill st-${s.status}">${STATUS_LABELS[s.status] || s.status}</span></td>
+                    <td>${integrityText}</td>
+                </tr>`;
+            }).join('');
+        } catch (e) { console.warn('roster_detail:', e.message); }
     }
 
     // ── ESTUDIANTE ───────────────────────────────────────────────────────────
@@ -300,7 +353,7 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
                     document.getElementById('wordCount').textContent = textarea.value.trim() ? textarea.value.trim().split(/\s+/).length : 0;
                 });
                 textarea.dataset.tracked = '1';
-                tickTimer();
+                startCountdown(() => writingDeadline, 'writingTimer');
             }
             // Si ya envió (participante en 'waiting'/'reviewing'/'done' pero sesión aún en 'writing'), no volver a mostrar el textarea.
             const already = (r.byStatus.waiting || 0) + (r.byStatus.reviewing || 0) + (r.byStatus.done || 0);
@@ -323,15 +376,16 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
         }
     }
 
-    function tickTimer() {
-        const el = document.getElementById('writingTimer');
+    function startCountdown(getDeadline, elId) {
+        const el = document.getElementById(elId);
         const step = () => {
-            if (!writingDeadline) return;
-            const diff = Math.max(0, new Date(writingDeadline).getTime() - Date.now());
+            const deadline = getDeadline();
+            if (!deadline) { el.textContent = ''; setTimeout(step, 1000); return; }
+            const diff = Math.max(0, new Date(deadline).getTime() - Date.now());
             const mm = Math.floor(diff / 60000);
             const ss = Math.floor((diff % 60000) / 1000);
             el.textContent = `${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
-            if (diff > 0) setTimeout(step, 1000);
+            setTimeout(step, 1000);
         };
         step();
     }

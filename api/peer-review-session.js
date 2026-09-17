@@ -24,6 +24,7 @@ const GRADING_MODEL = 'llama-3.3-70b-versatile'; // -> gpt-oss-120b en Groq
 
 const ESSAY_CRITERIA  = ['peel_rigor', 'hedging', 'nominalization'];
 const REVIEW_CRITERIA = ['specific', 'actionable', 'balanced'];
+const ETHICS_FLAG_THRESHOLD = 70; // integrity_score debajo de esto se marca para revisión del docente
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -114,7 +115,7 @@ function gradeReviewQuality(comments) {
 
 async function actionOpen(payload) {
     if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
-    const { lessonName, writingMinutes = 20, reviewMinutes = 15, reviewersPerEssay = 3, instructions = '' } = payload;
+    const { lessonName, writingMinutes = 20, reviewMinutes = 15, reviewersPerEssay = 3, instructions = '', courseId = null } = payload;
     if (!lessonName) return { status: 400, body: { error: 'lessonName requerido.' } };
 
     const { data, error } = await supabase.from('peer_review_sessions').insert({
@@ -124,7 +125,8 @@ async function actionOpen(payload) {
         writing_minutes:      writingMinutes,
         review_minutes:       reviewMinutes,
         reviewers_per_essay:  reviewersPerEssay,
-        instructions:         String(instructions).slice(0, 4000)
+        instructions:         String(instructions).slice(0, 4000),
+        course_id:            courseId || null
     }).select().single();
 
     if (error) return { status: 500, body: { error: error.message } };
@@ -186,6 +188,56 @@ async function actionRoster(sessionId) {
             connected:       participants.length,
             byStatus:        counts,
             reviewProgress
+        }
+    };
+}
+
+// Solo docente: roster nominal contra el curso completo (students.course_id),
+// con quién conectó y quién no, y marca de posible falta de integridad.
+// Nunca se expone a estudiantes — separado de actionRoster (anónimo/agregado).
+async function actionRosterDetail(sessionId, payload) {
+    if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
+    const { data: session, error: sErr } = await supabase.from('peer_review_sessions').select('*').eq('id', sessionId).single();
+    if (sErr || !session) return { status: 404, body: { error: 'Sesión no encontrada.' } };
+
+    let studentsQuery = supabase.from('students').select('id, name').eq('is_active', true).neq('major', 'Teacher');
+    if (session.course_id) studentsQuery = studentsQuery.eq('course_id', session.course_id);
+    const { data: courseStudents, error: stErr } = await studentsQuery.order('name');
+    if (stErr) return { status: 500, body: { error: stErr.message } };
+
+    const { data: participants, error: pErr } = await supabase.from('peer_review_participants')
+        .select('student_id, status, essay_submission_id').eq('session_id', sessionId);
+    if (pErr) return { status: 500, body: { error: pErr.message } };
+    const byStudent = Object.fromEntries(participants.map(p => [p.student_id, p]));
+
+    const submissionIds = participants.map(p => p.essay_submission_id).filter(Boolean);
+    let integrityById = {};
+    if (submissionIds.length) {
+        const { data: essays } = await supabase.from('essay_submissions')
+            .select('id, integrity_score').in('id', submissionIds);
+        integrityById = Object.fromEntries((essays || []).map(e => [e.id, e.integrity_score]));
+    }
+
+    const roster = (courseStudents || []).map(s => {
+        const p = byStudent[s.id];
+        const integrityScore = p && p.essay_submission_id != null ? integrityById[p.essay_submission_id] : null;
+        return {
+            studentId:      s.id,
+            name:           s.name,
+            connected:      !!p,
+            status:         p ? p.status : 'not_connected',
+            integrityScore: integrityScore != null ? integrityScore : null,
+            flagged:        integrityScore != null && integrityScore < ETHICS_FLAG_THRESHOLD
+        };
+    });
+
+    return {
+        status: 200,
+        body: {
+            sessionStatus:   session.status,
+            writingDeadline: session.writing_deadline,
+            reviewDeadline:  session.review_deadline,
+            roster
         }
     };
 }
@@ -544,6 +596,7 @@ module.exports = async (req, res) => {
             case 'open':                   result = await actionOpen(payload); break;
             case 'connect':                 result = await actionConnect(sessionId, studentId, payload); break;
             case 'roster':                  result = await actionRoster(sessionId); break;
+            case 'roster_detail':           result = await actionRosterDetail(sessionId, payload); break;
             case 'start_writing':           result = await actionStartWriting(sessionId, payload); break;
             case 'autosave_draft':          result = await actionAutosaveDraft(sessionId, studentId, payload); break;
             case 'finish_early':            result = await actionFinishEarly(sessionId, studentId, payload); break;

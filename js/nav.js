@@ -126,12 +126,12 @@ const MENU = [
     path: 'modules/03-peer-review/peer-review-hub.html',
     description: 'Learn about <strong>Data Privacy</strong>, ethics, and feedback systems.',
     children: [
+      { label: 'Live Peer Review Session', path: 'modules/03-peer-review/live-session.html' },
       { label: 'Review Checklist',         path: 'modules/03-peer-review/checklist.html' },
       { label: 'How to Give Feedback',     path: 'modules/03-peer-review/how-to-give-feedback.html' },
       { label: 'How to Receive Feedback',  path: 'modules/03-peer-review/how-to-receive-feedback.html' },
       { label: 'Peer Review Form',         path: 'modules/03-peer-review/peer-review-form.html' },
-      { label: 'Self-Assessment Rubric',   path: 'modules/03-peer-review/self-assessment-rubric.html' },
-      { label: 'Live Peer Review Session', path: 'modules/03-peer-review/live-session.html' }
+      { label: 'Self-Assessment Rubric',   path: 'modules/03-peer-review/self-assessment-rubric.html' }
     ]
   },
   {

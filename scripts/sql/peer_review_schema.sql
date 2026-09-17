@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS peer_review_sessions (
     review_deadline      TIMESTAMPTZ,
     reviewers_per_essay  INTEGER     NOT NULL DEFAULT 3,
     instructions         TEXT,                 -- consigna/thesis mostrada a los estudiantes durante la escritura
+    course_id            UUID,                 -- filtra el roster del docente contra students.course_id
     created_at           TIMESTAMPTZ DEFAULT NOW()
 );
 
