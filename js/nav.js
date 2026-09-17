@@ -12,6 +12,11 @@ const MENU = [
     path: 'dojo-home.html',
     description: 'Master writing through exercises, challenges, and competitions.'
   },
+  {
+    label: 'Peer Review (live)',
+    path: 'peer-review.html',
+    description: 'Live in-class peer review session: timed writing, anonymous assignment, dual AI + peer evaluation.'
+  },
   // ... dentro de MENU en nav.js
   {
     label: '00. Fundamentals',

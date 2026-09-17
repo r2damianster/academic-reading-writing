@@ -56,6 +56,13 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
+    // ─── 2c-bis. PEER REVIEW SESSION (en vivo) ──────────────────────────────────
+    if ((req.method === 'POST' || req.method === 'OPTIONS') && req.url === '/api/peer-review-session') {
+        const peerReviewSession = require('./api/peer-review-session');
+        peerReviewSession(req, res);
+        return;
+    }
+
     // ─── 2d. CRON: COMPRESIÓN DE PERFILES (Memory Agent) ────────────────────────
     if ((req.method === 'GET' || req.method === 'POST') && req.url === '/api/cron/compress-profiles') {
         const compressProfiles = require('./api/cron/compress-profiles');

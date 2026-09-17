@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peer Review en vivo</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #0f1f38; --ink: #1e2d42; --steel: #4a6080; --mist: #8da0b4;
+  --cloud: #e8edf3; --snow: #f6f8fb; --white: #ffffff;
+  --teal: #0891b2; --teal-lt: #e0f2f8;
+  --green: #059669; --green-lt: #d1fae5;
+  --amber: #d97706; --amber-lt: #fef3c7;
+  --red: #dc2626; --red-lt: #fee2e2;
+  --r: 12px;
+  --shadow: 0 1px 3px rgba(15,31,56,.07), 0 4px 16px rgba(15,31,56,.05);
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--snow); color: var(--ink); min-height: 100vh; }
+.wrap { max-width: 880px; margin: 0 auto; padding: 24px 20px 60px; }
+h1 { font-family: 'DM Serif Display', serif; font-size: 1.7rem; color: var(--navy); margin-bottom: 4px; }
+.subtitle { color: var(--steel); font-size: .9rem; margin-bottom: 20px; }
+.card { background: var(--white); border-radius: var(--r); box-shadow: var(--shadow); padding: 22px; margin-bottom: 18px; }
+.badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.badge-teal { background: var(--teal-lt); color: var(--teal); }
+.badge-amber { background: var(--amber-lt); color: var(--amber); }
+.badge-green { background: var(--green-lt); color: var(--green); }
+label { display: block; font-size: .8rem; font-weight: 600; color: var(--steel); margin: 10px 0 4px; }
+input[type=text], input[type=number], input[type=password], textarea, select {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--cloud); border-radius: 8px; font-family: inherit; font-size: .95rem;
+}
+textarea { min-height: 220px; resize: vertical; }
+button {
+  font-family: inherit; font-weight: 700; font-size: .88rem; padding: 10px 18px; border-radius: 8px;
+  border: none; cursor: pointer; background: var(--navy); color: var(--white); margin: 8px 6px 0 0;
+}
+button.secondary { background: var(--cloud); color: var(--ink); }
+button.danger { background: var(--red); }
+button:disabled { opacity: .5; cursor: not-allowed; }
+.row { display: flex; gap: 14px; flex-wrap: wrap; }
+.row > * { flex: 1; min-width: 140px; }
+.stat { font-size: 1.6rem; font-weight: 700; color: var(--navy); }
+.stat-label { font-size: .75rem; color: var(--mist); text-transform: uppercase; letter-spacing: .04em; }
+.timer { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--teal); }
+.essay-box { background: var(--snow); border-radius: 8px; padding: 14px; font-size: .9rem; line-height: 1.6; white-space: pre-wrap; max-height: 260px; overflow-y: auto; margin-bottom: 10px; }
+.score-block { border: 1px solid var(--cloud); border-radius: 10px; padding: 14px; margin-top: 12px; }
+.score-block h4 { font-size: .85rem; letter-spacing: .03em; margin-bottom: 8px; }
+.ai-label   { color: var(--teal); }
+.peer-label { color: var(--green); }
+.score-pill { display: inline-block; background: var(--cloud); border-radius: 6px; padding: 2px 8px; margin: 2px 4px 2px 0; font-size: .78rem; font-weight: 600; }
+.rationale { font-size: .82rem; color: var(--steel); margin-top: 6px; font-style: italic; }
+.assignment { border-top: 1px dashed var(--cloud); padding-top: 16px; margin-top: 16px; }
+.hidden { display: none !important; }
+.hint { font-size: .8rem; color: var(--mist); margin-top: 4px; }
+code.session-id { background: var(--cloud); padding: 3px 8px; border-radius: 6px; font-size: .82rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Peer Review en vivo</h1>
+  <p class="subtitle">Escritura con integridad → asignación anónima → revisión entre pares → resultados con doble evaluación (IA + pares).</p>
+
+  <!-- ══════════ PANEL DOCENTE ══════════ -->
+  <div id="teacherPanel" class="card hidden">
+    <span class="badge badge-teal">Docente</span>
+    <div id="teacherSetup">
+      <label>Nombre de la actividad</label>
+      <input type="text" id="lessonNameInput" placeholder="ej. Argumentative Essay — Peer Review Ciclo 1">
+      <div class="row">
+        <div><label>Minutos para escribir</label><input type="number" id="writingMinutesInput" value="20"></div>
+        <div><label>Minutos para revisar</label><input type="number" id="reviewMinutesInput" value="15"></div>
+        <div><label>Revisores por ensayo</label><input type="number" id="reviewersPerEssayInput" value="3"></div>
+      </div>
+      <label>Contraseña de docente</label>
+      <input type="password" id="teacherPasswordInput" placeholder="ADMIN_PASSWORD">
+      <button id="btnOpenSession">Abrir sesión</button>
+    </div>
+
+    <div id="teacherControls" class="hidden">
+      <p class="hint">ID de sesión (compártelo con los estudiantes): <code class="session-id" id="sessionIdDisplay"></code></p>
+      <div class="row" style="margin-top:14px;">
+        <div><div class="stat" id="statConnected">0</div><div class="stat-label">Conectados</div></div>
+        <div><div class="stat" id="statSubmitted">0</div><div class="stat-label">Entregados</div></div>
+        <div><div class="stat" id="statReviewDone">–</div><div class="stat-label">Revisiones listas</div></div>
+        <div><span class="badge badge-amber" id="sessionStatusBadge">open</span></div>
+      </div>
+      <div style="margin-top:14px;">
+        <button id="btnStartWriting">Iniciar escritura</button>
+        <button id="btnForceCloseWriting" class="secondary">Cerrar escritura y asignar revisiones</button>
+        <button id="btnForceCloseReviewing" class="secondary">Cerrar revisión (parcial si falta alguien)</button>
+        <button id="btnReleaseFeedback">Liberar resultados (IA + pares)</button>
+      </div>
+      <p class="hint" id="releaseProgress"></p>
+    </div>
+  </div>
+
+  <!-- ══════════ PANEL ESTUDIANTE ══════════ -->
+  <div id="studentPanel" class="card hidden">
+    <span class="badge badge-teal">Estudiante</span>
+
+    <div id="connectView">
+      <label>ID de sesión (pídelo al docente)</label>
+      <input type="text" id="sessionIdInput" placeholder="pega aquí el ID de sesión">
+      <button id="btnConnect">Conectarme</button>
+    </div>
+
+    <div id="waitingView" class="hidden">
+      <p>✅ Conectado. Esperando que el docente inicie la fase de escritura…</p>
+    </div>
+
+    <div id="writingView" class="hidden">
+      <div class="timer" id="writingTimer">--:--</div>
+      <textarea id="essayTextarea" placeholder="Escribe tu ensayo aquí. Se está midiendo integridad académica: pegado de texto, cambios de pestaña y velocidad de escritura."></textarea>
+      <p class="hint"><span id="wordCount">0</span> palabras</p>
+      <button id="btnFinishEarly">Terminé — enviar ahora</button>
+    </div>
+
+    <div id="submittedView" class="hidden">
+      <p>📨 Tu ensayo fue enviado. Esperando a que todos terminen…</p>
+    </div>
+
+    <div id="assigningView" class="hidden">
+      <p>🔀 El docente está preparando las asignaciones anónimas…</p>
+    </div>
+
+    <div id="reviewingView" class="hidden">
+      <p>Revisa cada ensayo asignado (anónimo) con la rúbrica.</p>
+      <div id="assignmentsContainer"></div>
+    </div>
+
+    <div id="resultsView" class="hidden">
+      <h3>Tu ensayo</h3>
+      <div class="essay-box" id="resultEssayText"></div>
+
+      <div class="score-block">
+        <h4 class="ai-label">🤖 Evaluador por IA (Groq)</h4>
+        <div id="resultAiScores"></div>
+        <p class="rationale" id="resultAiRationale"></p>
+      </div>
+
+      <div class="score-block">
+        <h4 class="peer-label">👥 Evaluación de tus pares</h4>
+        <div id="resultPeerScores"></div>
+        <div id="resultPeerComments"></div>
+      </div>
+
+      <h3 style="margin-top:22px;">Pertinencia de tus revisiones</h3>
+      <div class="score-block">
+        <h4 class="ai-label">🤖 Evaluador por IA (Groq)</h4>
+        <div id="resultReviewScores"></div>
+        <div id="resultReviewRationales"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/peer-review-client.js"></script>
+<script>
+(function () {
+    const RUBRIC_LABELS = {
+        argument: 'Argumento', evidence: 'Evidencia', structure: 'Estructura',
+        language: 'Lenguaje', conventions: 'Convenciones APA'
+    };
+    const REVIEW_LABELS = { specific: 'Específico', actionable: 'Accionable', balanced: 'Balanceado' };
+
+    let writingDeadline = null;
+    let currentSessionStatus = null;
+    let reviewingLoaded = false;
+    let resultsLoaded = false;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        PeerReview.init();
+        if (PeerReview.isTeacher()) {
+            document.getElementById('teacherPanel').classList.remove('hidden');
+            wireTeacher();
+        } else {
+            document.getElementById('studentPanel').classList.remove('hidden');
+            wireStudent();
+        }
+    });
+
+    // ── DOCENTE ──────────────────────────────────────────────────────────────
+    function wireTeacher() {
+        document.getElementById('btnOpenSession').onclick = async () => {
+            const lessonName = document.getElementById('lessonNameInput').value.trim();
+            const pw = document.getElementById('teacherPasswordInput').value;
+            if (!lessonName || !pw) return alert('Nombre de actividad y contraseña son obligatorios.');
+            PeerReview.setTeacherPassword(pw);
+            try {
+                const { session } = await PeerReview.call('open', {
+                    payload: PeerReview.teacherPayload({
+                        lessonName,
+                        writingMinutes: Number(document.getElementById('writingMinutesInput').value) || 20,
+                        reviewMinutes: Number(document.getElementById('reviewMinutesInput').value) || 15,
+                        reviewersPerEssay: Number(document.getElementById('reviewersPerEssayInput').value) || 3
+                    })
+                });
+                PeerReview.setSessionId(session.id);
+                document.getElementById('sessionIdDisplay').textContent = session.id;
+                document.getElementById('teacherSetup').classList.add('hidden');
+                document.getElementById('teacherControls').classList.remove('hidden');
+                PeerReview.startPolling(renderTeacherRoster);
+            } catch (e) { alert(e.message); }
+        };
+
+        document.getElementById('btnStartWriting').onclick = () => guarded(() =>
+            PeerReview.call('start_writing', { payload: PeerReview.teacherPayload() }));
+
+        document.getElementById('btnForceCloseWriting').onclick = () => guarded(async () => {
+            await PeerReview.call('force_close_writing', { payload: PeerReview.teacherPayload() });
+            await PeerReview.call('assign_reviews', { payload: PeerReview.teacherPayload() });
+        });
+
+        document.getElementById('btnForceCloseReviewing').onclick = () => guarded(() =>
+            PeerReview.call('force_close_reviewing', { payload: PeerReview.teacherPayload() }));
+
+        document.getElementById('btnReleaseFeedback').onclick = () => releaseFeedbackLoop();
+    }
+
+    function guarded(fn) { fn().catch(e => alert(e.message)); }
+
+    async function releaseFeedbackLoop() {
+        const progressEl = document.getElementById('releaseProgress');
+        let remaining = -1;
+        let rounds = 0;
+        try {
+            while (remaining !== 0 && rounds < 40) {
+                const r = await PeerReview.call('release_feedback', { payload: PeerReview.teacherPayload({ batchSize: 15 }) });
+                remaining = r.remaining;
+                rounds++;
+                progressEl.textContent = `Calificando con IA… ensayos: ${r.gradedEssays}, revisiones: ${r.gradedFeedback} (lote ${rounds})`;
+            }
+            progressEl.textContent = '✅ Resultados liberados. Los estudiantes ya pueden verlos.';
+        } catch (e) { progressEl.textContent = '⚠️ ' + e.message; }
+    }
+
+    function renderTeacherRoster(r) {
+        document.getElementById('sessionStatusBadge').textContent = r.sessionStatus;
+        document.getElementById('statConnected').textContent = r.connected;
+        document.getElementById('statSubmitted').textContent = (r.byStatus.waiting || 0) + (r.byStatus.reviewing || 0) + (r.byStatus.done || 0);
+        document.getElementById('statReviewDone').textContent = r.reviewProgress ? `${r.reviewProgress.done}/${r.reviewProgress.total}` : '–';
+    }
+
+    // ── ESTUDIANTE ───────────────────────────────────────────────────────────
+    function wireStudent() {
+        const savedId = PeerReview.getSessionId();
+        if (savedId) {
+            document.getElementById('sessionIdInput').value = savedId;
+            connectToSession();
+        }
+        document.getElementById('btnConnect').onclick = () => {
+            const id = document.getElementById('sessionIdInput').value.trim();
+            if (!id) return alert('Pega el ID de sesión que te dio el docente.');
+            PeerReview.setSessionId(id);
+            connectToSession();
+        };
+        document.getElementById('btnFinishEarly').onclick = finishEarly;
+    }
+
+    async function connectToSession() {
+        try {
+            await PeerReview.call('connect', { payload: { studentName: PeerReview.getStudentName() } });
+            document.getElementById('connectView').classList.add('hidden');
+            PeerReview.startPolling(handleStudentStatus);
+        } catch (e) { alert(e.message); }
+    }
+
+    function showOnly(viewId) {
+        ['waitingView','writingView','submittedView','assigningView','reviewingView','resultsView']
+            .forEach(id => document.getElementById(id).classList.toggle('hidden', id !== viewId));
+    }
+
+    async function handleStudentStatus(r) {
+        const prevStatus = currentSessionStatus;
+        currentSessionStatus = r.sessionStatus;
+        writingDeadline = r.writingDeadline;
+
+        if (r.sessionStatus === 'open') { showOnly('waitingView'); return; }
+
+        if (r.sessionStatus === 'writing') {
+            const textarea = document.getElementById('essayTextarea');
+            if (prevStatus !== 'writing' && !textarea.dataset.tracked) {
+                PeerReview.initWritingTracker(textarea);
+                PeerReview.startAutosave(textarea);
+                textarea.addEventListener('input', () => {
+                    document.getElementById('wordCount').textContent = textarea.value.trim() ? textarea.value.trim().split(/\s+/).length : 0;
+                });
+                textarea.dataset.tracked = '1';
+                tickTimer();
+            }
+            // Si ya envió (participante en 'waiting'/'reviewing'/'done' pero sesión aún en 'writing'), no volver a mostrar el textarea.
+            const already = (r.byStatus.waiting || 0) + (r.byStatus.reviewing || 0) + (r.byStatus.done || 0);
+            if (!document.getElementById('essayTextarea').dataset.submitted) showOnly('writingView');
+            return;
+        }
+
+        if (r.sessionStatus === 'assigning') { showOnly('assigningView'); return; }
+
+        if (r.sessionStatus === 'reviewing') {
+            if (!reviewingLoaded) { reviewingLoaded = true; await loadReviews(); }
+            showOnly('reviewingView');
+            return;
+        }
+
+        if (r.sessionStatus === 'feedback_released' || r.sessionStatus === 'closed') {
+            if (!resultsLoaded) { resultsLoaded = true; await loadResults(); }
+            showOnly('resultsView');
+            return;
+        }
+    }
+
+    function tickTimer() {
+        const el = document.getElementById('writingTimer');
+        const step = () => {
+            if (!writingDeadline) return;
+            const diff = Math.max(0, new Date(writingDeadline).getTime() - Date.now());
+            const mm = Math.floor(diff / 60000);
+            const ss = Math.floor((diff % 60000) / 1000);
+            el.textContent = `${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+            if (diff > 0) setTimeout(step, 1000);
+        };
+        step();
+    }
+
+    async function finishEarly() {
+        const textarea = document.getElementById('essayTextarea');
+        try {
+            await PeerReview.submitEssay(textarea, 'peer-review');
+            textarea.dataset.submitted = '1';
+            showOnly('submittedView');
+        } catch (e) { alert(e.message); }
+    }
+
+    async function loadReviews() {
+        const { reviews } = await PeerReview.call('get_my_reviews');
+        const container = document.getElementById('assignmentsContainer');
+        container.innerHTML = '';
+        reviews.forEach(rev => {
+            const div = document.createElement('div');
+            div.className = 'assignment';
+            div.innerHTML = `
+                <h4>${rev.anonCode}</h4>
+                <div class="essay-box">${escapeHtml(rev.essayText)}</div>
+                ${rev.status === 'done' ? '<p class="hint">✅ Ya enviaste esta revisión.</p>' : renderReviewForm(rev.assignmentId)}
+            `;
+            container.appendChild(div);
+            if (rev.status !== 'done') wireReviewForm(div, rev.assignmentId);
+        });
+    }
+
+    function renderReviewForm(assignmentId) {
+        const rubricSelects = Object.entries(RUBRIC_LABELS).map(([key, label]) => `
+            <label>${label}</label>
+            <select data-key="${key}">
+                <option value="4">4 — Excellent</option>
+                <option value="3" selected>3 — Satisfactory</option>
+                <option value="2">2 — In Progress</option>
+                <option value="1">1 — Unsatisfactory</option>
+            </select>`).join('');
+        return `
+            ${rubricSelects}
+            <label>Fortalezas</label><textarea data-field="strengths" style="min-height:70px;"></textarea>
+            <label>Qué mejorar</label><textarea data-field="improve" style="min-height:70px;"></textarea>
+            <label>Prioridad #1</label><textarea data-field="priority" style="min-height:50px;"></textarea>
+            <button data-submit="${assignmentId}">Enviar esta revisión</button>
+        `;
+    }
+
+    function wireReviewForm(container, assignmentId) {
+        container.querySelector(`[data-submit="${assignmentId}"]`).onclick = async (e) => {
+            const btn = e.target;
+            btn.disabled = true;
+            const essayScores = {};
+            container.querySelectorAll('select[data-key]').forEach(sel => { essayScores[sel.dataset.key] = Number(sel.value); });
+            const comments = {};
+            container.querySelectorAll('textarea[data-field]').forEach(ta => { comments[ta.dataset.field] = ta.value; });
+            try {
+                await PeerReview.call('submit_review', { payload: { assignmentId, essayScores, comments } });
+                container.innerHTML = `<h4>Revisión enviada ✅</h4>`;
+            } catch (err) { alert(err.message); btn.disabled = false; }
+        };
+    }
+
+    async function loadResults() {
+        const { essay, myReviewsQuality } = await PeerReview.call('get_results');
+
+        document.getElementById('resultEssayText').textContent = essay.text || '(sin texto)';
+
+        document.getElementById('resultAiScores').innerHTML = renderScorePills(essay.aiEvaluator.scores, RUBRIC_LABELS);
+        document.getElementById('resultAiRationale').textContent = essay.aiEvaluator.rationale || '';
+
+        document.getElementById('resultPeerScores').innerHTML =
+            renderScorePills(essay.peerEvaluation.scores, RUBRIC_LABELS) +
+            `<p class="hint">Basado en ${essay.peerEvaluation.reviewCount} revisión(es) de tus pares.</p>`;
+        document.getElementById('resultPeerComments').innerHTML = essay.peerEvaluation.details.map(c => `
+            <div class="essay-box">
+                <strong>Fortalezas:</strong> ${escapeHtml(c.strengths || '')}<br>
+                <strong>Mejorar:</strong> ${escapeHtml(c.improve || '')}<br>
+                <strong>Prioridad:</strong> ${escapeHtml(c.priority || '')}
+            </div>`).join('');
+
+        document.getElementById('resultReviewScores').innerHTML = renderScorePills(myReviewsQuality.scores, REVIEW_LABELS);
+        document.getElementById('resultReviewRationales').innerHTML = myReviewsQuality.rationales.map(r => `<p class="rationale">${escapeHtml(r)}</p>`).join('');
+    }
+
+    function renderScorePills(scores, labels) {
+        if (!scores) return '<p class="hint">Sin datos aún.</p>';
+        return Object.entries(labels).map(([key, label]) => {
+            const v = scores[key];
+            return `<span class="score-pill">${label}: ${v != null ? v + '/4' : '—'}</span>`;
+        }).join('');
+    }
+
+    function escapeHtml(str) {
+        return String(str || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+})();
+</script>
+</body>
+</html>
