@@ -503,6 +503,42 @@ async function actionExcludeParticipant(sessionId, payload) {
     return { status: 200, body: { excluded: true } };
 }
 
+// Persiste el promedio de pares directamente en essay_submissions — la misma
+// tabla que ya leen js/report.js (PDF del estudiante) y api/admin-student-detail.js
+// (panel del docente), ambos con acceso directo (anon key / RLS existente).
+// peer_review_feedback está bloqueada por RLS (anonimato), así que sin esto
+// el puntaje de peer review nunca llegaría al reporte del estudiante ni al
+// panel del docente — se recalcula cada vez que se libera feedback, así que
+// una re-liberación tras "Reabrir revisión" también actualiza el promedio.
+async function persistPeerAverages(sessionId) {
+    const { data: participants } = await supabase.from('peer_review_participants')
+        .select('id, essay_submission_id').eq('session_id', sessionId).not('essay_submission_id', 'is', null);
+
+    for (const p of (participants || [])) {
+        const { data: assignments } = await supabase.from('peer_review_assignments')
+            .select('id').eq('essay_owner_participant_id', p.id).eq('status', 'done');
+        const assignmentIds = (assignments || []).map(a => a.id);
+        if (!assignmentIds.length) {
+            await supabase.from('essay_submissions')
+                .update({ peer_avg_scores: null, peer_review_count: 0 }).eq('id', p.essay_submission_id);
+            continue;
+        }
+
+        const { data: feedbackRows } = await supabase.from('peer_review_feedback')
+            .select('essay_scores').in('assignment_id', assignmentIds);
+
+        const avg = {};
+        ESSAY_CRITERIA.forEach(key => {
+            const vals = (feedbackRows || []).map(f => f.essay_scores[key]).filter(v => v != null);
+            avg[key] = vals.length ? Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 100) / 100 : null;
+        });
+
+        await supabase.from('essay_submissions')
+            .update({ peer_avg_scores: avg, peer_review_count: (feedbackRows || []).length })
+            .eq('id', p.essay_submission_id);
+    }
+}
+
 // Idempotente y por lotes: se puede llamar varias veces seguidas (el frontend
 // hace polling de `remaining`) sin riesgo de duplicar evaluaciones ni de
 // exceder el timeout de la función serverless con clases grandes.
@@ -562,6 +598,7 @@ async function actionReleaseFeedback(sessionId, payload) {
 
         const remainingFeedback = Math.max(0, (ungradedFeedback || []).length - feedbackGraded);
         if (remainingFeedback === 0) {
+            await persistPeerAverages(sessionId);
             await supabase.from('peer_review_sessions').update({ status: 'feedback_released' }).eq('id', sessionId);
         }
 

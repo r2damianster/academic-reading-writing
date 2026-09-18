@@ -85,7 +85,7 @@ module.exports = async (req, res) => {
                 .order('created_at', { ascending: false })
                 .limit(500),
             supabase.from('essay_submissions')
-                .select('id,activity,words,pastes,keystrokes,deletions,tab_switches,writing_duration,chars_typed_ratio,integrity_score,essay_text,created_at')
+                .select('id,activity,words,pastes,keystrokes,deletions,tab_switches,writing_duration,chars_typed_ratio,integrity_score,essay_text,ai_essay_scores,ai_essay_rationale,peer_avg_scores,peer_review_count,created_at')
                 .eq('student_id', studentId)
                 .order('created_at', { ascending: false })
                 .limit(200),

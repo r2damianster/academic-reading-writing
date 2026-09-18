@@ -33,7 +33,7 @@ async function _loadReportData(opts = {}) {
     // Cargar datos
     let [logs, essays, complianceRows] = await Promise.all([
         _sbGet(`activity_logs?student_id=eq.${student.id}&select=activity,result,created_at&order=created_at.asc`),
-        _sbGet(`essay_submissions?student_id=eq.${student.id}&select=id,activity,essay_text,words,pastes,tab_switches,keystrokes,deletions,time_to_first_key,writing_duration,chars_typed_ratio,integrity_score,created_at&order=created_at.desc`),
+        _sbGet(`essay_submissions?student_id=eq.${student.id}&select=id,activity,essay_text,words,pastes,tab_switches,keystrokes,deletions,time_to_first_key,writing_duration,chars_typed_ratio,integrity_score,ai_essay_scores,ai_essay_rationale,peer_avg_scores,peer_review_count,created_at&order=created_at.desc`),
         _sbGet(`essay_compliance_results?student_id=eq.${student.id}&select=submission_id,activity,criteria_met,criteria_total,compliance_pct,snapshot&order=created_at.desc`)
     ]);
 
@@ -89,7 +89,13 @@ async function _loadReportData(opts = {}) {
                 writingDuration: e.writing_duration, charsTypedRatio: e.chars_typed_ratio,
                 integrityScore: e.integrity_score
             },
-            compliance
+            compliance,
+            peerReview: (e.ai_essay_scores || e.peer_avg_scores) ? {
+                aiScores:   e.ai_essay_scores,
+                aiRationale: e.ai_essay_rationale,
+                peerScores: e.peer_avg_scores,
+                peerCount:  e.peer_review_count || 0
+            } : null
         };
     }).sort((a,b) => new Date(a.date) - new Date(b.date));
 
@@ -196,6 +202,30 @@ async function generateReport(opts = {}) {
                 doc.setFontSize(7);
                 doc.text(`Words: ${audit.words || 0} | Pastes: ${audit.pastes || 0} | Tabs: ${audit.tabSwitches || 0} | Keys: ${audit.keystrokes || 0} | Duration: ${audit.writingDuration || 0}s`, 23, y + 8);
                 y += 20;
+
+                // Peer Review Box (IA + promedio de pares) — solo si el ensayo pasó por una sesión de peer review
+                if (ess.peerReview) {
+                    if (y > 260) { doc.addPage(); y = 20; }
+                    const pr = ess.peerReview;
+                    const fmtScores = (scores) => scores
+                        ? Object.entries(scores).map(([k, v]) => `${k}: ${v != null ? v : '-'}/4`).join('  ')
+                        : 'sin datos';
+
+                    doc.setFillColor(8, 145, 178); // teal
+                    doc.roundedRect(18, y - 4, 174, pr.aiRationale ? 24 : 16, 1, 1, 'F');
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFontSize(8);
+                    doc.setFont("helvetica", "bold");
+                    doc.text(`PEER REVIEW — AI Evaluator: ${fmtScores(pr.aiScores)}`, 23, y + 2);
+                    doc.setFont("helvetica", "normal");
+                    doc.setFontSize(7);
+                    doc.text(`Peer Evaluation (${pr.peerCount} reviewer${pr.peerCount === 1 ? '' : 's'}): ${fmtScores(pr.peerScores)}`, 23, y + 8);
+                    if (pr.aiRationale) {
+                        const rationaleLines = doc.splitTextToSize(pr.aiRationale, 165);
+                        doc.text(rationaleLines.slice(0, 2), 23, y + 14);
+                    }
+                    y += (pr.aiRationale ? 24 : 16) + 6;
+                }
 
                 // Essay Text
                 if (ess.text && ess.text.trim().length > 0) {

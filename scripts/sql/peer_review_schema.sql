@@ -76,5 +76,7 @@ ALTER TABLE peer_review_feedback      ENABLE ROW LEVEL SECURITY;
 
 -- Vincula cada ensayo escrito en sesión de peer review + resultado de la doble evaluación del ensayo.
 ALTER TABLE essay_submissions ADD COLUMN IF NOT EXISTS peer_review_session_id UUID REFERENCES peer_review_sessions(id);
-ALTER TABLE essay_submissions ADD COLUMN IF NOT EXISTS ai_essay_scores        JSONB;   -- {argument,evidence,structure,language,conventions}
+ALTER TABLE essay_submissions ADD COLUMN IF NOT EXISTS ai_essay_scores        JSONB;   -- {peel_rigor,hedging,nominalization}
 ALTER TABLE essay_submissions ADD COLUMN IF NOT EXISTS ai_essay_rationale     TEXT;
+ALTER TABLE essay_submissions ADD COLUMN IF NOT EXISTS peer_avg_scores        JSONB;   -- promedio de los 2-3 revisores, mismos criterios
+ALTER TABLE essay_submissions ADD COLUMN IF NOT EXISTS peer_review_count      INTEGER DEFAULT 0; -- cuantos revisores realmente entregaron
