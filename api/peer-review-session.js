@@ -57,25 +57,35 @@ function clampScore(n) {
     return Math.min(4, Math.max(1, v));
 }
 
-async function gradeWithGroq(criteria, systemPrompt, userContent) {
-    try {
-        const { text } = await groqChat({
-            apiKey:      process.env.GROQ_TOKEN,
-            model:       GRADING_MODEL,
-            system:      systemPrompt,
-            userContent: userContent.slice(0, 3000),
-            maxTokens:   300
-        });
-        const parsed = parseAiJson(text) || {};
-        const scores = {};
-        criteria.forEach(key => { scores[key] = clampScore(parsed[key]); });
-        return { scores, rationale: (parsed.rationale || '').slice(0, 400) };
-    } catch (e) {
-        console.warn('⚠️ Groq grading falló:', e.message);
-        const fallback = {};
-        criteria.forEach(key => { fallback[key] = null; });
-        return { scores: fallback, rationale: 'Evaluación IA no disponible (error de conexión con Groq).' };
+function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+// Reintenta antes de rendirse. Si todo falla, devuelve ok:false SIN escribir
+// nada en la fila — así el próximo click en "Liberar resultados" la reintenta
+// (a diferencia de escribir un fallback null, que la marcaba como "ya calificada"
+// para siempre y el estudiante nunca recibía su evaluación IA real).
+async function gradeWithGroq(criteria, systemPrompt, userContent, retries = 2) {
+    for (let attempt = 0; attempt <= retries; attempt++) {
+        try {
+            const { text } = await groqChat({
+                apiKey:      process.env.GROQ_TOKEN,
+                model:       GRADING_MODEL,
+                system:      systemPrompt,
+                userContent: userContent.slice(0, 3000),
+                maxTokens:   300
+            });
+            const parsed = parseAiJson(text);
+            if (parsed) {
+                const scores = {};
+                criteria.forEach(key => { scores[key] = clampScore(parsed[key]); });
+                return { ok: true, scores, rationale: (parsed.rationale || '').slice(0, 400) };
+            }
+            console.warn(`⚠️ Groq grading: respuesta sin JSON válido (intento ${attempt + 1})`);
+        } catch (e) {
+            console.warn(`⚠️ Groq grading falló (intento ${attempt + 1}):`, e.message);
+        }
+        if (attempt < retries) await sleep(600 * (attempt + 1));
     }
+    return { ok: false };
 }
 
 function gradeEssay(essayText) {
@@ -206,7 +216,7 @@ async function actionRosterDetail(sessionId, payload) {
     if (stErr) return { status: 500, body: { error: stErr.message } };
 
     const { data: participants, error: pErr } = await supabase.from('peer_review_participants')
-        .select('student_id, status, essay_submission_id').eq('session_id', sessionId);
+        .select('student_id, status, essay_submission_id, excluded').eq('session_id', sessionId);
     if (pErr) return { status: 500, body: { error: pErr.message } };
     const byStudent = Object.fromEntries(participants.map(p => [p.student_id, p]));
 
@@ -226,6 +236,7 @@ async function actionRosterDetail(sessionId, payload) {
             name:           s.name,
             connected:      !!p,
             status:         p ? p.status : 'not_connected',
+            excluded:       !!(p && p.excluded),
             integrityScore: integrityScore != null ? integrityScore : null,
             flagged:        integrityScore != null && integrityScore < ETHICS_FLAG_THRESHOLD
         };
@@ -282,6 +293,11 @@ async function actionFinishEarly(sessionId, studentId, payload) {
 // autoguardado (aunque esté incompleto o vacío) — no se excluyen del pool de revisión.
 async function actionForceCloseWriting(sessionId, payload) {
     if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
+    const { data: session, error: sErr } = await supabase.from('peer_review_sessions').select('status').eq('id', sessionId).single();
+    if (sErr || !session) return { status: 404, body: { error: 'Sesión no encontrada.' } };
+    if (session.status !== 'writing') {
+        return { status: 409, body: { error: `La sesión ya no está en fase de escritura (status actual: ${session.status}). No se repite el cierre.` } };
+    }
 
     const { data: stragglers, error: stErr } = await supabase.from('peer_review_participants')
         .select('*').eq('session_id', sessionId).in('status', ['connected', 'writing']);
@@ -315,9 +331,12 @@ async function actionAssignReviews(sessionId, payload) {
     if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
     const { data: session, error: sErr } = await supabase.from('peer_review_sessions').select('*').eq('id', sessionId).single();
     if (sErr || !session) return { status: 404, body: { error: 'Sesión no encontrada.' } };
+    if (session.status !== 'assigning') {
+        return { status: 409, body: { error: `La sesión no está en fase de asignación (status actual: ${session.status}). Evita doble-click — ya se asignó antes.` } };
+    }
 
     const { data: participants, error: pErr } = await supabase.from('peer_review_participants')
-        .select('id').eq('session_id', sessionId).not('essay_submission_id', 'is', null);
+        .select('id').eq('session_id', sessionId).not('essay_submission_id', 'is', null).eq('excluded', false);
     if (pErr) return { status: 500, body: { error: pErr.message } };
 
     const pool = participants || [];
@@ -427,20 +446,77 @@ async function actionSubmitReview(studentId, payload) {
 // igual con lo que sí llegó — parcial, nunca bloquea el cierre de la sesión.
 async function actionForceCloseReviewing(sessionId, payload) {
     if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
+    const { data: session, error: sErr } = await supabase.from('peer_review_sessions').select('status').eq('id', sessionId).single();
+    if (sErr || !session) return { status: 404, body: { error: 'Sesión no encontrada.' } };
+    if (session.status !== 'reviewing') {
+        return { status: 409, body: { error: `La sesión no está en fase de revisión (status actual: ${session.status}). Evita doble-click.` } };
+    }
     const { error } = await supabase.from('peer_review_assignments')
         .update({ status: 'expired' }).eq('session_id', sessionId).in('status', ['pending', 'in_progress']);
     if (error) return { status: 500, body: { error: error.message } };
     return { status: 200, body: { closed: true } };
 }
 
+// Recuperación: revierte asignaciones 'expired' a 'pending' y da más tiempo.
+// Para cuando se cerró la revisión antes de tiempo (por error o doble-click)
+// y nadie alcanzó a enviar — sin esto no había forma de reabrir la sesión.
+async function actionReopenReviewing(sessionId, payload) {
+    if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
+    const extraMinutes = Math.min((payload && payload.extraMinutes) || 10, 60);
+
+    const { data: reopened, error: rErr } = await supabase.from('peer_review_assignments')
+        .update({ status: 'pending' }).eq('session_id', sessionId).eq('status', 'expired').select('id');
+    if (rErr) return { status: 500, body: { error: rErr.message } };
+
+    const reviewDeadline = new Date(Date.now() + extraMinutes * 60000).toISOString();
+    const { error: sErr } = await supabase.from('peer_review_sessions')
+        .update({ status: 'reviewing', review_deadline: reviewDeadline }).eq('id', sessionId);
+    if (sErr) return { status: 500, body: { error: sErr.message } };
+
+    await supabase.from('peer_review_participants')
+        .update({ status: 'reviewing' }).eq('session_id', sessionId).in('status', ['waiting', 'done']);
+
+    return { status: 200, body: { reopened: (reopened || []).length, reviewDeadline } };
+}
+
+// Saca a un estudiante del pool activo sin cerrar la sesión — útil si se
+// desconecta a mitad de camino. Expira sus revisiones pendientes como revisor
+// (para no dejar a otros esperando por él) pero no toca su propio ensayo.
+async function actionExcludeParticipant(sessionId, payload) {
+    if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
+    const { studentId } = payload || {};
+    if (!studentId) return { status: 400, body: { error: 'studentId requerido.' } };
+
+    const { data: participant, error: pErr } = await supabase.from('peer_review_participants')
+        .select('id').eq('session_id', sessionId).eq('student_id', studentId).single();
+    if (pErr || !participant) return { status: 404, body: { error: 'Ese estudiante no está conectado a esta sesión.' } };
+
+    const { error: uErr } = await supabase.from('peer_review_participants')
+        .update({ excluded: true }).eq('id', participant.id);
+    if (uErr) return { status: 500, body: { error: uErr.message } };
+
+    await supabase.from('peer_review_assignments')
+        .update({ status: 'expired' })
+        .eq('reviewer_participant_id', participant.id)
+        .in('status', ['pending', 'in_progress']);
+
+    return { status: 200, body: { excluded: true } };
+}
+
 // Idempotente y por lotes: se puede llamar varias veces seguidas (el frontend
 // hace polling de `remaining`) sin riesgo de duplicar evaluaciones ni de
 // exceder el timeout de la función serverless con clases grandes.
+//
+// IMPORTANTE: el status de la sesión solo pasa a 'feedback_released' cuando
+// TODO terminó de calificarse (remaining === 0). Antes ponía el status al
+// inicio de la primera llamada — eso hacía que el estudiante cuyo poll caía
+// justo en ese instante viera "resultados listos" con su ai_essay_scores
+// todavía en null (la calificación real llegaba segundos después), y como el
+// frontend solo pedía get_results una vez, se quedaba con ese resultado vacío
+// para siempre.
 async function actionReleaseFeedback(sessionId, payload) {
     if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
     const batchSize = Math.min((payload && payload.batchSize) || 15, 30);
-
-    await supabase.from('peer_review_sessions').update({ status: 'feedback_released' }).eq('id', sessionId);
 
     const { data: participants } = await supabase.from('peer_review_participants')
         .select('essay_submission_id').eq('session_id', sessionId).not('essay_submission_id', 'is', null);
@@ -449,41 +525,55 @@ async function actionReleaseFeedback(sessionId, payload) {
     const { data: ungradedEssays } = await supabase.from('essay_submissions')
         .select('id, essay_text').in('id', submissionIds).is('ai_essay_scores', null);
 
-    let graded = 0;
+    let graded = 0, failedEssays = 0;
     for (const essay of (ungradedEssays || []).slice(0, batchSize)) {
-        const { scores, rationale } = await gradeEssay(essay.essay_text);
-        await supabase.from('essay_submissions')
-            .update({ ai_essay_scores: scores, ai_essay_rationale: rationale }).eq('id', essay.id);
-        graded++;
+        const result = await gradeEssay(essay.essay_text);
+        if (result.ok) {
+            await supabase.from('essay_submissions')
+                .update({ ai_essay_scores: result.scores, ai_essay_rationale: result.rationale }).eq('id', essay.id);
+            graded++;
+        } else {
+            failedEssays++;
+        }
     }
 
-    let feedbackGraded = 0;
-    if (graded === 0 && (!ungradedEssays || ungradedEssays.length <= batchSize)) {
-        // Solo pasa a calificar feedback una vez que ya no quedan ensayos sin calificar en este lote.
+    let feedbackGraded = 0, failedFeedback = 0;
+    const remainingEssays = Math.max(0, (ungradedEssays || []).length - graded);
+
+    if (remainingEssays === 0) {
+        // Solo pasa a calificar feedback una vez que ya no quedan ensayos sin calificar.
         const { data: assignmentIds } = await supabase.from('peer_review_assignments')
             .select('id').eq('session_id', sessionId);
         const ids = (assignmentIds || []).map(a => a.id);
 
         const { data: ungradedFeedback } = await supabase.from('peer_review_feedback')
-            .select('id, comments').in('assignment_id', ids).is('ai_review_quality_scores', null);
+            .select('id, comments').in('assignment_id', ids.length ? ids : ['00000000-0000-0000-0000-000000000000']).is('ai_review_quality_scores', null);
 
         for (const fb of (ungradedFeedback || []).slice(0, batchSize)) {
-            const { scores, rationale } = await gradeReviewQuality(fb.comments);
-            await supabase.from('peer_review_feedback')
-                .update({ ai_review_quality_scores: scores, ai_review_quality_rationale: rationale }).eq('id', fb.id);
-            feedbackGraded++;
+            const result = await gradeReviewQuality(fb.comments);
+            if (result.ok) {
+                await supabase.from('peer_review_feedback')
+                    .update({ ai_review_quality_scores: result.scores, ai_review_quality_rationale: result.rationale }).eq('id', fb.id);
+                feedbackGraded++;
+            } else {
+                failedFeedback++;
+            }
         }
+
+        const remainingFeedback = Math.max(0, (ungradedFeedback || []).length - feedbackGraded);
+        if (remainingFeedback === 0) {
+            await supabase.from('peer_review_sessions').update({ status: 'feedback_released' }).eq('id', sessionId);
+        }
+
+        return {
+            status: 200,
+            body: { gradedEssays: graded, gradedFeedback: feedbackGraded, failedEssays, failedFeedback, remaining: remainingFeedback }
+        };
     }
 
-    const remainingEssays = Math.max(0, (ungradedEssays || []).length - graded);
     return {
         status: 200,
-        body: {
-            gradedEssays:    graded,
-            gradedFeedback:  feedbackGraded,
-            remaining:       remainingEssays > 0 ? remainingEssays : feedbackGraded > 0 ? -1 : 0
-            // remaining: -1 significa "sigue habiendo feedback por calificar, sigue llamando"
-        }
+        body: { gradedEssays: graded, gradedFeedback: 0, failedEssays, failedFeedback: 0, remaining: remainingEssays }
     };
 }
 
@@ -605,6 +695,8 @@ module.exports = async (req, res) => {
             case 'get_my_reviews':          result = await actionGetMyReviews(sessionId, studentId); break;
             case 'submit_review':           result = await actionSubmitReview(studentId, payload); break;
             case 'force_close_reviewing':   result = await actionForceCloseReviewing(sessionId, payload); break;
+            case 'reopen_reviewing':        result = await actionReopenReviewing(sessionId, payload); break;
+            case 'exclude_participant':     result = await actionExcludeParticipant(sessionId, payload); break;
             case 'release_feedback':        result = await actionReleaseFeedback(sessionId, payload); break;
             case 'get_results':             result = await actionGetResults(sessionId, studentId); break;
             default: return send(400, { error: `Acción desconocida: "${action}"` });

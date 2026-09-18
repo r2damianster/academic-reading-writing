@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS peer_review_participants (
     essay_submission_id  UUID        REFERENCES essay_submissions(id),
     draft_text           TEXT,                 -- autoguardado mientras escribe, usado si el docente cierra antes de que termine
     draft_updated_at     TIMESTAMPTZ,
+    excluded             BOOLEAN     NOT NULL DEFAULT false, -- excluido manualmente del pool de revisión por el docente
     connected_at         TIMESTAMPTZ DEFAULT NOW(),
     submitted_at         TIMESTAMPTZ,
     UNIQUE (session_id, student_id)

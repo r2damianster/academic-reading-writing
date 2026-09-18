@@ -110,9 +110,11 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
         <button id="btnStartWriting">Iniciar escritura</button>
         <button id="btnForceCloseWriting" class="secondary">Cerrar escritura y asignar revisiones</button>
         <button id="btnForceCloseReviewing" class="secondary">Cerrar revisión (parcial si falta alguien)</button>
+        <button id="btnReopenReviewing" class="secondary">Reabrir revisión (+10 min)</button>
         <button id="btnReleaseFeedback">Liberar resultados (IA + pares)</button>
       </div>
       <p class="hint" id="releaseProgress"></p>
+      <div id="integrityAlertBanner" class="hidden" style="margin-top:10px; padding:10px 14px; background:var(--red-lt); color:var(--red); border-radius:8px; font-weight:700; font-size:.85rem;"></div>
 
       <h4 style="margin-top:18px; font-size:.85rem; color:var(--steel); text-transform:uppercase; letter-spacing:.04em;">Roster del curso</h4>
       <table id="rosterTable" style="width:100%; border-collapse:collapse; margin-top:8px; font-size:.85rem;">
@@ -121,6 +123,7 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
             <th style="padding:6px 4px;">Estudiante</th>
             <th style="padding:6px 4px;">Estado</th>
             <th style="padding:6px 4px;">Integridad</th>
+            <th style="padding:6px 4px;"></th>
           </tr>
         </thead>
         <tbody id="rosterTableBody"></tbody>
@@ -200,8 +203,6 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
     let writingDeadline = null;
     let teacherDeadline = null;
     let currentSessionStatus = null;
-    let reviewingLoaded = false;
-    let resultsLoaded = false;
 
     document.addEventListener('DOMContentLoaded', () => {
         PeerReview.init();
@@ -243,21 +244,33 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
             } catch (e) { alert(e.message); }
         };
 
-        document.getElementById('btnStartWriting').onclick = () => guarded(() =>
+        document.getElementById('btnStartWriting').onclick = (e) => guarded(e.target, () =>
             PeerReview.call('start_writing', { payload: PeerReview.teacherPayload() }));
 
-        document.getElementById('btnForceCloseWriting').onclick = () => guarded(async () => {
+        document.getElementById('btnForceCloseWriting').onclick = (e) => guarded(e.target, async () => {
             await PeerReview.call('force_close_writing', { payload: PeerReview.teacherPayload() });
             await PeerReview.call('assign_reviews', { payload: PeerReview.teacherPayload() });
         });
 
-        document.getElementById('btnForceCloseReviewing').onclick = () => guarded(() =>
+        document.getElementById('btnForceCloseReviewing').onclick = (e) => guarded(e.target, () =>
             PeerReview.call('force_close_reviewing', { payload: PeerReview.teacherPayload() }));
 
-        document.getElementById('btnReleaseFeedback').onclick = () => releaseFeedbackLoop();
+        document.getElementById('btnReopenReviewing').onclick = (e) => guarded(e.target, async () => {
+            const r = await PeerReview.call('reopen_reviewing', { payload: PeerReview.teacherPayload({ extraMinutes: 10 }) });
+            alert(`Reabierto: ${r.reopened} revisión(es) vuelven a estar pendientes. Nuevo plazo: 10 min.`);
+        });
+
+        document.getElementById('btnReleaseFeedback').onclick = (e) => guarded(e.target, releaseFeedbackLoop);
     }
 
-    function guarded(fn) { fn().catch(e => alert(e.message)); }
+    // Deshabilita el botón mientras la llamada está en vuelo — evita que un
+    // doble-click dispare la misma acción dos veces (causa real de la sesión
+    // que perdió sus asignaciones: click repetido antes de ver feedback visual).
+    function guarded(btn, fn) {
+        if (btn.disabled) return;
+        btn.disabled = true;
+        fn().catch(e => alert(e.message)).finally(() => { btn.disabled = false; });
+    }
 
     async function releaseFeedbackLoop() {
         const progressEl = document.getElementById('releaseProgress');
@@ -289,21 +302,62 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
         waiting: 'Esperando', reviewing: 'Revisando', done: 'Listo'
     };
 
+    const flaggedSeen = new Set();
+
+    function beep() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.frequency.value = 880;
+            gain.gain.setValueAtTime(0.15, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.start(); osc.stop(ctx.currentTime + 0.4);
+        } catch (e) { /* audio no disponible — no bloquea nada */ }
+    }
+
     async function pollRosterDetail() {
         try {
             const { roster } = await PeerReview.call('roster_detail', { payload: PeerReview.teacherPayload() });
+
+            const newlyFlagged = roster.filter(s => s.flagged && !flaggedSeen.has(s.studentId));
+            if (newlyFlagged.length) {
+                newlyFlagged.forEach(s => flaggedSeen.add(s.studentId));
+                beep();
+                const banner = document.getElementById('integrityAlertBanner');
+                banner.textContent = `⚠️ Nueva alerta de integridad: ${newlyFlagged.map(s => s.name).join(', ')}`;
+                banner.classList.remove('hidden');
+            }
+
             const tbody = document.getElementById('rosterTableBody');
             tbody.innerHTML = roster.map(s => {
-                const rowClass = s.flagged ? 'flagged' : (s.connected ? '' : 'not-connected');
+                const rowClass = s.excluded ? '' : s.flagged ? 'flagged' : (s.connected ? '' : 'not-connected');
                 const integrityText = s.integrityScore != null
                     ? (s.flagged ? `⚠️ ${s.integrityScore}/100 — revisar` : `${s.integrityScore}/100`)
                     : '—';
-                return `<tr class="${rowClass}">
+                const statusLabel = s.excluded ? 'Excluido' : (STATUS_LABELS[s.status] || s.status);
+                const excludeBtn = (s.connected && !s.excluded)
+                    ? `<button class="secondary" style="padding:3px 10px; font-size:.72rem; margin:0;" data-exclude="${s.studentId}">Excluir</button>`
+                    : '';
+                return `<tr class="${rowClass}" style="${s.excluded ? 'opacity:.5;' : ''}">
                     <td>${escapeHtml(s.name)}</td>
-                    <td><span class="status-pill st-${s.status}">${STATUS_LABELS[s.status] || s.status}</span></td>
+                    <td><span class="status-pill st-${s.status}">${statusLabel}</span></td>
                     <td>${integrityText}</td>
+                    <td>${excludeBtn}</td>
                 </tr>`;
             }).join('');
+
+            tbody.querySelectorAll('[data-exclude]').forEach(btn => {
+                btn.onclick = async () => {
+                    if (!confirm('¿Excluir a este estudiante del pool de revisión? Sus revisiones pendientes como revisor quedarán expiradas.')) return;
+                    btn.disabled = true;
+                    try {
+                        await PeerReview.call('exclude_participant', { payload: PeerReview.teacherPayload({ studentId: btn.dataset.exclude }) });
+                        pollRosterDetail();
+                    } catch (e) { alert(e.message); btn.disabled = false; }
+                };
+            });
         } catch (e) { console.warn('roster_detail:', e.message); }
     }
 
@@ -364,13 +418,20 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
         if (r.sessionStatus === 'assigning') { showOnly('assigningView'); return; }
 
         if (r.sessionStatus === 'reviewing') {
-            if (!reviewingLoaded) { reviewingLoaded = true; await loadReviews(); }
+            // Recarga al entrar de nuevo a 'reviewing' (incluye reapertura tras
+            // reopen_reviewing) — no solo la primera vez, para no quedarse con
+            // asignaciones ya vencidas en pantalla.
+            if (prevStatus !== 'reviewing') { await loadReviews(); }
             showOnly('reviewingView');
             return;
         }
 
         if (r.sessionStatus === 'feedback_released' || r.sessionStatus === 'closed') {
-            if (!resultsLoaded) { resultsLoaded = true; await loadResults(); }
+            // Sin caché de una sola vez a propósito: si el docente libera resultados
+            // en varios lotes, refrescar en cada poll evita quedarse con un resultado
+            // parcial/vacío para siempre (bug real: 3 estudiantes vieron "sin datos"
+            // porque su poll cayó antes de que Groq terminara de calificar su ensayo).
+            await loadResults();
             showOnly('resultsView');
             return;
         }
