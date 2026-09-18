@@ -1,7 +1,7 @@
 ---
 type: index
 domain: frontend
-last_updated: 2026-09-01
+last_updated: 2026-09-17
 owner: Arturo Rodríguez Zambrano
 ---
 
@@ -22,7 +22,8 @@ Stack: Vanilla JS + Bootstrap 5 en el lado del diseño visual. Sin frameworks JS
 | `js/dojo-client.js` | — | Cliente Dojo (gamificación) — API calls + offline-first localStorage sync | 🟡 |
 | `js/lesson-access.js` | — | Control de disponibilidad de lecciones | 🟢 |
 | `js/nav.js` / `js/navigation.js` | — | Navegación entre módulos | 🟢 |
-| `js/report.js` | — | Reporte de integridad académica | 🟡 |
+| `js/report.js` | — | Reporte de integridad académica — incluye bloque Peer Review (IA + pares) en el PDF desde 2026-09-17 | 🟡 |
+| `js/peer-review-client.js` | ~180 | Cliente de la sesión de Peer Review en vivo (polling, timer, integridad de escritura) — autocontenido, no depende de `slide-engine.js` | 🟢 |
 
 ## Archivos CSS
 
@@ -51,9 +52,17 @@ Stack: Vanilla JS + Bootstrap 5 en el lado del diseño visual. Sin frameworks JS
 
 | Archivo | Descripción |
 |---|---|
-| `admin-students.html` | Dashboard de progreso de estudiantes — tabla, badges integridad, CSV export |
-| `admin.html` | Instructor Panel existente — se agregó enlace a admin-students.html |
+| `admin-students.html` | Dashboard de progreso de estudiantes — tabla, badges integridad, CSV export. Desde 2026-09-17 incluye columna "Peer Review" (IA + promedio de pares) en la tabla de ensayos |
+| `admin.html` | Instructor Panel existente — se agregó enlace a admin-students.html. **No conectado** a los datos de Peer Review (solo `admin-students.html` lo muestra) |
+
+## Peer Review en vivo (2026-09-17)
+
+| Archivo | Descripción |
+|---|---|
+| `modules/03-peer-review/live-session.html` | Panel docente/estudiante de la sesión en vivo. Vive como primera lección del hub "03. Peer System" (`modules/03-peer-review/peer-review-hub.html`), no en la raíz — moverlo de ahí rompe el link relativo `../../js/peer-review-client.js` |
+| `js/peer-review-client.js` | Ver tabla de arriba |
+| `my-progress.html` | Sección "Peer review sessions" agregada — `writingActs` (lista fija de lecciones) nunca incluye `activity` dinámico tipo `peer-review:<sessionId>`, por eso necesita su propia sección aparte de las tablas normales |
 
 ## Deuda técnica activa (frontend)
 
-Ver tabla canónica en `DEUDA_TECNICA.md` (raíz del proyecto) — no duplicar IDs aquí para evitar que diverjan. Ítems de frontend relevantes hoy: DT-002 (`slide-engine.js` mezcla UI + sync Supabase), DT-003 (cálculo de integridad duplicado entre `essay-handler.js` y `slide-engine.js`), DT-007 (`_configReady` duplicado 3x).
+Ver tabla canónica en `DEUDA_TECNICA.md` (raíz del proyecto) — no duplicar IDs aquí para evitar que diverjan. Ítems de frontend relevantes hoy: DT-002 (`slide-engine.js` mezcla UI + sync Supabase), DT-003 (cálculo de integridad duplicado entre `essay-handler.js` y `slide-engine.js`), DT-007 (`_configReady` duplicado 3x), DT-008 (rúbrica de Peer Review hardcodeada en `RUBRIC_LABELS` de `live-session.html` — no editable desde tabla).

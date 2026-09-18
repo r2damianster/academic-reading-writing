@@ -1,11 +1,14 @@
 ---
 owner: Arturo Rodríguez Zambrano
 domain: agents
-last_updated: 2026-04-19
+last_updated: 2026-09-17
 status: active
 ---
 
 # Agente: Peer Review
+
+## ⚠️ No confundir con la sesión en vivo (2026-09-17)
+Este documento describe el **chatbot de guía socrática** (`lib/agents/peer-review.js`) usado por la lección estática `modules/03-peer-review/peer-review-form.html`. Es un módulo completamente distinto de la **sesión de peer review en vivo** (`api/peer-review-session.js` + `modules/03-peer-review/live-session.html`) — esa NO llama a este agente ni pasa por el orquestador; tiene su propio flujo de estado, asignación anónima, y calificación directa con Groq. Ver [.claude/api/peer-review-session.md](../api/peer-review-session.md).
 
 ## Responsable exclusivo
 Arturo Rodríguez Zambrano — diseño del módulo Track 03.

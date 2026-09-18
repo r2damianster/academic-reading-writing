@@ -1,14 +1,16 @@
 ---
 type: index
 domain: api
-last_updated: 2026-09-01
+last_updated: 2026-09-17
 owner: Arturo Rodríguez Zambrano
 ---
 
 # Índice de API Endpoints
 
 Todos los endpoints son funciones serverless de Vercel (CommonJS).
-**Límite: 12 funciones. Actualmente: 11 activas.**
+**Límite: 12 funciones. Actualmente: 12 activas — AL LÍMITE, cero slots libres.**
+
+Cualquier funcionalidad nueva debe entrar como una `action` más de un endpoint existente (ver `peer-review-session.js` como referencia de patrón multiplexado), no como archivo nuevo en `api/`.
 
 ## Tabla de endpoints
 
@@ -18,9 +20,10 @@ Todos los endpoints son funciones serverless de Vercel (CommonJS).
 | `GET /api/config` | GET | Expone anon key de Supabase al browser | [config.md](config.md) |
 | `POST /api/validate-student` | POST | Auth de estudiantes y admin | [validate-student.md](validate-student.md) |
 | `POST /api/sync-reading` | POST | Sincroniza progreso de lectura | [sync-reading.md](sync-reading.md) |
+| `POST /api/peer-review-session` | POST/GET | Sesión de peer review en vivo — 18 acciones multiplexadas | [peer-review-session.md](peer-review-session.md) |
 | `GET /api/cron/compress-profiles` | GET (cron) | Comprime perfiles nocturnamente | — |
 | `GET/POST /api/admin-students` | GET/POST | Lista/gestiona estudiantes (usa SERVICE_KEY) | — |
-| `GET /api/admin-student-detail` | GET | Historial completo de un estudiante `?studentId=<uuid>` (usa SERVICE_KEY) | — |
+| `GET /api/admin-student-detail` | GET | Historial completo de un estudiante `?studentId=<uuid>` (usa SERVICE_KEY) — incluye `ai_essay_scores`/`peer_avg_scores` desde 2026-09-17 | — |
 | `POST /api/admin-archive-course` | POST | Archiva un curso completo (usa SERVICE_KEY) | — |
 | `POST /api/admin-reenroll-student` | POST | Re-matricula un estudiante (usa SERVICE_KEY) | — |
 | `GET/POST /api/gamification` | GET/POST | Dojo — ligas, racha, insignias (`js/dojo-client.js`) | — |

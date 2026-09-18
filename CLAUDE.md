@@ -9,7 +9,7 @@ Instrucciones para **Claude Code** cuando trabaja en este proyecto.
 Sistema de aprendizaje de escritura académica en inglés para ~200 estudiantes de ULEAM (Manta, Ecuador). Incluye 72 lecciones en 5 tracks, 8 agentes de IA en Groq (Llama 3) y auditoría de integridad académica en tiempo real.
 
 **Stack:**
-- Node.js 24.x + Vercel serverless (11 endpoints en `api/`, bajo el límite de 12)
+- Node.js 24.x + Vercel serverless (12 endpoints en `api/` — **al límite exacto de 12**, no hay slot libre)
 - Supabase (PostgreSQL con RLS)
 - Groq API — Llama 3.1-8b-instant + Llama 3.3-70b-versatile (gratis)
 - Vanilla JS + Bootstrap 5 (sin frameworks frontend)
@@ -34,12 +34,12 @@ export default myFunction;
 
 ### Límite de funciones Vercel
 
-El plan Hobby de Vercel permite máximo 12 serverless functions. Actualmente hay 11 en `api/`: `admin-archive-course.js`, `admin-reenroll-student.js`, `admin-student-detail.js`, `admin-students.js`, `config.js`, `gamification.js`, `lesson-availability.js`, `orchestrator.js`, `sync-reading.js`, `validate-student.js`, y `cron/compress-profiles.js`.
+El plan Hobby de Vercel permite máximo 12 serverless functions. **Hay 12 en `api/` — al límite exacto, cero slots libres:** `admin-archive-course.js`, `admin-reenroll-student.js`, `admin-student-detail.js`, `admin-students.js`, `config.js`, `gamification.js`, `lesson-availability.js`, `orchestrator.js`, `peer-review-session.js`, `sync-reading.js`, `validate-student.js`, `cron/compress-profiles.js`.
 
 - **`api/`** → solo endpoints (cuentan como funciones Vercel)
 - **`lib/`** → módulos de soporte, helpers, agentes (no cuentan)
 
-**No mover nada de `lib/` a `api/` sin verificar el conteo.**
+**No mover nada de `lib/` a `api/` sin verificar el conteo.** **No agregar un endpoint nuevo sin antes consolidar uno existente** (`peer-review-session.js` ya es multiplexado por `action` en el body — ese es el patrón a seguir: nuevas funcionalidades entran como una acción más del endpoint existente que más se les parezca, no como archivo nuevo).
 
 ### Variables de entorno
 
@@ -205,10 +205,29 @@ Ver `DEUDA_TECNICA.md` para el estado completo. Items pendientes de mayor impact
 | DT-002 | 🟡 MEDIO | `slide-engine.js` (~3373 líneas) mezcla UI + sync Supabase |
 | DT-003 | 🟡 MEDIO | Cálculo de integridad duplicado: `_calcIntegrityScore` (`essay-handler.js`) vs `_calcIntegrity` (`slide-engine.js`) |
 | DT-006 | 🟢 NUEVO | Teacher Helper Mode: Inline annotations via `data-teacher-note` and `?teacher=1` |
+| DT-008 | 🟡 MEDIO | Rúbrica de Peer Review (`peel_rigor`/`hedging`/`nominalization`) hardcodeada en `api/peer-review-session.js` — no editable desde una tabla como `test_rubrics` |
 
-Ítems completados: DT-004 (READING_COMMENT deshabilitado en el motor; auditoría no encontró usos reales en `modules/`), L-001 (Argumentative Essay), L-002 (Chain Essay), L-003 (Instructor Mode Manual Toggle) — ver `DEUDA_TECNICA.md`.
+Ítems completados: DT-004 (READING_COMMENT deshabilitado en el motor; auditoría no encontró usos reales en `modules/`), L-001 (Argumentative Essay), L-002 (Chain Essay), L-003 (Instructor Mode Manual Toggle), sistema de Peer Review en vivo con plantillas (ver sección dedicada arriba) — ver `DEUDA_TECNICA.md`.
 
 **DT-007 (WONTFIX):** `_configReady` duplicado en `reading-engine.js`/`slide-engine.js` — investigado y descartado, no es bug funcional (ningún HTML carga ambos motores a la vez). Ver detalle en `DEUDA_TECNICA.md`.
+
+---
+
+## Peer Review — Sesión en vivo (nuevo, 2026-09-17)
+
+Módulo separado de la lección estática "Peer Review Form" (`lib/agents/peer-review.js`, chatbot guía socrática). Esta es una sesión sincronizada en tiempo real para toda la clase: el docente abre, los estudiantes escriben con integridad, se asignan revisiones anónimas al azar, se revisan con rúbrica, y se liberan resultados con doble evaluación (IA Groq + promedio de pares).
+
+**Archivos:**
+- `api/peer-review-session.js` — el único endpoint nuevo, multiplexado por `action` (18 acciones: `open`, `connect`, `roster`, `roster_detail`, `start_writing`, `autosave_draft`, `finish_early`, `force_close_writing`, `assign_reviews`, `get_my_reviews`, `submit_review`, `force_close_reviewing`, `reopen_reviewing`, `exclude_participant`, `release_feedback`, `get_results`, `list_templates`, `save_template`, `delete_template`).
+- `modules/03-peer-review/live-session.html` + `js/peer-review-client.js` — UI docente/estudiante. Vive dentro del hub existente "03. Peer System" (primera lección de la lista), no en la raíz.
+- Tablas nuevas en Supabase: `peer_review_sessions`, `peer_review_participants`, `peer_review_assignments`, `peer_review_feedback`, `peer_review_templates` — todas con RLS activo **sin políticas** (deny-all para anon/authenticated; solo el endpoint con `SUPABASE_SERVICE_KEY` puede leerlas/escribirlas). Esto es a propósito: garantiza el anonimato de quién revisó a quién.
+- Columnas nuevas en `essay_submissions`: `peer_review_session_id`, `ai_essay_scores`, `ai_essay_rationale`, `peer_avg_scores`, `peer_review_count`. El promedio de pares se persiste aquí (no en `peer_review_feedback`, que está bloqueada) porque `js/report.js` (PDF del estudiante) y `admin-student-detail.js`/`admin-students.html` (panel docente) leen `essay_submissions` directo con anon/service key — sin esta persistencia nunca podrían mostrar el resultado.
+
+**Reglas de estado — no romper:**
+- `assign_reviews` exige `session.status === 'assigning'`; `force_close_writing` exige `'writing'`; `force_close_reviewing` exige `'reviewing'`. Un doble-click en el botón correspondiente devuelve 409 en vez de repetir la acción — esto arregló un bug real (sesión del 2026-09-17 donde un doble-click dejó a los 8 estudiantes sin poder revisar). Si se agrega una acción nueva que cambia el status de la sesión, agregar la misma guarda.
+- `release_feedback` es idempotente y por lotes (`batchSize`, tope 30) — el frontend lo llama en loop hasta `remaining === 0`. El status de la sesión solo pasa a `'feedback_released'` cuando TODO el lote terminó — nunca al inicio (causaba que estudiantes con poll mal sincronizado vieran resultados vacíos permanentes).
+- `gradeWithGroq` reintenta 2 veces y, si falla del todo, no escribe nada (deja la fila sin calificar para que el próximo `release_feedback` la reintente) — nunca escribir un fallback `null` que marque una fila como "ya procesada".
+- La rúbrica (`ESSAY_CRITERIA` = `peel_rigor`/`hedging`/`nominalization`) está **hardcodeada** en `api/peer-review-session.js` y en `RUBRIC_LABELS` de `live-session.html` — no vive en una tabla editable todavía (a diferencia de `test_rubrics`). Ver DT-008 en `DEUDA_TECNICA.md`.
 
 ---
 

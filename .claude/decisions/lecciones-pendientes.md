@@ -1,7 +1,7 @@
 ---
 owner: Arturo Rodríguez Zambrano
 domain: decisions
-last_updated: 2026-09-01
+last_updated: 2026-09-17
 status: active
 ---
 
@@ -34,6 +34,8 @@ El scoring de tests requiere definir criterios en `essay_requirements` y conecta
 | L-007 | Self-Assessment Rubric | `modules/03-peer-review/` | 🟡 UI lista, lógica ausente |
 
 L-006 y L-007 necesitan conectar con el **Peer Review Agent** (`agent: "peer-review"`).
+
+**Nota 2026-09-17:** esto sigue pendiente sin cambios — es la forma estática individual (un estudiante llena un formulario sobre un ensayo pegado a mano). Lo que sí se construyó es un módulo **distinto**: una sesión de peer review sincronizada en vivo para toda la clase, con asignación anónima al azar y doble evaluación (IA + pares). Ver [.claude/api/peer-review-session.md](../api/peer-review-session.md). No resuelve L-006/L-007 — son features complementarias, no la misma.
 
 ## Orden de implementación sugerido
 
