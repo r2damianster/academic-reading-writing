@@ -549,6 +549,10 @@ td.lesson-name { font-weight: 600; color: var(--ink); }
     <!-- Integrity transparency section -->
     <div class="section-head" style="margin-top:28px;">Integrity signals — full transparency</div>
     <div id="wr-integrity-table"><div class="state-msg">Loading…</div></div>
+
+    <!-- Peer review sessions (fuera de la lista fija de lecciones) -->
+    <div class="section-head" style="margin-top:28px;">Peer review sessions</div>
+    <div id="pr-table"><div class="state-msg">No peer review sessions yet.</div></div>
   </div>
 
 
@@ -919,7 +923,7 @@ async function loadAll() {
         // ── 3. Fetch all activity data in parallel ─────────────────────
         const [logs, essays, compRows, readingRows] = await Promise.all([
             sbGet(`activity_logs?student_id=eq.${st.id}&select=activity,result,created_at&order=created_at.asc`),
-            sbGet(`essay_submissions?student_id=eq.${st.id}&select=activity,words,pastes,tab_switches,keystrokes,deletions,integrity_score,chars_typed_ratio,writing_duration,time_to_first_key,created_at&order=created_at.asc`),
+            sbGet(`essay_submissions?student_id=eq.${st.id}&select=activity,words,pastes,tab_switches,keystrokes,deletions,integrity_score,chars_typed_ratio,writing_duration,time_to_first_key,ai_essay_scores,peer_avg_scores,peer_review_count,created_at&order=created_at.asc`),
             sbGet(`essay_compliance_results?student_id=eq.${st.id}&select=activity,compliance_pct,criteria_met,criteria_total,words_ok,integrity_ok,pastes_ok,keywords_ok&order=created_at.asc`),
             sbGet(`reading_progress?student_id=eq.${st.id}&slide_id=eq.-1&select=lesson_name,score,total_errors,duration_sec,slides_total,completed_at&order=completed_at.desc`)
         ]);
@@ -1190,6 +1194,30 @@ function renderWriting(quizMap, essayMap, compMap, writingActs) {
         <tbody>${intRows}</tbody>
       </table>
     </div>` : '<div class="state-msg">No essay submissions yet.</div>';
+
+  // ── Peer review sessions — actividad dinámica (peer-review:<sessionId>),
+  // no está en la lista fija de writingActs, así que se muestra aparte.
+  const prEssays = Object.values(essayMap).filter(e => e.activity && e.activity.startsWith('peer-review:'));
+  const fmtScores = (scores) => scores
+    ? Object.entries(scores).map(([k, v]) => `${k}: ${v != null ? v : '—'}/4`).join(', ')
+    : null;
+  const prRows = prEssays.map(e => {
+    const ai   = fmtScores(e.ai_essay_scores);
+    const peer = fmtScores(e.peer_avg_scores);
+    return `<tr>
+      <td style="color:var(--mist);font-size:.72rem">${(e.created_at||'').slice(0,10)}</td>
+      <td>${ai ? `🤖 ${ai}` : '<span class="state-msg" style="padding:0">Pending</span>'}</td>
+      <td>${peer ? `👥 ${peer} <span style="color:var(--mist);font-size:.68rem">(${e.peer_review_count} reviewer${e.peer_review_count===1?'':'s'})</span>` : '<span class="state-msg" style="padding:0">No peer feedback yet</span>'}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('pr-table').innerHTML = prRows ? `
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Date</th><th>AI Evaluator</th><th>Peer Evaluation</th></tr></thead>
+        <tbody>${prRows}</tbody>
+      </table>
+    </div>` : '<div class="state-msg">No peer review sessions yet.</div>';
 }
 
 /* ════════════════════════════════════════════════════════════════════

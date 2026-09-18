@@ -72,6 +72,14 @@ code.session-id { background: var(--cloud); padding: 3px 8px; border-radius: 6px
   <div id="teacherPanel" class="card hidden">
     <span class="badge badge-teal">Docente</span>
     <div id="teacherSetup">
+      <label>Contraseña de docente</label>
+      <input type="password" id="teacherPasswordInput" placeholder="ADMIN_PASSWORD">
+      <label>Lección programada (opcional)</label>
+      <div class="row">
+        <select id="templateSelect" style="flex:2;"><option value="">— Nueva consigna —</option></select>
+        <button id="btnSaveTemplate" type="button" class="secondary" style="flex:1;">Guardar como plantilla</button>
+        <button id="btnDeleteTemplate" type="button" class="secondary hidden" style="flex:0 0 auto;">Eliminar</button>
+      </div>
       <label>Nombre de la actividad</label>
       <input type="text" id="lessonNameInput" placeholder="ej. Argumentative Essay — Peer Review Ciclo 1" value="Peer Review — PEEL, Hedging &amp; Nominalization">
       <label>Consigna (thesis + instrucciones, se muestra a los estudiantes mientras escriben)</label>
@@ -92,8 +100,6 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
       </div>
       <label>Course ID (filtra el roster nominal — deja el valor por defecto si es el curso activo)</label>
       <input type="text" id="courseIdInput" value="3f28057a-1836-4512-8d8b-bc13bd3526b8">
-      <label>Contraseña de docente</label>
-      <input type="password" id="teacherPasswordInput" placeholder="ADMIN_PASSWORD">
       <button id="btnOpenSession">Abrir sesión</button>
     </div>
 
@@ -215,8 +221,80 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
         }
     });
 
+    // ── PLANTILLAS (lecciones programadas) ──────────────────────────────────
+    let templates = [];
+
+    function wireTemplates() {
+        document.getElementById('teacherPasswordInput').addEventListener('blur', loadTemplates);
+
+        document.getElementById('templateSelect').onchange = (e) => {
+            const t = templates.find(t => t.id === e.target.value);
+            document.getElementById('btnDeleteTemplate').classList.toggle('hidden', !t);
+            if (!t) return;
+            document.getElementById('lessonNameInput').value = t.name;
+            document.getElementById('instructionsInput').value = t.instructions;
+            document.getElementById('writingMinutesInput').value = t.writing_minutes;
+            document.getElementById('reviewMinutesInput').value = t.review_minutes;
+            document.getElementById('reviewersPerEssayInput').value = t.reviewers_per_essay;
+            if (t.course_id) document.getElementById('courseIdInput').value = t.course_id;
+        };
+
+        document.getElementById('btnSaveTemplate').onclick = async () => {
+            const pw = document.getElementById('teacherPasswordInput').value;
+            if (!pw) return alert('Escribe la contraseña de docente primero.');
+            PeerReview.setTeacherPassword(pw);
+            const selectedId = document.getElementById('templateSelect').value || null;
+            const existing = templates.find(t => t.id === selectedId);
+            const defaultName = existing ? existing.name : document.getElementById('lessonNameInput').value.trim();
+            const name = prompt('Nombre de la plantilla:', defaultName);
+            if (!name) return;
+            try {
+                await PeerReview.call('save_template', {
+                    payload: PeerReview.teacherPayload({
+                        id: selectedId,
+                        name,
+                        instructions: document.getElementById('instructionsInput').value.trim(),
+                        writingMinutes: Number(document.getElementById('writingMinutesInput').value) || 20,
+                        reviewMinutes: Number(document.getElementById('reviewMinutesInput').value) || 15,
+                        reviewersPerEssay: Number(document.getElementById('reviewersPerEssayInput').value) || 3,
+                        courseId: document.getElementById('courseIdInput').value.trim() || null
+                    })
+                });
+                await loadTemplates();
+                alert('Plantilla guardada.');
+            } catch (e) { alert(e.message); }
+        };
+
+        document.getElementById('btnDeleteTemplate').onclick = async () => {
+            const id = document.getElementById('templateSelect').value;
+            if (!id || !confirm('¿Eliminar esta plantilla?')) return;
+            try {
+                await PeerReview.call('delete_template', { payload: PeerReview.teacherPayload({ id }) });
+                document.getElementById('templateSelect').value = '';
+                await loadTemplates();
+            } catch (e) { alert(e.message); }
+        };
+    }
+
+    async function loadTemplates() {
+        const pw = document.getElementById('teacherPasswordInput').value;
+        if (!pw) return;
+        PeerReview.setTeacherPassword(pw);
+        try {
+            const { templates: list } = await PeerReview.call('list_templates', { payload: PeerReview.teacherPayload() });
+            templates = list;
+            const select = document.getElementById('templateSelect');
+            const current = select.value;
+            select.innerHTML = '<option value="">— Nueva consigna —</option>' +
+                list.map(t => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join('');
+            select.value = list.some(t => t.id === current) ? current : '';
+        } catch (e) { console.warn('list_templates:', e.message); }
+    }
+
     // ── DOCENTE ──────────────────────────────────────────────────────────────
     function wireTeacher() {
+        wireTemplates();
+
         document.getElementById('btnOpenSession').onclick = async () => {
             const lessonName = document.getElementById('lessonNameInput').value.trim();
             const pw = document.getElementById('teacherPasswordInput').value;
@@ -230,7 +308,8 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
                         reviewMinutes: Number(document.getElementById('reviewMinutesInput').value) || 15,
                         reviewersPerEssay: Number(document.getElementById('reviewersPerEssayInput').value) || 3,
                         instructions: document.getElementById('instructionsInput').value.trim(),
-                        courseId: document.getElementById('courseIdInput').value.trim() || null
+                        courseId: document.getElementById('courseIdInput').value.trim() || null,
+                        templateId: document.getElementById('templateSelect').value || null
                     })
                 });
                 PeerReview.setSessionId(session.id);

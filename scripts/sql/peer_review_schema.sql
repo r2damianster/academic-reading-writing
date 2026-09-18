@@ -80,3 +80,20 @@ ALTER TABLE essay_submissions ADD COLUMN IF NOT EXISTS ai_essay_scores        JS
 ALTER TABLE essay_submissions ADD COLUMN IF NOT EXISTS ai_essay_rationale     TEXT;
 ALTER TABLE essay_submissions ADD COLUMN IF NOT EXISTS peer_avg_scores        JSONB;   -- promedio de los 2-3 revisores, mismos criterios
 ALTER TABLE essay_submissions ADD COLUMN IF NOT EXISTS peer_review_count      INTEGER DEFAULT 0; -- cuantos revisores realmente entregaron
+
+-- Plantillas de sesión — lecciones "programadas" que el docente elige de una
+-- lista desplegable en vez de escribir la consigna de nuevo cada vez.
+CREATE TABLE IF NOT EXISTS peer_review_templates (
+    id                   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name                 TEXT        NOT NULL,
+    course_id            UUID,
+    instructions         TEXT        NOT NULL,
+    writing_minutes      INTEGER     NOT NULL DEFAULT 20,
+    review_minutes       INTEGER     NOT NULL DEFAULT 15,
+    reviewers_per_essay  INTEGER     NOT NULL DEFAULT 3,
+    created_at           TIMESTAMPTZ DEFAULT NOW(),
+    updated_at           TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE peer_review_templates ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE peer_review_sessions ADD COLUMN IF NOT EXISTS template_id UUID REFERENCES peer_review_templates(id);

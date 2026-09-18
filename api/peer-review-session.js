@@ -123,9 +123,50 @@ function gradeReviewQuality(comments) {
 
 // ── Acciones ─────────────────────────────────────────────────────────────────
 
+// Plantillas: lecciones "programadas" de antemano — el docente las elige de
+// una lista desplegable en vez de escribir la consigna cada vez que abre sesión.
+async function actionListTemplates(payload) {
+    if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
+    const { data, error } = await supabase.from('peer_review_templates').select('*').order('name');
+    if (error) return { status: 500, body: { error: error.message } };
+    return { status: 200, body: { templates: data || [] } };
+}
+
+async function actionSaveTemplate(payload) {
+    if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
+    const { id, name, instructions, writingMinutes = 20, reviewMinutes = 15, reviewersPerEssay = 3, courseId = null } = payload;
+    if (!name || !instructions) return { status: 400, body: { error: 'name e instructions requeridos.' } };
+
+    const row = {
+        name:                String(name).slice(0, 150),
+        instructions:        String(instructions).slice(0, 4000),
+        writing_minutes:      writingMinutes,
+        review_minutes:       reviewMinutes,
+        reviewers_per_essay:  reviewersPerEssay,
+        course_id:            courseId || null,
+        updated_at:           new Date().toISOString()
+    };
+
+    const query = id
+        ? supabase.from('peer_review_templates').update(row).eq('id', id).select().single()
+        : supabase.from('peer_review_templates').insert(row).select().single();
+    const { data, error } = await query;
+    if (error) return { status: 500, body: { error: error.message } };
+    return { status: 200, body: { template: data } };
+}
+
+async function actionDeleteTemplate(payload) {
+    if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
+    const { id } = payload || {};
+    if (!id) return { status: 400, body: { error: 'id requerido.' } };
+    const { error } = await supabase.from('peer_review_templates').delete().eq('id', id);
+    if (error) return { status: 500, body: { error: error.message } };
+    return { status: 200, body: { deleted: true } };
+}
+
 async function actionOpen(payload) {
     if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
-    const { lessonName, writingMinutes = 20, reviewMinutes = 15, reviewersPerEssay = 3, instructions = '', courseId = null } = payload;
+    const { lessonName, writingMinutes = 20, reviewMinutes = 15, reviewersPerEssay = 3, instructions = '', courseId = null, templateId = null } = payload;
     if (!lessonName) return { status: 400, body: { error: 'lessonName requerido.' } };
 
     const { data, error } = await supabase.from('peer_review_sessions').insert({
@@ -136,7 +177,8 @@ async function actionOpen(payload) {
         review_minutes:       reviewMinutes,
         reviewers_per_essay:  reviewersPerEssay,
         instructions:         String(instructions).slice(0, 4000),
-        course_id:            courseId || null
+        course_id:            courseId || null,
+        template_id:          templateId || null
     }).select().single();
 
     if (error) return { status: 500, body: { error: error.message } };
@@ -720,6 +762,9 @@ module.exports = async (req, res) => {
 
         let result;
         switch (action) {
+            case 'list_templates':          result = await actionListTemplates(payload); break;
+            case 'save_template':           result = await actionSaveTemplate(payload); break;
+            case 'delete_template':         result = await actionDeleteTemplate(payload); break;
             case 'open':                   result = await actionOpen(payload); break;
             case 'connect':                 result = await actionConnect(sessionId, studentId, payload); break;
             case 'roster':                  result = await actionRoster(sessionId); break;

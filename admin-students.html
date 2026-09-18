@@ -376,12 +376,13 @@ tr.row-archived td { opacity:.55; }
                 <th>Words</th>
                 <th>Integrity</th>
                 <th>Compliance</th>
+                <th>Peer Review</th>
                 <th>Duration</th>
                 <th>Date</th>
                 <th></th>
               </tr>
             </thead>
-            <tbody id="essaysBody"><tr><td colspan="7" class="state-msg">Loading…</td></tr></tbody>
+            <tbody id="essaysBody"><tr><td colspan="8" class="state-msg">Loading…</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -539,6 +540,17 @@ function integrityBadge(score) {
     return `<span class="badge badge-bad">${score}%</span>`;
 }
 
+function peerReviewBadge(aiScores, peerScores, peerCount) {
+    if (!aiScores && !peerScores) return '—';
+    const fmt = (scores) => scores
+        ? Object.entries(scores).map(([k, v]) => `${k[0].toUpperCase()}${v != null ? v : '-'}`).join(' ')
+        : null;
+    const parts = [];
+    if (aiScores) parts.push(`🤖 ${fmt(aiScores)}`);
+    if (peerScores) parts.push(`👥 ${fmt(peerScores)} (${peerCount || 0})`);
+    return parts.join('<br>') || '—';
+}
+
 /* ── Detail modal ──────────────────────────────── */
 async function openDetail(studentId) {
     currentStudent = allStudents.find(s => s.id === studentId);
@@ -550,7 +562,7 @@ async function openDetail(studentId) {
     const archiveBtn = document.getElementById('archiveToggleBtn');
     archiveBtn.textContent = currentStudent.is_active ? '🗄 Archive' : '↺ Reactivate';
     document.getElementById('activityBody').innerHTML = '<tr><td colspan="3" class="state-msg"><span class="spin">⟳</span></td></tr>';
-    document.getElementById('essaysBody').innerHTML   = '<tr><td colspan="7" class="state-msg"><span class="spin">⟳</span></td></tr>';
+    document.getElementById('essaysBody').innerHTML   = '<tr><td colspan="8" class="state-msg"><span class="spin">⟳</span></td></tr>';
     document.getElementById('readingBody').innerHTML  = '<tr><td colspan="4" class="state-msg"><span class="spin">⟳</span></td></tr>';
 
     // Reset to first tab
@@ -730,7 +742,7 @@ function renderActivityTab(activities) {
 function renderEssaysTab(essays) {
     if (!essays || essays.length === 0) {
         document.getElementById('essaysBody').innerHTML =
-            '<tr><td colspan="7" class="state-msg">No essays submitted.</td></tr>';
+            '<tr><td colspan="8" class="state-msg">No essays submitted.</td></tr>';
         return;
     }
     document.getElementById('essaysBody').innerHTML = essays.map((e, i) => {
@@ -739,11 +751,13 @@ function renderEssaysTab(essays) {
             : '—';
         const dur = e.writing_duration ? Math.round(e.writing_duration / 60) + ' min' : '—';
         const essayId = `essay-${i}`;
+        const peerReviewCell = peerReviewBadge(e.ai_essay_scores, e.peer_avg_scores, e.peer_review_count);
         return `<tr>
             <td>${esc(e.activity || '—')}</td>
             <td style="text-align:center">${e.words || '—'}</td>
             <td>${integrityBadge(e.integrity_score)}</td>
             <td style="white-space:nowrap">${comp}</td>
+            <td style="white-space:nowrap; font-size:.75rem;">${peerReviewCell}</td>
             <td style="text-align:center">${dur}</td>
             <td style="white-space:nowrap;color:var(--mist)">${fmtDate(e.created_at)}</td>
             <td>
