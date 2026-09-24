@@ -351,7 +351,10 @@ const SlideEngine = (function () {
         let resultText = `Score: ${score}% (Errors: ${totalMistakes})`;
 
         if (_appliedTaskScore != null) {
-            score      = Math.round(drillScore * 0.5 + _appliedTaskScore * 0.5);
+            // Lecciones con varias tareas aplicadas (BUILD_UP) pesan más que los drills:
+            // 20/50 acordado, renormalizado a 30/70 porque el ESSAY final no genera score numérico.
+            const appliedWeight = Object.keys(_appliedTaskScores).length > 1 ? 0.7 : 0.5;
+            score      = Math.round(drillScore * (1 - appliedWeight) + _appliedTaskScore * appliedWeight);
             resultText = `Score: ${score}% (Drills: ${drillScore}%, Applied Task: ${_appliedTaskScore}%)`;
         }
 
