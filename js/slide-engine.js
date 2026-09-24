@@ -54,7 +54,8 @@ const SlideEngine = (function () {
 
     let _currentIndex      = 0;
     let _mistakes          = 0;
-    let _appliedTaskScore  = null; // 0-100, seteado por APPLIED_TASK vía _gradeAppliedTask()
+    let _appliedTaskScore  = null; // 0-100, promedio de _appliedTaskScores (APPLIED_TASK / BUILD_UP vía _gradeAppliedTask())
+    let _appliedTaskScores = {};   // { taskKey: 0-100 } — un score por tarea, no se sobrescriben entre sí
     let _lessonName        = '';
     let _slides            = [];
     let _scoreAlreadySaved = false;
@@ -99,6 +100,7 @@ const SlideEngine = (function () {
 
         _mistakes          = 0;
         _appliedTaskScore  = null;
+        _appliedTaskScores = {};
         _scoreAlreadySaved = false;
 
         _mountFullscreenToggle();
@@ -150,6 +152,7 @@ const SlideEngine = (function () {
                 case 'FILL_BLANK':      SlideTypes.FILL_BLANK.mount(slide, index);      break;
                 case 'ESSAY':          SlideTypes.ESSAY.mount(slide, index, lessonName); break;
                 case 'APPLIED_TASK':   SlideTypes.APPLIED_TASK.mount(slide, index, _lessonName); break;
+                case 'BUILD_UP':       if (SlideTypes.BUILD_UP) SlideTypes.BUILD_UP.mount(slide, index, _lessonName); break; // js/build-up.js
                 case 'SORT_PARAGRAPH': SlideTypes.SORT_PARAGRAPH.mount(slide, index);   break;
                 case 'HIGHLIGHT':      SlideTypes.HIGHLIGHT.mount(slide, index);        break;
                 case 'MATCH':           SlideTypes.MATCH.mount(slide, index);                     break;
@@ -1082,14 +1085,19 @@ const SlideEngine = (function () {
     // El resultado (0-100) se guarda en _appliedTaskScore para que finishLesson() lo
     // combine con el score de drills. Expuesta como window._gradeAppliedTask porque
     // SlideTypes.APPLIED_TASK vive fuera de este closure (ver SECCIÓN 3).
-    async function _gradeAppliedTask(lessonName, indicators, responseText) {
+    async function _gradeAppliedTask(lessonName, indicators, responseText, options = {}) {
+        // options: { taskKey, source, keyIdeas, checks, stepInstruction } — taskKey distingue tareas del mismo lesson
         const maxPoints = indicators.reduce((sum, item) => sum + (item.points || 0), 0) || 1;
 
         let aiRes;
         try {
             aiRes = await _callOrchestrator(
                 'test-grader', '',
-                { lesson: lessonName, essay: (responseText || '').slice(0, 3000), rubric: indicators },
+                {
+                    lesson: lessonName, essay: (responseText || '').slice(0, 3000), rubric: indicators,
+                    source: options.source, keyIdeas: options.keyIdeas,
+                    checks: options.checks, stepInstruction: options.stepInstruction
+                },
                 'json'
             );
         } catch (e) {
@@ -1110,7 +1118,7 @@ const SlideEngine = (function () {
         const studentId = await _resolveStudentId();
         _insertToSupabase('test_evaluations', {
             student_id:       studentId,
-            test_id:          'applied:' + lessonName,
+            test_id:          'applied:' + lessonName + (options.taskKey ? ':' + options.taskKey : ''),
             rubric_id:        null,
             attempt_number:   1,
             total_score:      evaluation.total_score ?? null,
@@ -1119,8 +1127,11 @@ const SlideEngine = (function () {
             model_used:       aiRes?.model || null
         }, `APPLIED_TASK_EVAL "${lessonName}"`);
 
-        const pct = Math.max(0, Math.min(100, Math.round(((evaluation.total_score || 0) / maxPoints) * 100)));
-        _appliedTaskScore = pct;
+        let pct = Math.max(0, Math.min(100, Math.round(((evaluation.total_score || 0) / maxPoints) * 100)));
+        if (options.scoreCap != null) pct = Math.min(pct, options.scoreCap); // checks deterministas fallidos (BUILD_UP)
+        _appliedTaskScores[options.taskKey || 'default'] = pct;
+        const gradedScores = Object.values(_appliedTaskScores);
+        _appliedTaskScore = Math.round(gradedScores.reduce((sum, taskScore) => sum + taskScore, 0) / gradedScores.length);
 
         return { pct, evaluation };
     }

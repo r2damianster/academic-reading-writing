@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Paraphrasing | Academic Workspace</title>
+
+    <link rel="stylesheet" href="../../../css/modules.css">
+
+    <script src="../../../js/activity-tracker.js"></script>
+    <script src="../../../js/essay-handler.js"></script>
+    <script src="../../../js/report.js"></script>
+
+    <script src="../../../js/slide-engine.js" defer></script>
+    <!-- BUILD_UP debe cargarse DESPUÉS de slide-engine.js (usa SlideTypes) -->
+    <script src="../../../js/build-up.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — CONTENT: qué es + 3 técnicas -->
+    <div class="slide active" data-type="CONTENT">
+        <h2>Paraphrasing: Same Idea, New Words</h2>
+        <p>A <strong>paraphrase</strong> restates one idea in your own words and your own sentence structure. It is about the <strong>same length</strong> as the original (a summary is much shorter) and it <strong>always needs a citation</strong>.</p>
+        <div style="background:#f0f4f8; border-radius:10px; padding:16px; margin:14px 0; line-height:2;">
+            <strong>1. Change the structure</strong> &mdash; reorder ideas, or switch active &harr; passive<br>
+            <strong>2. Change the vocabulary</strong> &mdash; precise academic synonyms<br>
+            <strong>3. Change the word class</strong> &mdash; <em>reduce</em> (verb) &rarr; <em>a reduction</em> (noun)
+        </div>
+        <p><strong>Warning:</strong> swapping a few synonyms and keeping the same structure is <em>patchwriting</em>. It still counts as plagiarism.</p>
+
+        <div data-teacher-note>
+            <strong>Enfoque:</strong> práctica sobre teoría. El pptx original lista 6 métodos; aquí se agrupan en 3 técnicas trabajables (estructura, vocabulario, categoría gramatical) y la sexta (citar) tiene su propio slide. Paráfrasis &asymp; misma longitud que el original.
+        </div>
+    </div>
+
+    <!-- SLIDE 1 — CONTENT: cómo citar -->
+    <div class="slide" data-type="CONTENT">
+        <h2>Always Credit the Author</h2>
+        <p>A paraphrase uses your words, but the <strong>idea</strong> belongs to the author. Two ways to cite (APA 7):</p>
+        <div style="background:#f8fafc; border-left:4px solid #2c3e50; padding:14px; border-radius:8px; line-height:1.9;">
+            <strong>Author in the sentence:</strong><br>
+            Herrera (2018) <em>argues that</em> regular exercise lowers the risk of illness.<br><br>
+            <strong>Author in parentheses:</strong><br>
+            Regular exercise lowers the risk of illness (Herrera, 2018).
+        </div>
+        <p style="margin-top:12px;">Useful reporting verbs: <em>argues, notes, explains, suggests, claims, reports, highlights</em>.</p>
+
+        <div data-teacher-note>
+            <strong>Nota:</strong> el corpus de práctica usa autores ficticios creados para el curso; en trabajos reales el estudiante debe citar la fuente verdadera. Verbos de reporte: <em>claims</em> es más fuerte que <em>suggests</em>; elegir según qué tan firme es la afirmación del autor.
+        </div>
+    </div>
+
+    <!-- SLIDE 2 — CATEGORIZE: paráfrasis válida / patchwriting / plagio -->
+    <div class="slide" data-type="CATEGORIZE">
+        <h2>Real Paraphrase or Not?</h2>
+        <p>Original: <em>"Regular physical exercise significantly reduces the risk of developing chronic diseases in adults." (Herrera, 2018)</em><br>Drag each student version to the right category.</p>
+
+        <div data-se-item data-se-category="valid">Adults who exercise often are much less likely to develop long-term illnesses (Herrera, 2018).</div>
+        <div data-se-item data-se-category="patch">Regular physical exercise greatly lowers the risk of developing chronic diseases in adults (Herrera, 2018).</div>
+        <div data-se-item data-se-category="plagiarism">Regular physical exercise significantly reduces the risk of developing chronic diseases in adults.</div>
+        <div data-se-item data-se-category="valid">According to Herrera (2018), the likelihood of long-term illness drops considerably for adults who stay physically active.</div>
+
+        <div data-se-category-zone data-se-accepts="valid"       data-se-label="Valid paraphrase"></div>
+        <div data-se-category-zone data-se-accepts="patch"       data-se-label="Patchwriting (only synonyms)"></div>
+        <div data-se-category-zone data-se-accepts="plagiarism"  data-se-label="Plagiarism (copied, no citation)"></div>
+
+        <div data-teacher-note>
+            <strong>Clave:</strong><br>
+            &bull; <strong>Patchwriting:</strong> misma estructura, solo cambió <em>significantly&rarr;greatly</em> y <em>reduces&rarr;lowers</em>. Aunque cite, no es paráfrasis válida.<br>
+            &bull; <strong>Plagio:</strong> copia literal sin autor ni año.<br>
+            &bull; <strong>Válidas:</strong> cambian estructura y vocabulario y citan.
+        </div>
+    </div>
+
+    <!-- SLIDE 3 — BUILD_UP 1: paráfrasis por capas, con andamio -->
+    <div class="slide" data-type="BUILD_UP" data-se-task-key="para-1" data-se-accumulate="revise">
+        <h2>Build It #1: Exercise and Health</h2>
+        <div data-se-source style="background:#f8fafc; border-left:4px solid #6c757d; padding:14px; border-radius:8px; line-height:1.6; font-size:0.93rem;">
+            <em>Original (fictional source written for this course): Herrera (2018)</em><br><br>
+            "Regular physical exercise significantly reduces the risk of developing chronic diseases, such as diabetes and cardiovascular conditions, in adults of all ages."
+        </div>
+
+        <div data-se-step data-se-min-words="10" data-se-max-overlap="0.55">
+            <p data-se-step-prompt><strong>Step 1 &mdash; Change the structure.</strong> Rewrite the sentence starting with a different part, for example <em>"Adults of all ages who..."</em> or <em>"The risk of chronic diseases..."</em>. Keep the meaning.</p>
+            <div data-se-key-idea>Regular exercise lowers the risk of chronic diseases (diabetes, heart/cardiovascular problems).</div>
+            <div data-se-key-idea>This applies to adults of all ages.</div>
+            <div data-se-rubric-item data-se-points="2.5">Conserva el significado: el ejercicio regular reduce el riesgo de enfermedades crónicas (p. ej. diabetes o cardiovasculares).</div>
+            <div data-se-rubric-item data-se-points="2.5">Cambia la estructura de la oración (orden de las ideas o voz) en lugar de solo reemplazar palabras, y mantiene "adultos de todas las edades".</div>
+        </div>
+        <div data-se-step data-se-min-words="10" data-se-max-overlap="0.25">
+            <p data-se-step-prompt><strong>Step 2 &mdash; Change the vocabulary.</strong> Now improve your sentence: replace the key words with academic synonyms (<em>exercise, reduces, risk, chronic diseases</em>). Edit the text above.</p>
+            <div data-se-key-idea>Regular exercise lowers the risk of chronic diseases (diabetes, heart problems) in adults of all ages.</div>
+            <div data-se-rubric-item data-se-points="2.5">Reemplaza las palabras clave por sinónimos precisos y académicos (p. ej. physical activity, decreases/lowers, likelihood, long-term illnesses) sin cambiar el significado.</div>
+            <div data-se-rubric-item data-se-points="2.5">El significado sigue fiel al original y el texto suena natural y gramaticalmente correcto.</div>
+        </div>
+        <div data-se-step data-se-min-words="10" data-se-max-overlap="0.25" data-se-require-citation>
+            <p data-se-step-prompt><strong>Step 3 &mdash; Credit the author.</strong> Add the citation: <em>Herrera (2018)</em> in the sentence, or <em>(Herrera, 2018)</em> at the end.</p>
+            <div data-se-key-idea>Regular exercise lowers the risk of chronic diseases in adults of all ages.</div>
+            <div data-se-rubric-item data-se-points="2.5">Incluye una cita correcta en formato APA: Herrera (2018) o (Herrera, 2018).</div>
+            <div data-se-rubric-item data-se-points="2.5">La paráfrasis final conserva el significado del original y no copia frases literales.</div>
+        </div>
+    </div>
+
+    <!-- SLIDE 4 — BUILD_UP 2: menos andamio -->
+    <div class="slide" data-type="BUILD_UP" data-se-task-key="para-2" data-se-accumulate="revise">
+        <h2>Build It #2: Time Management</h2>
+        <div data-se-source style="background:#f8fafc; border-left:4px solid #6c757d; padding:14px; border-radius:8px; line-height:1.6; font-size:0.93rem;">
+            <em>Original (fictional source written for this course): Salazar (2021)</em><br><br>
+            "Because many first-year students lack effective time-management strategies, they often underestimate how long academic tasks take, which leads to rushed and incomplete assignments."
+        </div>
+
+        <div data-se-step data-se-min-words="10" data-se-max-overlap="0.5">
+            <p data-se-step-prompt><strong>Step 1 &mdash; Change the structure.</strong> Reorder the ideas (for example, start with the result) or change the grammar. Keep the meaning.</p>
+            <div data-se-key-idea>First-year students lack good time-management strategies.</div>
+            <div data-se-key-idea>They underestimate how long tasks take.</div>
+            <div data-se-key-idea>The result is rushed / incomplete assignments.</div>
+            <div data-se-rubric-item data-se-points="2.5">Conserva las tres ideas: falta de estrategias de gestión del tiempo, subestimar cuánto tardan las tareas y trabajos apresurados/incompletos.</div>
+            <div data-se-rubric-item data-se-points="2.5">La estructura es claramente distinta de la original (orden o gramática), no solo sinónimos.</div>
+        </div>
+        <div data-se-step data-se-min-words="10" data-se-max-overlap="0.25">
+            <p data-se-step-prompt><strong>Step 2 &mdash; Change the vocabulary.</strong> Improve the wording: use different words for <em>lack, strategies, underestimate, rushed</em>. Consider changing a word class (verb &rarr; noun).</p>
+            <div data-se-key-idea>First-year students lack good time-management strategies; they underestimate task duration; assignments end up rushed or incomplete.</div>
+            <div data-se-rubric-item data-se-points="2.5">Sustituye vocabulario clave con equivalentes precisos (p. ej. new students, planning skills, misjudge, hurried) o cambia la categoría gramatical.</div>
+            <div data-se-rubric-item data-se-points="2.5">El significado es fiel a las tres ideas del original y la oración es gramaticalmente correcta.</div>
+        </div>
+        <div data-se-step data-se-min-words="10" data-se-max-overlap="0.25" data-se-require-citation>
+            <p data-se-step-prompt><strong>Step 3 &mdash; Credit the author.</strong> Add the citation and use a reporting verb (<em>notes, argues, explains...</em>).</p>
+            <div data-se-key-idea>First-year students lack time-management skills, underestimate task duration, and submit rushed/incomplete work.</div>
+            <div data-se-rubric-item data-se-points="2.5">Cita a Salazar (2021) en formato APA y usa un verbo de reporte (notes, argues, explains, etc.).</div>
+            <div data-se-rubric-item data-se-points="2.5">La paráfrasis final es fiel, con estructura y vocabulario propios.</div>
+        </div>
+    </div>
+
+    <!-- SLIDE 5 — BUILD_UP 3: sin andamio -->
+    <div class="slide" data-type="BUILD_UP" data-se-task-key="para-3" data-se-accumulate="revise">
+        <h2>Build It #3: Digital Tools and Focus</h2>
+        <div data-se-source style="background:#f8fafc; border-left:4px solid #6c757d; padding:14px; border-radius:8px; line-height:1.6; font-size:0.93rem;">
+            <em>Original (fictional source written for this course): Alvarado and Ponce (2022)</em><br><br>
+            "Although digital tools have expanded access to information, researchers have warned that constant connectivity may weaken students' ability to concentrate on demanding texts."
+        </div>
+
+        <div data-se-step data-se-min-words="10" data-se-max-overlap="0.5">
+            <p data-se-step-prompt><strong>Step 1.</strong> Paraphrase the sentence with a different structure.</p>
+            <div data-se-key-idea>Digital tools have expanded access to information.</div>
+            <div data-se-key-idea>Constant connectivity may weaken students' ability to concentrate on demanding texts.</div>
+            <div data-se-rubric-item data-se-points="2.5">Conserva ambas ideas: las herramientas digitales amplían el acceso a la información y la conectividad constante puede debilitar la concentración en textos exigentes.</div>
+            <div data-se-rubric-item data-se-points="2.5">Cambia la estructura (p. ej. voz pasiva, o comenzar por la advertencia) de forma clara.</div>
+        </div>
+        <div data-se-step data-se-min-words="10" data-se-max-overlap="0.25">
+            <p data-se-step-prompt><strong>Step 2.</strong> Now change the vocabulary and at least one word class.</p>
+            <div data-se-key-idea>Digital tools have expanded access to information; constant connectivity may weaken concentration on demanding texts.</div>
+            <div data-se-rubric-item data-se-points="2.5">Usa vocabulario académico distinto al original y al menos un cambio de categoría gramatical.</div>
+            <div data-se-rubric-item data-se-points="2.5">Mantiene el significado, incluido el matiz de posibilidad (may / could) sin exagerarlo.</div>
+        </div>
+        <div data-se-step data-se-min-words="10" data-se-max-overlap="0.25" data-se-require-citation>
+            <p data-se-step-prompt><strong>Step 3.</strong> Add the citation for two authors (APA 7: <em>Alvarado and Ponce (2022)</em> or <em>(Alvarado &amp; Ponce, 2022)</em>).</p>
+            <div data-se-key-idea>Digital tools have expanded access to information; constant connectivity may weaken concentration on demanding texts.</div>
+            <div data-se-rubric-item data-se-points="2.5">Cita a los dos autores correctamente en APA 7 (Alvarado and Ponce, 2022 / Alvarado &amp; Ponce, 2022).</div>
+            <div data-se-rubric-item data-se-points="2.5">La paráfrasis final es fiel, natural y no copia frases literales.</div>
+        </div>
+    </div>
+
+    <!-- SLIDE 6 — ESSAY warning -->
+    <div class="slide" id="preEssaySlide"
+         data-type="ESSAY" data-se-role="warning"
+         data-se-lesson="paraphrasing">
+        <h2>Writing Task Instructions</h2>
+        <p data-se-warning>
+            Now you will paraphrase a full paragraph on your own. It should take about 5 minutes.
+            Change the structure AND the vocabulary, keep the meaning, and credit the author.
+        </p>
+    </div>
+
+    <!-- SLIDE 7 — ESSAY workspace -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="paraphrasing">
+        <p data-se-prompt>
+            Paraphrase this paragraph in <strong>50&ndash;80 words</strong>. Keep all its ideas, use your own structure and vocabulary, and cite the author (Mendoza, 2021).<br><br>
+            <em style="font-size:0.9rem;">Original (fictional source written for this course): Mendoza (2021)</em><br>
+            <span style="display:block; margin-top:6px; font-size:0.9rem; line-height:1.6;">
+            "Urban gardens do more than supply fresh vegetables. Studies of community gardening projects report that participants develop stronger neighbourhood ties, and that these connections reduce feelings of isolation among older residents. Moreover, gardens can lower local temperatures during summer, making crowded districts more comfortable."
+            </span>
+        </p>
+    </div>
+
+</div>
+
+<script>
+    window.onload = () => {
+        SlideEngine.init('paraphrasing');
+        ActivityTracker.init('paraphrasing');
+    };
+</script>
+
+</body>
+</html>

@@ -48,7 +48,8 @@ const MENU = [
           { label: 'Types of Essays',             path: 'modules/01-core-syllabus/unit1-essays/types-essay.html' },
           { label: 'Argumentative Essay',         path: 'modules/01-core-syllabus/unit1-essays/argumentative-essay.html' },
           { label: 'Chain Essay',                 path: 'modules/01-core-syllabus/unit1-essays/chain-essay.html' },
-          { label: 'Summarizing & Paraphrasing',  path: 'modules/01-core-syllabus/unit1-essays/summarizing-paraphrasing.html' }
+          { label: 'Summarizing',                 path: 'modules/01-core-syllabus/unit1-essays/summarizing.html' },
+          { label: 'Paraphrasing',                path: 'modules/01-core-syllabus/unit1-essays/paraphrasing.html' }
         ]
       },
       {

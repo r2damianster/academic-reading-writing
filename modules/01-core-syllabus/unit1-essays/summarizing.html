@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Summarizing | Academic Workspace</title>
+
+    <link rel="stylesheet" href="../../../css/modules.css">
+
+    <script src="../../../js/activity-tracker.js"></script>
+    <script src="../../../js/essay-handler.js"></script>
+    <script src="../../../js/report.js"></script>
+
+    <script src="../../../js/slide-engine.js" defer></script>
+    <!-- BUILD_UP debe cargarse DESPUÉS de slide-engine.js (usa SlideTypes) -->
+    <script src="../../../js/build-up.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — CONTENT: qué es y la receta -->
+    <div class="slide active" data-type="CONTENT">
+        <h2>Summarizing in 3 Moves</h2>
+        <p>A <strong>summary</strong> is much shorter than the original. It keeps only the <strong>central idea</strong> and the <strong>main arguments</strong>, in your own words, and it always names the author.</p>
+        <div style="background:#f0f4f8; border-radius:10px; padding:16px; margin:14px 0; line-height:2;">
+            <strong>1. Find</strong> the central idea (what is the whole text about?)<br>
+            <strong>2. Keep</strong> the main arguments (the reasons that support it)<br>
+            <strong>3. Cut</strong> examples, statistics, and small details &mdash; then cite the author
+        </div>
+        <p>In this lesson you will practise by <strong>building</strong> summaries one piece at a time.</p>
+
+        <div data-teacher-note>
+            <strong>Enfoque:</strong> lección práctica; la teoría es mínima a propósito. Un resumen es 20&ndash;40 % del original. Diferencia clave con la paráfrasis (lección siguiente): el resumen <em>reduce</em>, la paráfrasis <em>reformula</em> con longitud similar.
+        </div>
+    </div>
+
+    <!-- SLIDE 1 — CONTRAST: modelo (Swales & Feak, 2012) -->
+    <div class="slide" data-type="CONTRAST">
+        <h2>Model: Original vs. Summary</h2>
+
+        <div data-se-incorrect data-se-label="Original (Swales &amp; Feak, 2012)">
+            "Writing an effective academic summary requires reading comprehension and text reduction skills. Novice writers frequently struggle because they copy sentences almost directly from the source without recognizing rhetorical organization. Consequently, their summaries often lack coherence and sound fragmented, relying on superficial lexical substitution."
+        </div>
+        <div data-se-correct data-se-label="Summary (about 25% of the length)">
+            Synthesizing academic sources requires structural comprehension over simple text substitution (Swales &amp; Feak, 2012).
+        </div>
+
+        <div data-teacher-note>
+            <strong>Qué observar:</strong> el resumen conserva solo la tesis (resumir exige comprender la estructura, no sustituir palabras), elimina la descripción de los escritores novatos y mantiene autor y año.
+        </div>
+    </div>
+
+    <!-- SLIDE 2 — CATEGORIZE: Keep vs Cut -->
+    <div class="slide" data-type="CATEGORIZE">
+        <h2>Keep or Cut?</h2>
+        <p>Drag each element of a text to the right place: does it belong in a summary?</p>
+
+        <div data-se-item data-se-category="keep">The author's central claim</div>
+        <div data-se-item data-se-category="keep">A main argument that supports the claim</div>
+        <div data-se-item data-se-category="keep">The author's conclusion</div>
+        <div data-se-item data-se-category="cut">"For example, in 2019, a study of 40 students..."</div>
+        <div data-se-item data-se-category="cut">A percentage or statistic</div>
+        <div data-se-item data-se-category="cut">A personal anecdote</div>
+
+        <div data-se-category-zone data-se-accepts="keep" data-se-label="Keep in the summary"></div>
+        <div data-se-category-zone data-se-accepts="cut"  data-se-label="Cut from the summary"></div>
+
+        <div data-teacher-note>
+            <strong>Clave:</strong> se conservan tesis, argumentos principales y conclusión. Ejemplos, cifras y anécdotas sostienen los argumentos pero no son los argumentos.
+        </div>
+    </div>
+
+    <!-- SLIDE 3 — HIGHLIGHT: encontrar el ejemplo que se corta -->
+    <div class="slide" data-type="HIGHLIGHT">
+        <h2>Spot the Detail to Cut</h2>
+        <p data-se-instruction>
+            One sentence in this paragraph is only a specific example. It should be <strong>cut</strong> from a summary. Click on it.
+        </p>
+
+        <div data-se-paragraph>
+            <span data-se-sentence>Public libraries remain essential because they give every citizen free access to information.</span>
+            <span data-se-sentence>They also offer quiet spaces where people without a reliable internet connection at home can study and apply for jobs.</span>
+            <span data-se-sentence data-se-highlight-correct>For instance, the Central Library of a mid-sized city recorded 12,000 visits in March, mostly from students.</span>
+            <span data-se-sentence>For these reasons, cities should protect library funding.</span>
+        </div>
+
+        <div data-teacher-note>
+            <strong>Respuesta:</strong> "For instance, the Central Library..." &mdash; es un ejemplo con cifra. Los demás enunciados son la tesis, un argumento y la conclusión.
+        </div>
+    </div>
+
+    <!-- SLIDE 4 — BUILD_UP 1: idea central + 2 argumentos (con andamio) -->
+    <div class="slide" data-type="BUILD_UP" data-se-task-key="summ-1" data-se-accumulate="append">
+        <h2>Build It #1: Sleep and Learning</h2>
+        <div data-se-source style="background:#f8fafc; border-left:4px solid #6c757d; padding:14px; border-radius:8px; line-height:1.6; font-size:0.93rem;">
+            <em>Practice text (written for this course):</em><br><br>
+            Many university students treat sleep as a flexible part of their schedule. When exams approach, they reduce their nightly rest to make room for extra study hours, convinced that more time with the material will lead to better results.<br><br>
+            Research on memory suggests the opposite. During sleep, the brain moves new information from short-term to long-term storage, a process that cannot be completed if sleep is cut short. Students who sleep fewer than six hours also show lower attention the next day, so the hours they gain for study are used less effectively.<br><br>
+            For example, in one experiment, students who slept eight hours remembered 20% more vocabulary than classmates who stayed awake to review. Therefore, protecting sleep is not a distraction from studying but a part of it.
+        </div>
+
+        <div data-se-step data-se-min-words="8">
+            <p data-se-step-prompt><strong>Step 1 &mdash; Central idea.</strong> Write ONE sentence with the central idea of the whole text.</p>
+            <div data-se-starter>The text argues that</div>
+            <div data-se-key-idea>Sleeping enough is part of effective studying / cutting sleep to study more is counterproductive.</div>
+            <div data-se-rubric-item data-se-points="5">Expresa la idea central del texto (dormir lo suficiente es parte del estudio efectivo; sacrificar el sueño para estudiar es contraproducente) en una sola oración, con sus propias palabras y sin incluir el ejemplo del experimento.</div>
+        </div>
+        <div data-se-step data-se-min-words="8">
+            <p data-se-step-prompt><strong>Step 2 &mdash; First argument.</strong> Add ONE sentence with the first main argument (why does sleep matter for memory?).</p>
+            <div data-se-starter>First,</div>
+            <div data-se-key-idea>During sleep the brain transfers information from short-term to long-term memory; cutting sleep prevents this.</div>
+            <div data-se-rubric-item data-se-points="5">Agrega, en una oración, el primer argumento principal: durante el sueño el cerebro consolida la información (de memoria de corto a largo plazo) y recortar el sueño lo impide. No incluye el dato del 20 %.</div>
+        </div>
+        <div data-se-step data-se-min-words="8" data-se-max-ratio="0.45" data-se-max-overlap="0.45" data-se-grade="accumulated">
+            <p data-se-step-prompt><strong>Step 3 &mdash; Second argument.</strong> Add ONE sentence with the second main argument (what happens to attention?). Your 3 sentences together are your summary.</p>
+            <div data-se-starter>Second,</div>
+            <div data-se-key-idea>Sleeping fewer than six hours lowers next-day attention, so extra study time is less effective.</div>
+            <div data-se-key-idea>The three sentences together give the central idea plus both arguments, without the experiment example.</div>
+            <div data-se-rubric-item data-se-points="3">Incluye el segundo argumento: dormir poco reduce la atención al día siguiente, por lo que las horas extra de estudio rinden menos.</div>
+            <div data-se-rubric-item data-se-points="2">El resumen completo (3 oraciones) conserva la idea central y ambos argumentos, elimina ejemplos y cifras, y no copia frases literales del texto.</div>
+        </div>
+    </div>
+
+    <!-- SLIDE 5 — BUILD_UP 2: con atribución, menos andamio -->
+    <div class="slide" data-type="BUILD_UP" data-se-task-key="summ-2" data-se-accumulate="append">
+        <h2>Build It #2: Green Spaces</h2>
+        <div data-se-source style="background:#f8fafc; border-left:4px solid #6c757d; padding:14px; border-radius:8px; line-height:1.6; font-size:0.93rem;">
+            <em>Practice text (fictional source written for this course): Lozano (2019)</em><br><br>
+            Cities are growing quickly, and many residents now live far from nature. Lozano (2019) argues that urban parks and gardens should be treated as public health infrastructure, not as decoration.<br><br>
+            First, contact with green areas lowers stress. In her survey, people who spent thirty minutes in a park reported feeling calmer than those who walked along a busy street. Second, parks encourage physical activity, because they give residents safe and free places to walk, run, or play sports.<br><br>
+            The author notes that a small neighbourhood park in her study attracted about 300 visitors each week. She concludes that city planners should invest in green space just as they invest in hospitals.
+        </div>
+
+        <div data-se-step data-se-min-words="10" data-se-require-citation>
+            <p data-se-step-prompt><strong>Step 1 &mdash; Central idea + author.</strong> One sentence with the central idea. Name the author and year: <em>Lozano (2019)</em> or <em>(Lozano, 2019)</em>.</p>
+            <div data-se-key-idea>Urban green spaces should be considered public health infrastructure / an investment for city health, not decoration.</div>
+            <div data-se-rubric-item data-se-points="3">Expresa la idea central (los espacios verdes urbanos deben tratarse como infraestructura de salud pública) en una oración con sus propias palabras.</div>
+            <div data-se-rubric-item data-se-points="2">Atribuye la idea al autor con nombre y año (Lozano, 2019) de forma correcta.</div>
+        </div>
+        <div data-se-step data-se-min-words="8">
+            <p data-se-step-prompt><strong>Step 2 &mdash; Two arguments.</strong> Add ONE sentence that includes BOTH main arguments (there are two: one about stress and one about physical activity).</p>
+            <div data-se-key-idea>Green areas reduce stress.</div>
+            <div data-se-key-idea>Parks encourage physical activity.</div>
+            <div data-se-rubric-item data-se-points="2.5">Menciona el primer argumento: el contacto con áreas verdes reduce el estrés.</div>
+            <div data-se-rubric-item data-se-points="2.5">Menciona el segundo argumento: los parques fomentan la actividad física.</div>
+        </div>
+        <div data-se-step data-se-min-words="6" data-se-max-ratio="0.4" data-se-max-overlap="0.4" data-se-grade="accumulated">
+            <p data-se-step-prompt><strong>Step 3 &mdash; Author's conclusion.</strong> Add ONE sentence with what the author concludes. Start it with a link word (<em>Therefore, / As a result, / Consequently,</em>).</p>
+            <div data-se-key-idea>Planners should invest in green space like they invest in hospitals.</div>
+            <div data-se-key-idea>Total summary omits the survey details and the 300-visitors figure.</div>
+            <div data-se-rubric-item data-se-points="3">Incluye la conclusión de la autora: los planificadores urbanos deben invertir en áreas verdes tal como invierten en hospitales.</div>
+            <div data-se-rubric-item data-se-points="2">El resumen completo es coherente, usa un conector y omite detalles (encuesta, cifra de 300 visitantes) sin copiar frases literales.</div>
+        </div>
+    </div>
+
+    <!-- SLIDE 6 — BUILD_UP 3: sin andamio -->
+    <div class="slide" data-type="BUILD_UP" data-se-task-key="summ-3" data-se-accumulate="append">
+        <h2>Build It #3: Social Media and Attention</h2>
+        <div data-se-source style="background:#f8fafc; border-left:4px solid #6c757d; padding:14px; border-radius:8px; line-height:1.6; font-size:0.93rem;">
+            <em>Practice text (fictional source written for this course): Pe&ntilde;a (2022)</em><br><br>
+            Pe&ntilde;a (2022) examines how social media platforms shape the way young adults read. Most platforms are designed to deliver short pieces of content in rapid succession, and users quickly learn to scroll instead of reading closely.<br><br>
+            According to the author, this habit has two consequences. Readers become less patient with long, demanding texts, and they retain less of what they read because their attention shifts every few seconds. In one of her interviews, a student admitted that she had not finished a full article in months.<br><br>
+            Pe&ntilde;a does not call for abandoning social media. Instead, she recommends that universities teach students to read deliberately, for example by setting fixed periods of uninterrupted reading.
+        </div>
+
+        <div data-se-step data-se-min-words="10" data-se-require-citation>
+            <p data-se-step-prompt><strong>Step 1.</strong> Write the central idea in ONE sentence, with the author and year.</p>
+            <div data-se-key-idea>Social media platforms change/weaken the way young adults read (habit of scrolling instead of reading closely).</div>
+            <div data-se-rubric-item data-se-points="3">Expresa la idea central: las redes sociales moldean/debilitan la forma en que los jóvenes leen (hábito de deslizar en lugar de leer con atención).</div>
+            <div data-se-rubric-item data-se-points="2">Cita correctamente a la autora con nombre y año (Peña, 2022).</div>
+        </div>
+        <div data-se-step data-se-min-words="12">
+            <p data-se-step-prompt><strong>Step 2.</strong> Add the main arguments (the two consequences) in one or two sentences.</p>
+            <div data-se-key-idea>Readers become less patient with long, demanding texts.</div>
+            <div data-se-key-idea>Readers retain less because their attention shifts constantly.</div>
+            <div data-se-rubric-item data-se-points="2.5">Incluye la primera consecuencia: menos paciencia con textos largos y exigentes.</div>
+            <div data-se-rubric-item data-se-points="2.5">Incluye la segunda consecuencia: se retiene menos porque la atención cambia constantemente.</div>
+        </div>
+        <div data-se-step data-se-min-words="10" data-se-max-ratio="0.35" data-se-max-overlap="0.4" data-se-grade="accumulated">
+            <p data-se-step-prompt><strong>Step 3.</strong> Finish with the author's recommendation. Your whole paragraph must be at most about one third of the original length.</p>
+            <div data-se-key-idea>Author recommends teaching students to read deliberately (e.g. periods of uninterrupted reading), not abandoning social media.</div>
+            <div data-se-rubric-item data-se-points="3">Incluye la recomendación de la autora: enseñar a los estudiantes a leer de forma deliberada (p. ej. períodos de lectura ininterrumpida), sin abandonar las redes sociales.</div>
+            <div data-se-rubric-item data-se-points="2">El párrafo completo es un resumen coherente y fiel: idea central, dos consecuencias y recomendación, sin la anécdota de la entrevista y sin copiar frases literales.</div>
+        </div>
+    </div>
+
+    <!-- SLIDE 7 — ESSAY warning -->
+    <div class="slide" id="preEssaySlide"
+         data-type="ESSAY" data-se-role="warning"
+         data-se-lesson="summarizing">
+        <h2>Writing Task Instructions</h2>
+        <p data-se-warning>
+            Now you will write a full summary on your own. It should take about 5 minutes.
+            Use everything you practised: central idea, main arguments, no examples, and cite the author.
+        </p>
+    </div>
+
+    <!-- SLIDE 8 — ESSAY workspace -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="summarizing">
+        <p data-se-prompt>
+            Read the text and write <strong>one paragraph of 60&ndash;90 words</strong> that summarizes it. Include the central idea, the two main problems, and cite the author (Ibarra, 2020). Do not copy sentences.<br><br>
+            <em style="font-size:0.9rem;">Practice text (fictional source written for this course): Ibarra (2020)</em><br>
+            <span style="display:block; margin-top:6px; font-size:0.9rem; line-height:1.6;">
+            Ibarra (2020) studies why so many students abandon language courses after a few months. In many programmes, learners are taught grammar rules first and are only expected to speak much later. As a result, they feel unprepared when they finally have to hold a conversation, and their motivation drops.<br><br>
+            The author identifies two main problems. First, classes rarely include speaking practice in the early weeks, so students never build confidence. Second, mistakes are usually corrected in front of the whole class, which makes learners afraid of speaking. One student in the study said she preferred silence to being corrected publicly.<br><br>
+            Ibarra proposes starting speaking practice from the first week, in small groups, and giving feedback privately. In the pilot course where these changes were tested, dropout fell from 35% to 12%.
+            </span>
+        </p>
+    </div>
+
+</div>
+
+<script>
+    window.onload = () => {
+        SlideEngine.init('summarizing');
+        ActivityTracker.init('summarizing');
+    };
+</script>
+
+</body>
+</html>

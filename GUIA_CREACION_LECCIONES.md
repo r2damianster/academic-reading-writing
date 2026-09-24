@@ -78,6 +78,7 @@ Copia este código para iniciar cualquier lección:
 | `CONTRAST` | `data-se-correct`, `data-se-incorrect`, `data-se-label` | Comparar ideas |
 | `DRAG_DROP` | `data-se-drag`, `data-se-drop-accepts` | Emparejamiento |
 | `ESSAY` | `data-se-role`, `data-se-lesson` | Escritura con telemetría |
+| `BUILD_UP` | `data-se-step`, `data-se-source`, `data-se-key-idea`, `data-se-rubric-item`, `data-se-accumulate` (`append`\|`revise`) | Respuesta larga acumulativa calificada por IA (summarizing/paraphrasing). Requiere cargar `js/build-up.js` **después** de `slide-engine.js`. Sintaxis completa en el encabezado de `js/build-up.js`; ejemplos: `unit1-essays/summarizing.html`, `paraphrasing.html` |
 
 > [!WARNING]
 > Esta guía cubre lecciones `slide-engine.js`. Para lecciones `reading-engine.js` (PDF + sidebar), **no uses `READING_COMMENT`** — quedó deshabilitado en el motor (DT-004, `DEUDA_TECNICA.md`). Las actividades de producción (escritura libre) solo van en `slide-engine` con tipo `ESSAY`; en `reading-engine` usa `READING_QUIZ`, `READING_FILL`, `READING_TFNG` o `READING_MATCH`.
