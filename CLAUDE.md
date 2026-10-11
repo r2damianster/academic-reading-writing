@@ -265,3 +265,16 @@ npm start 2>&1 | ollama run llama3.2 "Summarize errors only. Be concise."
 - El `slide-engine.js` tiene ~3373 líneas — leer solo las secciones relevantes.
 - **Teacher Helper**: Al agregar notas, usar el atributo `data-teacher-note="Texto de la nota"`. Las notas deben explicar el *porqué* pedagógico y proveer citas exactas en español.
 - **READING_COMMENT**: No usar en `reading-engine`. Si se encuentra uno, reportarlo para conversión a QUIZ o FILL.
+
+---
+
+## Writing Patterns (categoría 05)
+
+Categoría basada en el libro *Academic Writing Patterns* (`Academic Writing Patterns.docx`, raíz del repo): 17 capítulos → 19 lecciones + Midterm + Phrase Bank. Todo el contenido estudiantil va **en inglés**; las `data-teacher-note` en español.
+
+- **Fuente de verdad:** `scripts/patterns/lessons/*.js` (datos) + `scripts/patterns/build.js` (plantilla "Pattern Lab"). `node scripts/patterns/build.js` regenera `modules/05-writing-patterns/*.html`, `js/pattern-phrases.js` y `scripts/sql/pattern_lessons_config.sql`. **No editar el HTML generado.**
+- **Tipos de slide nuevos:** `MOVE_TAG`, `WAVE`, `PHRASE_BANK` en `js/pattern-types.js` (cargado después de `slide-engine.js`). Único cambio al motor: `default` del `switch` de `init()` y `_resolveHubUrl` (`/05-writing-patterns/`).
+- **PEEL reemplaza a PEER:** `modules/00-fundamentals/peer.html` es ahora un redirect a `05-writing-patterns/peel.html`. El label de Fundamentals #5 apunta a la nueva lección.
+- **Pendiente (DT-009):** `test1`/`test2` y las rúbricas en BD (`test_rubrics.sql`, `test2_rubric.sql`) y los prompts de `writing`/`peer-review` aún dicen "PEER (Relevance)". Cambiarlos altera la calificación en producción: requiere migración de rúbricas.
+- Sin endpoints nuevos (siguen 12/12). El cuaderno de frases vive en `localStorage`; sincronizarlo a Supabase requeriría una tabla + acción en un endpoint existente.
+

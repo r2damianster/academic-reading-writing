@@ -93,3 +93,26 @@ Copia este código para iniciar cualquier lección:
 
 > [!CAUTION]
 > No elimines los IDs `progressBar`, `preEssaySlide` o `essaySlide`, ya que el motor los busca por ID para la lógica de navegación y guardado.
+
+---
+
+## 4. Categoría `05-writing-patterns` (plantilla "Pattern Lab")
+
+Las 20 lecciones de `modules/05-writing-patterns/` **no se escriben a mano**: se generan desde
+`scripts/patterns/lessons/*.js` con `node scripts/patterns/build.js`. Edita el dato, no el HTML.
+
+Cada lección sigue las 7 etapas del libro *Academic Writing Patterns*: The model → Taking it apart →
+Why this works → Spot the pattern → Rebuild it → Now you write → Phrase bank.
+
+Tipos de slide propios (`js/pattern-types.js`, se carga **después** de `slide-engine.js`):
+
+| Tipo | Atributos | Propósito |
+|---|---|---|
+| `MOVE_TAG` | `data-pt-moves="A\|B\|C"`, `data-pt-segment` + `data-pt-answer` + `data-pt-why` | Asignar a cada segmento el move que cumple |
+| `WAVE` | `data-pt-mode="place\|show"`, `data-pt-wave-item` + `data-pt-level="3\|2\|1"` | Ubicar oraciones en la onda semántica y dibujarla |
+| `PHRASE_BANK` | `data-pt-pattern`, `data-pt-phrase-group` + `data-pt-label`, `data-pt-phrase` | Guardar frases en el cuaderno personal (`localStorage`: `pw_phrase_notebook`) |
+
+Reglas: `lessonName` en minúsculas, sin guiones, prefijo `pattern ` (la PK de `essay_requirements` es `activity_key` = lessonName con guiones; ver
+`scripts/sql/pattern_lessons_config.sql`, **generado**; ejecutarlo en Supabase tras añadir lecciones).
+El motor monta tipos externos mediante el `default` del `switch` de `SlideEngine.init()`.
+
