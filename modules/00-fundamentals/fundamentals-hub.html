@@ -45,7 +45,10 @@
             if (section && section.children) {
                 section.children.forEach(lesson => {
                     // Limpiamos el path para que sea relativo a esta carpeta
-                    const path = lesson.path.replace('modules/00-fundamentals/', '');
+                    // Lecciones de otras categorías (p. ej. PEEL en 05-writing-patterns) se enlazan con ../
+                    const path = lesson.path.startsWith('modules/00-fundamentals/')
+                        ? lesson.path.replace('modules/00-fundamentals/', '')
+                        : '../' + lesson.path.replace('modules/', '');
                     const card = document.createElement('div');
                     card.className = 'module-card';
                     card.innerHTML = `

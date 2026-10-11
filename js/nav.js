@@ -16,13 +16,13 @@ const MENU = [
   {
     label: '00. Fundamentals',
     path: 'modules/00-fundamentals/fundamentals-hub.html',
-    description: 'Master paragraph rules, structures, and the <strong>PEER</strong> model.',
+    description: 'Master paragraph rules and structures. The <strong>PEEL</strong> paragraph now lives in 05. Writing Patterns.',
     children: [
       { label: '1. Why Write?',                 path: 'modules/00-fundamentals/why-write.html' },
       { label: '2. The One-Point Rule',         path: 'modules/00-fundamentals/one-idea.html' },
       { label: '3. Topic Sentences',            path: 'modules/00-fundamentals/topic-sentences.html' },
       { label: '4. Supporting Sentences',       path: 'modules/00-fundamentals/supporting-sentences.html' },
-      { label: '5. PEER model',                 path: 'modules/00-fundamentals/peer.html' },
+      { label: '5. PEEL paragraph',             path: 'modules/05-writing-patterns/peel.html' },
       { label: '6. Paragraph Review',           path: 'modules/00-fundamentals/paragraph-review.html' },
       { label: '7. Organizational Patterns',    path: 'modules/00-fundamentals/organizational-patterns.html' },
       { label: '8. Body Paragraphs',            path: 'modules/00-fundamentals/body-paragraphs.html' },
@@ -144,6 +144,76 @@ const MENU = [
       { label: 'Test 2 — Essays',          path: 'modules/04-tests/test2-essays.html' },
       { label: 'Test 3 — Research',        path: 'modules/04-tests/test3-research.html' },
       { label: 'Test 4 — Toolbox',         path: 'modules/04-tests/test4-toolbox.html' }
+    ]
+  },
+  {
+    label: '05. Writing Patterns',
+    path: 'modules/05-writing-patterns/patterns-hub.html',
+    description: 'Real published models, <strong>PEEL</strong>, CER, Toulmin, CARS and more: learn each pattern by taking it apart.',
+    children: [
+      {
+        label: 'Part I: Foundations',
+        path: 'modules/05-writing-patterns/patterns-hub.html',
+        children: [
+          { label: 'What Is a Writing Pattern?',   path: 'modules/05-writing-patterns/what-is-a-pattern.html' },
+          { label: 'Given and New',                path: 'modules/05-writing-patterns/given-new.html' },
+          { label: 'General to Specific',          path: 'modules/05-writing-patterns/general-specific.html' }
+        ]
+      },
+      {
+        label: 'Part II: The Formula Paragraph',
+        path: 'modules/05-writing-patterns/patterns-hub.html',
+        children: [
+          { label: 'PEEL',                         path: 'modules/05-writing-patterns/peel.html' },
+          { label: 'The PEEL Family',              path: 'modules/05-writing-patterns/peel-family.html' },
+          { label: 'CER: Reporting Results',       path: 'modules/05-writing-patterns/cer.html' },
+          { label: 'SPRE: Problem and Solution',   path: 'modules/05-writing-patterns/spre.html' }
+        ]
+      },
+      {
+        label: 'Part III: Building Arguments',
+        path: 'modules/05-writing-patterns/patterns-hub.html',
+        children: [
+          { label: 'Toulmin',                      path: 'modules/05-writing-patterns/toulmin.html' },
+          { label: 'They Say / I Say',             path: 'modules/05-writing-patterns/they-say-i-say.html' },
+          { label: 'Concession',                   path: 'modules/05-writing-patterns/concession.html' }
+        ]
+      },
+      {
+        label: 'Part IV: Whole Text Patterns',
+        path: 'modules/05-writing-patterns/patterns-hub.html',
+        children: [
+          { label: 'Comparison',                   path: 'modules/05-writing-patterns/comparison.html' },
+          { label: 'Cause and Effect',             path: 'modules/05-writing-patterns/cause-effect.html' },
+          { label: 'Classification',               path: 'modules/05-writing-patterns/classification.html' },
+          { label: 'Process',                      path: 'modules/05-writing-patterns/process.html' },
+          { label: 'CARS',                         path: 'modules/05-writing-patterns/cars.html' },
+          { label: 'IMRaD',                        path: 'modules/05-writing-patterns/imrad.html' }
+        ]
+      },
+      {
+        label: 'Part V: Sources and Cohesion',
+        path: 'modules/05-writing-patterns/patterns-hub.html',
+        children: [
+          { label: 'ICE: Quotation Sandwich',      path: 'modules/05-writing-patterns/ice.html' },
+          { label: 'Metadiscourse',                path: 'modules/05-writing-patterns/metadiscourse.html' }
+        ]
+      },
+      {
+        label: 'Part VI: Beyond the Formula',
+        path: 'modules/05-writing-patterns/patterns-hub.html',
+        children: [
+          { label: 'Breaking the Pattern',         path: 'modules/05-writing-patterns/breaking-patterns.html' },
+          { label: 'Phrase Bank',                  path: 'modules/05-writing-patterns/phrase-bank.html' }
+        ]
+      },
+      {
+        label: 'Assessment',
+        path: 'modules/05-writing-patterns/patterns-hub.html',
+        children: [
+          { label: 'Midterm: Patterns 2-7',        path: 'modules/05-writing-patterns/midterm.html' }
+        ]
+      }
     ]
   }
 ];
