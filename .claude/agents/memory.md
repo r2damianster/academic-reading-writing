@@ -23,7 +23,7 @@ Gestión interna de perfiles de estudiantes. **No es un endpoint HTTP** — el o
 | `getProfile(studentId, sbUrl, sbKey)` | Lee session_cache → student_profiles → perfil vacío |
 | `buildContextString(profile)` | Convierte perfil JSON al Segmento B (texto para el LLM) |
 | `saveSessionCache(studentId, profile, ...)` | Actualiza cache de 4 horas en Supabase |
-| `compressHistory(studentId, ...)` | Comprime historial con llama-3.1-8b (cron nocturno) |
+| `compressHistory(studentId, ...)` | Comprime historial con gpt-oss-20b, clave `llama-3.1-8b-instant` (cron nocturno) |
 
 ## Flujo de lectura de perfil
 
@@ -64,7 +64,7 @@ getProfile(studentId)
 - `essay_submissions` — fuente para compressHistory
 
 ## Cron
-`api/cron/compress-profiles.js` llama a `compressHistory()` nocturnamente usando `llama-3.1-8b-instant`.
+`api/cron/compress-profiles.js` llama a `compressHistory()` nocturnamente usando la clave `llama-3.1-8b-instant` (gpt-oss-20b).
 
 ## Notas para Claude
 - El Segmento B es el output de `buildContextString()` — texto plano, no JSON

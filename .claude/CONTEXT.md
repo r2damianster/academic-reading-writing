@@ -7,7 +7,7 @@ owner: Arturo Rodríguez Zambrano
 # CONTEXT — Academic Reading & Writing Platform
 
 Plataforma de aprendizaje de escritura académica en inglés para ~200 estudiantes de ULEAM (Manta, Ecuador).
-72 lecciones, 5 tracks, 10 agentes de IA, auditoría de integridad en tiempo real.
+72 lecciones, 5 tracks, 11 agentes de IA enrutables (+ `memory` interno), auditoría de integridad en tiempo real.
 
 ---
 
@@ -16,8 +16,8 @@ Plataforma de aprendizaje de escritura académica en inglés para ~200 estudiant
 | Componente | Estado | Notas |
 |---|---|---|
 | Producción | ✅ Live en Vercel | ~200 estudiantes activos |
-| Funciones Vercel | 11 / 12 máximo | `api/` — no superar límite, queda 1 función libre |
-| Proveedor IA | Groq (gratuito) | llama-3.1-8b + llama-3.3-70b |
+| Funciones Vercel | 12 / 12 | `api/` — al límite, cero slots libres; nuevas acciones van en un endpoint existente |
+| Proveedor IA | Groq (gratuito) | openai/gpt-oss-20b + openai/gpt-oss-120b |
 | Base de datos | Supabase PostgreSQL | RLS activo |
 | Auth | Email lookup + admin password | ✅ Robustness fix applied (auto-fill safe) |
 ---

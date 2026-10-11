@@ -42,7 +42,7 @@ POST /api/orchestrator
 5. Referenciar la sección del PDF cuando señala evidencia
 
 ## Modelo seleccionado típicamente
-`llama-3.1-8b-instant` para preguntas cortas; `llama-3.3-70b` para análisis crítico.
+clave `llama-3.1-8b-instant` (gpt-oss-20b) para preguntas cortas; clave `llama-3.3-70b-versatile` (gpt-oss-120b) para análisis crítico.
 
 ## Notas para Claude
 - No resumir el artículo completo para el estudiante

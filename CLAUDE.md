@@ -6,13 +6,13 @@ Instrucciones para **Claude Code** cuando trabaja en este proyecto.
 
 ## Descripción del proyecto
 
-Sistema de aprendizaje de escritura académica en inglés para ~200 estudiantes de ULEAM (Manta, Ecuador). Incluye 72 lecciones en 5 tracks, 8 agentes de IA en Groq (Llama 3) y auditoría de integridad académica en tiempo real.
+Sistema de aprendizaje de escritura académica en inglés para ~200 estudiantes de ULEAM (Manta, Ecuador). Incluye 72 lecciones en 5 tracks, 11 agentes de IA enrutables (más el agente interno `memory`) en Groq (modelos gpt-oss) y auditoría de integridad académica en tiempo real.
 
 **Stack:**
 - Node.js 24.x + Vercel serverless (12 endpoints en `api/` — **al límite exacto de 12**, no hay slot libre)
 - Supabase (PostgreSQL con RLS)
-- Groq API — Llama 3.1-8b-instant + Llama 3.3-70b-versatile (gratis)
-- Vanilla JS + Bootstrap 5 (sin frameworks frontend)
+- Groq API — `openai/gpt-oss-20b` y `openai/gpt-oss-120b` (gratis). Los nombres internos `llama-3.1-8b-instant` / `llama-3.3-70b-versatile` son solo claves de `GROQ_MODELS` (ver `lib/groq-client.js`).
+- Vanilla JS, sin frameworks frontend. Bootstrap 5 solo en las páginas `dojo-*.html`.
 
 ---
 
@@ -68,7 +68,7 @@ POST /api/orchestrator
   1. AGENT_MAP[agent] → busca la clave del prompt en _prompts.js
   2. Memory.getProfile(studentId) → Segmento B (contexto del estudiante)
   3. scoreComplexity() → score 0-100
-  4. selectModel(score) → llama-3.1-8b o llama-3.3-70b
+  4. selectModel(score) → clave `llama-3.1-8b-instant` (gpt-oss-20b) o `llama-3.3-70b-versatile` (gpt-oss-120b)
   5. agentModule.transformPayload() → normaliza el payload
   6. groqChat(system, userContent, maxTokens) → respuesta
   7. _logInteraction() → audit trail en Supabase
@@ -107,9 +107,9 @@ Qwen via DashScope está documentado abajo como alternativa, pero `lib/qwen-clie
 GROQ_TOKEN=gsk_...
 ```
 
-Modelos en uso:
-- `llama-3.1-8b-instant` → tareas simples (score ≤ 30)
-- `llama-3.3-70b-versatile` → análisis complejos (score > 30)
+Modelos en uso (clave interna → modelo real en Groq):
+- `llama-3.1-8b-instant` → `openai/gpt-oss-20b`, tareas simples (score ≤ 30)
+- `llama-3.3-70b-versatile` → `openai/gpt-oss-120b`, análisis complejos (score > 30)
 
 También disponibles en Groq (no configurados por defecto):
 - `qwen-qwq-32b` → razonamiento, útil para feedback detallado
@@ -213,12 +213,12 @@ Ver `DEUDA_TECNICA.md` para el estado completo. Items pendientes de mayor impact
 
 ---
 
-## Peer Review — Sesión en vivo (nuevo, 2026-09-17)
+## Peer Review — Sesión en vivo
 
 Módulo separado de la lección estática "Peer Review Form" (`lib/agents/peer-review.js`, chatbot guía socrática). Esta es una sesión sincronizada en tiempo real para toda la clase: el docente abre, los estudiantes escriben con integridad, se asignan revisiones anónimas al azar, se revisan con rúbrica, y se liberan resultados con doble evaluación (IA Groq + promedio de pares).
 
 **Archivos:**
-- `api/peer-review-session.js` — el único endpoint nuevo, multiplexado por `action` (18 acciones: `open`, `connect`, `roster`, `roster_detail`, `start_writing`, `autosave_draft`, `finish_early`, `force_close_writing`, `assign_reviews`, `get_my_reviews`, `submit_review`, `force_close_reviewing`, `reopen_reviewing`, `exclude_participant`, `release_feedback`, `get_results`, `list_templates`, `save_template`, `delete_template`).
+- `api/peer-review-session.js` — el único endpoint nuevo, multiplexado por `action` (19 acciones: `open`, `connect`, `roster`, `roster_detail`, `start_writing`, `autosave_draft`, `finish_early`, `force_close_writing`, `assign_reviews`, `get_my_reviews`, `submit_review`, `force_close_reviewing`, `reopen_reviewing`, `exclude_participant`, `release_feedback`, `get_results`, `list_templates`, `save_template`, `delete_template`).
 - `modules/03-peer-review/live-session.html` + `js/peer-review-client.js` — UI docente/estudiante. Vive dentro del hub existente "03. Peer System" (primera lección de la lista), no en la raíz.
 - Tablas nuevas en Supabase: `peer_review_sessions`, `peer_review_participants`, `peer_review_assignments`, `peer_review_feedback`, `peer_review_templates` — todas con RLS activo **sin políticas** (deny-all para anon/authenticated; solo el endpoint con `SUPABASE_SERVICE_KEY` puede leerlas/escribirlas). Esto es a propósito: garantiza el anonimato de quién revisó a quién.
 - Columnas nuevas en `essay_submissions`: `peer_review_session_id`, `ai_essay_scores`, `ai_essay_rationale`, `peer_avg_scores`, `peer_review_count`. El promedio de pares se persiste aquí (no en `peer_review_feedback`, que está bloqueada) porque `js/report.js` (PDF del estudiante) y `admin-student-detail.js`/`admin-students.html` (panel docente) leen `essay_submissions` directo con anon/service key — sin esta persistencia nunca podrían mostrar el resultado.

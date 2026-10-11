@@ -20,10 +20,12 @@ GROQ_TOKEN=gsk_...
 
 ## Modelos en uso
 
-| Modelo | Alias interno | Nivel | Cuándo |
+Los modelos Llama fueron retirados de la cuenta de Groq (2026-09-13). Las claves internas se conservan y apuntan a gpt-oss (`GROQ_MODELS` en `lib/groq-client.js`).
+
+| Clave interna | Modelo real en Groq | Nivel | Cuándo |
 |---|---|---|---|
-| `llama-3.1-8b-instant` | Haiku equiv. | Rápido / económico | Score ≤ 30 |
-| `llama-3.3-70b-versatile` | Sonnet/Opus equiv. | Potente / preciso | Score > 30 |
+| `llama-3.1-8b-instant` | `openai/gpt-oss-20b` | Rápido / económico | Score ≤ 30 |
+| `llama-3.3-70b-versatile` | `openai/gpt-oss-120b` | Potente / preciso | Score > 30 |
 
 ## Modelos disponibles en Groq (no configurados por defecto)
 
@@ -44,11 +46,3 @@ El orquestador llama a `groqChat()` de `lib/groq-client.js`. Para cambiar:
 
 ## Qwen via DashScope (documentado, no implementado)
 No existe `QWEN.md` ni `lib/qwen-client.js` en el repo — la config está descrita en `CLAUDE.md` pero requiere crear el cliente antes de poder usarse.
-
-## Aliases de compatibilidad en groq-client.js
-```js
-'claude-haiku-4-5-20251001': 'llama-3.1-8b-instant',
-'claude-sonnet-4-6':         'llama-3.3-70b-versatile',
-'claude-opus-4-6':           'llama-3.3-70b-versatile'
-```
-Esto permite referenciar modelos de Anthropic y que el cliente resuelva al equivalente Groq.

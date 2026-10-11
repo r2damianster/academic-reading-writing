@@ -42,7 +42,7 @@ POST /api/orchestrator
 5. No dar calificación numérica salvo que la rúbrica lo exija
 
 ## Modelo seleccionado típicamente
-`llama-3.3-70b-versatile` — los ensayos suelen tener score de complejidad > 30.
+clave `llama-3.3-70b-versatile` (gpt-oss-120b) — los ensayos suelen tener score de complejidad > 30.
 
 ## Dependencias
 - `lib/agents/_prompts.js` → clave `writing`

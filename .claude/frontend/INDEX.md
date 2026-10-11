@@ -7,7 +7,7 @@ owner: Arturo Rodríguez Zambrano
 
 # Índice de Frontend
 
-Stack: Vanilla JS + Bootstrap 5 en el lado del diseño visual. Sin frameworks JS. Sin bundler.
+Stack: Vanilla JS, sin frameworks JS ni bundler. Bootstrap 5 solo en las páginas `dojo-*.html`.
 
 ## Archivos JS principales
 

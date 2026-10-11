@@ -8,7 +8,7 @@ status: active
 # ADR: Selección de Modelo IA (Token Optimizer)
 
 ## Decisión
-Usar `scoreComplexity()` para seleccionar dinámicamente entre llama-3.1-8b (rápido) y llama-3.3-70b (potente), en lugar de usar siempre el modelo más caro.
+Usar `scoreComplexity()` para seleccionar dinámicamente entre gpt-oss-20b (rápido, clave interna `llama-3.1-8b-instant`) y gpt-oss-120b (potente, clave `llama-3.3-70b-versatile`), en lugar de usar siempre el modelo más caro.
 
 ## Por qué
 - Groq es gratuito pero tiene rate limits
@@ -18,9 +18,9 @@ Usar `scoreComplexity()` para seleccionar dinámicamente entre llama-3.1-8b (rá
 ## Lógica actual
 
 ```
-score 0-30   → llama-3.1-8b-instant    (300 tokens max)
-score 31-65  → llama-3.3-70b-versatile (800 tokens max)
-score 66-100 → llama-3.3-70b-versatile (2000 tokens max)
+score 0-30   → llama-3.1-8b-instant    → gpt-oss-20b  (700 tokens max)
+score 31-65  → llama-3.3-70b-versatile → gpt-oss-120b (800 tokens max)
+score 66-100 → llama-3.3-70b-versatile → gpt-oss-120b (2000 tokens max)
 ```
 
 ## Cómo se calcula el score
@@ -29,7 +29,7 @@ Ver detalle completo en [api/orchestrator.md](../api/orchestrator.md#token-optim
 ## Si se cambia de proveedor
 - Crear nuevo cliente en `lib/` (patrón `groq-client.js`)
 - Cambiar `require` en `api/orchestrator.js`
-- Los alias en `GROQ_MODELS` permiten referenciar nombres de Anthropic y resolver al equivalente
+- Agregar las claves de modelo del nuevo proveedor en el mapa de modelos del cliente nuevo
 
 ## Alternativas consideradas
 - **Anthropic Claude**: más caro pero con prompt caching real — considerar si Groq tiene downtime frecuente
