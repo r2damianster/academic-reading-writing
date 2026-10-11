@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phrase Bank | Academic Workspace</title>
+    <link rel="stylesheet" href="../../css/modules.css">
+    <link rel="stylesheet" href="../../css/patterns.css">
+    <style>
+        .pb-toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+        .pb-toolbar input, .pb-toolbar select { padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: .9rem; }
+        .pb-toolbar input { flex: 1; min-width: 180px; }
+        .pb-tabs { display: flex; gap: 8px; margin: 16px 0 6px; }
+        .pb-tab { padding: 8px 16px; border: none; border-radius: 8px; background: #e2e8f0; cursor: pointer; font-weight: 700; }
+        .pb-tab.pb-tab-active { background: #1a2a6c; color: #fff; }
+        .pb-pattern { margin: 22px 0 6px; font-size: 1rem; color: #1a2a6c; }
+        .pb-pattern a { font-size: .78rem; margin-left: 8px; font-weight: 600; }
+        .pb-empty { color: #64748b; padding: 14px 0; }
+        .pb-actions { display: flex; gap: 8px; margin: 10px 0; }
+        .pb-actions button { padding: 8px 14px; border: 1px solid #cbd5e1; background: #fff; border-radius: 8px; cursor: pointer; font-weight: 600; }
+    </style>
+</head>
+<body>
+<div class="lesson-container">
+    <h2>Phrase Bank</h2>
+    <p class="pt-lead">All template phrases from the Writing Patterns lessons, grouped by rhetorical function. Save the ones you want to reuse: they go to <strong>your personal notebook</strong> (stored on this device).</p>
+
+    <div class="pb-tabs">
+        <button class="pb-tab pb-tab-active" id="tabBank" type="button">Master bank</button>
+        <button class="pb-tab" id="tabNotebook" type="button">My notebook (<span id="notebookCount">0</span>)</button>
+    </div>
+
+    <section id="bankView">
+        <div class="pb-toolbar">
+            <input id="searchInput" type="search" placeholder="Search a phrase or a move (e.g. however, evidence)">
+            <select id="patternFilter"><option value="">All patterns</option></select>
+        </div>
+        <div id="bankContainer"></div>
+    </section>
+
+    <section id="notebookView" style="display:none;">
+        <div class="pb-actions">
+            <button id="copyNotebook" type="button">Copy all</button>
+            <button id="downloadNotebook" type="button">Download .txt</button>
+        </div>
+        <div id="notebookContainer"></div>
+    </section>
+</div>
+
+<script src="../../js/pattern-phrases.js"></script>
+<script src="../../js/pattern-types.js"></script>
+<script>
+    const bankContainer     = document.getElementById('bankContainer');
+    const notebookContainer = document.getElementById('notebookContainer');
+    const searchInput       = document.getElementById('searchInput');
+    const patternFilter     = document.getElementById('patternFilter');
+
+    function refreshNotebookCount() {
+        document.getElementById('notebookCount').textContent = PatternNotebook.count();
+    }
+
+    function createPhraseRow(phraseText, groupLabel, patternKey, onChange) {
+        const row = document.createElement('div');
+        row.className = 'pt-phrase-row';
+        const textSpan = document.createElement('span');
+        textSpan.className = 'pt-phrase-text';
+        textSpan.textContent = phraseText;
+        const saveButton = document.createElement('button');
+        saveButton.type = 'button';
+        saveButton.className = 'pt-save-button';
+        const paint = () => {
+            const isSaved = PatternNotebook.has(phraseText);
+            saveButton.textContent = isSaved ? '✓ Saved' : '+ Save';
+            saveButton.classList.toggle('pt-save-button-done', isSaved);
+        };
+        paint();
+        saveButton.addEventListener('click', () => {
+            if (PatternNotebook.has(phraseText)) PatternNotebook.remove(phraseText);
+            else PatternNotebook.add(phraseText, groupLabel, patternKey);
+            paint();
+            refreshNotebookCount();
+            if (onChange) onChange();
+        });
+        row.append(textSpan, saveButton);
+        return row;
+    }
+
+    function renderBank() {
+        const searchTerm = searchInput.value.trim().toLowerCase();
+        const selectedPattern = patternFilter.value;
+        bankContainer.innerHTML = '';
+        let visibleGroups = 0;
+
+        window.PATTERN_PHRASES.forEach(pattern => {
+            if (selectedPattern && pattern.key !== selectedPattern) return;
+            const patternBlock = document.createElement('div');
+            let patternHasContent = false;
+
+            pattern.groups.forEach(group => {
+                const matchingPhrases = group.phrases.filter(phraseText =>
+                    !searchTerm
+                    || phraseText.toLowerCase().includes(searchTerm)
+                    || group.label.toLowerCase().includes(searchTerm));
+                if (!matchingPhrases.length) return;
+                patternHasContent = true;
+                visibleGroups++;
+
+                const groupElement = document.createElement('div');
+                groupElement.className = 'pt-phrase-group';
+                groupElement.style.setProperty('--pt-color', '#2563eb');
+                const heading = document.createElement('div');
+                heading.className = 'pt-phrase-heading';
+                heading.textContent = group.label;
+                groupElement.appendChild(heading);
+                matchingPhrases.forEach(phraseText => {
+                    groupElement.appendChild(createPhraseRow(phraseText, group.label, pattern.key));
+                });
+                patternBlock.appendChild(groupElement);
+            });
+
+            if (patternHasContent) {
+                const title = document.createElement('h3');
+                title.className = 'pb-pattern';
+                title.innerHTML = `${pattern.title} <a href="${pattern.file}">open lesson</a>`;
+                bankContainer.appendChild(title);
+                bankContainer.appendChild(patternBlock);
+            }
+        });
+
+        if (!visibleGroups) bankContainer.innerHTML = '<div class="pb-empty">No phrases match your search.</div>';
+    }
+
+    function renderNotebook() {
+        const entries = PatternNotebook.load();
+        notebookContainer.innerHTML = '';
+        if (!entries.length) {
+            notebookContainer.innerHTML = '<div class="pb-empty">Your notebook is empty. Save phrases from the master bank or from any lesson.</div>';
+            return;
+        }
+        entries.forEach(entry => {
+            const row = createPhraseRow(entry.phrase, entry.group, entry.pattern, renderNotebook);
+            notebookContainer.appendChild(row);
+            if (entry.group) {
+                const note = document.createElement('div');
+                note.className = 'pt-source';
+                note.textContent = entry.group;
+                notebookContainer.appendChild(note);
+            }
+        });
+    }
+
+    function showView(viewName) {
+        const isNotebook = viewName === 'notebook';
+        document.getElementById('bankView').style.display = isNotebook ? 'none' : 'block';
+        document.getElementById('notebookView').style.display = isNotebook ? 'block' : 'none';
+        document.getElementById('tabBank').classList.toggle('pb-tab-active', !isNotebook);
+        document.getElementById('tabNotebook').classList.toggle('pb-tab-active', isNotebook);
+        if (isNotebook) renderNotebook(); else renderBank();
+    }
+
+    function notebookAsText() {
+        return PatternNotebook.load()
+            .map(entry => '• ' + entry.phrase + (entry.group ? '   [' + entry.group + ']' : ''))
+            .join('\n');
+    }
+
+    window.PATTERN_PHRASES.forEach(pattern => {
+        const option = document.createElement('option');
+        option.value = pattern.key;
+        option.textContent = pattern.title;
+        patternFilter.appendChild(option);
+    });
+
+    searchInput.addEventListener('input', renderBank);
+    patternFilter.addEventListener('change', renderBank);
+    document.getElementById('tabBank').addEventListener('click', () => showView('bank'));
+    document.getElementById('tabNotebook').addEventListener('click', () => showView('notebook'));
+    document.getElementById('copyNotebook').addEventListener('click', () => {
+        if (navigator.clipboard) navigator.clipboard.writeText(notebookAsText());
+    });
+    document.getElementById('downloadNotebook').addEventListener('click', () => {
+        const blob = new Blob([notebookAsText()], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'my-phrase-notebook.txt';
+        link.click();
+        URL.revokeObjectURL(link.href);
+    });
+
+    refreshNotebookCount();
+    showView(location.hash === '#notebook' ? 'notebook' : 'bank');
+</script>
+</body>
+</html>
