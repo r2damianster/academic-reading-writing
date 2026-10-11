@@ -456,7 +456,7 @@ function main() {
     '{${keywordList}}',
     ${lesson.minKeywordMatches || 1},
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 )`;
     }).join(',\n\n');
     fs.writeFileSync(SQL_OUTPUT, `-- GENERADO por scripts/patterns/build.js — categoría 05. Writing Patterns

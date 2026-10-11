@@ -10,7 +10,7 @@ VALUES
     '{"pattern": "", "move": "", "structure": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-given-new',
@@ -18,7 +18,7 @@ VALUES
     '{"this": "", "increase": "", "reduction": "", "analysis": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-general-specific',
@@ -26,7 +26,7 @@ VALUES
     '{"general": "", "specific": "", "focus": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-peel',
@@ -34,7 +34,7 @@ VALUES
     '{"point": "", "evidence": "", "explanation": "", "link": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-peel-family',
@@ -42,7 +42,7 @@ VALUES
     '{"point": "", "evidence": "", "explanation": "", "link": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-cer',
@@ -50,7 +50,7 @@ VALUES
     '{"claim": "", "evidence": "", "reasoning": "", "significant": "", "mean": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-spre',
@@ -58,7 +58,7 @@ VALUES
     '{"situation": "", "problem": "", "response": "", "evaluation": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-toulmin',
@@ -66,7 +66,7 @@ VALUES
     '{"claim": "", "grounds": "", "warrant": "", "because": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-they-say-i-say',
@@ -74,7 +74,7 @@ VALUES
     '{"argues": "", "however": "", "evidence": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-concession',
@@ -82,7 +82,7 @@ VALUES
     '{"although": "", "however": "", "nevertheless": "", "concession": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-comparison',
@@ -90,7 +90,7 @@ VALUES
     '{"whereas": "", "in contrast": "", "similarly": "", "both": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-cause-effect',
@@ -98,7 +98,7 @@ VALUES
     '{"since": "", "because": "", "result": "", "leads to": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-classification',
@@ -106,7 +106,7 @@ VALUES
     '{"classified": "", "categories": "", "types": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-process',
@@ -114,7 +114,7 @@ VALUES
     '{"first": "", "then": "", "finally": "", "were": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-cars',
@@ -122,7 +122,7 @@ VALUES
     '{"however": "", "this study": "", "gap": "", "research": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-imrad',
@@ -130,7 +130,7 @@ VALUES
     '{"introduction": "", "methods": "", "results": "", "discussion": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-ice',
@@ -138,7 +138,7 @@ VALUES
     '{"according": "", "puts it": "", "suggests": "", "quotation": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-metadiscourse',
@@ -146,7 +146,7 @@ VALUES
     '{"may": "", "likely": "", "however": "", "suggests": "", "clearly": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-breaking-patterns',
@@ -154,7 +154,7 @@ VALUES
     '{"pattern": "", "move": "", "reader": ""}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 ),
 
 ('pattern-midterm',
@@ -162,7 +162,7 @@ VALUES
     '{}',
     1,
     ARRAY[]::TEXT[],
-    ARRAY['gonna','wanna','kinda','I think','I believe']
+    '["gonna","wanna","kinda","I think","I believe"]'::jsonb
 )
 
 ON CONFLICT (activity_key) DO UPDATE SET
