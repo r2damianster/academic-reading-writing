@@ -451,7 +451,8 @@ function main() {
     const sqlRows = lessons.map(lesson => {
         const keywordList = (lesson.keywords || []).map(keyword => `"${keyword}": ""`).join(', ');
         // La tabla usa activity_key = lessonName con guiones (ver slide-engine.js: lessonName.replace(/ /g, '-'))
-        return `('${lesson.lessonName.replace(/ /g, '-')}',
+        const lessonTitle = lesson.title.replace(/'/g, "''");
+        return `('${lesson.lessonName.replace(/ /g, '-')}', '${lessonTitle}',
     ${lesson.minWords || 40}, ${lesson.maxWords || 250}, 75,
     '{${keywordList}}',
     ${lesson.minKeywordMatches || 1},
@@ -462,13 +463,14 @@ function main() {
     fs.writeFileSync(SQL_OUTPUT, `-- GENERADO por scripts/patterns/build.js — categoría 05. Writing Patterns
 -- Ejecutar en el SQL Editor de Supabase. Idempotente (ON CONFLICT).
 INSERT INTO essay_requirements
-    (activity_key, min_words, max_words, min_integrity_score_required,
+    (activity_key, lesson_title, min_words, max_words, min_integrity_score_required,
      target_keywords, min_keyword_matches, required_markers, forbidden_words)
 VALUES
 
 ${sqlRows}
 
 ON CONFLICT (activity_key) DO UPDATE SET
+    lesson_title = EXCLUDED.lesson_title,
     min_words = EXCLUDED.min_words,
     max_words = EXCLUDED.max_words,
     min_integrity_score_required = EXCLUDED.min_integrity_score_required,
