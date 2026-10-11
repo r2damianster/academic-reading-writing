@@ -159,6 +159,12 @@ const SlideEngine = (function () {
                 case 'WORD_BANK':       SlideTypes.WORD_BANK.mount(slide, index);                  break;
                 case 'CATEGORIZE':      SlideTypes.CATEGORIZE.mount(slide, index);                 break;
                 case 'CHOOSE_CONTEXT':  SlideTypes.CHOOSE_CONTEXT.mount(slide, index);             break;
+                // Tipos registrados por archivos externos (js/pattern-types.js: MOVE_TAG, WAVE, PHRASE_BANK)
+                default:
+                    if (SlideTypes[type] && typeof SlideTypes[type].mount === 'function') {
+                        SlideTypes[type].mount(slide, index, _lessonName);
+                    }
+                    break;
                 // Sin data-type → slide estática, sin procesamiento adicional
             }
         });
@@ -270,6 +276,7 @@ const SlideEngine = (function () {
         if (p.includes('/grammar/'))           return 'grammar-hub.html';
         if (p.includes('/vocabulary/'))        return 'vocabulary-hub.html';
         if (p.includes('/03-peer-review/'))    return 'peer-review-hub.html';
+        if (p.includes('/05-writing-patterns/')) return 'patterns-hub.html';
         if (p.includes('/04-tests/'))          return 'tests-hub.html';
         return 'index.html';
     }

@@ -1,0 +1,77 @@
+/* css/patterns.css — estilos de la categoría 05. Writing Patterns
+   Se usa junto a modules.css. Tokens en :root para mantener un solo sistema. */
+:root {
+    --pt-ink: #1e293b;
+    --pt-muted: #64748b;
+    --pt-line: #e2e8f0;
+    --pt-surface: #f8fafc;
+    --pt-accent: #1a2a6c;
+    --pt-ok: #16a34a;
+    --pt-bad: #dc2626;
+}
+
+/* ── Lesson header (slide 0) ─────────────────────────────────────────────── */
+.pt-hero { background: var(--pt-surface); border: 1px solid var(--pt-line); border-radius: 12px; padding: 18px 20px; margin: 10px 0 16px; }
+.pt-hero p { margin: 0 0 10px; line-height: 1.6; color: var(--pt-ink); }
+.pt-hero .pt-meta { font-size: .82rem; color: var(--pt-muted); margin: 0; }
+.pt-stage-list { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 6px; }
+.pt-stage-list li { font-size: .88rem; color: var(--pt-ink); padding-left: 24px; position: relative; }
+.pt-stage-list li::before { content: attr(data-step); position: absolute; left: 0; top: 0; width: 18px; height: 18px; border-radius: 50%;
+    background: var(--pt-accent); color: #fff; font-size: .7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+/* ── The model: cita real con ficha de fuente ────────────────────────────── */
+.pt-model { border-left: 5px solid #3498db; background: #f1f7fd; padding: 16px 18px; border-radius: 0 10px 10px 0;
+    font-family: Georgia, 'Times New Roman', serif; font-size: 1.02rem; line-height: 1.75; color: var(--pt-ink); margin: 12px 0; }
+.pt-source { font-size: .78rem; color: var(--pt-muted); line-height: 1.5; margin: 6px 0 14px; padding-left: 4px; }
+.pt-source a { color: #2563eb; word-break: break-all; }
+.pt-lead { color: var(--pt-ink); line-height: 1.6; }
+
+/* ── MOVE_TAG / WAVE ─────────────────────────────────────────────────────── */
+.pt-legend { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 12px; }
+.pt-legend-item { font-size: .76rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; color: #fff; background: var(--pt-color, #2563eb); }
+.pt-segment, .pt-wave-item { border: 2px solid var(--pt-line); border-radius: 10px; padding: 12px 14px; margin: 10px 0; background: #fff; transition: border-color .2s, background .2s; }
+.pt-segment-text { line-height: 1.65; font-family: Georgia, 'Times New Roman', serif; color: var(--pt-ink); }
+.pt-segment-number { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; margin-right: 8px; border-radius: 50%;
+    background: var(--pt-accent); color: #fff; font: 700 .72rem 'Segoe UI', sans-serif; vertical-align: middle; }
+.pt-chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.pt-chip { border: 2px solid var(--pt-color, #2563eb); background: #fff; color: var(--pt-color, #2563eb); border-radius: 999px;
+    padding: 5px 13px; font-size: .8rem; font-weight: 700; cursor: pointer; transition: background .15s, color .15s; }
+.pt-chip:hover:not(:disabled) { background: color-mix(in srgb, var(--pt-color) 12%, #fff); }
+.pt-chip-selected { background: var(--pt-color, #2563eb); color: #fff; }
+.pt-chip:disabled { cursor: default; opacity: .75; }
+.pt-segment-correct { border-color: var(--pt-ok); background: #f0fdf4; }
+.pt-segment-wrong { border-color: var(--pt-bad); background: #fef2f2; }
+.pt-segment-result { margin-top: 10px; font-size: .85rem; line-height: 1.55; color: var(--pt-ink); }
+.pt-why { color: var(--pt-muted); }
+.pt-check-button { margin-top: 14px; padding: 11px 24px; background: #27ae60; color: #fff; border: none; border-radius: 8px; font-size: .95rem; font-weight: 600; cursor: pointer; }
+.pt-feedback { margin-top: 12px; font-weight: 700; font-size: .9rem; }
+.pt-wave-container { margin: 14px 0 4px; }
+.pt-wave-svg { width: 100%; height: auto; background: var(--pt-surface); border: 1px solid var(--pt-line); border-radius: 10px; }
+
+/* ── PHRASE_BANK ─────────────────────────────────────────────────────────── */
+.pt-notebook-counter { font-size: .85rem; margin: 8px 0 12px; color: var(--pt-ink); }
+.pt-notebook-counter a { color: #2563eb; }
+.pt-phrase-group { border-left: 5px solid var(--pt-color, #2563eb); background: var(--pt-surface); border-radius: 0 10px 10px 0; padding: 10px 14px; margin: 12px 0; }
+.pt-phrase-heading { font-weight: 700; font-size: .85rem; color: var(--pt-color, #2563eb); margin-bottom: 6px; }
+.pt-phrase-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 6px 0; border-top: 1px solid var(--pt-line); }
+.pt-phrase-row:first-of-type { border-top: none; }
+.pt-phrase-text { font-family: Georgia, serif; font-size: .95rem; color: var(--pt-ink); }
+.pt-save-button { flex: none; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; padding: 4px 10px; font-size: .76rem; font-weight: 700; cursor: pointer; color: var(--pt-ink); }
+.pt-save-button-done { background: #dcfce7; border-color: #86efac; color: #166534; }
+
+/* ── Rúbrica de autoevaluación ───────────────────────────────────────────── */
+.pt-rubric { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: .9rem; }
+.pt-rubric th, .pt-rubric td { border: 1px solid var(--pt-line); padding: 8px 10px; text-align: left; vertical-align: top; }
+.pt-rubric th { background: var(--pt-surface); }
+.pt-rubric td.pt-rubric-tick { text-align: center; width: 90px; color: var(--pt-muted); }
+.pt-checklist { list-style: none; padding: 0; margin: 10px 0; }
+.pt-checklist li { padding: 6px 0 6px 28px; position: relative; line-height: 1.5; }
+.pt-checklist li::before { content: ''; position: absolute; left: 0; top: 8px; width: 16px; height: 16px; border: 2px solid #94a3b8; border-radius: 4px; }
+.pt-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: .88rem; }
+.pt-table th, .pt-table td { border: 1px solid var(--pt-line); padding: 7px 9px; text-align: left; }
+.pt-table th { background: var(--pt-surface); }
+
+@media (max-width: 600px) {
+    .pt-chip { font-size: .76rem; padding: 5px 10px; }
+    .pt-phrase-row { flex-direction: column; align-items: flex-start; }
+}
