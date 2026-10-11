@@ -51,13 +51,13 @@ VALUES (
       },
       {
         "key": "peer_architecture_rigor",
-        "title": "PEER Architecture Rigor",
+        "title": "PEEL Architecture Rigor",
         "max_points": 1.50,
         "levels": [
-          {"label": "Excellent",      "points": 1.50, "desc": "All 4 body paragraphs explicitly, sequentially, and correctly execute the complete model: Point, Evidence, Explanation, Relevance."},
-          {"label": "Satisfactory",   "points": 1.00, "desc": "The paragraphs follow the model, but in 1 or 2 of them, a component (frequently Evidence or Relevance) is weak, redundant, or misplaced."},
-          {"label": "In Progress",    "points": 0.50, "desc": "PEER architecture is deficient or missing in more than two paragraphs (e.g., jumping from Point to Explanation without providing Evidence)."},
-          {"label": "Unsatisfactory", "points": 0.00, "desc": "Total absence of the PEER structure. Paragraphs are purely descriptive narratives lacking academic scaffolding."}
+          {"label": "Excellent",      "points": 1.50, "desc": "All 4 body paragraphs explicitly, sequentially, and correctly execute the complete model: Point, Evidence, Explanation, Link."},
+          {"label": "Satisfactory",   "points": 1.00, "desc": "The paragraphs follow the model, but in 1 or 2 of them, a component (frequently Evidence or Link) is weak, redundant, or misplaced."},
+          {"label": "In Progress",    "points": 0.50, "desc": "PEEL architecture is deficient or missing in more than two paragraphs (e.g., jumping from Point to Explanation without providing Evidence)."},
+          {"label": "Unsatisfactory", "points": 0.00, "desc": "Total absence of the PEEL structure. Paragraphs are purely descriptive narratives lacking academic scaffolding."}
         ]
       },
       {

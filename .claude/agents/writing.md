@@ -28,7 +28,7 @@ POST /api/orchestrator
 ```
 
 ## Marco pedagógico aplicado
-- **PEER model**: Point → Explanation → Evidence → Response
+- **PEEL model**: Point → Evidence → Explanation → Link
 - **Estructura**: Introduction (hook + background + thesis) → Body → Conclusion
 - **Bloque de refutación**: concession + counter-argument
 - **APA 7th edition** para citas

@@ -103,3 +103,7 @@ Nota agregada antes del checklist de publicación.
 **Notas adicionales:**
 - El componente `ReadingTypes.READING_COMMENT` puede mantenerse en el código como código muerto temporal por si se decide reactivarlo con un flag; o eliminarse completamente en una segunda pasada.
 - No hay impacto en `api/` ni en Supabase: `READING_COMMENT` guardaba progreso vía `_saveProgress('comment', ...)` que simplemente dejará de llamarse.
+
+## DT-010 — PEER (Relevance) → PEEL (Link) en tests, rúbricas y prompts (2026-10-11)
+
+La categoría 05 enseña PEEL. Se actualizaron: `test1-fundamentals.html`, `test2-essays.html`, `test_rubrics.sql`, `test2_rubric.sql`, `lib/agents/_prompts.js` (el prompt decía `Point → Explanation → Evidence → Response`, que no coincidía ni con PEER), `writing.js`, `peer-review.js` y docs `.claude/`. **Pendiente:** ejecutar `scripts/sql/migrate_peer_to_peel.sql` en Supabase (cambia solo textos de `test_rubrics.indicators`; la clave `peer_architecture_rigor` no cambia). Además `supabase-agents-schema.sql` tiene `'peer model'` y la lección usaba `'peer structure'` (no coincidían; la nueva usa `pattern-peel`).

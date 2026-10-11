@@ -25,7 +25,7 @@ Introduction
   └── Thesis statement (posición clara + preview de argumentos)
 
 Body Paragraphs (mínimo 2)
-  └── Cada uno: Topic sentence → Explanation → Evidence → Analysis (PEER model)
+  └── Cada uno: Point → Evidence → Explanation → Link (PEEL model)
 
 Rebuttal Paragraph
   ├── Concession ("While some argue that...")
@@ -63,11 +63,13 @@ Conclusion
 | Concesión | while, although, despite the fact that |
 | Contraste | however, on the other hand, nevertheless |
 
-## Modelo PEER (el core del feedback del writing agent)
+## Modelo PEEL (el core del feedback del writing agent)
 
-- **P**oint — hacer la afirmación / tesis del párrafo
-- **E**xplanation — explicar la afirmación
-- **E**vidence — citar evidencia (con APA)
-- **R**esponse — analizar qué significa esa evidencia para la tesis
+Reemplaza al antiguo PEER (2026-10-11). Lección: `modules/05-writing-patterns/peel.html`.
 
-Si un párrafo del estudiante falla, generalmente falta la E de Evidence o la R de Response.
+- **P**oint — anunciar la idea central del párrafo
+- **E**vidence — dato, cita o ejemplo verificable (con APA)
+- **E**xplanation — interpretar qué significa la evidencia (sin repetirla)
+- **L**ink — conectar con la tesis o con el párrafo siguiente
+
+Si un párrafo del estudiante falla, casi siempre falta la Explanation («evidence dump») o el Link.
