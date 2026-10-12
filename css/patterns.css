@@ -75,3 +75,9 @@
     .pt-chip { font-size: .76rem; padding: 5px 10px; }
     .pt-phrase-row { flex-direction: column; align-items: flex-start; }
 }
+
+/* ── Autoevaluación dentro del ensayo ────────────────────────────────────── */
+.pt-selfcheck { border: 1px solid var(--pt-line); border-left: 5px solid #3498db; background: var(--pt-surface); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 16px 0 6px; }
+.pt-selfcheck h4 { margin: 0 0 6px; color: var(--pt-accent); font-size: .95rem; }
+.pt-selfcheck p { margin: 0 0 8px; font-size: .85rem; color: var(--pt-ink); }
+.pt-selfcheck-summary { font-weight: 700; font-size: .85rem; min-height: 1.2em; }

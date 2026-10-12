@@ -1538,6 +1538,51 @@ const SlideEngine = (function () {
             }
         }
 
+        // MOVE_TAG / WAVE (js/pattern-types.js): respuesta correcta + por qué
+        if (type === 'MOVE_TAG') {
+            slide.querySelectorAll('[data-pt-segment]').forEach((segment, idx) => {
+                const sentence = segment.querySelector('.pt-segment-text')?.textContent.replace(/^\s*\d+/, '').trim() || '';
+                answers.push({
+                    label: `Segment ${idx + 1}: ${sentence.substring(0, 60)}…`,
+                    answer: segment.dataset.ptAnswer,
+                    explanation: segment.dataset.ptWhy || ''
+                });
+            });
+        }
+        if (type === 'WAVE') {
+            const levelNames = { 3: 'Abstract idea', 2: 'In between', 1: 'Concrete detail' };
+            slide.querySelectorAll('[data-pt-wave-item]').forEach((item, idx) => {
+                const sentence = item.querySelector('.pt-segment-text')?.textContent.replace(/^\s*\d+/, '').trim() || '';
+                answers.push({
+                    label: `Sentence ${idx + 1}: ${sentence.substring(0, 60)}…`,
+                    answer: levelNames[item.dataset.ptLevel] || item.dataset.ptLevel,
+                    explanation: item.dataset.ptWhy || ''
+                });
+            });
+        }
+
+        // APPLIED_TASK: criterios de la rúbrica (ya removidos del DOM)
+        if (type === 'APPLIED_TASK') {
+            const rubric = window._seAppliedRubrics && window._seAppliedRubrics.get(slide);
+            (rubric || []).forEach((criterion, idx) => {
+                answers.push({
+                    label: `Rubric criterion ${idx + 1} (${criterion.points} pts)`,
+                    answer: criterion.title,
+                    explanation: ''
+                });
+            });
+        }
+
+        // Nota docente de la slide (data-teacher-note): guía pedagógica y clave de respuestas
+        const teacherNote = slide.querySelector('[data-teacher-note]');
+        if (teacherNote && teacherNote.textContent.trim()) {
+            answers.push({
+                label: 'Teacher note',
+                answer: teacherNote.textContent.trim(),
+                explanation: ''
+            });
+        }
+
         return answers;
     }
 
@@ -2191,6 +2236,12 @@ SlideTypes.ESSAY = {
         const promptText = promptEl ? promptEl.innerHTML : '';
         if (promptEl) promptEl.remove();
 
+        // Autoevaluación opcional (generador de patrones): se muestra justo antes
+        // del botón de envío, no como slide aparte.
+        const selfCheckEl   = slide.querySelector('[data-se-self-check]');
+        const selfCheckHtml = selfCheckEl ? selfCheckEl.innerHTML : '';
+        if (selfCheckEl) selfCheckEl.remove();
+
         const workspace = document.createElement('div');
         workspace.className = 'essay-workspace';
         workspace.innerHTML = `
@@ -2316,6 +2367,33 @@ SlideTypes.ESSAY = {
                     to   { transform: rotate(360deg); }
                 }
             </style>`;
+
+        if (selfCheckHtml) {
+            const finalButton = workspace.querySelector('#finalBtn');
+            const selfCheckBox = document.createElement('div');
+            selfCheckBox.id = 'se-self-check';
+            selfCheckBox.innerHTML = selfCheckHtml;
+            if (finalButton) finalButton.parentNode.insertBefore(selfCheckBox, finalButton);
+            else workspace.appendChild(selfCheckBox);
+
+            // Contador: 3 o más filas en "Needs work" → sugerir reescribir antes de enviar
+            const summary = selfCheckBox.querySelector('[data-se-self-check-summary]');
+            const refreshSummary = () => {
+                const needsWorkCount = selfCheckBox.querySelectorAll('input[value="needs"]:checked').length;
+                const answeredCount  = selfCheckBox.querySelectorAll('input[type="radio"]:checked').length;
+                if (!summary) return;
+                if (needsWorkCount >= 3) {
+                    summary.textContent = needsWorkCount + ' rows need work: rewrite your paragraph before you submit.';
+                    summary.style.color = '#c0392b';
+                } else if (answeredCount) {
+                    summary.textContent = needsWorkCount + ' row(s) need work. You can submit when you are satisfied.';
+                    summary.style.color = '#27ae60';
+                } else {
+                    summary.textContent = '';
+                }
+            };
+            selfCheckBox.addEventListener('change', refreshSummary);
+        }
 
         slide.appendChild(workspace);
 
@@ -3691,6 +3769,8 @@ SlideTypes.APPLIED_TASK = {
             title:  el.textContent.trim(),
             points: parseFloat(el.dataset.sePoints) || 1
         }));
+        // El Instructor Helper necesita la rúbrica aunque ya no esté en el DOM
+        (window._seAppliedRubrics = window._seAppliedRubrics || new WeakMap()).set(slide, indicators);
         rubricEl.remove(); // la rúbrica es solo para calificar — no se muestra al estudiante
 
         const minWords  = 20;

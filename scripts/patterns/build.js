@@ -37,7 +37,10 @@ function escapeHtml(text) {
 
 // Texto plano con **negrita** y [[respuesta]] → HTML seguro
 function inlineHtml(text) {
-    return escapeHtml(text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    return escapeHtml(text)
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        // Lista blanca de etiquetas inline que los datos de lección pueden traer
+        .replace(/&lt;(\/?)(strong|em|br)&gt;/g, '<$1$2>');
 }
 
 function teacherNote(noteHtml) {
@@ -127,9 +130,8 @@ ${items}${teacherNote(slide.note)}
     },
 
     quiz(slide) {
-        const letters = 'ABCDEFG';
-        const options = slide.options.map((option, optionIndex) =>
-            `        <div data-se-option${option.correct ? ' data-se-correct' : ''}>${letters[optionIndex]}. ${inlineHtml(option.text)}</div>`
+        const options = slide.options.map(option =>
+            `        <div data-se-option${option.correct ? ' data-se-correct' : ''}>${inlineHtml(option.text)}</div>`
         ).join('\n');
         return `
     <!-- SLIDE — QUIZ -->
@@ -294,27 +296,20 @@ ${groups}
     </div>`;
     },
 
-    rubric(slide, lesson) {
-        const rows = (slide.criteria || lesson.rubric).map(criterion =>
-            `            <tr><td>${inlineHtml(criterion)}</td><td class="pt-rubric-tick">&#x2610;</td><td class="pt-rubric-tick">&#x2610;</td></tr>`
-        ).join('\n');
-        return `
-    <!-- SLIDE — SELF-ASSESSMENT RUBRIC -->
-    <div class="slide" data-type="CONTENT">
-        <h2>Self-assessment rubric: ${escapeHtml(lesson.patternName)}</h2>
-        <p class="pt-lead">Before you submit any paragraph in this pattern, check it against this rubric. If <strong>three or more</strong> rows are &ldquo;Needs work&rdquo;, rewrite before you hand it in.</p>
-        <table class="pt-rubric">
-            <thead><tr><th>Criterion</th><th>Achieved</th><th>Needs work</th></tr></thead>
-            <tbody>
-${rows}
-            </tbody>
-        </table>${teacherNote(slide.note)}
-    </div>`;
+    // La autoevaluación vive dentro del ensayo (antes de enviar); ya no es un slide aparte.
+    rubric() {
+        return '';
     },
 
     essay(slide, lesson) {
-        // Solo elementos inline: el motor inyecta el prompt dentro de un <p>
-        const checklist = slide.checklist.map(item => `&#x2610; ${inlineHtml(item)}`).join('<br>\n            ');
+        // Autoevaluación dentro del ensayo, antes de enviar: la rúbrica de la lección
+        // o, si no tiene, la lista de verificación del propio ensayo.
+        const criteria = lesson.rubric.length ? lesson.rubric : slide.checklist;
+        const selfCheckRows = criteria.map((criterion, criterionIndex) =>
+            `<tr><td>${inlineHtml(criterion)}</td>` +
+            `<td style="text-align:center;"><input type="radio" name="sc-${criterionIndex}" value="ok" aria-label="Achieved"></td>` +
+            `<td style="text-align:center;"><input type="radio" name="sc-${criterionIndex}" value="needs" aria-label="Needs work"></td></tr>`
+        ).join('\n                ');
         return `
     <!-- ESSAY — Warning -->
     <div class="slide" id="preEssaySlide"
@@ -331,9 +326,21 @@ ${rows}
          data-type="ESSAY" data-se-role="workspace"
          data-se-lesson="${lesson.lessonName}">
         <p data-se-prompt>
-            ${slide.promptHtml}<br><br><strong>Check your paragraph before submitting:</strong><br>
-            ${checklist}
-        </p>${teacherNote(slide.note)}
+            ${slide.promptHtml}
+        </p>
+        <div data-se-self-check>
+            <div class="pt-selfcheck">
+                <h4>Self-assessment rubric: ${escapeHtml(lesson.patternName)}</h4>
+                <p>Before you submit, check your paragraph against each row. If <strong>three or more</strong> rows need work, rewrite before you hand it in.</p>
+                <table class="pt-rubric">
+                    <thead><tr><th>Criterion</th><th>Achieved</th><th>Needs work</th></tr></thead>
+                    <tbody>
+                ${selfCheckRows}
+                    </tbody>
+                </table>
+                <div data-se-self-check-summary class="pt-selfcheck-summary"></div>
+            </div>
+        </div>${teacherNote(slide.note)}
     </div>`;
     }
 };
