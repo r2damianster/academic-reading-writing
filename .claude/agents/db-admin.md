@@ -38,7 +38,7 @@ POST /api/orchestrator
 | `student_profiles` | student_id, strengths, weaknesses, writing_patterns, engagement, session_summary, updated_at |
 | `agent_interactions` | id, student_id, agent, model_used, tokens_in, tokens_out, tokens_cached, complexity_score, created_at |
 | `session_cache` | student_id, context_blob, expires_at, created_at |
-| `essay_requirements` | lesson_id, criteria |
+| `essay_requirements` | activity_key (PK, con guiones), lesson_title, min/max_words, target_keywords, forbidden_words (jsonb)… |
 
 ## Reglas de seguridad
 - No exponer emails en exportaciones masivas

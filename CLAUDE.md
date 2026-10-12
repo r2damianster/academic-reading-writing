@@ -276,5 +276,6 @@ Categoría basada en el libro *Academic Writing Patterns* (`Academic Writing Pat
 - **Tipos de slide nuevos:** `MOVE_TAG`, `WAVE`, `PHRASE_BANK` en `js/pattern-types.js` (cargado después de `slide-engine.js`). Único cambio al motor: `default` del `switch` de `init()` y `_resolveHubUrl` (`/05-writing-patterns/`).
 - **PEEL reemplaza a PEER:** `modules/00-fundamentals/peer.html` es ahora un redirect a `05-writing-patterns/peel.html`. El label de Fundamentals #5 apunta a la nueva lección.
 - **DT-010 (resuelto en código, 2026-10-11):** tests, seeds de rúbricas, prompts de `writing`/`peer-review` y docs ya dicen PEEL (Link). La clave técnica `peer_architecture_rigor` se conserva. Rúbricas en BD migradas con `scripts/sql/migrate_peer_to_peel.sql` (ejecutado y verificado).
+- **Idioma del feedback:** las lecciones `pattern ...` envían `feedbackLanguage: 'en'` (ver `_feedbackLanguageFor` en `slide-engine.js`); `test-grader.js` y `writing.js` responden en inglés. El resto del sistema sigue en español.
 - Sin endpoints nuevos (siguen 12/12). El cuaderno de frases vive en `localStorage`; sincronizarlo a Supabase requeriría una tabla + acción en un endpoint existente.
 

@@ -125,8 +125,16 @@ session_cache(
 ## essay_requirements
 ```sql
 essay_requirements(
-  lesson_id  text PRIMARY KEY,
-  criteria   jsonb    -- array de criterios de evaluación
+  activity_key                  text PRIMARY KEY,  -- lessonName con guiones: "pattern-peel" (el motor hace lessonName.replace(/ /g, '-'))
+  lesson_title                  text NOT NULL,
+  min_words                     integer,
+  max_words                     integer,
+  min_integrity_score_required  integer,
+  target_keywords               jsonb,             -- objeto {"palabra": ""}
+  min_keyword_matches           integer,
+  required_markers              text[],
+  forbidden_words               jsonb              -- array JSON ["gonna", ...], NO text[]
+  -- la tabla tiene más columnas (p. ej. activity type) que el motor no lee; ver ejemplo en scripts/sql/pattern_lessons_config.sql
 )
 ```
 

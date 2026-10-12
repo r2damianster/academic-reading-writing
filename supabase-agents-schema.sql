@@ -109,8 +109,9 @@ CREATE POLICY "Service role has full access to cache"
 -- DATOS INICIALES — essay_requirements (DT-004)
 -- Criterios de compliance para las lecciones del módulo 00-fundamentals
 -- y primeras lecciones de 01/unit1-essays.
--- El campo `lesson_id` debe coincidir exactamente con _lessonName en slide-engine.js
--- (minúsculas, guiones → espacios, sin espacios extra).
+-- ⚠️ DESACTUALIZADO (2026-10-11): la tabla real usa `activity_key` (PK, con guiones, ej. "pattern-peel"),
+-- `lesson_title` NOT NULL y `forbidden_words` jsonb. Usar scripts/sql/pattern_lessons_config.sql como referencia vigente.
+-- El campo debe coincidir con _lessonName de slide-engine.js (minúsculas; el motor reemplaza espacios por guiones).
 -- =============================================================================
 
 -- Verificar que la tabla existe antes de insertar

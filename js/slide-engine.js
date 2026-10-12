@@ -1095,6 +1095,11 @@ const SlideEngine = (function () {
     // El resultado (0-100) se guarda en _appliedTaskScore para que finishLesson() lo
     // combine con el score de drills. Expuesta como window._gradeAppliedTask porque
     // SlideTypes.APPLIED_TASK vive fuera de este closure (ver SECCIÓN 3).
+    // Las lecciones de la categoría 05 ("pattern ...") reciben el feedback de la IA en inglés.
+    function _feedbackLanguageFor(lessonName) {
+        return String(lessonName || '').toLowerCase().startsWith('pattern ') ? 'en' : undefined;
+    }
+
     async function _gradeAppliedTask(lessonName, indicators, responseText, options = {}) {
         // options: { taskKey, source, keyIdeas, checks, stepInstruction } — taskKey distingue tareas del mismo lesson
         const maxPoints = indicators.reduce((sum, item) => sum + (item.points || 0), 0) || 1;
@@ -1106,7 +1111,8 @@ const SlideEngine = (function () {
                 {
                     lesson: lessonName, essay: (responseText || '').slice(0, 3000), rubric: indicators,
                     source: options.source, keyIdeas: options.keyIdeas,
-                    checks: options.checks, stepInstruction: options.stepInstruction
+                    checks: options.checks, stepInstruction: options.stepInstruction,
+                    feedbackLanguage: _feedbackLanguageFor(lessonName)
                 },
                 'json'
             );
@@ -1205,7 +1211,7 @@ const SlideEngine = (function () {
         try {
             const result = await _callOrchestrator(
                 'writing', '',
-                { lesson: lessonName, essay: (essay || '').slice(0, 2000), audit },
+                { lesson: lessonName, essay: (essay || '').slice(0, 2000), audit, feedbackLanguage: _feedbackLanguageFor(lessonName) },
                 'full_feedback'
             );
             const loading = document.getElementById('se-feedback-loading');
