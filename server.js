@@ -16,6 +16,7 @@ const MIME = {
     '.jpg':  'image/jpeg',
     '.svg':  'image/svg+xml',
     '.ico':  'image/x-icon',
+    '.mp4':  'video/mp4',
 };
 
 const server = http.createServer(async (req, res) => {

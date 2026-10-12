@@ -18,3 +18,7 @@ graphify-out/
 .code-review-graph/
 .vercel
 .env*
+
+# Videos HyperFrames: fuente local; lo publicable vive en public/video/
+videos/*
+!videos/README.md
