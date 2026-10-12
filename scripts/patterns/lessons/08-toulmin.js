@@ -8,6 +8,7 @@ module.exports = {
     part: 'Part III. Building Arguments',
     chapter: 8,
     title: 'Toulmin: The Anatomy of an Argument',
+    argumentative: true,
     patternName: 'Toulmin model',
     keywords: ['claim', 'grounds', 'warrant', 'because'],
     minWords: 70,

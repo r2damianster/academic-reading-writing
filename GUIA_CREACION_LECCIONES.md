@@ -116,3 +116,5 @@ Reglas: `lessonName` en minúsculas, sin guiones, prefijo `pattern ` (la PK de `
 `scripts/sql/pattern_lessons_config.sql`, **generado**; ejecutarlo en Supabase tras añadir lecciones).
 El motor monta tipos externos mediante el `default` del `switch` de `SlideEngine.init()`.
 
+Flags de lección en `scripts/patterns/lessons/*.js`: `argumentative: true` agrega el criterio general de hedging; `generalCriteria: false` omite los criterios generales (register, vocabulary, cohesion, grammar, focus) en la autoevaluación con IA.
+

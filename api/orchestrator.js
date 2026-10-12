@@ -31,7 +31,7 @@ const Memory       = require('../lib/agents/memory');
 // Módulos de agentes con transformaciones específicas de payload
 // Si el módulo no existe, el orquestador usa el payload tal como llega
 const AGENT_MODULES = {};
-['writing', 'integrity', 'reading', 'content-gen', 'github', 'frontend', 'peer-review', 'report-analyst', 'test-grader'].forEach(name => {
+['writing', 'integrity', 'reading', 'content-gen', 'github', 'frontend', 'peer-review', 'report-analyst', 'test-grader', 'self-check'].forEach(name => {
     try { AGENT_MODULES[name] = require(`../lib/agents/${name}`); } catch (e) {}
 });
 
@@ -110,8 +110,50 @@ const AGENT_MAP = {
     frontend:   'frontend',
     reportAnalyst:  'reportAnalyst',
     testGrader:     'testGrader',
-    'test-grader':  'testGrader'
+    'test-grader':  'testGrader',
+    'self-check':   'selfCheck'
 };
+
+// ── Autoevaluación formativa (agent "self-check") ────────────────────────────
+// Máximo de revisiones con IA por estudiante, lección e intento de lección.
+const SELF_CHECK_MAX_CHECKS = 2;
+
+function _selfCheckTestId(payload) {
+    const lesson  = String(payload.lesson || 'unknown').toLowerCase().replace(/[^a-z0-9 -]/g, '').slice(0, 60).trim();
+    const attempt = Number.isInteger(payload.lessonAttempt) ? payload.lessonAttempt : 1;
+    return `selfcheck:${lesson}:a${attempt}`;
+}
+
+async function _countSelfChecks(studentId, testId, supabaseUrl, supabaseKey) {
+    if (!studentId || !supabaseUrl || !supabaseKey) return 0;
+    try {
+        const url = `${supabaseUrl}/rest/v1/test_evaluations?student_id=eq.${encodeURIComponent(studentId)}`
+                  + `&test_id=eq.${encodeURIComponent(testId)}&select=id`;
+        const res = await fetch(url, { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } });
+        if (!res.ok) return 0;
+        const rows = await res.json();
+        return Array.isArray(rows) ? rows.length : 0;
+    } catch (e) {
+        console.warn('⚠️ Orchestrator: self-check count failed (non-critical):', e.message);
+        return 0;
+    }
+}
+
+async function _saveSelfCheck(studentId, testId, attemptNumber, criteria, model, supabaseUrl, supabaseKey) {
+    if (!studentId || !supabaseUrl || !supabaseKey) return;
+    try {
+        await fetch(`${supabaseUrl}/rest/v1/test_evaluations`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}`, Prefer: 'return=minimal' },
+            body: JSON.stringify({
+                student_id: studentId, test_id: testId, rubric_id: null, attempt_number: attemptNumber,
+                total_score: null, indicator_scores: criteria, overall_feedback: '', model_used: model || null
+            })
+        });
+    } catch (e) {
+        console.warn('⚠️ Orchestrator: self-check save failed (non-critical):', e.message);
+    }
+}
 
 // ── Registro de interacción en Supabase ──────────────────────────────────────
 
@@ -173,9 +215,24 @@ async function _handle(body, env) {
         }
     }
 
+    // ── 1b. Self-check: límite de revisiones aplicado en servidor ────────────
+    const isSelfCheck = agent === 'self-check';
+    let selfCheckTestId = null;
+    let selfCheckUsed   = 0;
+    if (isSelfCheck) {
+        selfCheckTestId = _selfCheckTestId(payload || {});
+        selfCheckUsed   = await _countSelfChecks(studentId, selfCheckTestId, env.supabaseUrl, env.supabaseKey);
+        if (selfCheckUsed >= SELF_CHECK_MAX_CHECKS) {
+            return { status: 429, body: { error: 'self_check_limit', checksUsed: selfCheckUsed, checksLeft: 0 } };
+        }
+    }
+
     // ── 2. Token Optimizer: score y selección de modelo ──────────────────────
     const complexityScore = scoreComplexity({ task, payload, needsHistoryDepth, requiresTools, outputFormat });
-    const { model, maxTokens } = selectModel(complexityScore);
+    // El self-check juzga criterios de rúbrica: siempre el modelo grande y respuesta determinista.
+    const { model, maxTokens } = isSelfCheck
+        ? { model: 'llama-3.3-70b-versatile', maxTokens: 1500 }
+        : selectModel(complexityScore);
 
     // ── 3. Transformar payload con el módulo del agente (si existe) ─────────
     let finalPayload = payload;
@@ -210,7 +267,8 @@ async function _handle(body, env) {
             model,
             system:     systemPrompt,
             userContent,
-            maxTokens
+            maxTokens,
+            temperature: isSelfCheck ? 0 : undefined
         });
     } catch (e) {
         console.error('❌ Orchestrator: Groq API error:', e.message);
@@ -238,12 +296,28 @@ async function _handle(body, env) {
             .catch(e => console.warn('⚠️ Orchestrator: session cache update failed:', e.message));
     }
 
+    // Self-check: persistir en test_evaluations (cuenta para el límite y queda visible al docente)
+    let selfCheckMeta = {};
+    if (isSelfCheck) {
+        let parsedCriteria = null;
+        try {
+            const raw = (responseText || '').trim();
+            parsedCriteria = JSON.parse(raw.startsWith('{') ? raw : raw.replace(/^```json?\n?/, '').replace(/```$/, '')).criteria || null;
+        } catch (e) { /* respuesta no parseable: no se cuenta como revisión usada */ }
+        if (parsedCriteria) {
+            await _saveSelfCheck(studentId, selfCheckTestId, selfCheckUsed + 1, parsedCriteria, groqResult.model || model, env.supabaseUrl, env.supabaseKey);
+            selfCheckUsed += 1;
+        }
+        selfCheckMeta = { checksUsed: selfCheckUsed, checksLeft: Math.max(0, SELF_CHECK_MAX_CHECKS - selfCheckUsed) };
+    }
+
     return {
         status: 200,
         body: {
             agent,
             model,
             response:        responseText,
+            ...selfCheckMeta,
             complexityScore,
             usage: {
                 input_tokens:  usage.input_tokens  || 0,

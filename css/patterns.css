@@ -81,3 +81,13 @@
 .pt-selfcheck h4 { margin: 0 0 6px; color: var(--pt-accent); font-size: .95rem; }
 .pt-selfcheck p { margin: 0 0 8px; font-size: .85rem; color: var(--pt-ink); }
 .pt-selfcheck-summary { font-weight: 700; font-size: .85rem; min-height: 1.2em; }
+
+.pt-selfcheck-group th { background: #e8eef7; color: var(--pt-accent); font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; }
+.pt-selfcheck-ai { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 10px 0 4px; }
+.pt-ai-button { background: #1a2a6c; color: #fff; border: none; border-radius: 8px; padding: 9px 16px; font-weight: 700; font-size: .88rem; cursor: pointer; }
+.pt-ai-button:disabled { background: #94a3b8; cursor: not-allowed; }
+.pt-ai-counter { font-size: .8rem; color: var(--pt-muted); }
+.pt-selfcheck-status { font-size: .82rem; color: var(--pt-muted); min-height: 1.1em; }
+.pt-selfcheck-comment { margin-top: 4px; font-size: .8rem; color: var(--pt-muted); }
+.pt-selfcheck-comment[data-status="needs"] { color: #b45309; }
+.pt-selfcheck-comment[data-status="ok"] { color: #166534; }

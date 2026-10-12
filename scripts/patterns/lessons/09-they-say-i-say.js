@@ -8,6 +8,7 @@ module.exports = {
     part: 'Part III. Building Arguments',
     chapter: 9,
     title: 'They Say / I Say: Entering the Academic Conversation',
+    argumentative: true,
     patternName: 'They Say / I Say',
     keywords: ['argues', 'however', 'evidence'],
     minWords: 70,

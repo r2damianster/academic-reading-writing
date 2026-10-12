@@ -8,6 +8,7 @@ module.exports = {
     part: 'Part III. Building Arguments',
     chapter: 10,
     title: 'Concession and Counterargument',
+    argumentative: true,
     patternName: 'Concession and Rogerian moves',
     keywords: ['although', 'however', 'nevertheless', 'concession'],
     minWords: 70,

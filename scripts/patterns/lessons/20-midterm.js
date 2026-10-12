@@ -101,6 +101,7 @@ module.exports = {
     part: 'Assessment',
     chapter: '2–7',
     title: 'Midterm: Writing Patterns 2–7',
+    generalCriteria: false,
     patternName: 'Patterns from chapters 2 to 7',
     keywords: [],
     minWords: 20,

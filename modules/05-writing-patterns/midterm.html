@@ -276,15 +276,20 @@
         <div data-se-self-check>
             <div class="pt-selfcheck">
                 <h4>Self-assessment rubric: Patterns from chapters 2 to 7</h4>
-                <p>Before you submit, check your paragraph against each row. If <strong>three or more</strong> rows need work, rewrite before you hand it in.</p>
+                <p>Before you submit, check your paragraph against each row. You can ask the AI for a quick check (maximum two times): it suggests the marks and you decide. If <strong>three or more</strong> rows need work, rewrite before you hand it in.</p>
                 <table class="pt-rubric">
                     <thead><tr><th>Criterion</th><th>Achieved</th><th>Needs work</th></tr></thead>
                     <tbody>
-                <tr><td>I name one specific pattern.</td><td style="text-align:center;"><input type="radio" name="sc-0" value="ok" aria-label="Achieved"></td><td style="text-align:center;"><input type="radio" name="sc-0" value="needs" aria-label="Needs work"></td></tr>
-                <tr><td>I identify one specific move that was hard (for example, Explanation, Reasoning or Evaluation).</td><td style="text-align:center;"><input type="radio" name="sc-1" value="ok" aria-label="Achieved"></td><td style="text-align:center;"><input type="radio" name="sc-1" value="needs" aria-label="Needs work"></td></tr>
-                <tr><td>I give a reason, not just a feeling.</td><td style="text-align:center;"><input type="radio" name="sc-2" value="ok" aria-label="Achieved"></td><td style="text-align:center;"><input type="radio" name="sc-2" value="needs" aria-label="Needs work"></td></tr>
+                <tr data-sc-key="lesson-1" data-sc-text="I name one specific pattern." data-sc-desc=""><td>I name one specific pattern.</td><td style="text-align:center;"><input type="radio" name="sc-lesson-1" value="ok" aria-label="Achieved"></td><td style="text-align:center;"><input type="radio" name="sc-lesson-1" value="needs" aria-label="Needs work"></td></tr>
+                <tr data-sc-key="lesson-2" data-sc-text="I identify one specific move that was hard (for example, Explanation, Reasoning or Evaluation)." data-sc-desc=""><td>I identify one specific move that was hard (for example, Explanation, Reasoning or Evaluation).</td><td style="text-align:center;"><input type="radio" name="sc-lesson-2" value="ok" aria-label="Achieved"></td><td style="text-align:center;"><input type="radio" name="sc-lesson-2" value="needs" aria-label="Needs work"></td></tr>
+                <tr data-sc-key="lesson-3" data-sc-text="I give a reason, not just a feeling." data-sc-desc=""><td>I give a reason, not just a feeling.</td><td style="text-align:center;"><input type="radio" name="sc-lesson-3" value="ok" aria-label="Achieved"></td><td style="text-align:center;"><input type="radio" name="sc-lesson-3" value="needs" aria-label="Needs work"></td></tr>
                     </tbody>
                 </table>
+                <div class="pt-selfcheck-ai">
+                    <button type="button" data-se-selfcheck-ai data-se-min-words="20" class="pt-ai-button">&#x2728; Check with AI</button>
+                    <span data-se-selfcheck-counter class="pt-ai-counter"></span>
+                </div>
+                <div data-se-selfcheck-status class="pt-selfcheck-status"></div>
                 <div data-se-self-check-summary class="pt-selfcheck-summary"></div>
             </div>
         </div>

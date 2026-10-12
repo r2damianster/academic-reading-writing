@@ -8,6 +8,7 @@ module.exports = {
     part: 'Part I. Foundations',
     chapter: 1,
     title: 'What Is a Writing Pattern?',
+    generalCriteria: false,
     patternName: 'Writing patterns',
     keywords: ['pattern', 'move', 'structure'],
     minWords: 30,

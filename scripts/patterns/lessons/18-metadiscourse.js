@@ -8,6 +8,7 @@ module.exports = {
     part: 'Part V. Integrating Sources and Cohesion',
     chapter: 16,
     title: 'Metadiscourse: Guiding the Reader',
+    argumentative: true,
     patternName: 'Metadiscourse (hedges, boosters, connectors)',
     keywords: ['may', 'likely', 'however', 'suggests', 'clearly'],
     minWords: 50,

@@ -125,6 +125,8 @@ const SlideEngine = (function () {
         }
 
 
+        window._seLessonAttempt = _attemptNumber; // lo usa la autoevaluación con IA (límite por intento)
+
         // Exponer globales para compatibilidad con essay-handler.js y activity-tracker.js
         window.mistakes    = _mistakes;
         window.nextSlide   = goTo;
@@ -1700,6 +1702,140 @@ const SlideEngine = (function () {
      ("se" = slide engine) para no colisionar con otros sistemas.
    ============================================================================= */
 
+/* =============================================================================
+   SelfCheckAI — autoevaluación formativa con IA (máx. 2 revisiones)
+   Se activa si el slide del ensayo trae <button data-se-selfcheck-ai>.
+   - Checks deterministas en cliente (contracciones, palabras vagas, informales)
+     que se tratan como hechos y fuerzan "needs work" en registro/vocabulario.
+   - La IA (agente "self-check") marca el resto de criterios y comenta.
+   - Las marcas son editables; Submit nunca se bloquea.
+   - El límite de 2 lo aplica el servidor (api/orchestrator.js) por estudiante,
+     lección e intento; el cliente solo lo muestra.
+============================================================================= */
+const SelfCheckAI = {
+    MAX_CHECKS: 2,
+
+    facts(text) {
+        const find = pattern => Array.from(new Set((text.match(pattern) || []).map(match => match.toLowerCase())));
+        return {
+            wordCount:     text.trim().split(/\s+/).filter(Boolean).length,
+            contractions:  find(/\b\w+(?:n't|'re|'ve|'ll|'m|'d)\b|\b(?:it|that|there|here|what|let)'s\b/gi),
+            vagueWords:    find(/\b(?:things?|stuff|a lot of|lots of|kind of|sort of)\b/gi),
+            informalPhrases: find(/\b(?:i think|i believe|in my opinion|gonna|wanna|kinda|you know)\b/gi)
+        };
+    },
+
+    _storageKey(lessonName) {
+        return `se_selfcheck:${String(lessonName).toLowerCase()}:a${window._seLessonAttempt || 1}`;
+    },
+
+    wire(box, button, lessonName, onChange) {
+        const counter  = box.querySelector('[data-se-selfcheck-counter]');
+        const status   = box.querySelector('[data-se-selfcheck-status]');
+        const minWords = parseInt(button.dataset.seMinWords, 10) || 20;
+        const storageKey = this._storageKey(lessonName);
+        let used = 0;
+        try { used = parseInt(localStorage.getItem(storageKey), 10) || 0; } catch (e) { /* sin storage */ }
+
+        const paintCounter = () => {
+            const left = Math.max(0, this.MAX_CHECKS - used);
+            counter.textContent = left > 0 ? `AI checks left: ${left} of ${this.MAX_CHECKS}` : 'No AI checks left for this attempt.';
+            button.disabled = left === 0;
+        };
+        paintCounter();
+
+        button.addEventListener('click', async () => {
+            const textarea = document.getElementById('essayInput');
+            const text = textarea ? textarea.value.trim() : '';
+            const facts = this.facts(text);
+            if (facts.wordCount < minWords) {
+                status.textContent = `Write at least ${minWords} words before asking for an AI check (you have ${facts.wordCount}).`;
+                return;
+            }
+
+            const rows = Array.from(box.querySelectorAll('tr[data-sc-key]'));
+            const criteria = rows.map(row => ({
+                key: row.dataset.scKey, text: row.dataset.scText, desc: row.dataset.scDesc || ''
+            }));
+
+            button.disabled = true;
+            status.textContent = 'Checking your paragraph…';
+            try {
+                const response = await fetch('/api/orchestrator', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        agent: 'self-check',
+                        studentId: localStorage.getItem('studentId') || null,
+                        task: '', outputFormat: 'json', needsHistoryDepth: 0, requiresTools: false,
+                        payload: {
+                            lesson: lessonName, essay: text, criteria,
+                            checks: facts, feedbackLanguage: 'en',
+                            lessonAttempt: window._seLessonAttempt || 1
+                        }
+                    })
+                });
+                if (response.status === 429) {
+                    used = this.MAX_CHECKS; paintCounter();
+                    status.textContent = 'You have used both AI checks for this attempt.';
+                    return;
+                }
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const data = await response.json();
+                const raw  = String(data.response || '').trim();
+                const parsed = JSON.parse(raw.startsWith('{') ? raw : raw.replace(/^```json?\n?/, '').replace(/```$/, ''));
+                this._apply(rows, parsed.criteria || [], facts);
+
+                used = typeof data.checksUsed === 'number' ? data.checksUsed : used + 1;
+                try { localStorage.setItem(storageKey, String(used)); } catch (e) { /* sin storage */ }
+                status.textContent = 'These marks are a suggestion: you can change any of them before you submit.';
+                if (onChange) onChange();
+            } catch (error) {
+                console.warn('SelfCheckAI: failed', error.message);
+                status.textContent = 'The AI check is not available right now. Use the rubric yourself; this did not use one of your checks.';
+            } finally {
+                paintCounter();
+            }
+        });
+    },
+
+    _apply(rows, aiCriteria, facts) {
+        const byKey = {};
+        aiCriteria.forEach(item => { byKey[item.key] = item; });
+
+        rows.forEach(row => {
+            const item = byKey[row.dataset.scKey];
+            let status  = item && item.status === 'achieved' ? 'ok' : 'needs';
+            let comment = item && item.comment ? String(item.comment) : '';
+
+            // Hechos deterministas: mandan sobre la IA
+            if (row.dataset.scKey === 'register' && (facts.contractions.length || facts.informalPhrases.length)) {
+                status = 'needs';
+                const found = facts.contractions.concat(facts.informalPhrases).slice(0, 4).join(', ');
+                comment = `Informal wording found: ${found}. ${comment}`.trim();
+            }
+            if (row.dataset.scKey === 'vocabulary' && facts.vagueWords.length >= 2) {
+                status = 'needs';
+                comment = `Vague wording found: ${facts.vagueWords.slice(0, 4).join(', ')}. ${comment}`.trim();
+            }
+
+            const radio = row.querySelector(`input[value="${status}"]`);
+            if (radio) radio.checked = true;
+
+            const cell = row.querySelector('td');
+            let note = cell.querySelector('.pt-selfcheck-comment');
+            if (!note) {
+                note = document.createElement('div');
+                note.className = 'pt-selfcheck-comment';
+                cell.appendChild(note);
+            }
+            note.textContent = comment;
+            note.dataset.status = status;
+        });
+    }
+};
+
+
 const SlideTypes = {};
 
 
@@ -2393,6 +2529,9 @@ SlideTypes.ESSAY = {
                 }
             };
             selfCheckBox.addEventListener('change', refreshSummary);
+
+            const aiButton = selfCheckBox.querySelector('[data-se-selfcheck-ai]');
+            if (aiButton) SelfCheckAI.wire(selfCheckBox, aiButton, lessonName, refreshSummary);
         }
 
         slide.appendChild(workspace);

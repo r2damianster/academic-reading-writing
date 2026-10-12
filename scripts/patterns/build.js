@@ -30,6 +30,26 @@ const STAGE_NAMES = [
     'Phrase bank — keep the phrases you will reuse'
 ];
 
+// Criterios generales de escritura académica: se agregan a la autoevaluación de cada lección.
+// "desc" lo lee la IA; "text" lo ve el estudiante. La clave `register` y `vocabulary` además se
+// refuerzan con checks deterministas en el cliente (SelfCheckAI en js/slide-engine.js).
+const GENERAL_CRITERIA = [
+    { key: 'register',   text: 'Academic register: formal tone, no contractions or colloquial expressions.',
+      desc: 'Formal academic tone; no contractions, slang, or personal-opinion fillers such as "I think".' },
+    { key: 'vocabulary', text: 'Vocabulary: precise, specific words instead of vague ones (thing, stuff, a lot of).',
+      desc: 'Specific academic vocabulary; avoids vague words such as thing, stuff, a lot of, good, bad.' },
+    { key: 'cohesion',   text: 'Cohesion: connectors and reference words link each sentence to the previous one.',
+      desc: 'Sentences are linked with connectors (however, therefore) and reference words (this, such) so the paragraph flows.' },
+    { key: 'grammar',    text: 'Grammar and mechanics: complete sentences, agreement, punctuation, spelling.',
+      desc: 'Complete sentences, subject-verb agreement, correct tenses, punctuation and spelling; errors do not block meaning.' },
+    { key: 'focus',      text: 'Focus: the whole paragraph develops one main idea.',
+      desc: 'One main idea; every sentence supports it and nothing drifts to a different topic (One-Point Rule).' }
+];
+const HEDGING_CRITERION = {
+    key: 'hedging', text: 'Certainty: hedges and boosters match the strength of the evidence.',
+    desc: 'Claims are calibrated: hedges (may, appears to, likely) where evidence is limited, boosters only where it is strong.'
+};
+
 function escapeHtml(text) {
     return String(text)
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -304,12 +324,26 @@ ${groups}
     essay(slide, lesson) {
         // Autoevaluación dentro del ensayo, antes de enviar: la rúbrica de la lección
         // o, si no tiene, la lista de verificación del propio ensayo.
-        const criteria = lesson.rubric.length ? lesson.rubric : slide.checklist;
-        const selfCheckRows = criteria.map((criterion, criterionIndex) =>
-            `<tr><td>${inlineHtml(criterion)}</td>` +
-            `<td style="text-align:center;"><input type="radio" name="sc-${criterionIndex}" value="ok" aria-label="Achieved"></td>` +
-            `<td style="text-align:center;"><input type="radio" name="sc-${criterionIndex}" value="needs" aria-label="Needs work"></td></tr>`
-        ).join('\n                ');
+        const lessonCriteria = (lesson.rubric.length ? lesson.rubric : slide.checklist)
+            .map((criterion, criterionIndex) => ({ key: `lesson-${criterionIndex + 1}`, text: criterion.replace(/\*\*/g, ''), html: criterion, desc: '' }));
+        const generalCriteria = lesson.generalCriteria === false
+            ? []
+            : GENERAL_CRITERIA.concat(lesson.argumentative ? [HEDGING_CRITERION] : [])
+                .map(criterion => ({ key: criterion.key, text: criterion.text, html: criterion.text, desc: criterion.desc }));
+
+        const renderRow = criterion =>
+            `<tr data-sc-key="${criterion.key}" data-sc-text="${escapeHtml(criterion.text)}" data-sc-desc="${escapeHtml(criterion.desc)}">` +
+            `<td>${inlineHtml(criterion.html)}</td>` +
+            `<td style="text-align:center;"><input type="radio" name="sc-${criterion.key}" value="ok" aria-label="Achieved"></td>` +
+            `<td style="text-align:center;"><input type="radio" name="sc-${criterion.key}" value="needs" aria-label="Needs work"></td></tr>`;
+        const groupRow = label => `<tr class="pt-selfcheck-group"><th colspan="3">${label}</th></tr>`;
+        const selfCheckRows = [
+            ...(generalCriteria.length ? [groupRow('This pattern')] : []),
+            ...lessonCriteria.map(renderRow),
+            ...(generalCriteria.length ? [groupRow('General writing criteria')] : []),
+            ...generalCriteria.map(renderRow)
+        ].join('\n                ');
+        const minWordsForAI = Math.max(20, Math.round((lesson.minWords || 40) * 0.8));
         return `
     <!-- ESSAY — Warning -->
     <div class="slide" id="preEssaySlide"
@@ -331,13 +365,18 @@ ${groups}
         <div data-se-self-check>
             <div class="pt-selfcheck">
                 <h4>Self-assessment rubric: ${escapeHtml(lesson.patternName)}</h4>
-                <p>Before you submit, check your paragraph against each row. If <strong>three or more</strong> rows need work, rewrite before you hand it in.</p>
+                <p>Before you submit, check your paragraph against each row. You can ask the AI for a quick check (maximum two times): it suggests the marks and you decide. If <strong>three or more</strong> rows need work, rewrite before you hand it in.</p>
                 <table class="pt-rubric">
                     <thead><tr><th>Criterion</th><th>Achieved</th><th>Needs work</th></tr></thead>
                     <tbody>
                 ${selfCheckRows}
                     </tbody>
                 </table>
+                <div class="pt-selfcheck-ai">
+                    <button type="button" data-se-selfcheck-ai data-se-min-words="${minWordsForAI}" class="pt-ai-button">&#x2728; Check with AI</button>
+                    <span data-se-selfcheck-counter class="pt-ai-counter"></span>
+                </div>
+                <div data-se-selfcheck-status class="pt-selfcheck-status"></div>
                 <div data-se-self-check-summary class="pt-selfcheck-summary"></div>
             </div>
         </div>${teacherNote(slide.note)}
