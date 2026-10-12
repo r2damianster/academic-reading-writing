@@ -354,6 +354,7 @@ tr.row-archived td { opacity:.55; }
         <button class="tab-btn active" onclick="switchTab('activity', this)">Activity Log</button>
         <button class="tab-btn" onclick="switchTab('essays', this)">Essays</button>
         <button class="tab-btn" onclick="switchTab('reading', this)">Reading</button>
+        <button class="tab-btn" onclick="switchTab('selfchecks', this)">AI Self-checks</button>
       </div>
 
       <!-- Activity tab -->
@@ -383,6 +384,16 @@ tr.row-archived td { opacity:.55; }
               </tr>
             </thead>
             <tbody id="essaysBody"><tr><td colspan="8" class="state-msg">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- AI self-checks tab (categoría 05 Writing Patterns) -->
+      <div class="tab-panel" id="tab-selfchecks">
+        <div class="detail-table-wrap">
+          <table class="detail-table">
+            <thead><tr><th>Lesson</th><th>Attempt</th><th>Check</th><th>Achieved</th><th>Date</th><th></th></tr></thead>
+            <tbody id="selfChecksBody"><tr><td colspan="6" class="state-msg">Loading…</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -578,6 +589,7 @@ async function openDetail(studentId) {
         renderActivityTab(currentDetail.activities);
         renderEssaysTab(currentDetail.essays);
         renderReadingTab(currentDetail.reading);
+        renderSelfChecksTab(currentDetail.selfChecks);
     } catch(e) {
         document.getElementById('activityBody').innerHTML =
             `<tr><td colspan="3" class="state-msg" style="color:var(--red)">Error: ${e.message}</td></tr>`;
@@ -788,6 +800,32 @@ function renderReadingTab(reading) {
     ).join('');
 }
 
+function renderSelfChecksTab(selfChecks) {
+    const body = document.getElementById('selfChecksBody');
+    if (!selfChecks || selfChecks.length === 0) {
+        body.innerHTML = '<tr><td colspan="6" class="state-msg">No AI self-checks used.</td></tr>';
+        return;
+    }
+    body.innerHTML = selfChecks.map((check, index) => {
+        const detailId = `selfcheck-${index}`;
+        const badgeClass = check.total && check.achieved === check.total ? 'badge-good' : 'badge-none';
+        const detailRows = (check.criteria || []).map(item =>
+            `<div style="margin:3px 0;">${item.status === 'achieved' ? '✅' : '⚠️'} <strong>${esc(item.key || '')}</strong> — ${esc(item.comment || '')}</div>`
+        ).join('');
+        return `<tr>
+            <td>${esc(check.lesson || '—')}</td>
+            <td style="text-align:center">${check.lessonAttempt ?? '—'}</td>
+            <td style="text-align:center">${check.checkNumber ?? '—'} / 2</td>
+            <td><span class="badge ${badgeClass}">${check.achieved}/${check.total}</span></td>
+            <td style="white-space:nowrap;color:var(--mist)">${fmtDate(check.created_at)}</td>
+            <td>
+                <button class="expand-btn" onclick="toggleEssay('${detailId}')">Details</button>
+                <div class="essay-full" id="${detailId}">${detailRows || '—'}</div>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
 function toggleEssay(id) {
     const el = document.getElementById(id);
     el.classList.toggle('open');
@@ -833,6 +871,9 @@ function downloadStudentCSV() {
     (currentDetail.essays || []).forEach(e => {
         rows.push(['Essay', e.activity || '', '', e.words || '', e.integrity_score !== null ? e.integrity_score : '',
             e.writing_duration ? Math.round(e.writing_duration/60) : '', fmtDate(e.created_at)]);
+    });
+    (currentDetail.selfChecks || []).forEach(c => {
+        rows.push(['AI self-check', c.lesson || '', `${c.achieved}/${c.total} achieved (check ${c.checkNumber}, attempt ${c.lessonAttempt})`, '', '', '', fmtDate(c.created_at)]);
     });
     (currentDetail.reading || []).forEach(r => {
         rows.push(['Reading', r.lesson || '', r.completed ? 'Completed' : 'In progress', '', r.score !== null ? r.score : '', '', fmtDate(r.created_at)]);

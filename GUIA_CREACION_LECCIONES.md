@@ -101,6 +101,8 @@ Copia este código para iniciar cualquier lección:
 Las 20 lecciones de `modules/05-writing-patterns/` **no se escriben a mano**: se generan desde
 `scripts/patterns/lessons/*.js` con `node scripts/patterns/build.js`. Edita el dato, no el HTML.
 
+Referencia APA 7 del libro (manuscrito sin publicar): Rodríguez Zambrano, A. D. (2026). *Academic writing patterns: A practical guide for EFL university students* [Unpublished manuscript]. Universidad Laica Eloy Alfaro de Manta. El generador la agrega al encabezado de cada lección (`BOOK_REFERENCE_HTML`).
+
 Cada lección sigue las 7 etapas del libro *Academic Writing Patterns*: The model → Taking it apart →
 Why this works → Spot the pattern → Rebuild it → Now you write → Phrase bank.
 

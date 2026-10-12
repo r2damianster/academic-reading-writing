@@ -91,3 +91,9 @@
 .pt-selfcheck-comment { margin-top: 4px; font-size: .8rem; color: var(--pt-muted); }
 .pt-selfcheck-comment[data-status="needs"] { color: #b45309; }
 .pt-selfcheck-comment[data-status="ok"] { color: #166534; }
+
+.pt-reference { margin: 10px 0 0; padding-top: 8px; border-top: 1px dashed var(--pt-line); font-size: .78rem; color: var(--pt-muted); line-height: 1.5; padding-left: 2em; text-indent: -2em; }
+.pt-book { border: 1px solid var(--pt-line); border-left: 5px solid #1a2a6c; background: #fff; border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 0 0 20px; }
+.pt-book h3 { margin: 0; color: #1a2a6c; font-size: 1.1rem; }
+.pt-book .pt-book-sub { margin: 2px 0 8px; color: var(--pt-muted); font-style: italic; }
+.pt-book p { margin: 2px 0; font-size: .88rem; color: var(--pt-ink); }

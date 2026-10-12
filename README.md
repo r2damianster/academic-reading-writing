@@ -259,3 +259,11 @@ Este proyecto está diseñado para ser **agnóstico al proveedor de LLM**. El cl
 Docente de Pedagogía de los Idiomas Nacionales y Extranjeros  
 Universidad Laica Eloy Alfaro de Manabí (ULEAM) — Manta, Ecuador  
 `arturo.rodriguez@uleam.edu.ec`
+
+---
+
+## Referencia del módulo 05 (Writing Patterns)
+
+Rodríguez Zambrano, A. D. (2026). *Academic writing patterns: A practical guide for EFL university students* [Unpublished manuscript]. Universidad Laica Eloy Alfaro de Manta.
+
+En texto: (Rodríguez Zambrano, 2026). Libro en desarrollo, sin publicar.

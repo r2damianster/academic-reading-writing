@@ -33,6 +33,9 @@ const STAGE_NAMES = [
 // Criterios generales de escritura académica: se agregan a la autoevaluación de cada lección.
 // "desc" lo lee la IA; "text" lo ve el estudiante. La clave `register` y `vocabulary` además se
 // refuerzan con checks deterministas en el cliente (SelfCheckAI en js/slide-engine.js).
+// Referencia APA 7 del libro en el que se basa la categoría (manuscrito aún no publicado).
+const BOOK_REFERENCE_HTML = 'Rodríguez Zambrano, A. D. (2026). <em>Academic writing patterns: A practical guide for EFL university students</em> [Unpublished manuscript]. Universidad Laica Eloy Alfaro de Manta.';
+
 const GENERAL_CRITERIA = [
     { key: 'register',   text: 'Academic register: formal tone, no contractions or colloquial expressions.',
       desc: 'Formal academic tone; no contractions, slang, or personal-opinion fillers such as "I think".' },
@@ -88,6 +91,7 @@ const SLIDE_RENDERERS = {
         <div class="pt-hero">
             <p>${inlineHtml(slide.objective)}</p>
             <p class="pt-meta">Pattern: <strong>${escapeHtml(lesson.patternName)}</strong> &middot; About ${slide.minutes || 20} minutes &middot; Book chapter ${lesson.chapter}</p>
+            <p class="pt-reference"><strong>Based on:</strong> ${BOOK_REFERENCE_HTML}</p>
             <ol class="pt-stage-list">
                 ${stageItems}
             </ol>

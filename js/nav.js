@@ -149,7 +149,7 @@ const MENU = [
   {
     label: '05. Writing Patterns',
     path: 'modules/05-writing-patterns/patterns-hub.html',
-    description: 'Real published models, <strong>PEEL</strong>, CER, Toulmin, CARS and more: learn each pattern by taking it apart.',
+    description: 'Real published models, <strong>PEEL</strong>, CER, Toulmin, CARS and more. Based on Rodríguez Zambrano (2026).',
     children: [
       {
         label: 'Part I: Foundations',

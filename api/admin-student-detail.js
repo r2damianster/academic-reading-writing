@@ -14,6 +14,7 @@ const CHILD_TABLES = [
     'essay_submissions',
     'activity_logs',
     'reading_progress',
+    'test_evaluations',
     'session_cache',
     'student_profiles'
 ];
@@ -77,7 +78,8 @@ module.exports = async (req, res) => {
             { data: activities, error: e1 },
             { data: essays,     error: e2 },
             { data: compliance, error: e3 },
-            { data: reading,    error: e4 }
+            { data: reading,    error: e4 },
+            { data: selfChecks }
         ] = await Promise.all([
             supabase.from('activity_logs')
                 .select('activity,result,created_at')
@@ -99,7 +101,14 @@ module.exports = async (req, res) => {
                 .eq('student_id', studentId)
                 .eq('slide_id', -1)
                 .order('completed_at', { ascending: false })
-                .limit(200)
+                .limit(200),
+            // Autoevaluaciones con IA (agente self-check): test_id = selfcheck:<lección>:a<intento>
+            supabase.from('test_evaluations')
+                .select('test_id,attempt_number,indicator_scores,model_used,created_at')
+                .eq('student_id', studentId)
+                .like('test_id', 'selfcheck:%')
+                .order('created_at', { ascending: false })
+                .limit(300)
         ]);
 
         if (e1) return res.status(500).json({ error: 'activity_logs: ' + e1.message });
@@ -122,10 +131,26 @@ module.exports = async (req, res) => {
             created_at: r.completed_at
         }));
 
+        // Un fallo al leer test_evaluations no debe tumbar el resto del historial
+        const selfChecksMapped = (selfChecks || []).map(row => {
+            const match = /^selfcheck:(.+):a(\d+)$/.exec(row.test_id || '');
+            const criteria = Array.isArray(row.indicator_scores) ? row.indicator_scores : [];
+            return {
+                lesson:         match ? match[1] : row.test_id,
+                lessonAttempt:  match ? parseInt(match[2], 10) : null,
+                checkNumber:    row.attempt_number,
+                criteria,
+                achieved:       criteria.filter(item => item.status === 'achieved').length,
+                total:          criteria.length,
+                created_at:     row.created_at
+            };
+        });
+
         return res.status(200).json({
             activities: activities || [],
             essays: essaysWithCompliance,
-            reading: readingMapped
+            reading: readingMapped,
+            selfChecks: selfChecksMapped
         });
 
     } catch (e) {

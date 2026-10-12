@@ -270,6 +270,12 @@ npm start 2>&1 | ollama run llama3.2 "Summarize errors only. Be concise."
 
 ## Writing Patterns (categoría 05)
 
+**Referencia APA 7 (libro en desarrollo, sin publicar):**
+
+> Rodríguez Zambrano, A. D. (2026). *Academic writing patterns: A practical guide for EFL university students* [Unpublished manuscript]. Universidad Laica Eloy Alfaro de Manta.
+>
+> En texto: (Rodríguez Zambrano, 2026). Se muestra en el hub del módulo, en el encabezado de cada lección (`BOOK_REFERENCE_HTML` en `scripts/patterns/build.js`) y en el Phrase Bank.
+
 Categoría basada en el libro *Academic Writing Patterns* (`Academic Writing Patterns.docx`, raíz del repo): 17 capítulos → 19 lecciones + Midterm + Phrase Bank. Todo el contenido estudiantil va **en inglés**; las `data-teacher-note` en español.
 
 - **Fuente de verdad:** `scripts/patterns/lessons/*.js` (datos) + `scripts/patterns/build.js` (plantilla "Pattern Lab"). `node scripts/patterns/build.js` regenera `modules/05-writing-patterns/*.html`, `js/pattern-phrases.js` y `scripts/sql/pattern_lessons_config.sql`. **No editar el HTML generado.**
