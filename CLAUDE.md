@@ -275,6 +275,6 @@ Categoría basada en el libro *Academic Writing Patterns* (`Academic Writing Pat
 - **Fuente de verdad:** `scripts/patterns/lessons/*.js` (datos) + `scripts/patterns/build.js` (plantilla "Pattern Lab"). `node scripts/patterns/build.js` regenera `modules/05-writing-patterns/*.html`, `js/pattern-phrases.js` y `scripts/sql/pattern_lessons_config.sql`. **No editar el HTML generado.**
 - **Tipos de slide nuevos:** `MOVE_TAG`, `WAVE`, `PHRASE_BANK` en `js/pattern-types.js` (cargado después de `slide-engine.js`). Único cambio al motor: `default` del `switch` de `init()` y `_resolveHubUrl` (`/05-writing-patterns/`).
 - **PEEL reemplaza a PEER:** `modules/00-fundamentals/peer.html` es ahora un redirect a `05-writing-patterns/peel.html`. El label de Fundamentals #5 apunta a la nueva lección.
-- **DT-010 (resuelto en código, 2026-10-11):** tests, seeds de rúbricas, prompts de `writing`/`peer-review` y docs ya dicen PEEL (Link). La clave técnica `peer_architecture_rigor` se conserva. Falta ejecutar `scripts/sql/migrate_peer_to_peel.sql` en Supabase para actualizar las rúbricas ya sembradas.
+- **DT-010 (resuelto en código, 2026-10-11):** tests, seeds de rúbricas, prompts de `writing`/`peer-review` y docs ya dicen PEEL (Link). La clave técnica `peer_architecture_rigor` se conserva. Rúbricas en BD migradas con `scripts/sql/migrate_peer_to_peel.sql` (ejecutado y verificado).
 - Sin endpoints nuevos (siguen 12/12). El cuaderno de frases vive en `localStorage`; sincronizarlo a Supabase requeriría una tabla + acción en un endpoint existente.
 

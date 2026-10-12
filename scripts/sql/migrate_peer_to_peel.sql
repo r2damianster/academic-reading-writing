@@ -1,4 +1,4 @@
--- DT-009: PEER (Relevance) → PEEL (Link) en las rúbricas ya sembradas.
+-- DT-010 (ejecutado y verificado 2026-10-11): PEER (Relevance) → PEEL (Link) en las rúbricas ya sembradas.
 -- Cambia SOLO los textos; la clave técnica "peer_architecture_rigor" se conserva
 -- para no romper test_evaluations ni el prompt del test-grader.
 -- Idempotente: si ya está migrado, los replace no encuentran nada.
