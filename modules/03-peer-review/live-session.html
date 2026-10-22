@@ -80,6 +80,11 @@ code.session-id { background: var(--cloud); padding: 3px 8px; border-radius: 6px
         <button id="btnSaveTemplate" type="button" class="secondary" style="flex:1;">Guardar como plantilla</button>
         <button id="btnDeleteTemplate" type="button" class="secondary hidden" style="flex:0 0 auto;">Eliminar</button>
       </div>
+      <label>Rúbrica de evaluación (define los criterios de revisores e IA)</label>
+      <select id="rubricSelect">
+        <option value="peel">PEEL, Hedging &amp; Nominalización (3 párrafos PEEL)</option>
+        <option value="combined">SPRE + PEEL + CER + Toulmin (4 párrafos)</option>
+      </select>
       <label>Nombre de la actividad</label>
       <input type="text" id="lessonNameInput" placeholder="ej. Argumentative Essay — Peer Review Ciclo 1" value="Peer Review — PEEL, Hedging &amp; Nominalization">
       <label>Consigna (thesis + instrucciones, se muestra a los estudiantes mientras escriben)</label>
@@ -201,9 +206,14 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
 <script src="../../js/peer-review-client.js"></script>
 <script>
 (function () {
-    const RUBRIC_LABELS = {
-        peel_rigor: 'PEEL (Point-Evidence-Explain-Link)', hedging: 'Hedging', nominalization: 'Nominalización'
-    };
+    // Los criterios los define la rúbrica de la sesión (lib/peer-rubrics.js) y llegan del servidor.
+    let RUBRIC_LABELS = {};
+    let rubricReviewHint = '';
+    function applyRubric(rubric) {
+        if (!rubric) return;
+        RUBRIC_LABELS = Object.fromEntries(rubric.criteria.map(criterion => [criterion.key, criterion.label]));
+        rubricReviewHint = rubric.reviewHint || '';
+    }
     const REVIEW_LABELS = { specific: 'Específico', actionable: 'Accionable', balanced: 'Balanceado' };
 
     let writingDeadline = null;
@@ -232,6 +242,7 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
             document.getElementById('btnDeleteTemplate').classList.toggle('hidden', !t);
             if (!t) return;
             document.getElementById('lessonNameInput').value = t.name;
+            document.getElementById('rubricSelect').value = t.rubric_key || 'peel';
             document.getElementById('instructionsInput').value = t.instructions;
             document.getElementById('writingMinutesInput').value = t.writing_minutes;
             document.getElementById('reviewMinutesInput').value = t.review_minutes;
@@ -253,6 +264,7 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
                     payload: PeerReview.teacherPayload({
                         id: selectedId,
                         name,
+                        rubricKey: document.getElementById('rubricSelect').value,
                         instructions: document.getElementById('instructionsInput').value.trim(),
                         writingMinutes: Number(document.getElementById('writingMinutesInput').value) || 20,
                         reviewMinutes: Number(document.getElementById('reviewMinutesInput').value) || 15,
@@ -304,6 +316,7 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
                 const { session } = await PeerReview.call('open', {
                     payload: PeerReview.teacherPayload({
                         lessonName,
+                        rubricKey: document.getElementById('rubricSelect').value,
                         writingMinutes: Number(document.getElementById('writingMinutesInput').value) || 20,
                         reviewMinutes: Number(document.getElementById('reviewMinutesInput').value) || 15,
                         reviewersPerEssay: Number(document.getElementById('reviewersPerEssayInput').value) || 3,
@@ -540,7 +553,8 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
     }
 
     async function loadReviews() {
-        const { reviews } = await PeerReview.call('get_my_reviews');
+        const { reviews, rubric } = await PeerReview.call('get_my_reviews');
+        applyRubric(rubric);
         const container = document.getElementById('assignmentsContainer');
         container.innerHTML = '';
         reviews.forEach(rev => {
@@ -565,7 +579,9 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
                 <option value="2">2 — In Progress</option>
                 <option value="1">1 — Unsatisfactory</option>
             </select>`).join('');
+        const hintHtml = rubricReviewHint ? `<p class="hint">${escapeHtml(rubricReviewHint)}</p>` : '';
         return `
+            ${hintHtml}
             ${rubricSelects}
             <label>Fortalezas</label><textarea data-field="strengths" style="min-height:70px;"></textarea>
             <label>Qué mejorar</label><textarea data-field="improve" style="min-height:70px;"></textarea>
@@ -590,7 +606,8 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
     }
 
     async function loadResults() {
-        const { essay, myReviewsQuality } = await PeerReview.call('get_results');
+        const { essay, myReviewsQuality, rubric } = await PeerReview.call('get_results');
+        applyRubric(rubric);
 
         document.getElementById('resultEssayText').textContent = essay.text || '(sin texto)';
 

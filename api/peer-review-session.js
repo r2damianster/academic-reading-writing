@@ -101,6 +101,13 @@ async function loadSessionRubricKey(sessionId) {
     return resolveRubricKey(data && data.rubric_key);
 }
 
+// Lo que el cliente necesita para dibujar el formulario de revisión y las pills de resultado.
+function rubricForClient(rubricKey) {
+    const key = resolveRubricKey(rubricKey);
+    const { label, criteria, reviewHint = '' } = getRubric(key);
+    return { key, label, criteria, reviewHint };
+}
+
 function averageScores(criteriaKeys, scoreRows) {
     const averages = {};
     criteriaKeys.forEach(key => {
@@ -431,7 +438,8 @@ async function actionGetMyReviews(sessionId, studentId) {
     if (aErr) return { status: 500, body: { error: aErr.message } };
 
     const ownerIds = (assignments || []).map(a => a.essay_owner_participant_id);
-    if (ownerIds.length === 0) return { status: 200, body: { reviews: [] } };
+    const rubricKey = await loadSessionRubricKey(sessionId);
+    if (ownerIds.length === 0) return { status: 200, body: { reviews: [], rubric: rubricForClient(rubricKey) } };
 
     const { data: owners, error: oErr } = await supabase.from('peer_review_participants')
         .select('id, essay_submission_id').in('id', ownerIds);
@@ -452,7 +460,7 @@ async function actionGetMyReviews(sessionId, studentId) {
         essayText:    essayById[subByOwner[a.essay_owner_participant_id]] || '(sin entrega)'
     }));
 
-    return { status: 200, body: { reviews } };
+    return { status: 200, body: { reviews, rubric: rubricForClient(rubricKey) } };
 }
 
 async function actionSubmitReview(studentId, payload) {
@@ -462,7 +470,7 @@ async function actionSubmitReview(studentId, payload) {
     }
 
     const { data: assignment, error: aErr } = await supabase.from('peer_review_assignments')
-        .select('id, reviewer_participant_id').eq('id', assignmentId).single();
+        .select('id, session_id, reviewer_participant_id').eq('id', assignmentId).single();
     if (aErr || !assignment) return { status: 404, body: { error: 'Asignación no encontrada.' } };
 
     const { data: reviewer } = await supabase.from('peer_review_participants')
@@ -472,7 +480,8 @@ async function actionSubmitReview(studentId, payload) {
     }
 
     const cleanScores = {};
-    ESSAY_CRITERIA.forEach(key => { cleanScores[key] = clampScore(essayScores[key]); });
+    getCriteriaKeys(await loadSessionRubricKey(assignment.session_id))
+        .forEach(key => { cleanScores[key] = clampScore(essayScores[key]); });
     const cleanComments = {
         strengths: (comments.strengths || '').slice(0, 600),
         improve:   (comments.improve   || '').slice(0, 600),
@@ -559,6 +568,7 @@ async function actionExcludeParticipant(sessionId, payload) {
 // panel del docente — se recalcula cada vez que se libera feedback, así que
 // una re-liberación tras "Reabrir revisión" también actualiza el promedio.
 async function persistPeerAverages(sessionId) {
+    const criteriaKeys = getCriteriaKeys(await loadSessionRubricKey(sessionId));
     const { data: participants } = await supabase.from('peer_review_participants')
         .select('id, essay_submission_id').eq('session_id', sessionId).not('essay_submission_id', 'is', null);
 
@@ -575,11 +585,7 @@ async function persistPeerAverages(sessionId) {
         const { data: feedbackRows } = await supabase.from('peer_review_feedback')
             .select('essay_scores').in('assignment_id', assignmentIds);
 
-        const avg = {};
-        ESSAY_CRITERIA.forEach(key => {
-            const vals = (feedbackRows || []).map(f => f.essay_scores[key]).filter(v => v != null);
-            avg[key] = vals.length ? Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 100) / 100 : null;
-        });
+        const avg = averageScores(criteriaKeys, (feedbackRows || []).map(f => f.essay_scores));
 
         await supabase.from('essay_submissions')
             .update({ peer_avg_scores: avg, peer_review_count: (feedbackRows || []).length })
@@ -601,6 +607,7 @@ async function persistPeerAverages(sessionId) {
 async function actionReleaseFeedback(sessionId, payload) {
     if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
     const batchSize = Math.min((payload && payload.batchSize) || 15, 30);
+    const rubricKey = await loadSessionRubricKey(sessionId);
 
     const { data: participants } = await supabase.from('peer_review_participants')
         .select('essay_submission_id').eq('session_id', sessionId).not('essay_submission_id', 'is', null);
@@ -611,7 +618,7 @@ async function actionReleaseFeedback(sessionId, payload) {
 
     let graded = 0, failedEssays = 0;
     for (const essay of (ungradedEssays || []).slice(0, batchSize)) {
-        const result = await gradeEssay(essay.essay_text);
+        const result = await gradeEssay(essay.essay_text, rubricKey);
         if (result.ok) {
             await supabase.from('essay_submissions')
                 .update({ ai_essay_scores: result.scores, ai_essay_rationale: result.rationale }).eq('id', essay.id);
@@ -683,11 +690,8 @@ async function actionGetResults(sessionId, studentId) {
     const { data: peerFeedback } = await supabase.from('peer_review_feedback')
         .select('essay_scores, comments').in('assignment_id', doneIds.length ? doneIds : ['00000000-0000-0000-0000-000000000000']);
 
-    const peerAvg = {};
-    ESSAY_CRITERIA.forEach(key => {
-        const vals = (peerFeedback || []).map(f => f.essay_scores[key]).filter(v => v != null);
-        peerAvg[key] = vals.length ? Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 100) / 100 : null;
-    });
+    const rubricKey = await loadSessionRubricKey(sessionId);
+    const peerAvg = averageScores(getCriteriaKeys(rubricKey), (peerFeedback || []).map(f => f.essay_scores));
 
     const { data: myReviewAssignments } = await supabase.from('peer_review_assignments')
         .select('id').eq('reviewer_participant_id', me.id);
@@ -705,6 +709,7 @@ async function actionGetResults(sessionId, studentId) {
     return {
         status: 200,
         body: {
+            rubric: rubricForClient(rubricKey),
             essay: {
                 text: essay ? essay.essay_text : null,
                 aiEvaluator: {
