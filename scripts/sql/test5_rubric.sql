@@ -1,4 +1,4 @@
--- Migration: seed Test 5 — Writing Patterns rubric (8 indicators / 10 pts)
+-- Migration: seed Test 6 — Writing Patterns rubric (test_id 'test5 patterns', etiqueta renumerada) (8 indicators / 10 pts)
 -- Generado con un script a partir de los datos de la rúbrica; test_rubrics se crea en test_rubrics.sql.
 -- El estudiante elige un patrón distinto (SPRE, PEEL, CER, Toulmin) para cada párrafo y lo declara en la Fase 1;
 -- el texto evaluado incluye "[PHASE 1 — PLAN]" con "Paragraph N [PATRÓN]: oración".

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Test 1 — PEEL Essentials | Academic Writing Assessment</title>
+    <link rel="stylesheet" href="../../css/modules.css">
+    <style>
+        .test-badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .question-box {
+            background: #f0f4ff;
+            border-left: 4px solid #3498db;
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.93rem;
+            color: #2c3e50;
+        }
+        .phase-header {
+            background: #2c3e50;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px 8px 0 0;
+            font-weight: 700;
+            font-size: 0.88rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .phase-body {
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 16px;
+            margin-bottom: 18px;
+        }
+        .plan-row { margin-bottom: 14px; }
+        .plan-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        .plan-input {
+            width: 100%;
+            min-height: 60px;
+            padding: 10px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            font-family: inherit;
+            resize: vertical;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .plan-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52,152,219,0.15);
+        }
+        .plan-error {
+            display: none;
+            background: #fdecea;
+            border: 1px solid #e74c3c;
+            border-radius: 6px;
+            color: #c0392b;
+            font-size: 0.82rem;
+            padding: 8px 12px;
+            margin-bottom: 12px;
+        }
+        .instruction-list {
+            background: #fff8e1;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 14px 0;
+        }
+        .instruction-list li { font-size: 0.88rem; margin-bottom: 6px; color: #495057; }
+        .note-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 12px;
+            font-style: italic;
+        }
+        .btn-back {
+            display: inline-block;
+            margin-bottom: 16px;
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            color: #495057;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-back:hover { background: #e9ecef; }
+
+        /* Compliance panel hidden — students must not see what is being evaluated */
+        #se-req-panel, #se-req-badge { display: none !important; }
+    </style>
+    <script src="../../js/activity-tracker.js"></script>
+    <script src="../../js/essay-handler.js"></script>
+    <script src="../../js/report.js"></script>
+    <script src="../../js/slide-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — TEST WARNING (cover + instructions) -->
+    <div class="slide active" data-type="CONTENT">
+        <span class="test-badge">Official Assessment</span>
+        <h2>Test 1 — PEEL Essentials</h2>
+        <p>This assessment checks the essential pattern of the course: the PEEL paragraph. You will answer a question by building four PEEL paragraphs, each defending a different reason.</p>
+
+        <div class="question-box">
+            <strong>Question:</strong> "Should university students in Ecuador be allowed to use their phones during class?"
+        </div>
+
+        <p style="font-size:0.88rem; color:#495057;">This test has <strong>two phases</strong>:</p>
+        <ol style="font-size:0.88rem; color:#495057; line-height:2;">
+            <li><strong>Phase 1</strong> — Planning: state your position and draft the Point of each of your four paragraphs.</li>
+            <li><strong>Phase 2</strong> — Writing: develop four PEEL paragraphs that follow your plan.</li>
+        </ol>
+
+        <ul class="instruction-list">
+            <li><strong>Your position:</strong> answer the question with a clear position (yes, no, or yes under conditions). All four paragraphs must support it.</li>
+            <li><strong>Four paragraphs, four reasons:</strong> each paragraph defends one reason, and the four reasons must be different from one another.</li>
+            <li><strong>PEEL Model (Point, Evidence, Explanation, Link):</strong> every paragraph must follow Point → Evidence → Explanation → Link. The Evidence must be concrete (a datum, a source or a specific example). The Explanation must interpret the Evidence, not repeat it. The Link ties the paragraph back to the question or leads into the next paragraph.</li>
+            <li><strong>One Point per paragraph:</strong> do not mix two ideas in the same paragraph.</li>
+            <li><strong>No labels:</strong> do not write the names of the components (Point, Evidence...) in your paragraphs.</li>
+            <li><strong>Register:</strong> formal academic English, no contractions, no vague words such as <em>thing</em>, <em>stuff</em> or <em>a lot</em>. No introduction or conclusion is needed.</li>
+            <li><strong>Length:</strong> 300–450 words in total.</li>
+        </ul>
+
+        <div class="note-box">
+            Note: Strikethroughs and erasures are allowed, as long as they do not interrupt the teacher's reading.
+        </div>
+    </div>
+
+    <!-- SLIDE 1 — PHASE 1: PLANNING WORKSPACE -->
+    <!-- id="preEssaySlide" triggers finishLesson() (quiz score save) when entered -->
+    <div class="slide" data-type="CONTENT" id="preEssaySlide">
+        <button class="btn-back" onclick="window.prevSlide && window.prevSlide()">&#8592; Back to Instructions</button>
+
+        <div class="phase-header">Phase 1 — Planning</div>
+        <div class="phase-body">
+            <div class="plan-error" id="planError"></div>
+
+            <div class="plan-row">
+                <div class="plan-label">Your position — answer the question in one sentence:</div>
+                <textarea class="plan-input" id="position"
+                    placeholder="Write a complete sentence that answers the question..."></textarea>
+            </div>
+
+            <p style="font-size:0.85rem; font-weight:600; color:#2c3e50; margin:16px 0 12px 0;">
+                Write ONLY the Point (topic sentence) of each paragraph. Each Point is a different reason that supports your position:
+            </p>
+
+            <div class="plan-row">
+                <div class="plan-label">Paragraph 1 — Point:</div>
+                <textarea class="plan-input" id="point-1"
+                    placeholder="Write a complete, arguable sentence for Paragraph 1..."></textarea>
+            </div>
+            <div class="plan-row">
+                <div class="plan-label">Paragraph 2 — Point:</div>
+                <textarea class="plan-input" id="point-2"
+                    placeholder="Write a complete, arguable sentence for Paragraph 2..."></textarea>
+            </div>
+            <div class="plan-row">
+                <div class="plan-label">Paragraph 3 — Point:</div>
+                <textarea class="plan-input" id="point-3"
+                    placeholder="Write a complete, arguable sentence for Paragraph 3..."></textarea>
+            </div>
+            <div class="plan-row">
+                <div class="plan-label">Paragraph 4 — Point:</div>
+                <textarea class="plan-input" id="point-4"
+                    placeholder="Write a complete, arguable sentence for Paragraph 4..."></textarea>
+            </div>
+        </div>
+        <p style="font-size:0.78rem; color:#6c757d; margin:0 0 12px 0;">
+            When your position and four Points are ready, click <strong>Next</strong> to proceed to Phase 2.
+        </p>
+    </div>
+
+    <!-- SLIDE 2 — ESSAY WORKSPACE (Phase 2 writing) -->
+    <!-- Back button injected via JS after SlideEngine.init() -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="test peel">
+        <p data-se-prompt>
+            Write your four PEEL paragraphs following the plan you made in Phase 1, in the same order.
+            Every paragraph must follow Point, Evidence, Explanation, Link, develop only one reason, and support your position.
+            Do not write the names of the components. Keep a formal academic register.
+            Target: 300–450 words total.
+        </p>
+    </div>
+
+</div><!-- /.lesson-container -->
+
+<script>
+window.onload = () => {
+    const PARAGRAPH_NUMBERS = [1, 2, 3, 4];
+
+    const getPositionInput = () => document.getElementById('position');
+    const getPointInput    = paragraphNumber => document.getElementById('point-' + paragraphNumber);
+    const getPositionText  = () => (getPositionInput()?.value || '').trim();
+    const getPointText     = paragraphNumber => (getPointInput(paragraphNumber)?.value || '').trim();
+
+    // ── Phase 1 integrity tracker ────────────────────────────────────────────
+    // Monitors keystrokes and pastes in the planning textareas so that
+    // Phase 1 input is included in the cumulative integrity audit.
+    window._phase1Audit = { pastes: 0, keystrokes: 0, deletions: 0 };
+
+    document.querySelectorAll('.plan-input').forEach(planInput => {
+        planInput.addEventListener('paste', () => { window._phase1Audit.pastes++; });
+        planInput.addEventListener('keydown', keyEvent => {
+            window._phase1Audit.keystrokes++;
+            if (keyEvent.key === 'Backspace' || keyEvent.key === 'Delete') window._phase1Audit.deletions++;
+        });
+    });
+
+    // Returns an error message, or '' when the plan is complete.
+    function validatePlan() {
+        if (!getPositionText()) {
+            return 'Write your position: one sentence that answers the question.';
+        }
+        if (PARAGRAPH_NUMBERS.some(paragraphNumber => !getPointText(paragraphNumber))) {
+            return 'Write the Point of every paragraph.';
+        }
+        return '';
+    }
+
+    // Capture phase on document: runs before the engine's own Next handler,
+    // so an incomplete plan never reaches Phase 2.
+    document.addEventListener('click', clickEvent => {
+        const nextButton = clickEvent.target.closest && clickEvent.target.closest('#preEssaySlide .btn-next');
+        if (!nextButton) return;
+        const planError    = document.getElementById('planError');
+        const errorMessage = validatePlan();
+        planError.textContent   = errorMessage;
+        planError.style.display = errorMessage ? 'block' : 'none';
+        if (errorMessage) {
+            clickEvent.stopImmediatePropagation();
+            clickEvent.preventDefault();
+        }
+    }, true);
+
+    // ── Boot engines ─────────────────────────────────────────────────────────
+    // ActivityTracker must init before SlideEngine mounts the workspace
+    // so the tab-switch baseline is set correctly when EssayHandler.init() fires.
+    ActivityTracker.init('test peel');
+
+    const engineReady = SlideEngine.init('test peel');
+
+    engineReady.then(() => {
+
+        // ── Override finishLessonWithEssay ────────────────────────────────────
+        // Prepend the Phase 1 plan (position + one Point per paragraph) and
+        // recalculate integrity score using combined Phase 1 + Phase 2 raw stats.
+        const originalFinishLesson = window.finishLessonWithEssay;
+        window.finishLessonWithEssay = function(lessonName, essay, audit, redirectUrl) {
+            const pointLines = PARAGRAPH_NUMBERS.map(paragraphNumber =>
+                'Point ' + paragraphNumber + ': ' + (getPointText(paragraphNumber) || '(not provided)'));
+
+            const fullEssay =
+                '[PHASE 1 — PLAN]\n' +
+                'Position: ' + (getPositionText() || '(not provided)') + '\n' +
+                pointLines.join('\n') + '\n\n' +
+                '[PHASE 2 — FOUR PEEL PARAGRAPHS]\n' + (essay || '');
+
+            // Skip merge if essay was discarded (skipped flag) or no Phase 1 activity
+            const phase1Audit = window._phase1Audit || { pastes: 0, keystrokes: 0, deletions: 0 };
+            const mergedAudit = Object.assign({}, audit);
+
+            if (!audit?.skipped && (phase1Audit.pastes > 0 || phase1Audit.keystrokes > 0)) {
+                const phase1Chars = [getPositionInput(), ...PARAGRAPH_NUMBERS.map(getPointInput)]
+                    .reduce((total, planInput) => total + (planInput?.value.length || 0), 0);
+
+                const combinedPastes      = (audit?.pastes     || 0) + phase1Audit.pastes;
+                const combinedKeystrokes  = (audit?.keystrokes || 0) + phase1Audit.keystrokes;
+                const combinedChars       = (audit?.chars      || 0) + phase1Chars;
+                const combinedDeletions   = (audit?.deletions  || 0) + phase1Audit.deletions;
+                const combinedWords       =  audit?.words           || 0;
+                const tabSwitches         =  audit?.tabSwitches     || 0;
+                const writingDuration     =  audit?.writingDuration || 0;
+
+                // Replicate EssayHandler._calcIntegrityScore with combined stats
+                let integrityScore = 100;
+                if (combinedPastes > 0 && combinedChars > 30) {
+                    const typedRatio = Math.round((combinedKeystrokes / combinedChars) * 100);
+                    const pastedPercent = Math.max(0, 100 - typedRatio);
+                    if      (pastedPercent >= 60) integrityScore -= 50;
+                    else if (pastedPercent >= 30) integrityScore -= 25;
+                    else if (pastedPercent >= 10) integrityScore -= 10;
+                    else                          integrityScore -= 5;
+                } else if (combinedPastes > 0) {
+                    integrityScore -= 20;
+                }
+                if (tabSwitches >= 5)      integrityScore -= Math.min(tabSwitches * 4, 25);
+                else if (tabSwitches >= 2) integrityScore -= tabSwitches * 3;
+                if (combinedWords > 10 && combinedDeletions > 0) {
+                    const deletionRatio = combinedDeletions / Math.max(combinedKeystrokes, 1);
+                    if (deletionRatio > 0.6) integrityScore -= 10;
+                }
+                if (combinedPastes === 0 && combinedWords > 30 && writingDuration > 0 && writingDuration < 30) {
+                    integrityScore -= 15;
+                }
+
+                mergedAudit.pastes          = combinedPastes;
+                mergedAudit.keystrokes      = combinedKeystrokes;
+                mergedAudit.deletions       = combinedDeletions;
+                mergedAudit.integrityScore  = Math.max(0, integrityScore);
+                mergedAudit.charsTypedRatio = combinedChars > 0
+                    ? Math.round((combinedKeystrokes / combinedChars) * 100)
+                    : (audit?.charsTypedRatio || 0);
+            }
+
+            originalFinishLesson(lessonName, fullEssay, mergedAudit, redirectUrl);
+        };
+
+        // ── Intercept Phase 1 Next button to init EssayHandler once ──────────
+        // EssayHandler normally starts via the warning-slide "Start Writing" button.
+        // Since there is no warning slide in this test, we trigger it the first time
+        // the student navigates from Phase 1 to the writing workspace. An incomplete
+        // plan is stopped earlier by the capture handler, so this only runs when valid.
+        let essayHandlerStarted = false;
+        const phase1NextButton = document.querySelector('#preEssaySlide .btn-next');
+        if (phase1NextButton) {
+            phase1NextButton.addEventListener('click', () => {
+                if (!essayHandlerStarted && window.EssayHandler) {
+                    EssayHandler.init('test peel');
+                    essayHandlerStarted = true;
+                }
+            });
+        }
+
+        // ── Inject "Review Plan" back button into the essay workspace ─────────
+        // Allows the student to freely navigate back to Phase 1 planning.
+        const workspace = document.querySelector('#essaySlide .essay-workspace');
+        const finalButton = document.getElementById('finalBtn');
+        if (workspace && finalButton) {
+            const reviewPlanButton = document.createElement('button');
+            reviewPlanButton.innerHTML = '&#8592; Review Phase 1 Plan';
+            reviewPlanButton.style.cssText =
+                'display:block; width:100%; margin-bottom:10px; padding:10px 20px;' +
+                'background:#f8f9fa; border:1px solid #dee2e6; border-radius:8px;' +
+                'color:#495057; font-size:0.9rem; font-weight:600; cursor:pointer;' +
+                'transition:background 0.2s;';
+            reviewPlanButton.onmouseover = () => { reviewPlanButton.style.background = '#e9ecef'; };
+            reviewPlanButton.onmouseout  = () => { reviewPlanButton.style.background = '#f8f9fa'; };
+            reviewPlanButton.onclick     = () => { window.prevSlide && window.prevSlide(); };
+            workspace.insertBefore(reviewPlanButton, finalButton);
+        }
+
+    }); // end engineReady.then()
+};
+</script>
+
+</body>
+</html>
