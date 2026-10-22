@@ -143,7 +143,8 @@ const MENU = [
       { label: 'Test 1 — Fundamentals',    path: 'modules/04-tests/test1-fundamentals.html' },
       { label: 'Test 2 — Essays',          path: 'modules/04-tests/test2-essays.html' },
       { label: 'Test 3 — Research',        path: 'modules/04-tests/test3-research.html' },
-      { label: 'Test 4 — Toolbox',         path: 'modules/04-tests/test4-toolbox.html' }
+      { label: 'Test 4 — Toolbox',         path: 'modules/04-tests/test4-toolbox.html' },
+      { label: 'Test 5 — Writing Patterns', path: 'modules/04-tests/test5-patterns.html' }
     ]
   },
   {

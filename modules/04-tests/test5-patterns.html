@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Test 5 — Writing Patterns | Academic Writing Assessment</title>
+    <link rel="stylesheet" href="../../css/modules.css">
+    <style>
+        .test-badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .topic-box {
+            background: #f0f4ff;
+            border-left: 4px solid #3498db;
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.93rem;
+            color: #2c3e50;
+        }
+        .phase-header {
+            background: #2c3e50;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px 8px 0 0;
+            font-weight: 700;
+            font-size: 0.88rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .phase-body {
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 16px;
+            margin-bottom: 18px;
+        }
+        .plan-row { margin-bottom: 16px; }
+        .plan-row-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+        .plan-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #495057;
+        }
+        .pattern-select {
+            padding: 6px 10px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-family: inherit;
+            background: white;
+        }
+        .pattern-select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52,152,219,0.15);
+        }
+        .plan-input {
+            width: 100%;
+            min-height: 60px;
+            padding: 10px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            font-family: inherit;
+            resize: vertical;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .plan-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52,152,219,0.15);
+        }
+        .plan-error {
+            display: none;
+            background: #fdecea;
+            border: 1px solid #e74c3c;
+            border-radius: 6px;
+            color: #c0392b;
+            font-size: 0.82rem;
+            padding: 8px 12px;
+            margin-bottom: 12px;
+        }
+        .instruction-list {
+            background: #fff8e1;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 14px 0;
+        }
+        .instruction-list li { font-size: 0.88rem; margin-bottom: 6px; color: #495057; }
+        .pattern-reference {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            margin: 10px 0;
+        }
+        .pattern-reference th, .pattern-reference td {
+            border: 1px solid #dee2e6;
+            padding: 6px 10px;
+            text-align: left;
+            color: #495057;
+        }
+        .pattern-reference th { background: #f8f9fa; color: #2c3e50; }
+        .note-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 12px;
+            font-style: italic;
+        }
+        .btn-back {
+            display: inline-block;
+            margin-bottom: 16px;
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            color: #495057;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-back:hover { background: #e9ecef; }
+
+        /* Compliance panel hidden — students must not see what is being evaluated */
+        #se-req-panel, #se-req-badge { display: none !important; }
+    </style>
+    <script src="../../js/activity-tracker.js"></script>
+    <script src="../../js/essay-handler.js"></script>
+    <script src="../../js/report.js"></script>
+    <script src="../../js/slide-engine.js" defer></script>
+</head>
+<body>
+
+<div class="lesson-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- SLIDE 0 — TEST WARNING (cover + instructions) -->
+    <div class="slide active" data-type="CONTENT">
+        <span class="test-badge">Official Assessment</span>
+        <h2>Test 5 — Writing Patterns</h2>
+        <p>This assessment evaluates your ability to choose and apply the four paragraph patterns studied in the Writing Patterns module within one short, coherent text.</p>
+
+        <div class="topic-box">
+            <strong>Topic:</strong> "Should every university degree in Ecuador require an English-medium course?"
+        </div>
+
+        <p style="font-size:0.88rem; color:#495057;">This test has <strong>two phases</strong>:</p>
+        <ol style="font-size:0.88rem; color:#495057; line-height:2;">
+            <li><strong>Phase 1</strong> — Planning: choose the pattern for each of your four paragraphs and write its opening sentence.</li>
+            <li><strong>Phase 2</strong> — Writing: develop the four paragraphs, applying the patterns you chose, in the same order.</li>
+        </ol>
+
+        <table class="pattern-reference">
+            <tr><th>Pattern</th><th>Components</th></tr>
+            <tr><td>SPRE</td><td>Situation, Problem, Response, Evaluation</td></tr>
+            <tr><td>PEEL</td><td>Point, Evidence, Explanation, Link</td></tr>
+            <tr><td>CER</td><td>Claim, Evidence (with data), Reasoning</td></tr>
+            <tr><td>Toulmin</td><td>At least four of Claim, Grounds, Warrant, Backing, Qualifier, Rebuttal (a Warrant is required)</td></tr>
+        </table>
+
+        <ul class="instruction-list">
+            <li><strong>Four paragraphs, four patterns:</strong> use <strong>each</strong> pattern exactly once. You decide which pattern goes in which paragraph and in what order.</li>
+            <li><strong>Choose with a purpose:</strong> pick the pattern that best fits what that paragraph does for your answer to the topic. The four paragraphs must work together as one coherent text.</li>
+            <li><strong>Opening sentence:</strong> in Phase 1 you write only the first sentence of each paragraph (the Situation for SPRE, the Point for PEEL, the Claim for CER and Toulmin).</li>
+            <li><strong>No labels:</strong> do not write the names of the components (Point, Claim, Warrant...) in your paragraphs.</li>
+            <li><strong>Data:</strong> in the CER paragraph you may invent a small, plausible data set (two groups, two means, a difference).</li>
+            <li><strong>Hedging and nominalization:</strong> include at least one hedge and one nominalization in every paragraph.</li>
+            <li><strong>Register:</strong> formal academic English, no contractions. Target: 350–500 words in total.</li>
+        </ul>
+
+        <div class="note-box">
+            Note: Strikethroughs and erasures are allowed, as long as they do not interrupt the teacher's reading.
+        </div>
+    </div>
+
+    <!-- SLIDE 1 — PHASE 1: PLANNING WORKSPACE -->
+    <!-- id="preEssaySlide" triggers finishLesson() (quiz score save) when entered -->
+    <div class="slide" data-type="CONTENT" id="preEssaySlide">
+        <button class="btn-back" onclick="window.prevSlide && window.prevSlide()">&#8592; Back to Instructions</button>
+
+        <div class="phase-header">Phase 1 — Pattern Planning</div>
+        <div class="phase-body">
+            <p style="font-size:0.88rem; margin:0 0 10px 0;">For each paragraph, choose a pattern and write the opening sentence that will start it. Each pattern must be used exactly once.</p>
+
+            <div class="plan-error" id="planError"></div>
+
+            <div class="plan-row">
+                <div class="plan-row-header">
+                    <span class="plan-label">Paragraph 1:</span>
+                    <select class="pattern-select" id="pattern-1" data-paragraph="1">
+                        <option value="">— Choose a pattern —</option>
+                        <option value="SPRE">SPRE</option>
+                        <option value="PEEL">PEEL</option>
+                        <option value="CER">CER</option>
+                        <option value="Toulmin">Toulmin</option>
+                    </select>
+                    <span class="plan-label" id="openingLabel-1">Opening sentence</span>
+                </div>
+                <textarea class="plan-input" id="opening-1"
+                    placeholder="Write a complete sentence that opens Paragraph 1..."></textarea>
+            </div>
+
+            <div class="plan-row">
+                <div class="plan-row-header">
+                    <span class="plan-label">Paragraph 2:</span>
+                    <select class="pattern-select" id="pattern-2" data-paragraph="2">
+                        <option value="">— Choose a pattern —</option>
+                        <option value="SPRE">SPRE</option>
+                        <option value="PEEL">PEEL</option>
+                        <option value="CER">CER</option>
+                        <option value="Toulmin">Toulmin</option>
+                    </select>
+                    <span class="plan-label" id="openingLabel-2">Opening sentence</span>
+                </div>
+                <textarea class="plan-input" id="opening-2"
+                    placeholder="Write a complete sentence that opens Paragraph 2..."></textarea>
+            </div>
+
+            <div class="plan-row">
+                <div class="plan-row-header">
+                    <span class="plan-label">Paragraph 3:</span>
+                    <select class="pattern-select" id="pattern-3" data-paragraph="3">
+                        <option value="">— Choose a pattern —</option>
+                        <option value="SPRE">SPRE</option>
+                        <option value="PEEL">PEEL</option>
+                        <option value="CER">CER</option>
+                        <option value="Toulmin">Toulmin</option>
+                    </select>
+                    <span class="plan-label" id="openingLabel-3">Opening sentence</span>
+                </div>
+                <textarea class="plan-input" id="opening-3"
+                    placeholder="Write a complete sentence that opens Paragraph 3..."></textarea>
+            </div>
+
+            <div class="plan-row">
+                <div class="plan-row-header">
+                    <span class="plan-label">Paragraph 4:</span>
+                    <select class="pattern-select" id="pattern-4" data-paragraph="4">
+                        <option value="">— Choose a pattern —</option>
+                        <option value="SPRE">SPRE</option>
+                        <option value="PEEL">PEEL</option>
+                        <option value="CER">CER</option>
+                        <option value="Toulmin">Toulmin</option>
+                    </select>
+                    <span class="plan-label" id="openingLabel-4">Opening sentence</span>
+                </div>
+                <textarea class="plan-input" id="opening-4"
+                    placeholder="Write a complete sentence that opens Paragraph 4..."></textarea>
+            </div>
+        </div>
+        <p style="font-size:0.78rem; color:#6c757d; margin:0 0 12px 0;">
+            When your four patterns and opening sentences are ready, click <strong>Next</strong> to proceed to Phase 2.
+        </p>
+    </div>
+
+    <!-- SLIDE 2 — ESSAY WORKSPACE (Phase 2 writing) -->
+    <!-- Back button injected via JS after SlideEngine.init() -->
+    <div class="slide" id="essaySlide"
+         data-type="ESSAY" data-se-role="workspace"
+         data-se-lesson="test5 patterns">
+        <p data-se-prompt>
+            Write your four paragraphs in the same order as your Phase 1 plan, applying to each one the pattern you chose.
+            Do not write the names of the components. Include at least one hedge and one nominalization in every paragraph, and keep a formal academic register.
+            Target: 350–500 words total.
+        </p>
+    </div>
+
+</div><!-- /.lesson-container -->
+
+<script>
+window.onload = () => {
+    const PARAGRAPH_NUMBERS = [1, 2, 3, 4];
+    const OPENING_SENTENCE_NAME_BY_PATTERN = {
+        SPRE: 'Situation sentence',
+        PEEL: 'Point sentence',
+        CER: 'Claim sentence',
+        Toulmin: 'Claim sentence'
+    };
+
+    const getPatternSelect  = paragraphNumber => document.getElementById('pattern-' + paragraphNumber);
+    const getOpeningInput   = paragraphNumber => document.getElementById('opening-' + paragraphNumber);
+    const getOpeningLabel   = paragraphNumber => document.getElementById('openingLabel-' + paragraphNumber);
+    const getOpeningText    = paragraphNumber => (getOpeningInput(paragraphNumber)?.value || '').trim();
+    const getChosenPattern  = paragraphNumber => getPatternSelect(paragraphNumber)?.value || '';
+
+    // ── Phase 1 integrity tracker ────────────────────────────────────────────
+    // Monitors keystrokes and pastes in the planning textareas so that
+    // Phase 1 input is included in the cumulative integrity audit.
+    window._phase1Audit = { pastes: 0, keystrokes: 0, deletions: 0 };
+
+    document.querySelectorAll('.plan-input').forEach(openingInput => {
+        openingInput.addEventListener('paste', () => { window._phase1Audit.pastes++; });
+        openingInput.addEventListener('keydown', keyEvent => {
+            window._phase1Audit.keystrokes++;
+            if (keyEvent.key === 'Backspace' || keyEvent.key === 'Delete') window._phase1Audit.deletions++;
+        });
+    });
+
+    // The label beside each menu names the opening sentence that the chosen pattern asks for.
+    PARAGRAPH_NUMBERS.forEach(paragraphNumber => {
+        getPatternSelect(paragraphNumber).addEventListener('change', () => {
+            const sentenceName = OPENING_SENTENCE_NAME_BY_PATTERN[getChosenPattern(paragraphNumber)];
+            getOpeningLabel(paragraphNumber).textContent = sentenceName || 'Opening sentence';
+        });
+    });
+
+    // Returns an error message, or '' when the plan is valid:
+    // every paragraph has a pattern and a sentence, and each pattern is used exactly once.
+    function validatePlan() {
+        const chosenPatterns = PARAGRAPH_NUMBERS.map(getChosenPattern);
+        if (chosenPatterns.some(pattern => !pattern)) {
+            return 'Choose a pattern for every paragraph.';
+        }
+        if (new Set(chosenPatterns).size !== chosenPatterns.length) {
+            return 'Each pattern (SPRE, PEEL, CER, Toulmin) must be used exactly once. One of them is repeated.';
+        }
+        if (PARAGRAPH_NUMBERS.some(paragraphNumber => !getOpeningText(paragraphNumber))) {
+            return 'Write the opening sentence for every paragraph.';
+        }
+        return '';
+    }
+
+    // Capture phase on document: runs before the engine's own Next handler,
+    // so an invalid plan never reaches Phase 2.
+    document.addEventListener('click', clickEvent => {
+        const nextButton = clickEvent.target.closest && clickEvent.target.closest('#preEssaySlide .btn-next');
+        if (!nextButton) return;
+        const planError   = document.getElementById('planError');
+        const errorMessage = validatePlan();
+        planError.textContent   = errorMessage;
+        planError.style.display = errorMessage ? 'block' : 'none';
+        if (errorMessage) {
+            clickEvent.stopImmediatePropagation();
+            clickEvent.preventDefault();
+        }
+    }, true);
+
+    // ── Boot engines ─────────────────────────────────────────────────────────
+    // ActivityTracker must init before SlideEngine mounts the workspace
+    // so the tab-switch baseline is set correctly when EssayHandler.init() fires.
+    ActivityTracker.init('test5 patterns');
+
+    const engineReady = SlideEngine.init('test5 patterns');
+
+    engineReady.then(() => {
+
+        // ── Override finishLessonWithEssay ────────────────────────────────────
+        // Prepend the Phase 1 plan (declared pattern + opening sentence per paragraph)
+        // and recalculate integrity score using combined Phase 1 + Phase 2 raw stats.
+        // The declared pattern travels in the text so the grader knows which
+        // pattern each paragraph was supposed to follow.
+        const originalFinishLesson = window.finishLessonWithEssay;
+        window.finishLessonWithEssay = function(lessonName, essay, audit, redirectUrl) {
+            const planLines = PARAGRAPH_NUMBERS.map(paragraphNumber => {
+                const chosenPattern = getChosenPattern(paragraphNumber) || 'not chosen';
+                const openingText   = getOpeningText(paragraphNumber) || '(not provided)';
+                return 'Paragraph ' + paragraphNumber + ' [' + chosenPattern + ']: ' + openingText;
+            });
+
+            const fullEssay =
+                '[PHASE 1 — PLAN]\n' +
+                planLines.join('\n') + '\n\n' +
+                '[PHASE 2 — FOUR PARAGRAPHS]\n' + (essay || '');
+
+            // Skip merge if essay was discarded (skipped flag) or no Phase 1 activity
+            const phase1Audit = window._phase1Audit || { pastes: 0, keystrokes: 0, deletions: 0 };
+            const mergedAudit = Object.assign({}, audit);
+
+            if (!audit?.skipped && (phase1Audit.pastes > 0 || phase1Audit.keystrokes > 0)) {
+                const phase1Chars = PARAGRAPH_NUMBERS
+                    .reduce((total, paragraphNumber) => total + (getOpeningInput(paragraphNumber)?.value.length || 0), 0);
+
+                const combinedPastes      = (audit?.pastes     || 0) + phase1Audit.pastes;
+                const combinedKeystrokes  = (audit?.keystrokes || 0) + phase1Audit.keystrokes;
+                const combinedChars       = (audit?.chars      || 0) + phase1Chars;
+                const combinedDeletions   = (audit?.deletions  || 0) + phase1Audit.deletions;
+                const combinedWords       =  audit?.words           || 0;
+                const tabSwitches         =  audit?.tabSwitches     || 0;
+                const writingDuration     =  audit?.writingDuration || 0;
+
+                // Replicate EssayHandler._calcIntegrityScore with combined stats
+                let integrityScore = 100;
+                if (combinedPastes > 0 && combinedChars > 30) {
+                    const typedRatio = Math.round((combinedKeystrokes / combinedChars) * 100);
+                    const pastedPercent = Math.max(0, 100 - typedRatio);
+                    if      (pastedPercent >= 60) integrityScore -= 50;
+                    else if (pastedPercent >= 30) integrityScore -= 25;
+                    else if (pastedPercent >= 10) integrityScore -= 10;
+                    else                          integrityScore -= 5;
+                } else if (combinedPastes > 0) {
+                    integrityScore -= 20;
+                }
+                if (tabSwitches >= 5)      integrityScore -= Math.min(tabSwitches * 4, 25);
+                else if (tabSwitches >= 2) integrityScore -= tabSwitches * 3;
+                if (combinedWords > 10 && combinedDeletions > 0) {
+                    const deletionRatio = combinedDeletions / Math.max(combinedKeystrokes, 1);
+                    if (deletionRatio > 0.6) integrityScore -= 10;
+                }
+                if (combinedPastes === 0 && combinedWords > 30 && writingDuration > 0 && writingDuration < 30) {
+                    integrityScore -= 15;
+                }
+
+                mergedAudit.pastes          = combinedPastes;
+                mergedAudit.keystrokes      = combinedKeystrokes;
+                mergedAudit.deletions       = combinedDeletions;
+                mergedAudit.integrityScore  = Math.max(0, integrityScore);
+                mergedAudit.charsTypedRatio = combinedChars > 0
+                    ? Math.round((combinedKeystrokes / combinedChars) * 100)
+                    : (audit?.charsTypedRatio || 0);
+            }
+
+            originalFinishLesson(lessonName, fullEssay, mergedAudit, redirectUrl);
+        };
+
+        // ── Intercept Phase 1 Next button to init EssayHandler once ──────────
+        // EssayHandler normally starts via the warning-slide "Start Writing" button.
+        // Since there is no warning slide in this test, we trigger it the first time
+        // the student navigates from Phase 1 to the writing workspace. An invalid
+        // plan is stopped earlier by the capture handler, so this only runs when valid.
+        let essayHandlerStarted = false;
+        const phase1NextButton = document.querySelector('#preEssaySlide .btn-next');
+        if (phase1NextButton) {
+            phase1NextButton.addEventListener('click', () => {
+                if (!essayHandlerStarted && window.EssayHandler) {
+                    EssayHandler.init('test5 patterns');
+                    essayHandlerStarted = true;
+                }
+            });
+        }
+
+        // ── Inject "Review Plan" back button into the essay workspace ─────────
+        // Allows the student to freely navigate back to Phase 1 planning.
+        const workspace = document.querySelector('#essaySlide .essay-workspace');
+        const finalButton = document.getElementById('finalBtn');
+        if (workspace && finalButton) {
+            const reviewPlanButton = document.createElement('button');
+            reviewPlanButton.innerHTML = '&#8592; Review Phase 1 Plan';
+            reviewPlanButton.style.cssText =
+                'display:block; width:100%; margin-bottom:10px; padding:10px 20px;' +
+                'background:#f8f9fa; border:1px solid #dee2e6; border-radius:8px;' +
+                'color:#495057; font-size:0.9rem; font-weight:600; cursor:pointer;' +
+                'transition:background 0.2s;';
+            reviewPlanButton.onmouseover = () => { reviewPlanButton.style.background = '#e9ecef'; };
+            reviewPlanButton.onmouseout  = () => { reviewPlanButton.style.background = '#f8f9fa'; };
+            reviewPlanButton.onclick     = () => { window.prevSlide && window.prevSlide(); };
+            workspace.insertBefore(reviewPlanButton, finalButton);
+        }
+
+    }); // end engineReady.then()
+};
+</script>
+
+</body>
+</html>
