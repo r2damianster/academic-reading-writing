@@ -9,7 +9,7 @@ INSERT INTO peer_review_templates (name, rubric_key, instructions, writing_minut
 SELECT
     'Peer Review — SPRE + PEEL + CER + Toulmin',
     'combined',
-    $instructions$TOPIC: Should universities in Ecuador adopt AI writing assistants in EFL courses?
+    $instructions$TOPIC: Should AI detectors decide if academic work is authentic?
 
 Write FOUR paragraphs (about 90-120 words each), one per pattern, in this exact order. Do NOT write the labels (Point, Claim, Situation...): the reader must not see them.
 
