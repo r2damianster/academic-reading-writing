@@ -16,13 +16,13 @@
 
 const { createClient } = require('@supabase/supabase-js');
 const { groqChat } = require('../lib/groq-client');
+const { getRubric, getCriteriaKeys, resolveRubricKey } = require('../lib/peer-rubrics');
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
 const ADMIN_EMAIL   = 'arturo.rodriguez@uleam.edu.ec';
 const GRADING_MODEL = 'llama-3.3-70b-versatile'; // -> gpt-oss-120b en Groq
 
-const ESSAY_CRITERIA  = ['peel_rigor', 'hedging', 'nominalization'];
 const REVIEW_CRITERIA = ['specific', 'actionable', 'balanced'];
 const ETHICS_FLAG_THRESHOLD = 70; // integrity_score debajo de esto se marca para revisión del docente
 
@@ -88,22 +88,26 @@ async function gradeWithGroq(criteria, systemPrompt, userContent, retries = 2) {
     return { ok: false };
 }
 
-function gradeEssay(essayText) {
+function gradeEssay(essayText, rubricKey) {
     return gradeWithGroq(
-        ESSAY_CRITERIA,
-        'You are an objective academic writing evaluator. The essay below is 3 argument paragraphs ' +
-        'that must each follow the P.E.E.L. model (Point, Evidence, Explain, Link — Link connects the ' +
-        "paragraph back to the thesis) and deliberately use hedging language and nominalizations. " +
-        'Score 1-4 on exactly these 3 criteria (1=Unsatisfactory, 2=In Progress, 3=Satisfactory, 4=Excellent): ' +
-        'peel_rigor (all 3 paragraphs execute Point→Evidence→Explain→Link in order, Link ties back to the thesis), ' +
-        'hedging (modal verbs / approximators / distancing verbs / reporting structures used in each paragraph, ' +
-        'calibrated to the strength of the claim — not overclaiming or underclaiming), ' +
-        'nominalization (at least 2 natural nominalizations per paragraph, e.g. implementation/development/assumption, ' +
-        'not just plain verbs). Respond ONLY with JSON: ' +
-        '{"peel_rigor":n,"hedging":n,"nominalization":n,' +
-        '"rationale":"1-2 sentences in Spanish explaining the overall score"}',
+        getCriteriaKeys(rubricKey),
+        getRubric(rubricKey).graderPrompt,
         essayText || '(ensayo vacío — el estudiante no entregó texto)'
     );
+}
+
+async function loadSessionRubricKey(sessionId) {
+    const { data } = await supabase.from('peer_review_sessions').select('rubric_key').eq('id', sessionId).single();
+    return resolveRubricKey(data && data.rubric_key);
+}
+
+function averageScores(criteriaKeys, scoreRows) {
+    const averages = {};
+    criteriaKeys.forEach(key => {
+        const values = scoreRows.map(row => row[key]).filter(value => value != null);
+        averages[key] = values.length ? Math.round((values.reduce((sum, value) => sum + value, 0) / values.length) * 100) / 100 : null;
+    });
+    return averages;
 }
 
 function gradeReviewQuality(comments) {
@@ -134,11 +138,12 @@ async function actionListTemplates(payload) {
 
 async function actionSaveTemplate(payload) {
     if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
-    const { id, name, instructions, writingMinutes = 20, reviewMinutes = 15, reviewersPerEssay = 3, courseId = null } = payload;
+    const { id, name, instructions, writingMinutes = 20, reviewMinutes = 15, reviewersPerEssay = 3, courseId = null, rubricKey } = payload;
     if (!name || !instructions) return { status: 400, body: { error: 'name e instructions requeridos.' } };
 
     const row = {
         name:                String(name).slice(0, 150),
+        rubric_key:          resolveRubricKey(rubricKey),
         instructions:        String(instructions).slice(0, 4000),
         writing_minutes:      writingMinutes,
         review_minutes:       reviewMinutes,
@@ -166,11 +171,12 @@ async function actionDeleteTemplate(payload) {
 
 async function actionOpen(payload) {
     if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
-    const { lessonName, writingMinutes = 20, reviewMinutes = 15, reviewersPerEssay = 3, instructions = '', courseId = null, templateId = null } = payload;
+    const { lessonName, writingMinutes = 20, reviewMinutes = 15, reviewersPerEssay = 3, instructions = '', courseId = null, templateId = null, rubricKey } = payload;
     if (!lessonName) return { status: 400, body: { error: 'lessonName requerido.' } };
 
     const { data, error } = await supabase.from('peer_review_sessions').insert({
         lesson_name:          String(lessonName).slice(0, 150),
+        rubric_key:           resolveRubricKey(rubricKey),
         teacher_email:        ADMIN_EMAIL,
         status:               'open',
         writing_minutes:      writingMinutes,
