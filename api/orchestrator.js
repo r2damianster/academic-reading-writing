@@ -230,9 +230,13 @@ async function _handle(body, env) {
     // ── 2. Token Optimizer: score y selección de modelo ──────────────────────
     const complexityScore = scoreComplexity({ task, payload, needsHistoryDepth, requiresTools, outputFormat });
     // El self-check juzga criterios de rúbrica: siempre el modelo grande y respuesta determinista.
+    // El test-grader devuelve JSON con 8 indicadores (comentario + ejemplo cada uno): con 700-800
+    // tokens la respuesta se cortaba y el JSON inválido hacía que no se guardara la calificación.
     const { model, maxTokens } = isSelfCheck
         ? { model: 'llama-3.3-70b-versatile', maxTokens: 1500 }
-        : selectModel(complexityScore);
+        : agent === 'test-grader'
+            ? { model: 'llama-3.3-70b-versatile', maxTokens: 2000 }
+            : selectModel(complexityScore);
 
     // ── 3. Transformar payload con el módulo del agente (si existe) ─────────
     let finalPayload = payload;
