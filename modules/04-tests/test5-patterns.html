@@ -149,6 +149,7 @@
     <script src="../../js/activity-tracker.js"></script>
     <script src="../../js/essay-handler.js"></script>
     <script src="../../js/report.js"></script>
+    <script src="../../js/plan-review-panel.js"></script>
     <script src="../../js/slide-engine.js" defer></script>
 </head>
 <body>
@@ -452,23 +453,16 @@ window.onload = () => {
             });
         }
 
-        // ── Inject "Review Plan" back button into the essay workspace ─────────
-        // Allows the student to freely navigate back to Phase 1 planning.
-        const workspace = document.querySelector('#essaySlide .essay-workspace');
-        const finalButton = document.getElementById('finalBtn');
-        if (workspace && finalButton) {
-            const reviewPlanButton = document.createElement('button');
-            reviewPlanButton.innerHTML = '&#8592; Review Phase 1 Plan';
-            reviewPlanButton.style.cssText =
-                'display:block; width:100%; margin-bottom:10px; padding:10px 20px;' +
-                'background:#f8f9fa; border:1px solid #dee2e6; border-radius:8px;' +
-                'color:#495057; font-size:0.9rem; font-weight:600; cursor:pointer;' +
-                'transition:background 0.2s;';
-            reviewPlanButton.onmouseover = () => { reviewPlanButton.style.background = '#e9ecef'; };
-            reviewPlanButton.onmouseout  = () => { reviewPlanButton.style.background = '#f8f9fa'; };
-            reviewPlanButton.onclick     = () => { window.prevSlide && window.prevSlide(); };
-            workspace.insertBefore(reviewPlanButton, finalButton);
-        }
+        // ── Show the Phase 1 plan inside the essay workspace ──────────────────
+        // The engine blocks going back on the first attempt, so the plan is mirrored here.
+        PlanReviewPanel.mount({
+            title: 'Your Phase 1 plan',
+            getEntries: () => [1, 2, 3, 4].map(paragraphNumber => ({
+                label: 'Paragraph ' + paragraphNumber + ' (' +
+                    (document.getElementById('pattern-' + paragraphNumber)?.value || 'no pattern') + '):',
+                text: (document.getElementById('opening-' + paragraphNumber)?.value || '').trim()
+            }))
+        });
 
     }); // end engineReady.then()
 };
