@@ -6,6 +6,7 @@
  *   node scripts/grade-pending-tests.js            → simulacro: lista qué calificaría, no escribe nada
  *   node scripts/grade-pending-tests.js --apply    → califica y guarda en test_evaluations
  *   node scripts/grade-pending-tests.js --apply --test "test peel"   → solo un test
+ *   node scripts/grade-pending-tests.js --apply --since 2026-09-01   → solo envíos desde esa fecha
  */
 const fs = require('fs');
 const path = require('path');
@@ -31,6 +32,8 @@ const SECONDS_BETWEEN_CALLS = 30; // límite de Groq: 8000 tokens/minuto, ~4000 
 const shouldApply  = process.argv.includes('--apply');
 const testFilterIx = process.argv.indexOf('--test');
 const testFilter   = testFilterIx !== -1 ? process.argv[testFilterIx + 1] : null;
+const sinceIx      = process.argv.indexOf('--since');
+const sinceDate    = sinceIx !== -1 ? process.argv[sinceIx + 1] : null; // YYYY-MM-DD
 
 const supabaseHeaders = {
     apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}`, 'Content-Type': 'application/json'
@@ -99,7 +102,8 @@ async function main() {
         !evaluatedIds.has(submission.id) &&
         rubricByTest[submission.activity] &&
         (submission.essay_text || '').trim().length > 50 &&
-        (!testFilter || submission.activity === testFilter));
+        (!testFilter || submission.activity === testFilter) &&
+        (!sinceDate || submission.created_at >= sinceDate));
 
     console.log(`${pending.length} envíos sin calificar (${shouldApply ? 'APLICANDO' : 'simulacro'})`);
 
