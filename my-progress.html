@@ -351,6 +351,34 @@ td.lesson-name { font-weight: 600; color: var(--ink); }
   font-size: 0.66rem;
   font-weight: 600;
 }
+.essay-text-item {
+  border: 1px solid var(--border, #dee2e6);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: #fff;
+}
+.essay-text-item summary {
+  cursor: pointer;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.essay-text-meta {
+  font-weight: 400;
+  font-size: 0.72rem;
+  color: var(--mist, #6c757d);
+}
+.essay-text-body {
+  padding: 4px 14px 14px;
+  font-family: Georgia, serif;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
 
 /* ── State messages ──────────────────────────────────────────────── */
 .state-msg {
@@ -549,6 +577,10 @@ td.lesson-name { font-weight: 600; color: var(--ink); }
     <!-- Integrity transparency section -->
     <div class="section-head" style="margin-top:28px;">Integrity signals — full transparency</div>
     <div id="wr-integrity-table"><div class="state-msg">Loading…</div></div>
+
+    <!-- Texto de los ensayos enviados -->
+    <div class="section-head" style="margin-top:28px;">My submitted essays</div>
+    <div id="wr-essay-texts"><div class="state-msg">Loading…</div></div>
 
     <!-- Peer review sessions (fuera de la lista fija de lecciones) -->
     <div class="section-head" style="margin-top:28px;">Peer review sessions</div>
@@ -923,7 +955,7 @@ async function loadAll() {
         // ── 3. Fetch all activity data in parallel ─────────────────────
         const [logs, essays, compRows, readingRows] = await Promise.all([
             sbGet(`activity_logs?student_id=eq.${st.id}&select=activity,result,created_at&order=created_at.asc`),
-            sbGet(`essay_submissions?student_id=eq.${st.id}&select=activity,words,pastes,tab_switches,keystrokes,deletions,integrity_score,chars_typed_ratio,writing_duration,time_to_first_key,ai_essay_scores,peer_avg_scores,peer_review_count,created_at&order=created_at.asc`),
+            sbGet(`essay_submissions?student_id=eq.${st.id}&select=activity,essay_text,skipped,words,pastes,tab_switches,keystrokes,deletions,integrity_score,chars_typed_ratio,writing_duration,time_to_first_key,ai_essay_scores,peer_avg_scores,peer_review_count,created_at&order=created_at.asc`),
             sbGet(`essay_compliance_results?student_id=eq.${st.id}&select=activity,compliance_pct,criteria_met,criteria_total,words_ok,integrity_ok,pastes_ok,keywords_ok&order=created_at.asc`),
             sbGet(`reading_progress?student_id=eq.${st.id}&slide_id=eq.-1&select=lesson_name,score,total_errors,duration_sec,slides_total,completed_at&order=completed_at.desc`)
         ]);
@@ -1097,6 +1129,7 @@ function renderWriting(quizMap, essayMap, compMap, writingActs) {
     document.getElementById('wr-table').innerHTML =
       '<div class="state-msg">No writing lessons completed yet.</div>';
     document.getElementById('wr-integrity-table').innerHTML = '';
+    document.getElementById('wr-essay-texts').innerHTML = '';
     return;
   }
 
@@ -1194,6 +1227,22 @@ function renderWriting(quizMap, essayMap, compMap, writingActs) {
         <tbody>${intRows}</tbody>
       </table>
     </div>` : '<div class="state-msg">No essay submissions yet.</div>';
+
+  // ── Texto de los ensayos enviados (último envío por actividad) ────────
+  const submittedEssays = essays
+    .filter(essay => !essay.skipped && essay.essay_text && essay.essay_text.trim().length > 5)
+    .sort((firstEssay, secondEssay) => (secondEssay.created_at || '').localeCompare(firstEssay.created_at || ''));
+
+  document.getElementById('wr-essay-texts').innerHTML = submittedEssays.length
+    ? submittedEssays.map(essay => `
+      <details class="essay-text-item">
+        <summary>
+          <span>${escapeAttr(essay.activity)}</span>
+          <span class="essay-text-meta">${(essay.created_at || '').slice(0, 10)} · ${essay.words || 0} words</span>
+        </summary>
+        <div class="essay-text-body">${escapeAttr(essay.essay_text.trim())}</div>
+      </details>`).join('')
+    : '<div class="state-msg">No essay submissions yet.</div>';
 
   // ── Peer review sessions — actividad dinámica (peer-review:<sessionId>),
   // no está en la lista fija de writingActs, así que se muestra aparte.
