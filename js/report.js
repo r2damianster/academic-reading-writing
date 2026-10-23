@@ -20,6 +20,14 @@ async function _sbGet(path) {
     return res.json();
 }
 
+// Supabase devuelve timestamps en UTC; slice(0, 10) mostraba el día UTC
+// (en Ecuador, después de las 19:00 aparecía como "mañana"). Devuelve YYYY-MM-DD local.
+function _localDateLabel(isoTimestamp) {
+    if (!isoTimestamp) return '';
+    const parsedDate = new Date(isoTimestamp);
+    return isNaN(parsedDate) ? '' : parsedDate.toLocaleDateString('en-CA');
+}
+
 async function _loadReportData(opts = {}) {
     const email = localStorage.getItem('studentEmail') || '';
     if (!email) return null;
@@ -152,7 +160,7 @@ async function generateReport(opts = {}) {
             doc.setFontSize(8);
             doc.text(item.activity, 18, y + 5);
             doc.text(item.result || '—', 120, y + 5);
-            doc.text((item.created_at || '').slice(0, 10), 170, y + 5);
+            doc.text(_localDateLabel(item.created_at), 170, y + 5);
             doc.setDrawColor(245);
             doc.line(15, y + 8, 195, y + 8);
             y += 8;

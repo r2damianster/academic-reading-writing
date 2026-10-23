@@ -1090,7 +1090,7 @@ function renderOverview(st, quizMap, essayMap, writingActs, readingMap) {
     if (isReading) {
       badge = '<span class="badge b-reading">📖 Reading</span>';
       scoreTd = r.score != null ? pill(r.score) : '<span class="p-none">—</span>';
-      dateTd  = (r.completed_at||'').slice(0,10);
+      dateTd  = _localDateLabel(r.completed_at);
     } else {
       const hasQ = !!q, hasE = !!e;
       badge = hasQ && hasE ? '<span class="badge b-done">✓ Complete</span>'
@@ -1099,7 +1099,7 @@ function renderOverview(st, quizMap, essayMap, writingActs, readingMap) {
             : '<span class="badge b-pending">○ Not started</span>';
       const avgQ = q && q.scores.length ? Math.round(q.scores.reduce((a,b)=>a+b,0)/q.scores.length) : null;
       scoreTd = avgQ != null ? pill(avgQ) : '<span class="p-none">—</span>';
-      dateTd  = (q?.date || e?.created_at || '').slice(0,10);
+      dateTd  = _localDateLabel(q?.date || e?.created_at);
     }
 
     return `<tr>
@@ -1161,7 +1161,7 @@ function renderWriting(quizMap, essayMap, compMap, writingActs) {
     const c  = compMap[a];
     const avgQ = q && q.scores.length ? Math.round(q.scores.reduce((a,b)=>a+b,0)/q.scores.length) : null;
     const attempts = q ? q.scores.length : 0;
-    const date = (q?.date || e?.created_at||'').slice(0,10);
+    const date = _localDateLabel(q?.date || e?.created_at);
 
     return `<tr>
       <td class="lesson-name">${a}</td>
@@ -1238,7 +1238,7 @@ function renderWriting(quizMap, essayMap, compMap, writingActs) {
       <details class="essay-text-item">
         <summary>
           <span>${escapeAttr(essay.activity)}</span>
-          <span class="essay-text-meta">${(essay.created_at || '').slice(0, 10)} · ${essay.words || 0} words</span>
+          <span class="essay-text-meta">${_localDateLabel(essay.created_at)} · ${essay.words || 0} words</span>
         </summary>
         <div class="essay-text-body">${escapeAttr(essay.essay_text.trim())}</div>
       </details>`).join('')
@@ -1254,7 +1254,7 @@ function renderWriting(quizMap, essayMap, compMap, writingActs) {
     const ai   = fmtScores(e.ai_essay_scores);
     const peer = fmtScores(e.peer_avg_scores);
     return `<tr>
-      <td style="color:var(--mist);font-size:.72rem">${(e.created_at||'').slice(0,10)}</td>
+      <td style="color:var(--mist);font-size:.72rem">${_localDateLabel(e.created_at)}</td>
       <td>${ai ? `🤖 ${ai}` : '<span class="state-msg" style="padding:0">Pending</span>'}</td>
       <td>${peer ? `👥 ${peer} <span style="color:var(--mist);font-size:.68rem">(${e.peer_review_count} reviewer${e.peer_review_count===1?'':'s'})</span>` : '<span class="state-msg" style="padding:0">No peer feedback yet</span>'}</td>
     </tr>`;
@@ -1307,7 +1307,7 @@ function renderReading(readingMap) {
       <td style="color:var(--steel)">${r.total_errors != null ? r.total_errors : '—'}</td>
       <td style="color:var(--steel)">${mins != null ? `${mins} min` : '—'}</td>
       <td style="color:var(--steel)">${r.slides_total != null ? r.slides_total : '—'}</td>
-      <td style="color:var(--mist);font-size:.72rem">${(r.completed_at||'').slice(0,10)||'—'}</td>
+      <td style="color:var(--mist);font-size:.72rem">${_localDateLabel(r.completed_at)||'—'}</td>
     </tr>`;
   }).join('');
 
