@@ -677,6 +677,66 @@ async function actionReleaseFeedback(sessionId, payload) {
     };
 }
 
+function meanOfScores(scoreObject) {
+    const values = Object.values(scoreObject || {}).filter(value => typeof value === 'number');
+    return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
+}
+
+// Podio de la sesión: top 3 por promedio de la rúbrica del ensayo (IA) y top 3
+// por calidad de las revisiones que entregó cada estudiante (IA). Solo expone
+// nombre y puntaje — nunca quién revisó a quién (el anonimato se mantiene).
+async function buildPodium(sessionId, myParticipantId) {
+    const { data: participants } = await supabase.from('peer_review_participants')
+        .select('id, student_name, essay_submission_id, excluded').eq('session_id', sessionId);
+    const activeParticipants = (participants || []).filter(participant => !participant.excluded);
+
+    const essayIds = activeParticipants.map(participant => participant.essay_submission_id).filter(Boolean);
+    const { data: essays } = essayIds.length
+        ? await supabase.from('essay_submissions').select('id, ai_essay_scores').in('id', essayIds)
+        : { data: [] };
+    const essayScoreById = {};
+    (essays || []).forEach(essay => { essayScoreById[essay.id] = meanOfScores(essay.ai_essay_scores); });
+
+    const { data: assignments } = await supabase.from('peer_review_assignments')
+        .select('id, reviewer_participant_id').eq('session_id', sessionId);
+    const assignmentIds = (assignments || []).map(assignment => assignment.id);
+    const { data: feedbackRows } = assignmentIds.length
+        ? await supabase.from('peer_review_feedback').select('assignment_id, ai_review_quality_scores').in('assignment_id', assignmentIds)
+        : { data: [] };
+    const reviewerByAssignment = {};
+    (assignments || []).forEach(assignment => { reviewerByAssignment[assignment.id] = assignment.reviewer_participant_id; });
+    const qualityListByReviewer = {};
+    (feedbackRows || []).forEach(feedback => {
+        const quality = meanOfScores(feedback.ai_review_quality_scores);
+        if (quality == null) return;
+        const reviewerId = reviewerByAssignment[feedback.assignment_id];
+        (qualityListByReviewer[reviewerId] = qualityListByReviewer[reviewerId] || []).push(quality);
+    });
+
+    const toEntry = (participant, score) => ({
+        name:  participant.student_name || 'Estudiante',
+        score: Math.round(score * 100) / 100,
+        isMe:  participant.id === myParticipantId
+    });
+
+    const bestEssays = activeParticipants
+        .map(participant => ({ participant, score: essayScoreById[participant.essay_submission_id] }))
+        .filter(row => row.score != null)
+        .sort((a, b) => b.score - a.score).slice(0, 3)
+        .map(row => toEntry(row.participant, row.score));
+
+    const bestReviewers = activeParticipants
+        .map(participant => {
+            const list = qualityListByReviewer[participant.id] || [];
+            return { participant, score: list.length ? list.reduce((sum, value) => sum + value, 0) / list.length : null };
+        })
+        .filter(row => row.score != null)
+        .sort((a, b) => b.score - a.score).slice(0, 3)
+        .map(row => toEntry(row.participant, row.score));
+
+    return { bestEssays, bestReviewers };
+}
+
 async function actionGetResults(sessionId, studentId) {
     if (!sessionId || !studentId) return { status: 400, body: { error: 'sessionId y studentId requeridos.' } };
 
@@ -714,10 +774,13 @@ async function actionGetResults(sessionId, studentId) {
         reviewAvg[key] = vals.length ? Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 100) / 100 : null;
     });
 
+    const podium = await buildPodium(sessionId, me.id);
+
     return {
         status: 200,
         body: {
             rubric: rubricForClient(rubricKey),
+            podium,
             essay: {
                 text: essay ? essay.essay_text : null,
                 aiEvaluator: {

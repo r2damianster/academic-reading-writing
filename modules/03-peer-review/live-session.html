@@ -56,6 +56,15 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .ai-label   { color: var(--teal); }
 .peer-label { color: var(--green); }
 .score-pill { display: inline-block; background: var(--cloud); border-radius: 6px; padding: 2px 8px; margin: 2px 4px 2px 0; font-size: .78rem; font-weight: 600; }
+.podium-section { margin-bottom: 22px; padding: 14px; border-radius: 12px; background: var(--cloud); }
+.podium-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 8px; }
+.podium-card { background: #fff; border-radius: 10px; padding: 10px 14px; }
+.podium-card h4 { margin: 0 0 6px; font-size: .9rem; }
+.podium-list { list-style: none; margin: 0; padding: 0; }
+.podium-list li { display: flex; justify-content: space-between; gap: 10px; padding: 6px 4px; font-size: .85rem; border-bottom: 1px solid var(--cloud); }
+.podium-list li:last-child { border-bottom: none; }
+.podium-list li.is-me { font-weight: 800; }
+.podium-score { font-weight: 700; white-space: nowrap; }
 .rationale { font-size: .82rem; color: var(--steel); margin-top: 6px; font-style: italic; }
 .assignment { border-top: 1px dashed var(--cloud); padding-top: 16px; margin-top: 16px; }
 .hidden { display: none !important; }
@@ -120,9 +129,13 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
       <div style="margin-top:14px;">
         <button id="btnStartWriting">Iniciar escritura</button>
         <button id="btnForceCloseWriting" class="secondary">Cerrar escritura y asignar revisiones</button>
-        <button id="btnForceCloseReviewing" class="secondary">Cerrar revisión (parcial si falta alguien)</button>
-        <button id="btnReopenReviewing" class="secondary">Reabrir revisión (+10 min)</button>
         <button id="btnReleaseFeedback">Liberar resultados (IA + pares)</button>
+        <p class="hint" id="nextStepHint" style="margin-top:8px;"></p>
+        <details style="margin-top:8px;">
+          <summary class="hint" style="cursor:pointer;">Opciones de recuperación</summary>
+          <button id="btnForceCloseReviewing" class="secondary">Cerrar revisión (parcial si falta alguien)</button>
+          <button id="btnReopenReviewing" class="secondary">Reabrir revisión (+10 min)</button>
+        </details>
       </div>
       <p class="hint" id="releaseProgress"></p>
       <div id="integrityAlertBanner" class="hidden" style="margin-top:10px; padding:10px 14px; background:var(--red-lt); color:var(--red); border-radius:8px; font-weight:700; font-size:.85rem;"></div>
@@ -178,6 +191,15 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
     </div>
 
     <div id="resultsView" class="hidden">
+      <div id="podiumSection" class="podium-section hidden">
+        <h3>🏆 Podio de la sesión</h3>
+        <p class="hint">Calificado por IA (Groq) según la rúbrica de la actividad.</p>
+        <div class="podium-grid">
+          <div class="podium-card"><h4>📝 Mejores ensayos</h4><ol id="podiumEssays" class="podium-list"></ol></div>
+          <div class="podium-card"><h4>🧐 Mejores evaluadores</h4><ol id="podiumReviewers" class="podium-list"></ol></div>
+        </div>
+      </div>
+
       <h3>Tu ensayo</h3>
       <div class="essay-box" id="resultEssayText"></div>
 
@@ -384,6 +406,13 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
         document.getElementById('statConnected').textContent = r.connected;
         document.getElementById('statSubmitted').textContent = (r.byStatus.waiting || 0) + (r.byStatus.reviewing || 0) + (r.byStatus.done || 0);
         document.getElementById('statReviewDone').textContent = r.reviewProgress ? `${r.reviewProgress.done}/${r.reviewProgress.total}` : '–';
+        const reviewsAllDone = r.reviewProgress && r.reviewProgress.total > 0 && r.reviewProgress.done === r.reviewProgress.total;
+        document.getElementById('nextStepHint').textContent =
+            r.sessionStatus === 'open'      ? 'Siguiente paso: «Iniciar escritura».' :
+            r.sessionStatus === 'writing'   ? 'Siguiente paso: «Cerrar escritura y asignar revisiones» cuando terminen.' :
+            (r.sessionStatus === 'reviewing' && reviewsAllDone) ? '✅ Todas las revisiones están listas. Siguiente paso: «Liberar resultados».' :
+            r.sessionStatus === 'reviewing' ? 'Esperando revisiones. Puedes liberar resultados en cualquier momento (se usará lo entregado).' :
+            r.sessionStatus === 'feedback_released' ? '✅ Resultados liberados. Sesión terminada.' : '';
         teacherDeadline = r.sessionStatus === 'writing'  ? r.writingDeadline
                         : r.sessionStatus === 'reviewing' ? r.reviewDeadline
                         : null;
@@ -606,8 +635,9 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
     }
 
     async function loadResults() {
-        const { essay, myReviewsQuality, rubric } = await PeerReview.call('get_results');
+        const { essay, myReviewsQuality, rubric, podium } = await PeerReview.call('get_results');
         applyRubric(rubric);
+        renderPodium(podium);
 
         document.getElementById('resultEssayText').textContent = essay.text || '(sin texto)';
 
@@ -626,6 +656,21 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
 
         document.getElementById('resultReviewScores').innerHTML = renderScorePills(myReviewsQuality.scores, REVIEW_LABELS);
         document.getElementById('resultReviewRationales').innerHTML = myReviewsQuality.rationales.map(r => `<p class="rationale">${escapeHtml(r)}</p>`).join('');
+    }
+
+    function renderPodium(podium) {
+        const section = document.getElementById('podiumSection');
+        const hasEntries = podium && ((podium.bestEssays || []).length || (podium.bestReviewers || []).length);
+        section.classList.toggle('hidden', !hasEntries);
+        if (!hasEntries) return;
+        const medals = ['🥇', '🥈', '🥉'];
+        const renderList = (entries) => (entries || []).map((entry, positionIndex) => `
+            <li class="${entry.isMe ? 'is-me' : ''}">
+                <span>${medals[positionIndex]} ${escapeHtml(entry.name)}${entry.isMe ? ' (tú)' : ''}</span>
+                <span class="podium-score">${entry.score}/4</span>
+            </li>`).join('');
+        document.getElementById('podiumEssays').innerHTML = renderList(podium.bestEssays);
+        document.getElementById('podiumReviewers').innerHTML = renderList(podium.bestReviewers);
     }
 
     function renderScorePills(scores, labels) {
