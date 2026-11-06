@@ -613,7 +613,8 @@ async function persistPeerAverages(sessionId) {
 // para siempre.
 async function actionReleaseFeedback(sessionId, payload) {
     if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
-    const batchSize = Math.min((payload && payload.batchSize) || 15, 30);
+    // Tope 8: cada lote califica en paralelo con Groq; 15 en serie superaba los 60 s de Vercel (timeout 2026-11-05).
+    const batchSize = Math.min((payload && payload.batchSize) || 8, 8);
     const rubricKey = await loadSessionRubricKey(sessionId);
 
     const { data: participants } = await supabase.from('peer_review_participants')
@@ -624,7 +625,7 @@ async function actionReleaseFeedback(sessionId, payload) {
         .select('id, essay_text').in('id', submissionIds).is('ai_essay_scores', null);
 
     let graded = 0, failedEssays = 0;
-    for (const essay of (ungradedEssays || []).slice(0, batchSize)) {
+    await Promise.all((ungradedEssays || []).slice(0, batchSize).map(async (essay) => {
         const result = await gradeEssay(essay.essay_text, rubricKey);
         if (result.ok) {
             await supabase.from('essay_submissions')
@@ -633,7 +634,7 @@ async function actionReleaseFeedback(sessionId, payload) {
         } else {
             failedEssays++;
         }
-    }
+    }));
 
     let feedbackGraded = 0, failedFeedback = 0;
     const remainingEssays = Math.max(0, (ungradedEssays || []).length - graded);
@@ -647,7 +648,7 @@ async function actionReleaseFeedback(sessionId, payload) {
         const { data: ungradedFeedback } = await supabase.from('peer_review_feedback')
             .select('id, comments').in('assignment_id', ids.length ? ids : ['00000000-0000-0000-0000-000000000000']).is('ai_review_quality_scores', null);
 
-        for (const fb of (ungradedFeedback || []).slice(0, batchSize)) {
+        await Promise.all((ungradedFeedback || []).slice(0, batchSize).map(async (fb) => {
             const result = await gradeReviewQuality(fb.comments);
             if (result.ok) {
                 await supabase.from('peer_review_feedback')
@@ -656,7 +657,7 @@ async function actionReleaseFeedback(sessionId, payload) {
             } else {
                 failedFeedback++;
             }
-        }
+        }));
 
         const remainingFeedback = Math.max(0, (ungradedFeedback || []).length - feedbackGraded);
         if (remainingFeedback === 0) {
