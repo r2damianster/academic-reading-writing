@@ -1092,7 +1092,9 @@ function renderOverview(st, quizMap, essayMap, writingActs, readingMap) {
       scoreTd = r.score != null ? pill(r.score) : '<span class="p-none">—</span>';
       dateTd  = _localDateLabel(r.completed_at);
     } else {
-      const hasQ = !!q, hasE = !!e;
+      // Peer review en vivo (activity "peer-review:<sessionId>"): solo tiene ensayo, no práctica/quiz.
+      const isLivePeerReview = a.startsWith('peer-review:');
+      const hasQ = !!q || (isLivePeerReview && !!e), hasE = !!e;
       badge = hasQ && hasE ? '<span class="badge b-done">✓ Complete</span>'
             : hasQ        ? '<span class="badge b-quiz">✍️ Essay pending</span>'
             : hasE        ? '<span class="badge b-essay">📝 Practice pending</span>'
@@ -1103,7 +1105,7 @@ function renderOverview(st, quizMap, essayMap, writingActs, readingMap) {
     }
 
     return `<tr>
-      <td class="lesson-name">${a}</td>
+      <td class="lesson-name">${a.startsWith('peer-review:') ? 'Live Peer Review Session' : a}</td>
       <td>${badge}</td>
       <td>${scoreTd}</td>
       <td>${dateTd || '—'}</td>
