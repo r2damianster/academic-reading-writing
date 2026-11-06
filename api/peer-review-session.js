@@ -203,6 +203,13 @@ async function actionConnect(sessionId, studentId, payload) {
     const { data: session, error: sErr } = await supabase.from('peer_review_sessions').select('status').eq('id', sessionId).single();
     if (sErr || !session) return { status: 404, body: { error: 'Sesión no encontrada.' } };
     if (!['open', 'writing'].includes(session.status)) {
+        // Reconexión: un participante ya registrado (no excluido) puede volver a entrar
+        // durante la revisión / resultados; solo se bloquean participantes nuevos.
+        const { data: existing } = await supabase.from('peer_review_participants')
+            .select('id, status, excluded').eq('session_id', sessionId).eq('student_id', studentId).maybeSingle();
+        if (existing && !existing.excluded && ['reviewing', 'feedback_released'].includes(session.status)) {
+            return { status: 200, body: { participantId: existing.id, status: existing.status, sessionStatus: session.status } };
+        }
         return { status: 409, body: { error: 'La sesión ya no acepta nuevas conexiones.' } };
     }
 
