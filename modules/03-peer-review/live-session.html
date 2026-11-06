@@ -83,6 +83,20 @@ code.session-id { background: var(--cloud); padding: 3px 8px; border-radius: 6px
     <div id="teacherSetup">
       <label>Contraseña de docente</label>
       <input type="password" id="teacherPasswordInput" placeholder="ADMIN_PASSWORD">
+
+      <details id="pastPodiumDetails" style="margin:10px 0;">
+        <summary class="hint" style="cursor:pointer;">🏆 Ver podio de sesiones anteriores</summary>
+        <select id="pastSessionSelect"><option value="">— Escribe la contraseña y abre esta sección —</option></select>
+        <div id="pastPodiumBox" class="podium-section hidden" style="margin-top:10px;">
+          <p class="hint" id="pastPodiumTitle"></p>
+          <div class="podium-grid">
+            <div class="podium-card"><h4>📝 Mejores ensayos</h4><ol id="pastPodiumEssays" class="podium-list"></ol></div>
+            <div class="podium-card"><h4>🧐 Mejores evaluadores</h4><ol id="pastPodiumReviewers" class="podium-list"></ol></div>
+          </div>
+          <p class="hint">Calificado por IA (Groq).</p>
+        </div>
+      </details>
+
       <label>Lección programada (opcional)</label>
       <div class="row">
         <select id="templateSelect" style="flex:2;"><option value="">— Nueva consigna —</option></select>
@@ -256,7 +270,41 @@ Formal academic register. No introduction or conclusion needed — only the 3 ar
     // ── PLANTILLAS (lecciones programadas) ──────────────────────────────────
     let templates = [];
 
+    // ── PODIO DE SESIONES ANTERIORES ─────────────────────────────────────────
+    function wirePastPodium() {
+        const sessionSelect = document.getElementById('pastSessionSelect');
+
+        document.getElementById('pastPodiumDetails').addEventListener('toggle', async (toggleEvent) => {
+            if (!toggleEvent.target.open) return;
+            const teacherPassword = document.getElementById('teacherPasswordInput').value;
+            if (!teacherPassword) return;
+            PeerReview.setTeacherPassword(teacherPassword);
+            try {
+                const { sessions } = await PeerReview.call('list_sessions', { payload: PeerReview.teacherPayload() });
+                sessionSelect.innerHTML = '<option value="">— Elige una sesión —</option>' + sessions.map(pastSession =>
+                    `<option value="${pastSession.id}">${new Date(pastSession.created_at).toLocaleString('es-EC')} — ${escapeHtml(pastSession.lesson_name || 'Sin nombre')}</option>`).join('');
+            } catch (e) { sessionSelect.innerHTML = `<option value="">⚠️ ${escapeHtml(e.message)}</option>`; }
+        });
+
+        sessionSelect.onchange = async () => {
+            const box = document.getElementById('pastPodiumBox');
+            if (!sessionSelect.value) { box.classList.add('hidden'); return; }
+            try {
+                const { podium } = await PeerReview.call('get_podium', { sessionId: sessionSelect.value, payload: PeerReview.teacherPayload() });
+                const medals = ['🥇', '🥈', '🥉'];
+                const renderList = (entries) => (entries || []).map((entry, positionIndex) => `
+                    <li><span>${medals[positionIndex]} ${escapeHtml(entry.name)}</span><span class="podium-score">${entry.score}/4</span></li>`).join('')
+                    || '<li class="hint">Sin datos calificados.</li>';
+                document.getElementById('pastPodiumTitle').textContent = sessionSelect.options[sessionSelect.selectedIndex].textContent;
+                document.getElementById('pastPodiumEssays').innerHTML = renderList(podium.bestEssays);
+                document.getElementById('pastPodiumReviewers').innerHTML = renderList(podium.bestReviewers);
+                box.classList.remove('hidden');
+            } catch (e) { alert(e.message); }
+        };
+    }
+
     function wireTemplates() {
+        wirePastPodium();
         document.getElementById('teacherPasswordInput').addEventListener('blur', loadTemplates);
 
         document.getElementById('templateSelect').onchange = (e) => {

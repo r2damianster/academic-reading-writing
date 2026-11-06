@@ -737,6 +737,24 @@ async function buildPodium(sessionId, myParticipantId) {
     return { bestEssays, bestReviewers };
 }
 
+// Docente: sesiones ya liberadas (más recientes primero) para ver su podio después.
+async function actionListSessions(payload) {
+    if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
+    const { data, error } = await supabase.from('peer_review_sessions')
+        .select('id, lesson_name, created_at, status')
+        .in('status', ['feedback_released', 'closed'])
+        .order('created_at', { ascending: false }).limit(50);
+    if (error) return { status: 500, body: { error: error.message } };
+    return { status: 200, body: { sessions: data || [] } };
+}
+
+// Docente: podio de cualquier sesión (sin marcar "isMe").
+async function actionGetPodium(sessionId, payload) {
+    if (!requireTeacher(payload)) return { status: 401, body: { error: 'Contraseña de docente inválida.' } };
+    if (!sessionId) return { status: 400, body: { error: 'sessionId requerido.' } };
+    return { status: 200, body: { podium: await buildPodium(sessionId, null) } };
+}
+
 async function actionGetResults(sessionId, studentId) {
     if (!sessionId || !studentId) return { status: 400, body: { error: 'sessionId y studentId requeridos.' } };
 
@@ -863,6 +881,8 @@ module.exports = async (req, res) => {
             case 'exclude_participant':     result = await actionExcludeParticipant(sessionId, payload); break;
             case 'release_feedback':        result = await actionReleaseFeedback(sessionId, payload); break;
             case 'get_results':             result = await actionGetResults(sessionId, studentId); break;
+            case 'list_sessions':           result = await actionListSessions(payload); break;
+            case 'get_podium':              result = await actionGetPodium(sessionId, payload); break;
             default: return send(400, { error: `Acción desconocida: "${action}"` });
         }
 
